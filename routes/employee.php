@@ -14,6 +14,12 @@ Route::get('',function(){
 })->middleware('auth')->name('dashboard');
 
 
+
+
+Route::get('/support',function(){
+    return view('employee.dashboard.support');
+})->middleware('auth')->name('support');
+
 /*
 Route::get('/employee', function () {
     $employee = [];

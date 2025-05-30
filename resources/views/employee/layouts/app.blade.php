@@ -13,7 +13,7 @@
                     <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold text-xl">
                         S
                     </div>
-                    <span class="text-2xl font-semibold text-gray-700">Admin</span>
+                    <span class="text-2xl font-semibold text-gray-700">Employee</span>
                 </div>
                 <div class="col-span-2 sm:hidden text-right">
                     <button id="menu-toggle1" class="md:hidden p-2 bg-white shadow rounded-full">
@@ -32,7 +32,13 @@
                             Overview
                         </a>
                     </li>
-
+                    <li>
+                        <a href="{{ route('employee.support') }}"
+                            class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
+                            <i class="ri-customer-service-2-line"></i>
+                            Support
+                        </a>
+                    </li>
 
 
                 </ul>
