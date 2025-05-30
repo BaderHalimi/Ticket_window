@@ -1,104 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
+@push('styles')
+<style>
+    :where([class^="ri-"])::before {
+        content: "\f3c2";
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name') }} Platform</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <!-- <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#2D9CDB',
-                        secondary: '#27AE60',
-                        accent: '#F2994A',
-                        background: '#F9FAFB',
-                        card: '#FFFFFF',
-                        textdark: '#2C3E50',
-                        textlight: '#7F8C8D',
-                        error: '#EB5757'
-                    },
-                    borderRadius: {
-                        'none': '0px',
-                        'sm': '4px',
-                        DEFAULT: '8px',
-                        'md': '12px',
-                        'lg': '16px',
-                        'xl': '20px',
-                        '2xl': '24px',
-                        '3xl': '32px',
-                        'full': '9999px',
-                        'button': '8px'
-                    }
-                }
-            }
-        }
-    </script> -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-    <style>
-        :where([class^="ri-"])::before {
-            content: "\f3c2";
-        }
+    body {
+        font-family: 'Quicksand', sans-serif;
+        background: linear-gradient(135deg, #f0f9ff 0%, #e6e6fa 100%);
+        overflow-x: hidden;
+    }
 
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e6e6fa 100%);
-            overflow-x: hidden;
-        }
+    .glassmorphism {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(106, 90, 205, 0.1);
+    }
 
-        .glassmorphism {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(106, 90, 205, 0.1);
-        }
+    .neumorphism {
+        box-shadow:
+            8px 8px 16px rgba(106, 90, 205, 0.1),
+            -8px -8px 16px rgba(255, 255, 255, 0.7);
+    }
 
-        .neumorphism {
-            box-shadow:
-                8px 8px 16px rgba(106, 90, 205, 0.1),
-                -8px -8px 16px rgba(255, 255, 255, 0.7);
-        }
+    .event-card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow:
+            0 8px 32px rgba(106, 90, 205, 0.1),
+            inset 0 0 16px rgba(224, 255, 255, 0.05);
+        transform-style: preserve-3d;
+        transition: all 0.5s ease;
+    }
 
-        .event-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow:
-                0 8px 32px rgba(106, 90, 205, 0.1),
-                inset 0 0 16px rgba(224, 255, 255, 0.05);
-            transform-style: preserve-3d;
-            transition: all 0.5s ease;
-        }
+    .event-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow:
+            0 16px 48px rgba(106, 90, 205, 0.15),
+            inset 0 0 24px rgba(224, 255, 255, 0.1);
+    }
 
-        .event-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow:
-                0 16px 48px rgba(106, 90, 205, 0.15),
-                inset 0 0 24px rgba(224, 255, 255, 0.1);
-        }
+    .light-beam {
+        background: linear-gradient(90deg,
+                rgba(224, 255, 255, 0) 0%,
+                rgba(224, 255, 255, 0.1) 50%,
+                rgba(224, 255, 255, 0) 100%);
+        transform: rotate(-45deg);
+        position: absolute;
+        width: 200%;
+        height: 100px;
+        top: -50px;
+        left: -50%;
+        animation: beam-move 8s infinite linear;
+    }
 
-        .light-beam {
-            background: linear-gradient(90deg,
-                    rgba(224, 255, 255, 0) 0%,
-                    rgba(224, 255, 255, 0.1) 50%,
-                    rgba(224, 255, 255, 0) 100%);
-            transform: rotate(-45deg);
-            position: absolute;
-            width: 200%;
-            height: 100px;
-            top: -50px;
-            left: -50%;
-            animation: beam-move 8s infinite linear;
-        }
-
-        /* @keyframes beam-move {
+    /* @keyframes beam-move {
             0% {
                 transform: rotate(-45deg) translateX(-100%);
             }
@@ -108,57 +66,57 @@
             }
         } */
 
-        .nav-button {
-            transition: all 0.3s ease;
-        }
+    .nav-button {
+        transition: all 0.3s ease;
+    }
 
-        .nav-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 15px rgba(87, 181, 231, 0.5);
-        }
+    .nav-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 15px rgba(87, 181, 231, 0.5);
+    }
 
-        .calendar-day {
-            transition: all 0.3s ease;
-        }
+    .calendar-day {
+        transition: all 0.3s ease;
+    }
 
-        .calendar-day:hover:not(.calendar-day-active) {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
-        }
+    .calendar-day:hover:not(.calendar-day-active) {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.1);
+    }
 
-        .calendar-day-active {
-            background: rgba(87, 181, 231, 0.2);
-            box-shadow: 0 0 10px rgba(87, 181, 231, 0.3);
-        }
+    .calendar-day-active {
+        background: rgba(87, 181, 231, 0.2);
+        box-shadow: 0 0 10px rgba(87, 181, 231, 0.3);
+    }
 
-        .grid-background {
-            background-image:
-                linear-gradient(rgba(177, 156, 217, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(177, 156, 217, 0.1) 1px, transparent 1px);
-            background-size: 40px 40px;
-            background-position: center center;
-            perspective: 1000px;
-            transform-style: preserve-3d;
-            transform: rotateX(60deg) scale(1.5);
-            opacity: 0.3;
-        }
+    .grid-background {
+        background-image:
+            linear-gradient(rgba(177, 156, 217, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(177, 156, 217, 0.1) 1px, transparent 1px);
+        background-size: 40px 40px;
+        background-position: center center;
+        perspective: 1000px;
+        transform-style: preserve-3d;
+        transform: rotateX(60deg) scale(1.5);
+        opacity: 0.3;
+    }
 
-        .hero-bg {
-            background-image: radial-gradient(circle at 20% 30%, rgba(224, 255, 255, 0.15) 0%, transparent 60%),
-                radial-gradient(circle at 80% 70%, rgba(177, 156, 217, 0.15) 0%, transparent 60%);
-        }
+    .hero-bg {
+        background-image: radial-gradient(circle at 20% 30%, rgba(224, 255, 255, 0.15) 0%, transparent 60%),
+            radial-gradient(circle at 80% 70%, rgba(177, 156, 217, 0.15) 0%, transparent 60%);
+    }
 
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 
-        .floating-animation {
-            animation: float 6s ease-in-out infinite;
-        }
+    .floating-animation {
+        animation: float 6s ease-in-out infinite;
+    }
 
-        /* @keyframes float {
+    /* @keyframes float {
             0% {
                 transform: translateY(0px);
             }
@@ -172,11 +130,12 @@
             }
         } */
 
-        .glow {
-            box-shadow: 0 0 15px rgba(87, 181, 231, 0.5);
-        }
-    </style>
-</head>
+    .glow {
+        box-shadow: 0 0 15px rgba(87, 181, 231, 0.5);
+    }
+</style>
+@endpush
+@section('content')
 
 <body class="min-h-screen overflow-x-hidden">
     <div class="hero-bg relative min-h-screen">
@@ -657,5 +616,4 @@
         });
     </script>
 </body>
-
-</html>
+@endsection

@@ -1,33 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
+@section('title','register - ')
+@push('styles')
+<style>
+    body {
+        font-family: 'Quicksand', sans-serif;
+        background: linear-gradient(135deg, #f0f9ff 0%, #e6e6fa 100%);
+    }
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>register - {{ config('app.name') }} Platform</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <style>
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e6e6fa 100%);
-        }
-
-        .glassmorphism {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(106, 90, 205, 0.1);
-        }
-    </style>
-</head>
+    .glassmorphism {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(106, 90, 205, 0.1);
+    }
+</style>
+@endpush
+@section('content')
 
 <body class="min-h-screen flex items-center justify-center px-4 py-10">
     <nav class="fixed top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center">
@@ -90,5 +78,4 @@
     </div>
 
 </body>
-
-</html>
+@endsection
