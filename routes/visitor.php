@@ -10,3 +10,7 @@ Route::post('register', [LoginController::class, 'register_logic'])->middleware(
 Route::get('',function(){
     return view('visitor.dashboard.index');
 })->name('dashboard');
+Route::get('my_bookings', function () {
+    $bookings = [];
+    return view('visitor.dashboard.my_booking',compact('bookings'));
+})->name('my_bookings');
