@@ -195,7 +195,7 @@
             </div>
             <!-- Header Section -->
             <header
-                class=" mt-5 sm:mt-0glassmorphism rounded-xl p-4 mb-8 flex items-center justify-between">
+                class="mt-5 sm:mt-0 glassmorphism rounded-xl p-4 mb-8 flex items-center justify-between">
                 <div class="flex items-center gap-4">
                     <div
                         class="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center overflow-hidden border-2 border-white">
@@ -206,9 +206,9 @@
                     </div>
                     <div>
                         <h1 class="text-xl md:text-2xl font-semibold">
-                            Welcome back, Ahmed
+                            {{ Auth::user()->name }}
                         </h1>
-                        <p class="text-sm text-gray-600">Friday, May 30, 2025</p>
+                        <p class="text-sm text-gray-600">{{ Carbon\Carbon::now()->format('D, M d, Y') }}</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
@@ -543,6 +543,7 @@
         document.getElementById("menu-toggle1").addEventListener("click", function() {
             toggleSidebar();
         });
+
         function toggleSidebar() {
             const sidebar = document.getElementById("sidebar");
             sidebar.classList.toggle("translate-x-0");
