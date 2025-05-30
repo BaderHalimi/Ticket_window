@@ -18,3 +18,14 @@ Route::get('tickets',function () {
     $tickets = [];
     return view('visitor.dashboard.tickets',compact('tickets'));
 })->name('my_tickets');
+
+
+Route::get('explore_events',function () {
+    $events = [];
+    return view('visitor.dashboard.explore_events',compact('events'));
+})->name('my_events');
+
+Route::get('explore_restaurents',function () {
+    $restaurents = [];
+    return view('visitor.dashboard.explore_restaurents',compact('restaurents'));
+})->name('my_restaurents');

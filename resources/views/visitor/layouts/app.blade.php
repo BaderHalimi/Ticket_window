@@ -45,14 +45,14 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{{ route('visitor.my_events') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-ticket-line text-xl"></i>
                             Explore events
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{{ route('visitor.my_restaurents') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-ticket-line text-xl"></i>
                             Explore restaurents
