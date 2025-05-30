@@ -9,9 +9,9 @@
             <div class="grid grid-cols-10">
                 <div class="mb-10 flex items-center gap-2 col-span-8 sm:col-span-10">
                     <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold text-xl">
-                        V
+                        S
                     </div>
-                    <span class="text-2xl font-semibold text-gray-700">Visitor</span>
+                    <span class="text-2xl font-semibold text-gray-700">Admin</span>
                 </div>
                 <div class="col-span-2 sm:hidden text-right">
                     <button id="menu-toggle1" class="md:hidden p-2 bg-white shadow rounded-full">
@@ -24,40 +24,27 @@
             <nav class="flex-1">
                 <ul class="space-y-4">
                     <li>
-                        <a href="{{ route('visitor.dashboard') }}"
+                        <a href="#"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-dashboard-line text-xl"></i>
-                            Dashboard
+                            Overview
                         </a>
                     </li>
                     <li>
-                        <a href="{{route('visitor.my_bookings')}}"
+                        <a href="{{ route('admin.sellers') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
-                            <i class="ri-calendar-event-line text-xl"></i>
-                            My Bookings
+                            <i class="ri-user-line text-xl"></i>
+                            Sellers
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('visitor.my_tickets') }}"
+                        <a href="{{ route('admin.employees') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
-                            <i class="ri-ticket-line text-xl"></i>
-                            Tickets
+                            <i class="ri-team-line text-xl"></i>
+                            Employees
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ route('visitor.my_events') }}"
-                            class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
-                            <i class="ri-ticket-2-line text-xl"></i>
-                            Explore events
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('visitor.my_restaurents') }}"
-                            class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
-                            <i class="ri-restaurant-line text-xl"></i>
-                            Explore restaurents
-                        </a>
-                    </li>
+
                 </ul>
             </nav>
         </div>
@@ -158,6 +145,11 @@
 </body>
 
 
+
+
+
+
+
 <script id="carousel-control">
     document.addEventListener("DOMContentLoaded", function() {
         const carousel = document.getElementById("carousel");
@@ -238,4 +230,15 @@
         });
     });
 </script>
+
+
+
 @endsection
+
+
+
+
+
+
+
+

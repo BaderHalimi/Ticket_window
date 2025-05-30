@@ -31,3 +31,5 @@ Route::group(['middleware' => 'auth'], function () {
         return view('visitor.dashboard.explore_restaurents', compact('restaurents'));
     })->name('my_restaurents');
 });
+
+

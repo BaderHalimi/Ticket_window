@@ -19,6 +19,7 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return redirect()->route('visitor.login');
 })->middleware('guest')->name('login');
+
 Route::post('/logout', function(){
     auth()->logout();
     session()->regenerate();

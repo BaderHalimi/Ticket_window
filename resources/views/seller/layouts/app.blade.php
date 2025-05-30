@@ -143,4 +143,86 @@
     </div>
     @stack('scripts')
 </body>
+
+
+<script id="carousel-control">
+    document.addEventListener("DOMContentLoaded", function() {
+        const carousel = document.getElementById("carousel");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+        const scrollAmount = 300;
+
+        prevBtn.addEventListener("click", function() {
+            carousel.scrollBy({
+                left: -scrollAmount,
+                behavior: "smooth",
+            });
+        });
+
+        nextBtn.addEventListener("click", function() {
+            carousel.scrollBy({
+                left: scrollAmount,
+                behavior: "smooth",
+            });
+        });
+    });
+    document.getElementById("menu-toggle").addEventListener("click", function() {
+        toggleSidebar();
+    });
+    document.getElementById("menu-toggle1").addEventListener("click", function() {
+        toggleSidebar();
+    });
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.toggle("translate-x-0");
+        sidebar.classList.toggle("hidden");
+        sidebar.classList.toggle("w-full");
+        sidebar.classList.toggle("w-64");
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        const btn = document.querySelector('.ri-settings-3-line.ri-xl');
+        const menu = document.getElementById('settings-menu');
+
+        btn.addEventListener('click', function(e) {
+            const notifMenu = document.getElementById('notifications-menu');
+            if (!notifMenu.classList.contains('hidden')) {
+                notifMenu.classList.toggle('hidden');
+            }
+            e.stopPropagation();
+            const rect = btn.getBoundingClientRect();
+            menu.classList.toggle('hidden');
+            menu.style.top = (rect.bottom + 10) + 'px';
+            menu.style.left = (rect.left - (menu.offsetWidth - rect.width)) + 'px';
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!menu.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+        const notifBtn = document.querySelector('.ri-notification-3-line.ri-xl');
+        const notifMenu = document.getElementById('notifications-menu');
+
+        notifBtn.addEventListener('click', function(e) {
+            const menu = document.getElementById('settings-menu');
+            if (!menu.classList.contains('hidden')) {
+                menu.classList.toggle('hidden');
+            }
+            e.stopPropagation();
+            const rect = notifBtn.getBoundingClientRect();
+            notifMenu.classList.toggle('hidden');
+            notifMenu.style.top = (rect.bottom + 10) + 'px';
+            notifMenu.style.left = (rect.left - (notifMenu.offsetWidth - rect.width)) + 'px';
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!notifMenu.contains(e.target) && !notifBtn.contains(e.target)) {
+                notifMenu.classList.add('hidden');
+            }
+        });
+    });
+</script>
 @endsection

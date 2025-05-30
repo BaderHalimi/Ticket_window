@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\seller;
+namespace App\Http\Controllers\employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -11,11 +11,11 @@ class LoginController extends Controller
 {
     public function login()
     {
-        return view('seller.auth.login');
+        return view('employee.auth.login');
     }
     public function register()
     {
-        return view('seller.auth.register');
+        return view('employee.auth.register');
     }
 
     public function login_logic(Request $request)
@@ -25,12 +25,12 @@ class LoginController extends Controller
             'password' => 'required|min:6',
         ]);
         $user = User::where('email', $validated['email'])->first();
-        if($user->role !== 'seller' or $user->role == 'visitor') {
+        if($user->role !== 'checker' or $user->role == 'seller' or $user->role == 'visitor') {
             return redirect()->back()->withErrors(['email' => 'You are not authorized to access this area'])->withInput();
         }
         if ($user && Hash::check($validated['password'], $user->password)) {
             auth()->login($user);
-            return redirect()->route('seller.dashboard')->with('success', 'Login successful');
+            return redirect()->route('employee.dashboard')->with('success', 'Login successful');
         } else {
             return redirect()->back()->withErrors(['email' => 'Invalid credentials'])->withInput();
         }
@@ -46,9 +46,9 @@ class LoginController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'seller',
+            'role' => 'checker',
         ]);
         auth()->login($user);
-        return redirect()->route('seller.dashboard')->with('success', 'Login successful');
+        return redirect()->route('employee.dashboard')->with('success', 'Login successful');
     }
 }
