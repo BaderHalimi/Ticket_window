@@ -24,14 +24,14 @@
             <nav class="flex-1">
                 <ul class="space-y-4">
                     <li>
-                        <a href="#"
+                        <a href="{{ route('seller.dashboard') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-dashboard-line text-xl"></i>
                             Dashboard
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('visitor.my_bookings') }}"
+                        <a href="{{ route('seller.events.index') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-calendar-event-line text-xl"></i>
                             Events
