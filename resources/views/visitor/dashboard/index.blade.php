@@ -160,20 +160,6 @@
                             Tickets
                         </a>
                     </li>
-                    <li>
-                        <a href="#"
-                            class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
-                            <i class="ri-settings-3-line text-xl"></i>
-                            Settings
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="flex items-center gap-3 text-red-500 font-medium hover:text-red-600 transition">
-                            <i class="ri-logout-box-line text-xl"></i>
-                            Logout
-                        </a>
-                    </li>
                 </ul>
             </nav>
         </div>
@@ -193,6 +179,49 @@
                     <i class="ri-menu-line text-2xl text-gray-600"></i> Burger menu
                 </button>
             </div>
+            <ul id="settings-menu" class="fixed bg-white glassmorphism shadow-lg rounded-lg py-2 z-[99999] hidden">
+                <li>
+                    <a href="#" class="flex items-center gap-3 px-4 py-2 text-gray-700 font-medium hover:bg-gray-100 transition">
+                        <i class="ri-settings-3-line text-xl"></i> Settings
+                    </a>
+                </li>
+                <li>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="flex items-center gap-3 px-4 py-2 text-red-500 font-medium hover:bg-red-100 transition w-full text-left">
+                            <i class="ri-logout-box-line text-xl"></i> Logout
+                        </button>
+                    </form>
+
+                </li>
+            </ul>
+            <ul id="notifications-menu" class="fixed bg-white glassmorphism shadow-lg rounded-lg py-2 z-[99999] hidden w-80 max-w-[90vw]">
+                <li class="px-4 py-2 border-b border-gray-100">
+                    <div class="flex items-start gap-3">
+                        <i class="ri-information-line text-xl text-primary"></i>
+                        <div>
+                            <p class="text-sm font-medium text-gray-800">New booking confirmed</p>
+                            <p class="text-xs text-gray-500">2 minutes ago</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="px-4 py-2 border-b border-gray-100">
+                    <div class="flex items-start gap-3">
+                        <i class="ri-calendar-event-line text-xl text-secondary"></i>
+                        <div>
+                            <p class="text-sm font-medium text-gray-800">Upcoming event tomorrow</p>
+                            <p class="text-xs text-gray-500">1 hour ago</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="px-4 py-2">
+                    <div class="flex items-center justify-center">
+                        <a href="#" class="text-sm text-primary font-medium">View All Notifications</a>
+                    </div>
+                </li>
+            </ul>
+
+
             <!-- Header Section -->
             <header
                 class="mt-5 sm:mt-0 glassmorphism rounded-xl p-4 mb-8 flex items-center justify-between">
@@ -218,10 +247,10 @@
                         <span
                             class="absolute top-2 right-2 w-2 h-2 rounded-full bg-secondary"></span>
                     </div>
-                    <div
-                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer">
+                    <div class="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer group z-10">
                         <i class="ri-settings-3-line ri-xl"></i>
                     </div>
+
                 </div>
             </header>
 
@@ -551,6 +580,50 @@
             sidebar.classList.toggle("w-full");
             sidebar.classList.toggle("w-64");
         }
+        document.addEventListener("DOMContentLoaded", function() {
+            const btn = document.querySelector('.ri-settings-3-line.ri-xl');
+            const menu = document.getElementById('settings-menu');
+
+            btn.addEventListener('click', function(e) {
+                const notifMenu = document.getElementById('notifications-menu');
+                if (!notifMenu.classList.contains('hidden')) {
+                    notifMenu.classList.toggle('hidden');
+                }
+                e.stopPropagation();
+                const rect = btn.getBoundingClientRect();
+                menu.classList.toggle('hidden');
+                menu.style.top = (rect.bottom + 10) + 'px';
+                menu.style.left = (rect.left - (menu.offsetWidth - rect.width)) + 'px';
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!menu.contains(e.target)) {
+                    menu.classList.add('hidden');
+                }
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const notifBtn = document.querySelector('.ri-notification-3-line.ri-xl');
+            const notifMenu = document.getElementById('notifications-menu');
+
+            notifBtn.addEventListener('click', function(e) {
+                const menu = document.getElementById('settings-menu');
+                if (!menu.classList.contains('hidden')) {
+                    menu.classList.toggle('hidden');
+                }
+                e.stopPropagation();
+                const rect = notifBtn.getBoundingClientRect();
+                notifMenu.classList.toggle('hidden');
+                notifMenu.style.top = (rect.bottom + 10) + 'px';
+                notifMenu.style.left = (rect.left - (notifMenu.offsetWidth - rect.width)) + 'px';
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!notifMenu.contains(e.target) && !notifBtn.contains(e.target)) {
+                    notifMenu.classList.add('hidden');
+                }
+            });
+        });
     </script>
 </body>
 

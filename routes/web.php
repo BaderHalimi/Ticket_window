@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::post('/logout', function(){
+    auth()->logout();
+    session()->regenerate();
+    return redirect()->route('home')->with('success', 'You have been logged out successfully.');
+})->middleware('auth')->name('logout');
