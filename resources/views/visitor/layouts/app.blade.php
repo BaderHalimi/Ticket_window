@@ -38,10 +38,24 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{{ route('visitor.my_tickets') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-ticket-line text-xl"></i>
                             Tickets
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
+                            <i class="ri-ticket-line text-xl"></i>
+                            Explore events
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
+                            <i class="ri-ticket-line text-xl"></i>
+                            Explore restaurents
                         </a>
                     </li>
                 </ul>

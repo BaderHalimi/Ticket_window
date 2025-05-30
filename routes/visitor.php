@@ -14,3 +14,7 @@ Route::get('my_bookings', function () {
     $bookings = [];
     return view('visitor.dashboard.my_booking',compact('bookings'));
 })->name('my_bookings');
+Route::get('tickets',function () {
+    $tickets = [];
+    return view('visitor.dashboard.tickets',compact('tickets'));
+})->name('my_tickets');
