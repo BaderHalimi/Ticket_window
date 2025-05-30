@@ -43,7 +43,8 @@
                                     <i class="ri-eye-line text-base"></i>
                                 </button>
                                 <button title="تعديل" class="inline-flex items-center justify-center text-sm text-white bg-green-500 hover:bg-green-600 px-2 py-1 rounded-full transition">
-                                    <i class="ri-pencil-line text-base"></i>
+                                   <i class="ri-pencil-line text-purple-500 text-base"></i>
+
                                 </button>
                             </td>
                         </tr>

@@ -38,7 +38,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('visitor.my_tickets') }}"
+                        <a href="{{ route('seller.sales') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-money-dollar-circle-line text-xl"></i>
                             Sales

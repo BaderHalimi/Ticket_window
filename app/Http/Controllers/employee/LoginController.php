@@ -25,7 +25,7 @@ class LoginController extends Controller
             'password' => 'required|min:6',
         ]);
         $user = User::where('email', $validated['email'])->first();
-        if($user->role !== 'checker' or $user->role == 'seller' or $user->role == 'visitor') {
+        if($user->role !== 'checker') {
             return redirect()->back()->withErrors(['email' => 'You are not authorized to access this area'])->withInput();
         }
         if ($user && Hash::check($validated['password'], $user->password)) {
