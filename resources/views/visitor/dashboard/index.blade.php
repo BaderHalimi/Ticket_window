@@ -2,6 +2,52 @@
 @section('title', 'Dashboard - ')
 @push('styles')
 <style>
+    .price-slider {
+        position: relative;
+        width: 100%;
+        height: 6px;
+        background: #ddd;
+        border-radius: 5px;
+    }
+
+    .range-input {
+        position: relative;
+        width: 100%;
+    }
+
+    .range-input input {
+        position: absolute;
+        width: 100%;
+        top: -5px;
+        z-index: 10;
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        pointer-events: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        background: #ffffff;
+        border: 1px solid #007bff;
+        border-radius: 50%;
+        cursor: pointer;
+        pointer-events: all;
+        position: relative;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .progress-bar {
+        position: absolute;
+        height: 6px;
+        background: #5b91cf;
+        border-radius: 5px;
+        z-index: 1;
+    }
+
     :where([class^="ri-"])::before {
         content: "\f3c2";
     }
@@ -186,19 +232,21 @@
     <div id="events" class="lg:col-span-3">
         <!-- Search Section -->
         <div class="mb-10 flex justify-between">
-            <div class="glassmorphism rounded-full p-2 flex items-center w-full max-w-4xl">
-                <div
-                    class="w-10 h-10 flex items-center justify-center text-gray-500">
-                    <i class="ri-search-line ri-xl"></i>
-                </div>
-                <input
-                    type="text"
-                    placeholder="Search for events..."
-                    class="search-bar w-full bg-transparent border-none outline-none px-3 py-2 text-gray-700 placeholder-gray-500" />
-                <button
-                    class="gradient-button text-white px-5 mx-3 py-2 rounded-full whitespace-nowrap font-medium">
-                    Search
-                </button>
+            <div class="glassmorphism rounded-full p-2 flex items-center w-full max-w-3xl">
+                <form action="{{ route('visitor.dashboard') }}" method="GET" class="flex items-center w-full max-w-4xl">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center text-gray-500">
+                        <i class="ri-search-line ri-xl"></i>
+                    </div>
+                    <input
+                        type="text" name="search"
+                        placeholder="Search for events..."
+                        class="search-bar w-full bg-transparent border-none outline-none px-3 py-2 text-gray-700 placeholder-gray-500" />
+                    <button
+                        class="gradient-button text-white px-5 mx-3 py-2 rounded-full whitespace-nowrap font-medium">
+                        Search
+                    </button>
+                </form>
             </div>
             <button class="glassmorphism rounded-full px-3 py-2 z-50" id="calender_toggle"><i class="ri-filter-line text-lg"></i></button>
 
@@ -280,19 +328,25 @@
                 </div>
 
                 <!-- Price Range (Double Range Slider) -->
-                <div class="mt-6">
-                    <h4 class="text-md font-bold text-indigo-900 mb-4 font-['Space_Grotesk']">Price Range</h4>
-                    <div class="flex flex-col gap-2">
-                        <div class="relative w-full flex items-center">
-                            <input type="range" id="price_from" min="0" max="1000" step="10" value="{{ request('price_from', 0) }}" class="w-full accent-indigo-500 z-10">
-                            <input type="range" id="price_to" min="0" max="1000" step="10" value="{{ request('price_to', 1000) }}" class="w-full accent-indigo-300 absolute left-0 top-0 z-20">
+                <div class="filter-sidebar">
+                    <h4 class="text-md font-bold text-indigo-900 mb-4 font-['Space_Grotesk']">Price</h4>
+                    <!-- 💰 شريط السعر المحسّن -->
+                    <div class="filter-group">
+                        <div class="price-slider">
+                            <div class="progress-bar" id="progress"></div>
+                            <div class="range-input">
+                                <input type="hidden" id="priceChanged" value="false">
+                                <input type="range" id="maxPrice" name="maxPrice" min="50" max="3000" value="1000" step="50">
+                                <input type="range" id="minPrice" name="minPrice" min="0" max="3000" value="0" step="50">
+                            </div>
                         </div>
-                        <div class="flex justify-between text-xs text-indigo-700 mt-1">
-                            <span>From: <span id="from_val">{{ request('price_from', 0) }}</span> SAR</span>
-                            <span>To: <span id="to_val">{{ request('price_to', 1000) }}</span> SAR</span>
+                        <div class="price-values mt-3">
+                            <span>{{ 'price' }}</span>
+                            <span class="price-bubble" id="minPriceBubble">SAR 100</span> -
+                            <span class="price-bubble" id="maxPriceBubble">SAR 75</span>
                         </div>
-
                     </div>
+
                 </div>
 
                 <!-- Filter button -->
@@ -449,18 +503,28 @@
             const dayButton = document.createElement('button');
             dayButton.textContent = day;
             dayButton.classList.add('calendar-day', 'w-8', 'h-8', 'flex', 'items-center', 'justify-center', 'rounded-full', 'text-indigo-700', 'text-sm');
-            dayButton.addEventListener('click', function() {
-                // Remove active from all
+
+            dayButton.addEventListener('click', function(e) {
+                e.preventDefault(); // منع الحدث الافتراضي
+
+                // إزالة التحديد من كل الأيام
                 document.querySelectorAll('.calendar-day-active').forEach(el => {
-                    el.classList.remove('calendar-day-active', 'text-primary', 'font-bold', 'glow');
-                    el.classList.add('text-indigo-700');
+                    el.classList.remove('calendar-day-active', 'text-primary', 'font-bold', 'glow', 'gradient-button');
+                    // el.classList.add('text-indigo-700');
                 });
-                this.classList.add('calendar-day-active', 'text-primary', 'font-bold', 'glow');
-                this.classList.remove('text-indigo-700');
-                // Set selected date in hidden input
+
+                // تفعيل التحديد لليوم الحالي
+                this.classList.add('active', 'glow', 'gradient-button');
+                // this.classList.remove('text-indigo-700');
+
+                // تعيين التاريخ المحدد في hidden input
                 const selectedDate = new Date(year, month, day);
-                document.getElementById('selectedDate').value = selectedDate.toISOString().slice(0, 10);
+                const yearStr = selectedDate.getFullYear();
+                const monthStr = ('0' + (selectedDate.getMonth() + 1)).slice(-2);
+                const dayStr = ('0' + selectedDate.getDate()).slice(-2);
+                document.getElementById('selectedDate').value = `${yearStr}-${monthStr}-${dayStr}`;
             });
+
             calendarDays.appendChild(dayButton);
         }
 
@@ -486,10 +550,10 @@
                 const isActive = this.classList.contains('calendar-day-active');
 
                 if (!isActive) {
-                    this.classList.add('calendar-day-active', 'text-primary', 'font-bold', 'glow');
+                    this.classList.add('calendar-day-active', 'glow');
                     this.classList.remove('text-indigo-700');
                 } else {
-                    this.classList.remove('calendar-day-active', 'text-primary', 'font-bold', 'glow');
+                    this.classList.remove('calendar-day-active', 'glow');
                     this.classList.add('text-indigo-700');
                 }
             });
@@ -497,30 +561,38 @@
     });
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const priceFrom = document.getElementById('price_from');
-        const priceTo = document.getElementById('price_to');
-        const fromVal = document.getElementById('from_val');
-        const toVal = document.getElementById('to_val');
+    const minPrice = document.getElementById("minPrice");
+    const maxPrice = document.getElementById("maxPrice");
+    const minPriceBubble = document.getElementById("minPriceBubble");
+    const maxPriceBubble = document.getElementById("maxPriceBubble");
+    const progress = document.getElementById("progress");
 
-        function updateValues() {
-            let from = parseInt(priceFrom.value);
-            let to = parseInt(priceTo.value);
+    function updatePriceRange() {
+        document.getElementById("priceChanged").value = "true";
+        let minVal = parseInt(minPrice.value);
+        let maxVal = parseInt(maxPrice.value);
 
-            if (from > to) {
-                [from, to] = [to, from]; // تبديل القيم تلقائياً لو صارت المشكلة
-                priceFrom.value = from;
-                priceTo.value = to;
-            }
-
-            fromVal.textContent = from;
-            toVal.textContent = to;
+        if (minVal >= maxVal) {
+            minVal = maxVal - 1;
+            minPrice.value = minVal;
         }
 
-        priceFrom.addEventListener('input', updateValues);
-        priceTo.addEventListener('input', updateValues);
+        const minPercent = ((minVal - minPrice.min) / (minPrice.max - minPrice.min)) * 100;
+        const maxPercent = ((maxVal - minPrice.min) / (minPrice.max - minPrice.min)) * 100;
 
-        updateValues(); // للتأكد عند تحميل الصفحة
-    });
+        progress.style.left = minPercent + "%";
+        progress.style.width = (maxPercent - minPercent) + "%";
+
+        minPriceBubble.textContent = `${minVal} SAR`;
+        maxPriceBubble.textContent = `${maxVal==3000?'100,000':maxVal} SAR`;
+
+        minPriceBubble.style.left = minPercent + "%";
+        maxPriceBubble.style.left = maxPercent + "%";
+    }
+
+    minPrice.addEventListener("input", updatePriceRange);
+    maxPrice.addEventListener("input", updatePriceRange);
+
+    updatePriceRange();
 </script>
 @endpush
