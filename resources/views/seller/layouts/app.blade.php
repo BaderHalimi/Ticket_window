@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
+
+
 <body class="text-gray-800 grid grid-cols-10">
     <!-- Sidebar -->
     <div id="sidebar" class="fixed top-0 left-0 h-full w-64 glassmorphism shadow-lg z-20 hidden md:block">
@@ -38,6 +40,13 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('seller.branche.index') }}"
+                            class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
+                            <i class="ri-git-branch-line text-xl"></i>
+                            Branches
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('seller.sales') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-money-dollar-circle-line text-xl"></i>
@@ -50,7 +59,6 @@
         </div>
     </div>
     <div class="col-span-2"></div>
-
     <div class="relative max-h-screen overflow-hidden overflow-y-scroll col-span-10 sm:col-span-8 sm:px-12 md:px-12 lg:px-12">
 
         <!-- Particles -->

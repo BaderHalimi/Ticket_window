@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\seller\BranchController;
 use App\Http\Controllers\seller\EventsController;
 use App\Http\Controllers\seller\LoginController;
 use Illuminate\Support\Facades\Route;
@@ -32,7 +33,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('events', EventsController::class);
 });
 
+Route::resource('branche', BranchController::class);
 
 Route::get('/sales',function(){
     return view('seller.dashboard.sales');
 })->name('sales');
+
+/*
+Route::get('/branches',function(){
+    return view('seller.dashboard.branches.index');
+})->name('branches');*/
