@@ -25,7 +25,7 @@ class LoginController extends Controller
             'password' => 'required|min:6',
         ]);
         $user = User::where('email', $validated['email'])->first();
-        if($user->role !== 'checker') {
+        if($user->role !== 'employee') {
             return redirect()->back()->withErrors(['email' => 'You are not authorized to access this area'])->withInput();
         }
         if ($user && Hash::check($validated['password'], $user->password)) {
@@ -46,7 +46,7 @@ class LoginController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'checker',
+            'role' => 'employee',
         ]);
         auth()->login($user);
         return redirect()->route('employee.dashboard')->with('success', 'Login successful');

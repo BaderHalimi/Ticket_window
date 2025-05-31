@@ -103,7 +103,7 @@
 <!-- Main Content -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- Recent Activity Widget -->
-    <div class="lg:col-span-1">
+    <!-- <div class="lg:col-span-1">
         <div
             class="glassmorphism rounded-xl p-6 h-full transition-all duration-300 card-hover">
             <div class="flex items-center justify-between mb-6">
@@ -180,7 +180,7 @@
                 View All Bookings
             </button>
         </div>
-    </div>
+    </div> -->
 
     <!-- Featured Events Grid -->
     <div class="lg:col-span-2">

@@ -38,12 +38,12 @@
                             <td class="px-6 py-4">Salem Electronics</td>
                             <td class="px-6 py-4">01012345678</td>
                             <td class="px-6 py-4">Cairo</td>
-                            <td class="px-6 py-4 text-right space-x-2">
-                                <button title="عرض" class="inline-flex items-center justify-center text-sm text-white bg-indigo-500 hover:bg-indigo-600 px-2 py-1 rounded-full transition">
+                            <td class="px-6 py-4 text-right">
+                                <button title="view" class="inline-flex items-center justify-center text-sm hover:text-white text-indigo-500 hover:bg-indigo-600 px-2 py-1 rounded-full transition">
                                     <i class="ri-eye-line text-base"></i>
                                 </button>
-                                <button title="تعديل" class="inline-flex items-center justify-center text-sm text-white bg-green-500 hover:bg-green-600 px-2 py-1 rounded-full transition">
-                                   <i class="ri-pencil-line text-purple-500 text-base"></i>
+                                <button title="edit" class="inline-flex items-center justify-center text-sm hover:text-white text-green-500 hover:bg-green-600 px-2 py-1 rounded-full transition">
+                                   <i class="ri-pencil-line text-base"></i>
 
                                 </button>
                             </td>
