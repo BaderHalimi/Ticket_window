@@ -59,8 +59,10 @@
 
     /* الصورة: مستطيل يأخذ نصف عرض الأب */
     .image-container {
-        flex: 1 1 50%; /* 50% من عرض الحاوية الأب */
-        height: 180px; /* ارتفاع ثابت */
+        flex: 1 1 50%;
+        /* 50% من عرض الحاوية الأب */
+        height: 180px;
+        /* ارتفاع ثابت */
         position: relative;
         background-color: #f9fafb;
         border: 4px solid #6366F1;
@@ -78,7 +80,7 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        border-radius: 0.75rem;
+        /* border-radius: 0.75rem; */
     }
 
     /* أيقونة تعديل الصورة */
@@ -91,7 +93,7 @@
         padding: 6px 8px;
         border-radius: 6px;
         cursor: pointer;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         transition: background-color 0.3s ease;
         font-size: 1.2rem;
         display: flex;
@@ -173,9 +175,10 @@
     button[type="submit"]:hover {
         background-color: #4F46E5;
     }
+
     .gradient-button {
-    background: linear-gradient(135deg, #57B5E7 0%, #B19CD9 100%);
-    transition: all 0.3s ease;
+        background: linear-gradient(135deg, #57B5E7 0%, #B19CD9 100%);
+        transition: all 0.3s ease;
     }
 
     .gradient-button:hover {
@@ -183,7 +186,6 @@
         transform: translateY(-2px);
         filter: brightness(1.1);
     }
-
 </style>
 @endpush
 
@@ -200,7 +202,7 @@
         {{-- قسم الصورة والنص مع بعض --}}
         <div class="profile-section">
             <div class="image-container">
-                <div class="event-image-bg" style="background-image: url('{{ asset($event->image) }}');"></div>
+                <div class="event-image-bg" style="background-image: url('{{ Storage::url($event->image) }}');"></div>
                 <label for="image" title="Change Image">
                     <i class="ri-pencil-line"></i>
                 </label>
@@ -223,9 +225,9 @@
                 <label for="category_id">Category</label>
                 <select name="category_id" id="category_id">
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ $event->category_id == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
+                    <option value="{{ $category->id }}" {{ $event->category_id == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
                     @endforeach
                 </select>
             </div>
@@ -233,11 +235,6 @@
             <div>
                 <label for="date">Date</label>
                 <input type="datetime-local" name="date" id="date" value="{{ old('date', \Carbon\Carbon::parse($event->date)->format('Y-m-d\TH:i')) }}" />
-            </div>
-
-            <div>
-                <label for="location">Location</label>
-                <input type="text" name="location" id="location" value="{{ old('location', $event->location) }}" />
             </div>
 
             <div>
@@ -258,19 +255,38 @@
                 </select>
             </div>
         </div>
+        <div class="mt-6">
+            <label for="location">Location</label>
+            <input type="text" name="location" id="location" value="{{ old('location', $event->location) }}" />
+        </div>
 
         <div class="mt-6">
             <label for="description">Description</label>
             <textarea name="description" id="description" rows="4">{{ old('description', $event->description) }}</textarea>
         </div>
 
-        <div class="mt-8 text-right">
-            <button type="submit" 
-            class="gradient-button px-6 py-3 text-white rounded-lg shadow-md transition hover:translate-y-[-2px] hover:brightness-110 flex items-center gap-2">
-            <i class="ri-save-line"></i> Save Changes
-        </button>
-        
+        <div class="mt-8">
+            <button type="submit"
+                class="gradient-button px-6 py-3 text-white rounded-lg shadow-md transition hover:translate-y-[-2px] hover:brightness-110 flex items-center gap-2">
+                <i class="ri-save-line"></i> Save Changes
+            </button>
         </div>
     </form>
 </div>
 @endsection
+@push('scripts')
+<script>
+    document.getElementById('image').addEventListener('change', function(event) {
+        const input = event.target;
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // غير خلفية الديف للصورة الجديدة
+                document.querySelector('.event-image-bg').style.backgroundImage = `url('${e.target.result}')`;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    });
+</script>
+
+@endpush

@@ -58,13 +58,13 @@
         <div class="card-hover glassmorphism p-3 rounded-lg shadow-lg transition-transform">
             <div>
                 <div
-                    class="absolute top-3 left-3 bg-orange-600 bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
+                    class="absolute top-3 left-3 bg-orange-600 text-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
                     {{ $event->category->name }}
                 </div>
                 <img src="{{ Storage::url($event->image) }}" alt="{{ $event->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
                 <div
                     class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
-                    {{ $event->ticket_price }} SAR
+                    {{ $event->total_tickets . ' ticket | '.$event->ticket_price }} SAR
                 </div>
             </div>
             <h2 class="text-xl font-semibold text-gray-800">{{ $event->name }}</h2>

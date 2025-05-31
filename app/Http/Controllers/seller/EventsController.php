@@ -8,7 +8,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-
+use Illuminate\Support\Facades\Storage;
 
 class EventsController extends Controller
 {
@@ -28,7 +28,7 @@ class EventsController extends Controller
     public function create()
     {
         $categories = Category::active()->where('type', 'events')->get();
-        return view('seller.dashboard.events.create',compact('categories'));
+        return view('seller.dashboard.events.create', compact('categories'));
     }
 
     /**
@@ -49,23 +49,23 @@ class EventsController extends Controller
         ]);
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('events', 'public');
-        }else{
+        } else {
             return "erorr";
         }
 
 
 
         $event_sender = Event::create([
-            'image'=> $imagePath,
-            'name'=> $request->name,
-            'description'=> $request->description,
-            'category_id'=> $request->category_id,
-            'date'=> $request->date,
-            'location'=> $request->location,
-            'total_tickets'=> $request->total_tickets,
-            'ticket_price'=> $request->ticket_price,
-            'status'=> $request->status,
-            'user_id'=> Auth::user()->id
+            'image' => $imagePath,
+            'name' => $request->name,
+            'description' => $request->description,
+            'category_id' => $request->category_id,
+            'date' => $request->date,
+            'location' => $request->location,
+            'total_tickets' => $request->total_tickets,
+            'ticket_price' => $request->ticket_price,
+            'status' => $request->status,
+            'user_id' => Auth::user()->id
         ]);
 
 
@@ -97,61 +97,47 @@ class EventsController extends Controller
     {
         $event = Event::findOrFail($id);
         $categories = Category::active()->where('type', 'events')->get();
-        return view('seller.dashboard.events.edit',compact('event',"categories"));
+        return view('seller.dashboard.events.edit', compact('event', "categories"));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Event $event)
     {
-        $event = Event::findOrFail($id);
         $validated = $request->validate([
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg',
-            'name' => 'string|max:255',
-            'description' => 'string',
-            'date' => 'date|after_or_equal:now',
-            'category_id' => 'exists:categories,id',
-            'location' => 'string|max:255',
-            'total_tickets' => 'integer|min:1',
-            'ticket_price' => 'numeric|min:0',
-            'status' => 'in:active,inactive',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'date' => 'required|date|after_or_equal:now',
+            'category_id' => 'required|exists:categories,id',
+            'location' => 'required|string|max:255',
+            'total_tickets' => 'required|integer|min:1',
+            'ticket_price' => 'required|numeric|min:0',
+            'status' => 'required|in:active,inactive',
         ]);
 
-        if ($request->hasFile('image')){
-            File::delete(public_path($event->image));
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path(''),$imageName);
-
-            $event->image = $imageName;
-            $event->save();
+        if ($request->hasFile('image')) {
+            // File::delete(public_path($event->image));
+            Storage::disk('public')->delete($event->image);
+            $validated['image'] = $request->file('image')->store('events', 'public');
+        }else{
+            $validated['image'] = $event->image; // Keep the old image if no new one is uploaded
         }
+        $event->update($validated);
 
-
-
-        foreach ($validated as $key => $value) {
-            if ($key !== 'image') {
-                $event->$key = $value;
-            }
-        }
-
-        $event->save();
-
-        return redirect()->route('seller.events.index')->with("success","تم التحديث بنجاح");
-
+        return redirect()->route('seller.events.index')->with("success", "تم التحديث بنجاح");
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Event $event)
     {
-        $event = Event::findOrFail($id);
-        $event->delete();
-        if ($event->image and File::exists(public_path($event->image))) {
-            File::delete(public_path($event->image));
+        if ($event->image && Storage::disk('public')->exists($event->image)) {
+            Storage::disk('public')->delete($event->image);
         }
-        return redirect()->route('seller.events.index')->with("success","تم الحذف بنجاح");
+        $event->delete();
+        return redirect()->route('seller.events.index')->with("success", "event deleted successfully");
     }
 }
