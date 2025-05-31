@@ -11,7 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::create("tickets",function(Blueprint $table){
+            $table->id();
+            $table->integer("user_id");
+            $table->enum("status",['deny','allow','pending'])->default("pending");
+            $table->string("title",255);
+            $table->string("description",1024);
+            $table->integer("staff_id")->nullable();
+            $table->timestamps();
+        });
+
+        
     }
 
     /**
@@ -19,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('tickets');
     }
 };

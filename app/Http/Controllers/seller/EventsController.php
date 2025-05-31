@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\seller;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventsController extends Controller
 {
@@ -13,7 +15,8 @@ class EventsController extends Controller
      */
     public function index()
     {
-        $events = [];
+        $events = Event::all();
+
         return view('seller.dashboard.events.index', compact('events'));
     }
 
@@ -32,21 +35,46 @@ class EventsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'date' => 'required|datetime|after_or_equal:now',
+            'date' => 'required|date|after_or_equal:now',
+            'category_id' => 'required|exists:categories,id',
             'location' => 'required|string|max:255',
             'total_tickets' => 'required|integer|min:1',
             'ticket_price' => 'required|numeric|min:0',
             'status' => 'required|in:active,inactive',
         ]);
-        if ($request->hasFile('image')) {
+        /*if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('events', 'public');
         }else{
             return "erorr";
-        }
+        }*/
+        
 
+
+        Event::create([
+            'image'=> "",
+            'name'=> $request->name,
+            'description'=> $request->description,
+            'category_id'=> $request->category_id,
+            'date'=> $request->date,
+            'location'=> $request->location,
+            'total_tickets'=> $request->total_tickets,
+            'ticket_price'=> $request->ticket_price,
+            'status'=> $request->status,
+            'user_id'=> Auth::user()->id
+        ]);
+
+        
+        if ($request->hasFile('image')){
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path(),$imageName);
+
+            $events->image = $imageName;
+            $events->save();
+        }else{return "erorr";}
         // Logic to store the event in the database
 
         return redirect()->route('seller.events.index')->with('success', 'Event created successfully.');
