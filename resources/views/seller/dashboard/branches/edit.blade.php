@@ -166,6 +166,13 @@
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name" value="{{ old('name', $branch->name) }}" />
             </div>
+            <div>
+                <label for="status">Status</label>
+                <select name="status" id="status">
+                    <option value="active" {{ $branch->status == 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="inactive" {{ $branch->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                </select>
+            </div>
 
             <div>
                 <label for="tables">Tables</label>
@@ -187,13 +194,7 @@
                 <input type="time" name="close_at" id="close_at" value="{{ old('close_at', $branch->close_at) }}" />
             </div>
 
-            <div>
-                <label for="status">Status</label>
-                <select name="status" id="status">
-                    <option value="active" {{ $branch->status == 'active' ? 'selected' : '' }}>Active</option>
-                    <option value="inactive" {{ $branch->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                </select>
-            </div>
+
 
             {{-- <div>
                 <label for="restaurent_id">Restaurant</label>

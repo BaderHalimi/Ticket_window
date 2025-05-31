@@ -1,7 +1,53 @@
 @extends('visitor.layouts.app')
-@section('title', 'explore events - ')
+@section('title', 'Dashboard - ')
 @push('styles')
 <style>
+    .price-slider {
+        position: relative;
+        width: 100%;
+        height: 6px;
+        background: #ddd;
+        border-radius: 5px;
+    }
+
+    .range-input {
+        position: relative;
+        width: 100%;
+    }
+
+    .range-input input {
+        position: absolute;
+        width: 100%;
+        top: -5px;
+        z-index: 10;
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        pointer-events: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        background: #ffffff;
+        border: 1px solid #007bff;
+        border-radius: 50%;
+        cursor: pointer;
+        pointer-events: all;
+        position: relative;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .progress-bar {
+        position: absolute;
+        height: 6px;
+        background: #5b91cf;
+        border-radius: 5px;
+        z-index: 1;
+    }
+
     :where([class^="ri-"])::before {
         content: "\f3c2";
     }
@@ -101,157 +147,213 @@
 
 
 <!-- Main Content -->
-<div class="grid">
-    <!-- Featured Events Grid -->
-    <div>
-        <!-- Search Section -->
-        <div class="mb-10 max-w-2xl me-auto">
-            <div class="glassmorphism rounded-full p-2 flex items-center w-full mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Recent Activity Widget -->
+    <!-- <div class="lg:col-span-1">
+        <div
+            class="glassmorphism rounded-xl p-6 h-full transition-all duration-300 card-hover">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-semibold">Recent Bookings</h2>
+                <span class="text-primary text-sm cursor-pointer">View all</span>
+            </div>
+
+            <div class="space-y-4">
                 <div
-                    class="w-10 h-10 flex items-center justify-center text-gray-500">
-                    <i class="ri-search-line ri-xl"></i>
+                    class="p-3 rounded-lg bg-white bg-opacity-50 border border-gray-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium">Dubai Jazz Festival</h3>
+                            <p class="text-sm text-gray-600">
+                                May 28, 2025 • 7:30 PM
+                            </p>
+                        </div>
+                        <span
+                            class="status-confirmed text-xs px-3 py-1 rounded-full">Confirmed</span>
+                    </div>
+                    <div class="flex mt-3 gap-2">
+                        <button
+                            class="flex items-center justify-center gap-1 text-xs bg-white px-3 py-1.5 rounded-full border border-gray-200 !rounded-button whitespace-nowrap">
+                            <i class="ri-qr-code-line ri-sm"></i> View QR
+                        </button>
+                        <button
+                            class="flex items-center justify-center gap-1 text-xs bg-white px-3 py-1.5 rounded-full border border-gray-200 !rounded-button whitespace-nowrap">
+                            <i class="ri-file-pdf-line ri-sm"></i> Download PDF
+                        </button>
+                    </div>
                 </div>
-                <input
-                    type="text"
-                    placeholder="Search for events, restaurants, or exhibitions..."
-                    class="search-bar w-full bg-transparent border-none outline-none px-2 py-2 text-gray-700 placeholder-gray-500" />
+
+                <div
+                    class="p-3 rounded-lg bg-white bg-opacity-50 border border-gray-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium">Riyadh Season Concert</h3>
+                            <p class="text-sm text-gray-600">
+                                June 5, 2025 • 8:00 PM
+                            </p>
+                        </div>
+                        <span class="status-pending text-xs px-3 py-1 rounded-full">Pending</span>
+                    </div>
+                    <div class="flex mt-3 gap-2">
+                        <button
+                            class="flex items-center justify-center gap-1 text-xs bg-white px-3 py-1.5 rounded-full border border-gray-200 !rounded-button whitespace-nowrap">
+                            <i class="ri-bank-card-line ri-sm"></i> Complete Payment
+                        </button>
+                    </div>
+                </div>
+
+                <div
+                    class="p-3 rounded-lg bg-white bg-opacity-50 border border-gray-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium">Cairo Film Festival</h3>
+                            <p class="text-sm text-gray-600">
+                                May 15, 2025 • 6:00 PM
+                            </p>
+                        </div>
+                        <span class="status-canceled text-xs px-3 py-1 rounded-full">Canceled</span>
+                    </div>
+                    <div class="flex mt-3 gap-2">
+                        <button
+                            class="flex items-center justify-center gap-1 text-xs bg-white px-3 py-1.5 rounded-full border border-gray-200 !rounded-button whitespace-nowrap">
+                            <i class="ri-refresh-line ri-sm"></i> Rebook
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button
+                class="w-full mt-6 py-3 text-center gradient-button text-white rounded-lg !rounded-button whitespace-nowrap font-medium">
+                View All Bookings
+            </button>
+        </div>
+    </div> -->
+
+    <!-- Featured Events Grid -->
+    <div id="events" class="lg:col-span-3">
+        <!-- Search Section -->
+        <div class="mb-10 flex justify-between">
+            <div class="glassmorphism rounded-full p-2 flex items-center w-full max-w-3xl">
+                <form action="{{ route('visitor.dashboard') }}" method="GET" class="flex items-center w-full max-w-4xl">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center text-gray-500">
+                        <i class="ri-search-line ri-xl"></i>
+                    </div>
+                    <input
+                        type="text" name="search"
+                        placeholder="Search for events..."
+                        class="search-bar w-full bg-transparent border-none outline-none px-3 py-2 text-gray-700 placeholder-gray-500" />
+                    <button
+                        class="gradient-button text-white px-5 mx-3 py-2 rounded-full whitespace-nowrap font-medium">
+                        Search
+                    </button>
+                </form>
+            </div>
+            <button class="glassmorphism rounded-full px-3 py-2 z-50" id="calender_toggle"><i class="ri-filter-line text-lg"></i></button>
+
+        </div>
+        <!-- <h2 class="text-xl font-semibold mb-6">Featured Events</h2> -->
+        <div id="cards_conatiner" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Event Card 1 -->
+            @foreach($events as $event)
+            <div class="card-hover glassmorphism p-3 rounded-lg shadow-lg transition-transform">
+                <div>
+                    <div
+                        class="absolute top-3 left-3 bg-orange-600 text-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
+                        {{ $event->category->name }}
+                    </div>
+                    <img src="{{ Storage::url($event->image) }}" alt="{{ $event->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <div
+                        class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
+                        {{ $event->ticket_price }} SAR
+                    </div>
+                </div>
+                <h2 class="text-xl font-semibold text-gray-800">{{ $event->name }}</h2>
+                <p class="text-gray-600 mt-2">{{ $event->description }}</p>
+                <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-calendar-line ri-sm"></i></span> {{ Carbon\Carbon::create($event->date)->diffForHumans() }}</p>
+                <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-map-pin-line ri-sm"></i></span> <span class="rounded-full px-2 bg-green-200">{{ $event->location }}</span></p>
                 <button
-                    class="gradient-button text-white px-5 mx-3 py-2 rounded-full whitespace-nowrap font-medium">
-                    Search
+                    class="w-full mt-4 py-2 gradient-button text-white rounded-lg !rounded-button whitespace-nowrap font-medium">
+                    Book Now
                 </button>
             </div>
+            @endforeach
         </div>
-        <h2 class="text-xl font-semibold mb-6">Explore Events</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6" id="carousel">
-            <!-- Event Card 1 -->
-            <div
-                class="glassmorphism rounded-xl overflow-hidden transition-all duration-300 card-hover">
-                <div class="h-40 bg-gray-200 relative">
-                    <img
-                        src="https://readdy.ai/api/search-image?query=luxury%20concert%20hall%20with%20stage%20lighting%20and%20crowd%2C%20professional%20photography%2C%20high%20quality%20image%20with%20dramatic%20lighting%2C%20cinematic%20atmosphere%2C%20high-end%20venue&width=600&height=300&seq=event1&orientation=landscape"
-                        alt="Concert Event"
-                        class="w-full h-full object-cover object-top" />
-                    <div
-                        class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
-                        $120
-                    </div>
-                </div>
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg">
-                        International Symphony Orchestra
-                    </h3>
-                    <div
-                        class="flex items-center gap-1 text-gray-600 text-sm mt-1">
-                        <i class="ri-calendar-line ri-sm"></i>
-                        <span>June 15, 2025</span>
-                    </div>
-                    <div
-                        class="flex items-center gap-1 text-gray-600 text-sm mt-1">
-                        <i class="ri-map-pin-line ri-sm"></i>
-                        <span>Dubai Opera House</span>
-                    </div>
-                    <button
-                        class="w-full mt-4 py-2 gradient-button text-white rounded-lg !rounded-button whitespace-nowrap font-medium">
-                        Book Now
+    </div>
+    <!-- Calendar Widget -->
+    <div id="calender" class="lg:col-span-1 hidden">
+        <div class="glassmorphism rounded-3xl p-6 sticky top-32">
+            <div>
+                <h3 class="text-xl font-bold text-indigo-900 mb-6 font-['Space_Grotesk']">Event Calendar</h3>
+                <button id="calender_toggle_1" class="absolute top-4 mt-3 right-5 decoration-0 text-primary p-0"><i class="ri-close-line text-indigo-400"></i></button>
+            </div>
+            <form method="GET" action="{{ route('visitor.dashboard') }}">
+                <!-- Month selector -->
+                <div class="flex justify-between items-center mb-6">
+                    <button type="button" id="prevMonth" class="w-8 h-8 flex items-center justify-center rounded-full glassmorphism">
+                        <i class="ri-arrow-left-s-line text-indigo-400"></i>
+                    </button>
+                    <span id="monthYear" class="text-indigo-900 font-medium"></span>
+                    <button type="button" id="nextMonth" class="w-8 h-8 flex items-center justify-center rounded-full glassmorphism">
+                        <i class="ri-arrow-right-s-line text-indigo-400"></i>
                     </button>
                 </div>
-            </div>
+                <!-- Weekdays -->
+                <div class="grid grid-cols-7 gap-1 mb-2">
+                    <span class="text-center text-xs text-indigo-400">Su</span>
+                    <span class="text-center text-xs text-indigo-400">Mo</span>
+                    <span class="text-center text-xs text-indigo-400">Tu</span>
+                    <span class="text-center text-xs text-indigo-400">We</span>
+                    <span class="text-center text-xs text-indigo-400">Th</span>
+                    <span class="text-center text-xs text-indigo-400">Fr</span>
+                    <span class="text-center text-xs text-indigo-400">Sa</span>
+                </div>
+                <!-- Calendar days -->
+                <div id="calendarDays" class="grid grid-cols-7 gap-1 mb-4"></div>
+                <!-- Hidden input for selected date -->
+                <input type="hidden" name="date" id="selectedDate">
 
-            <!-- Event Card 2 -->
-            <div
-                class="glassmorphism rounded-xl overflow-hidden transition-all duration-300 card-hover">
-                <div class="h-40 bg-gray-200 relative">
-                    <img
-                        src="https://readdy.ai/api/search-image?query=luxury%20art%20exhibition%20gallery%20with%20modern%20artworks%20displayed%2C%20professional%20photography%2C%20high%20quality%20image%20with%20elegant%20lighting%2C%20sophisticated%20atmosphere%2C%20high-end%20venue&width=600&height=300&seq=event2&orientation=landscape"
-                        alt="Art Exhibition"
-                        class="w-full h-full object-cover object-top" />
-                    <div
-                        class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
-                        $75
+                <!-- Categories -->
+                <div class="mt-8">
+                    <h4 class="text-md font-bold text-indigo-900 mb-4 font-['Space_Grotesk']">Categories</h4>
+                    <div class="flex flex-col gap-2 mb-4">
+                        @foreach ($categories as $category)
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="categories[]" value="{{ $category->id }}"
+                                class="form-checkbox text-indigo-600 rounded focus:ring-indigo-500"
+                                {{ in_array($category->id, request()->input('categories', [])) ? 'checked' : '' }}>
+                            <span class="text-sm text-indigo-800">{{ $category->name }}</span>
+                        </label>
+                        @endforeach
                     </div>
                 </div>
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg">Modern Art Exhibition</h3>
-                    <div
-                        class="flex items-center gap-1 text-gray-600 text-sm mt-1">
-                        <i class="ri-calendar-line ri-sm"></i>
-                        <span>June 10-20, 2025</span>
-                    </div>
-                    <div
-                        class="flex items-center gap-1 text-gray-600 text-sm mt-1">
-                        <i class="ri-map-pin-line ri-sm"></i>
-                        <span>Riyadh Art Center</span>
-                    </div>
-                    <button
-                        class="w-full mt-4 py-2 gradient-button text-white rounded-lg !rounded-button whitespace-nowrap font-medium">
-                        Book Now
-                    </button>
-                </div>
-            </div>
 
-            <!-- Event Card 3 -->
-            <div
-                class="glassmorphism rounded-xl overflow-hidden transition-all duration-300 card-hover">
-                <div class="h-40 bg-gray-200 relative">
-                    <img
-                        src="https://readdy.ai/api/search-image?query=luxury%20theater%20with%20red%20velvet%20seats%20and%20dramatic%20stage%20lighting%2C%20professional%20photography%2C%20high%20quality%20image%20with%20elegant%20atmosphere%2C%20high-end%20venue&width=600&height=300&seq=event3&orientation=landscape"
-                        alt="Theater Show"
-                        class="w-full h-full object-cover object-top" />
-                    <div
-                        class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
-                        $95
+                <!-- Price Range (Double Range Slider) -->
+                <div class="filter-sidebar">
+                    <h4 class="text-md font-bold text-indigo-900 mb-4 font-['Space_Grotesk']">Price</h4>
+                    <!-- 💰 شريط السعر المحسّن -->
+                    <div class="filter-group">
+                        <div class="price-slider">
+                            <div class="progress-bar" id="progress"></div>
+                            <div class="range-input">
+                                <input type="hidden" id="priceChanged" value="false">
+                                <input type="range" id="maxPrice" name="maxPrice" min="50" max="3000" value="1000" step="50">
+                                <input type="range" id="minPrice" name="minPrice" min="0" max="3000" value="0" step="50">
+                            </div>
+                        </div>
+                        <div class="price-values mt-3">
+                            <span>{{ 'price' }}</span>
+                            <span class="price-bubble" id="minPriceBubble">SAR 100</span> -
+                            <span class="price-bubble" id="maxPriceBubble">SAR 75</span>
+                        </div>
                     </div>
-                </div>
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg">Shakespeare's Hamlet</h3>
-                    <div
-                        class="flex items-center gap-1 text-gray-600 text-sm mt-1">
-                        <i class="ri-calendar-line ri-sm"></i>
-                        <span>June 8, 2025</span>
-                    </div>
-                    <div
-                        class="flex items-center gap-1 text-gray-600 text-sm mt-1">
-                        <i class="ri-map-pin-line ri-sm"></i>
-                        <span>Cairo National Theater</span>
-                    </div>
-                    <button
-                        class="w-full mt-4 py-2 gradient-button text-white rounded-lg !rounded-button whitespace-nowrap font-medium">
-                        Book Now
-                    </button>
-                </div>
-            </div>
 
-            <!-- Event Card 4 -->
-            <div
-                class="glassmorphism rounded-xl overflow-hidden transition-all duration-300 card-hover">
-                <div class="h-40 bg-gray-200 relative">
-                    <img
-                        src="https://readdy.ai/api/search-image?query=luxury%20music%20festival%20with%20stage%20and%20colorful%20lighting%20at%20night%2C%20professional%20photography%2C%20high%20quality%20image%20with%20vibrant%20atmosphere%2C%20high-end%20outdoor%20venue&width=600&height=300&seq=event4&orientation=landscape"
-                        alt="Music Festival"
-                        class="w-full h-full object-cover object-top" />
-                    <div
-                        class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
-                        $150
-                    </div>
                 </div>
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg">Summer Music Festival</h3>
-                    <div
-                        class="flex items-center gap-1 text-gray-600 text-sm mt-1">
-                        <i class="ri-calendar-line ri-sm"></i>
-                        <span>July 1-3, 2025</span>
-                    </div>
-                    <div
-                        class="flex items-center gap-1 text-gray-600 text-sm mt-1">
-                        <i class="ri-map-pin-line ri-sm"></i>
-                        <span>Jeddah Waterfront</span>
-                    </div>
-                    <button
-                        class="w-full mt-4 py-2 gradient-button text-white rounded-lg !rounded-button whitespace-nowrap font-medium">
-                        Book Now
-                    </button>
-                </div>
-            </div>
+
+                <!-- Filter button -->
+                <button type="submit" class="w-full glassmorphism mt-6 py-3 rounded-xl text-indigo-900 font-medium !rounded-button whitespace-nowrap">
+                    Filter Events
+                </button>
+            </form>
         </div>
     </div>
 </div>
@@ -308,86 +410,189 @@
                   `;
         document.head.appendChild(style);
     });
-</script>
-
-<script id="carousel-control">
-    document.addEventListener("DOMContentLoaded", function() {
-        const carousel = document.getElementById("carousel");
-        const prevBtn = document.getElementById("prev-btn");
-        const nextBtn = document.getElementById("next-btn");
-        const scrollAmount = 300;
-
-        prevBtn.addEventListener("click", function() {
-            carousel.scrollBy({
-                left: -scrollAmount,
-                behavior: "smooth",
-            });
-        });
-
-        nextBtn.addEventListener("click", function() {
-            carousel.scrollBy({
-                left: scrollAmount,
-                behavior: "smooth",
-            });
-        });
+    document.getElementById('calender_toggle_1').addEventListener('click', function() {
+        calenderToggle();
     });
-    document.getElementById("menu-toggle").addEventListener("click", function() {
-        toggleSidebar();
-    });
-    document.getElementById("menu-toggle1").addEventListener("click", function() {
-        toggleSidebar();
+    document.getElementById('calender_toggle').addEventListener('click', function() {
+        calenderToggle();
     });
 
-    function toggleSidebar() {
-        const sidebar = document.getElementById("sidebar");
-        sidebar.classList.toggle("translate-x-0");
-        sidebar.classList.toggle("hidden");
-        sidebar.classList.toggle("w-full");
-        sidebar.classList.toggle("w-64");
+    function calenderToggle() {
+        const calenderBtn = document.getElementById('calender_toggle');
+        calenderBtn.classList.toggle('hidden');
+        const calender = document.getElementById('calender');
+        calender.classList.toggle('hidden');
+        const cardsConatiner = document.getElementById('cards_conatiner');
+        cardsConatiner.classList.toggle('md:grid-cols-3');
+        cardsConatiner.classList.toggle('md:grid-cols-2');
+        const events = document.getElementById('events');
+        events.classList.toggle('lg:col-span-3');
+        events.classList.toggle('lg:col-span-2');
     }
-    document.addEventListener("DOMContentLoaded", function() {
-        const btn = document.querySelector('.ri-settings-3-line.ri-xl');
-        const menu = document.getElementById('settings-menu');
 
-        btn.addEventListener('click', function(e) {
-            const notifMenu = document.getElementById('notifications-menu');
-            if (!notifMenu.classList.contains('hidden')) {
-                notifMenu.classList.toggle('hidden');
-            }
-            e.stopPropagation();
-            const rect = btn.getBoundingClientRect();
-            menu.classList.toggle('hidden');
-            menu.style.top = (rect.bottom + 10) + 'px';
-            menu.style.left = (rect.left - (menu.offsetWidth - rect.width)) + 'px';
+    // Calendar functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarDays = document.querySelectorAll('.calendar-day');
+
+        calendarDays.forEach(day => {
+            day.addEventListener('click', function() {
+                // Skip if it's a previous month day
+                if (this.classList.contains('text-indigo-300')) return;
+
+                // Toggle active state
+                const isActive = this.classList.contains('calendar-day-active');
+
+                if (!isActive) {
+                    this.classList.add('calendar-day-active', 'text-primary', 'font-bold', 'glow');
+                    this.classList.remove('text-indigo-700');
+                } else {
+                    this.classList.remove('calendar-day-active', 'text-primary', 'font-bold', 'glow');
+                    this.classList.add('text-indigo-700');
+                }
+            });
         });
 
-        document.addEventListener('click', function(e) {
-            if (!menu.contains(e.target)) {
-                menu.classList.add('hidden');
-            }
+        // Initialize current month and year
+        const monthYear = document.getElementById('monthYear');
+        const currentDate = new Date();
+        monthYear.textContent = currentDate.toLocaleString('default', {
+            month: 'long',
+            year: 'numeric'
+        });
+
+        // Load current month days
+        loadMonthDays(currentDate.getFullYear(), currentDate.getMonth());
+
+        document.getElementById('prevMonth').addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            monthYear.textContent = currentDate.toLocaleString('default', {
+                month: 'long',
+                year: 'numeric'
+            });
+            loadMonthDays(currentDate.getFullYear(), currentDate.getMonth());
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            monthYear.textContent = currentDate.toLocaleString('default', {
+                month: 'long',
+                year: 'numeric'
+            });
+            loadMonthDays(currentDate.getFullYear(), currentDate.getMonth());
         });
     });
-    document.addEventListener("DOMContentLoaded", function() {
-        const notifBtn = document.querySelector('.ri-notification-3-line.ri-xl');
-        const notifMenu = document.getElementById('notifications-menu');
 
-        notifBtn.addEventListener('click', function(e) {
-            const menu = document.getElementById('settings-menu');
-            if (!menu.classList.contains('hidden')) {
-                menu.classList.toggle('hidden');
-            }
-            e.stopPropagation();
-            const rect = notifBtn.getBoundingClientRect();
-            notifMenu.classList.toggle('hidden');
-            notifMenu.style.top = (rect.bottom + 10) + 'px';
-            notifMenu.style.left = (rect.left - (notifMenu.offsetWidth - rect.width)) + 'px';
-        });
+    function loadMonthDays(year, month) {
+        const calendarDays = document.getElementById('calendarDays');
+        calendarDays.innerHTML = '';
 
-        document.addEventListener('click', function(e) {
-            if (!notifMenu.contains(e.target) && !notifBtn.contains(e.target)) {
-                notifMenu.classList.add('hidden');
-            }
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const numDays = lastDay.getDate();
+        const startDay = firstDay.getDay();
+
+        // Empty slots for previous month
+        for (let i = 0; i < startDay; i++) {
+            const emptyDay = document.createElement('button');
+            emptyDay.classList.add('calendar-day', 'w-8', 'h-8', 'flex', 'items-center', 'justify-center', 'rounded-full', 'text-transparent', 'text-sm');
+            calendarDays.appendChild(emptyDay);
+        }
+
+        // Days of current month
+        for (let day = 1; day <= numDays; day++) {
+            const dayButton = document.createElement('button');
+            dayButton.textContent = day;
+            dayButton.classList.add('calendar-day', 'w-8', 'h-8', 'flex', 'items-center', 'justify-center', 'rounded-full', 'text-indigo-700', 'text-sm');
+
+            dayButton.addEventListener('click', function(e) {
+                e.preventDefault(); // منع الحدث الافتراضي
+
+                // إزالة التحديد من كل الأيام
+                document.querySelectorAll('.calendar-day-active').forEach(el => {
+                    el.classList.remove('calendar-day-active', 'text-primary', 'font-bold', 'glow', 'gradient-button');
+                    // el.classList.add('text-indigo-700');
+                });
+
+                // تفعيل التحديد لليوم الحالي
+                this.classList.add('active', 'glow', 'gradient-button');
+                // this.classList.remove('text-indigo-700');
+
+                // تعيين التاريخ المحدد في hidden input
+                const selectedDate = new Date(year, month, day);
+                const yearStr = selectedDate.getFullYear();
+                const monthStr = ('0' + (selectedDate.getMonth() + 1)).slice(-2);
+                const dayStr = ('0' + selectedDate.getDate()).slice(-2);
+                document.getElementById('selectedDate').value = `${yearStr}-${monthStr}-${dayStr}`;
+            });
+
+            calendarDays.appendChild(dayButton);
+        }
+
+        // Empty slots for next month
+        const endDay = lastDay.getDay();
+        for (let i = endDay + 1; i < 7; i++) {
+            const emptyDay = document.createElement('button');
+            emptyDay.classList.add('calendar-day', 'w-8', 'h-8', 'flex', 'items-center', 'justify-center', 'rounded-full', 'text-transparent', 'text-sm');
+            calendarDays.appendChild(emptyDay);
+        }
+    }
+</script>
+<script id="calendarInteraction">
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarDays = document.querySelectorAll('.calendar-day');
+
+        calendarDays.forEach(day => {
+            day.addEventListener('click', function() {
+                // Skip if it's a previous month day
+                if (this.classList.contains('text-indigo-300')) return;
+
+                // Toggle active state
+                const isActive = this.classList.contains('calendar-day-active');
+
+                if (!isActive) {
+                    this.classList.add('calendar-day-active', 'glow');
+                    this.classList.remove('text-indigo-700');
+                } else {
+                    this.classList.remove('calendar-day-active', 'glow');
+                    this.classList.add('text-indigo-700');
+                }
+            });
         });
     });
+</script>
+<script>
+    const minPrice = document.getElementById("minPrice");
+    const maxPrice = document.getElementById("maxPrice");
+    const minPriceBubble = document.getElementById("minPriceBubble");
+    const maxPriceBubble = document.getElementById("maxPriceBubble");
+    const progress = document.getElementById("progress");
+
+    function updatePriceRange() {
+        document.getElementById("priceChanged").value = "true";
+        let minVal = parseInt(minPrice.value);
+        let maxVal = parseInt(maxPrice.value);
+
+        if (minVal >= maxVal) {
+            minVal = maxVal - 1;
+            minPrice.value = minVal;
+        }
+
+        const minPercent = ((minVal - minPrice.min) / (minPrice.max - minPrice.min)) * 100;
+        const maxPercent = ((maxVal - minPrice.min) / (minPrice.max - minPrice.min)) * 100;
+
+        progress.style.left = minPercent + "%";
+        progress.style.width = (maxPercent - minPercent) + "%";
+
+        minPriceBubble.textContent = `${minVal} SAR`;
+        maxPriceBubble.textContent = `${maxVal==3000?'100,000':maxVal} SAR`;
+
+        minPriceBubble.style.left = minPercent + "%";
+        maxPriceBubble.style.left = maxPercent + "%";
+    }
+
+    minPrice.addEventListener("input", updatePriceRange);
+    maxPrice.addEventListener("input", updatePriceRange);
+
+    updatePriceRange();
 </script>
 @endpush

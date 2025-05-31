@@ -41,13 +41,11 @@ class BranchController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
             'name'=>'required|string|max:255',
             'location'=>'required|string|max:255',
-            'tables'=>'required|string',
-            'hour_price'=>'required|integer',
-            'open_at'=>'required|nullable',
-            'close_at'=>'required|nullable',
-            'status' => 'required|in:active,inactive',
-            'restaurent_id' => 'required|exists:users,id'
-
+            'tables'=>'required|integer',
+            'hour_price'=>'required|numeric',
+            'open_at' => 'nullable|date_format:H:i',
+            'close_at' => 'required_with:open_at|date_format:H:i|after:open_at',
+            'status' => 'required|in:active,inactive'
         ]);
 
         if ($request->hasFile('image')) {
@@ -93,16 +91,17 @@ class BranchController extends Controller
     public function update(Request $request, branch $branch)
     {
         $validate = $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
-            'name'=>'required|string|max:255',
-            'location'=>'required|string|max:255',
-            'tables'=>'required|string',
-            'hour_price'=>'required|integer',
-            'open_at'=>'required|nullable',
-            'close_at'=>'required|nullable',
-            'status' => 'required|in:active,inactive',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            'name'=>'nullable|string|max:255',
+            'location'=>'nullable|string|max:255',
+            'tables'=>'nullable|integer',
+            'hour_price'=>'nullable|numeric',
+            'open_at' => 'nullable|date_format:H:i',
+            'close_at' => 'required_with:open_at|date_format:H:i|after:open_at',
+            'status' => 'in:active,inactive',
 
         ]);
+
 
         $validated['restaurent_id'] = Auth::id();
 

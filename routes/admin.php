@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\LoginController;
+use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('login', [LoginController::class, 'login'])->middleware('guest')->name('login');
@@ -20,7 +21,5 @@ Route::get('/sellers', function () {
 })->name('sellers');
 
 
-Route::get('/employees', function () {
-    $employees = [];
-    return view('admin.dashboard.employees', compact('employees'));
-})->name('employees');
+Route::resource('employees', EmployeeController::class)->middleware("auth")->names('employees');
+Route::put('employees/{employee}', [EmployeeController::class, 'update'])->name('admin.employees.update');

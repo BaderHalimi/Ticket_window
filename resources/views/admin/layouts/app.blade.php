@@ -38,7 +38,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.employees') }}"
+                        <a href="{{ route('admin.employees.index') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-team-line text-xl"></i>
                             Employees

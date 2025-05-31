@@ -54,9 +54,39 @@ Route::group(['middleware' => 'auth'], function () {
     })->name('my_tickets');
 
 
-    Route::get('explore_events', function () {
-        $events = [];
-        return view('visitor.dashboard.explore_events', compact('events'));
+    Route::get('explore_events', function (HttpRequest $request) {
+        
+        $validated = $request->validate([
+            'search' => 'nullable|string|max:255',
+            'date' => 'nullable|date',
+            'category' => 'nullable|exists:categories,id',
+            'minPrice' => 'nullable|numeric|max:99999|min:0',
+            'maxPrice' => 'nullable|numeric|max:10000|min:1',
+        ]);
+        $events = Event::where('status','active');
+        if (isset($validated['search']) && $validated['search'] != '') {
+            $events = $events->where('name', 'like', '%' . $validated['search'] . '%')->orWhere('description', 'like', '%' . $validated['search'] . '%')->orwhere('location', 'like', '%' . $validated['search'] . '%');
+        }
+        if (isset($validated['date']) && $validated['date'] != '') {
+            $events = $events->whereDate('date', $validated['date']);
+        }else{
+            $events = $events->where('date', '>', now());
+        }
+        if (isset($validated['category']) && $validated['category'] != '') {
+            $events = $events->where('category_id', $validated['category']);
+        }
+        if (isset($validated['minPrice']) && $validated['minPrice'] != '') {
+            $events = $events->where('ticket_price', '>=', $validated['minPrice']);
+        }
+        if (isset($validated['maxPrice']) && $validated['maxPrice'] != '') {
+            $events = $events->where('ticket_price', '<=', $validated['maxPrice']);
+        }
+        $events = $events->orderBy('date', 'asc')->paginate(12);
+        // ->paginate(12);
+        // where('date','>',now())->
+        $categories = Category::where('type','events')->where('status','active')->get();
+
+        return view('visitor.dashboard.explore_events', compact('events','categories'));
     })->name('my_events');
 
     Route::get('explore_restaurents', function () {

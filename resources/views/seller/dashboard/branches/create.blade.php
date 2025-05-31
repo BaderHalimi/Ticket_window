@@ -71,12 +71,15 @@
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
         </div>
 
-        <div>
-            <label for="location" class="block text-gray-700 font-medium mb-2">Location</label>
-            <input type="text" name="location" id="location" required
-                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
-        </div>
 
+        <div>
+            <label for="status" class="block text-gray-700 font-medium mb-2">Status</label>
+            <select name="status" id="status"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+        </div>
         <div>
             <label for="tables" class="block text-gray-700 font-medium mb-2">Number of Tables</label>
             <input type="number" name="tables" id="tables" required min="1"
@@ -101,26 +104,19 @@
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
         </div>
 
-        <div>
-            <label for="status" class="block text-gray-700 font-medium mb-2">Status</label>
-            <select name="status" id="status"
+        
+
+        <div class=" col-span-2">
+            <label for="location" class="block text-gray-700 font-medium mb-2">Location</label>
+            <input type="text" name="location" id="location" required
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-            </select>
         </div>
 
-        {{-- <div>
-            <label for="restaurent_id" class="block text-gray-700 font-medium mb-2">Restaurant</label>
-            <select name="restaurent_id" id="restaurent_id" required
-                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
-                @foreach($categories as $category)
-                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                @endforeach
-            </select>
-        </div> --}}
+
 
         <div class="col-span-2 text-center">
+
+            
             <button type="submit"
                 class="gradient-button text-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                 Create Branch
