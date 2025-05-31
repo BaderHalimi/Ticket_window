@@ -15,7 +15,7 @@ class CategorySeeder extends Seeder
                 'slug' => 'concerts',
                 'status' => 'active',
                 'type' => 'events',
-                'user_id' => 1, // غيّر الـ ID حسب المستخدم الموجود عندك
+                'user_id' => 1, 
             ],
             [
                 'name' => 'Conferences',

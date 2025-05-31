@@ -7,6 +7,8 @@ use App\Models\Event;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+
 
 class EventsController extends Controller
 {
@@ -53,7 +55,7 @@ class EventsController extends Controller
         
 
 
-        Event::create([
+        $event_sender = Event::create([
             'image'=> "",
             'name'=> $request->name,
             'description'=> $request->description,
@@ -72,8 +74,8 @@ class EventsController extends Controller
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path(),$imageName);
 
-            $events->image = $imageName;
-            $events->save();
+            $event_sender->image = $imageName;
+            $event_sender->save();
         }else{return "erorr";}
         // Logic to store the event in the database
 
@@ -109,6 +111,11 @@ class EventsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $event = Event::findOrFail($id);
+        $event->delete();
+        if ($event->image and File::exists(public_path($event->image))) {
+            File::delete(public_path($event->image));
+        }
+        return redirect()->route('seller.events.index')->with("success","تم الحذف بنجاح");
     }
 }
