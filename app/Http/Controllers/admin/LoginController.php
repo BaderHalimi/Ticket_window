@@ -13,10 +13,10 @@ class LoginController extends Controller
     {
         return view('admin.auth.login');
     }
-    public function register()
-    {
-        return view('admin.auth.register');
-    }
+    // public function register()
+    // {
+    //     return view('admin.auth.register');
+    // }
 
     public function login_logic(Request $request)
     {
@@ -35,20 +35,20 @@ class LoginController extends Controller
             return redirect()->back()->withErrors(['email' => 'Invalid credentials'])->withInput();
         }
     }
-    public function register_logic(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
-        ]);
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role' => 'admin',
-        ]);
-        auth()->login($user);
-        return redirect()->route('admin.dashboard')->with('success', 'Login successful');
-    }
+    // public function register_logic(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'email' => 'required|email|unique:users,email',
+    //         'password' => 'required|min:6|confirmed',
+    //     ]);
+    //     $user = User::create([
+    //         'name' => $validated['name'],
+    //         'email' => $validated['email'],
+    //         'password' => Hash::make($validated['password']),
+    //         'role' => 'admin',
+    //     ]);
+    //     auth()->login($user);
+    //     return redirect()->route('admin.dashboard')->with('success', 'Login successful');
+    // }
 }

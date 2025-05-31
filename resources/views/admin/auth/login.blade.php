@@ -59,9 +59,9 @@
                     Continue with Google
                 </a>
 
-                <p class="text-center text-indigo-700 mt-4">Don't have an account?
+                {{-- <p class="text-center text-indigo-700 mt-4">Don't have an account?
                     <a href="{{ route('admin.register') }}" class="text-primary font-semibold">Register</a>
-                </p>
+                </p> --}}
             </form>
         </div>
 
