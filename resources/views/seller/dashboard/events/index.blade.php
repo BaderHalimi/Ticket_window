@@ -55,20 +55,31 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($events as $event)
-            <div class="card-hover glassmorphism p-6 rounded-lg shadow-lg transition-transform">
-                <h2 class="text-xl font-semibold text-gray-800">{{ $event->name }}</h2>
-                <p class="text-gray-600 mt-2">{{ $event->description }}</p>
-                <p class="text-gray-500 mt-1">Date: {{ $event->date }}</p>
-                <p class="text-gray-500 mt-1">Location: {{ $event->location }}</p>
-                <div class="mt-4 flex justify-between items-center">
-                    <a href="{{ route('seller.events.edit', $event->id) }}" class="text-blue-600 hover:underline">Edit</a>
-                    <form action="{{ route('seller.events.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this event?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="text-red-600 hover:underline">Delete</button>
-                    </form>
+        <div class="card-hover glassmorphism p-3 rounded-lg shadow-lg transition-transform">
+            <div>
+                <div
+                    class="absolute top-3 left-3 bg-orange-600 bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
+                    {{ $event->category->name }}
+                </div>
+                <img src="{{ Storage::url($event->image) }}" alt="{{ $event->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
+                <div
+                    class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
+                    {{ $event->ticket_price }} SAR
                 </div>
             </div>
+            <h2 class="text-xl font-semibold text-gray-800">{{ $event->name }}</h2>
+            <p class="text-gray-600 mt-2">{{ $event->description }}</p>
+            <p class="text-gray-500 mt-1"><span class="text-black">Date:</span> {{ Carbon\Carbon::create($event->date)->diffForHumans() }}</p>
+            <p class="text-gray-500 mt-1"><span class="text-black">Location:</span> <span class="rounded-full px-2 bg-green-200">{{ $event->location }}</span></p>
+            <div class="mt-4 flex justify-between items-center">
+                <a href="{{ route('seller.events.edit', $event->id) }}" class="bg-blue-600 text-white rounded px-3 py-2 hover:bg-blue-900"><i class="ri-edit-line text-lg"></i></a>
+                <form action="{{ route('seller.events.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this event?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-600 text-white rounded px-3 py-2 hover:bg-red-900 hover:underline"><i class="ri-delete-bin-line text-lg"></i></button>
+                </form>
+            </div>
+        </div>
         @endforeach
     </div>
 

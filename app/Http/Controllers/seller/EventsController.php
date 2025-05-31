@@ -47,16 +47,16 @@ class EventsController extends Controller
             'ticket_price' => 'required|numeric|min:0',
             'status' => 'required|in:active,inactive',
         ]);
-        /*if ($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('events', 'public');
         }else{
             return "erorr";
-        }*/
-        
+        }
+
 
 
         $event_sender = Event::create([
-            'image'=> "",
+            'image'=> $imagePath,
             'name'=> $request->name,
             'description'=> $request->description,
             'category_id'=> $request->category_id,
@@ -68,15 +68,15 @@ class EventsController extends Controller
             'user_id'=> Auth::user()->id
         ]);
 
-        
-        if ($request->hasFile('image')){
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path(''),$imageName);
 
-            $event_sender->image = $imageName;
-            $event_sender->save();
-        }else{return "erorr";}
+        // if ($request->hasFile('image')){
+        //     $image = $request->file('image');
+        //     $imageName = time() . '.' . $image->getClientOriginalExtension();
+        //     $image->move(public_path(''),$imageName);
+
+        //     $event_sender->image = $imageName;
+        //     $event_sender->save();
+        // }else{return "erorr";}
         // Logic to store the event in the database
 
         return redirect()->route('seller.events.index')->with('success', 'Event created successfully.');
@@ -128,7 +128,7 @@ class EventsController extends Controller
             $event->save();
         }
 
-        
+
 
         foreach ($validated as $key => $value) {
             if ($key !== 'image') {

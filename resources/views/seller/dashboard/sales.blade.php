@@ -55,13 +55,13 @@
                     <td class="px-6 py-4"><span class="text-green-700 font-medium">تم الدفع</span></td>
                     <td class="px-6 py-4 space-x-2 space-x-reverse">
 
-                        <button class="text-blue-500 hover:text-blue-700">
+                        <button class="text-blue-700 hover:bg-blue-700 rounded-full px-3 py-2 hover:text-white transition duration-500">
                             <i class="ri-eye-line text-lg"></i>
                         </button>
-                        <button class="text-red-500 hover:text-red-700">
+                        <!-- <button class="text-red-500 hover:text-red-700">
                             <i class="ri-delete-bin-line text-lg"></i>
-                        </button>
-                        <button class="text-gray-700 hover:text-black">
+                        </button> -->
+                        <button class="text-gray-700 hover:bg-gray-700 rounded-full px-3 py-2 hover:text-white transition duration-500">
                             <i class="ri-printer-line text-lg"></i>
                         </button>
 
