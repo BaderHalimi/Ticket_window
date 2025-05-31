@@ -173,6 +173,17 @@
     button[type="submit"]:hover {
         background-color: #4F46E5;
     }
+    .gradient-button {
+    background: linear-gradient(135deg, #57B5E7 0%, #B19CD9 100%);
+    transition: all 0.3s ease;
+    }
+
+    .gradient-button:hover {
+        background: linear-gradient(135deg, #4da8d9 0%, #a28cc7 100%);
+        transform: translateY(-2px);
+        filter: brightness(1.1);
+    }
+
 </style>
 @endpush
 
@@ -254,9 +265,11 @@
         </div>
 
         <div class="mt-8 text-right">
-            <button type="submit">
-                <i class="ri-save-line"></i> Save Changes
-            </button>
+            <button type="submit" 
+            class="gradient-button px-6 py-3 text-white rounded-lg shadow-md transition hover:translate-y-[-2px] hover:brightness-110 flex items-center gap-2">
+            <i class="ri-save-line"></i> Save Changes
+        </button>
+        
         </div>
     </form>
 </div>

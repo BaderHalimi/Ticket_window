@@ -105,7 +105,41 @@ class EventsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $event = Event::findOrFail($id);
+        $validated = $request->validate([
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg',
+            'name' => 'string|max:255',
+            'description' => 'string',
+            'date' => 'date|after_or_equal:now',
+            'category_id' => 'exists:categories,id',
+            'location' => 'string|max:255',
+            'total_tickets' => 'integer|min:1',
+            'ticket_price' => 'numeric|min:0',
+            'status' => 'in:active,inactive',
+        ]);
+
+        if ($request->hasFile('image')){
+            File::delete(public_path($event->image));
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path(''),$imageName);
+
+            $event->image = $imageName;
+            $event->save();
+        }
+
+        
+
+        foreach ($validated as $key => $value) {
+            if ($key !== 'image') {
+                $event->$key = $value;
+            }
+        }
+
+        $event->save();
+
+        return redirect()->route('seller.events.index')->with("success","تم التحديث بنجاح");
+
     }
 
     /**
