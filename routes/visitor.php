@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\visitor\LoginController;
+use App\Models\Category;
+use App\Models\Event;
 use Illuminate\Support\Facades\Route;
 
 Route::get('login', [LoginController::class, 'login'])->middleware('guest')->name('login');
@@ -9,7 +11,9 @@ Route::get('register', [LoginController::class, 'register'])->middleware('guest'
 Route::post('register', [LoginController::class, 'register_logic'])->middleware('guest')->name('register_logic');
 Route::group(['middleware' => 'auth'], function () {
     Route::get('', function () {
-        return view('visitor.dashboard.index');
+        $events = Event::where('date','>',now())->where('status','active')->paginate(12);
+        $categories = Category::where('type','events')->where('status','active')->get();
+        return view('visitor.dashboard.index',compact('events','categories'));
     })->name('dashboard');
     Route::get('my_bookings', function () {
         $bookings = [];

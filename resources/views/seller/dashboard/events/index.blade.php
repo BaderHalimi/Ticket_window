@@ -69,8 +69,8 @@
             </div>
             <h2 class="text-xl font-semibold text-gray-800">{{ $event->name }}</h2>
             <p class="text-gray-600 mt-2">{{ $event->description }}</p>
-            <p class="text-gray-500 mt-1"><span class="text-black">Date:</span> {{ Carbon\Carbon::create($event->date)->diffForHumans() }}</p>
-            <p class="text-gray-500 mt-1"><span class="text-black">Location:</span> <span class="rounded-full px-2 bg-green-200">{{ $event->location }}</span></p>
+            <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-calendar-line ri-sm"></i></span> {{ Carbon\Carbon::create($event->date)->diffForHumans() }}</p>
+            <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-map-pin-line ri-sm"></i></span> <span class="rounded-full px-2 bg-green-200">{{ $event->location }}</span></p>
             <div class="mt-4 flex justify-between items-center">
                 <a href="{{ route('seller.events.edit', $event->id) }}" class="bg-blue-600 text-white rounded px-3 py-2 hover:bg-blue-900"><i class="ri-edit-line text-lg"></i></a>
                 <form action="{{ route('seller.events.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this event?');">
