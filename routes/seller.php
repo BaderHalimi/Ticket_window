@@ -33,7 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('events', EventsController::class);
 });
 
-Route::resource('branche', BranchController::class);
+Route::resource('branch', BranchController::class);
 
 Route::get('/sales',function(){
     return view('seller.dashboard.sales');

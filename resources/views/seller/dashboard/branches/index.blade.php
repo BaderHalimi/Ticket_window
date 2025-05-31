@@ -48,7 +48,7 @@
 
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Branches</h1>
-        <a href="{{ route('seller.events.create') }}" class="gradient-button text-white px-4 py-2 rounded-lg shadow-md">
+        <a href="{{ route('seller.branch.create') }}" class="gradient-button text-white px-4 py-2 rounded-lg shadow-md">
             <i class="ri-add-line"></i> Create Branche
         </a>
     </div>
@@ -73,8 +73,9 @@
             {{-- <p class="text-gray-500 mt-1"><span class="text-black"></span> {{  }}</p> --}}
             <p class="text-gray-500 mt-1"><span class="text-black">Location:</span> <span class="rounded-full px-2 bg-green-200">{{ $branche->location }}</span></p>
             <div class="mt-4 flex justify-between items-center">
-                <a href="{{ route('seller.events.edit', $branche->id) }}" class="bg-blue-600 text-white rounded px-3 py-2 hover:bg-blue-900"><i class="ri-edit-line text-lg"></i></a>
-                <form action="{{ route('seller.events.destroy', $branche->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this event?');">
+                 <a href="{{ route('seller.branch.edit', $branche->id) }}" class="bg-blue-600 text-white rounded px-3 py-2 hover:bg-blue-900"><i class="ri-edit-line text-lg"></i></a> 
+                
+                <form action="{{ route('seller.branch.destroy', $branche->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this event?');">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="bg-red-600 text-white rounded px-3 py-2 hover:bg-red-900 hover:underline"><i class="ri-delete-bin-line text-lg"></i></button>

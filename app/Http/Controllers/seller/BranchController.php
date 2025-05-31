@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers\seller;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\Branch;
 use Illuminate\Http\Request;
+use App\Models\Category;
+
 
 class BranchController extends Controller
 {
@@ -13,6 +19,7 @@ class BranchController extends Controller
     public function index()
     {
         $branchs = Branch::all();
+
         return view('seller.dashboard.branches.index',compact('branchs'));
     }
 
@@ -21,7 +28,8 @@ class BranchController extends Controller
      */
     public function create()
     {
-        //
+        //$categories = Category::active()->where('type', 'events')->get();
+        return view('seller.dashboard.branches.create');
     }
 
     /**
@@ -29,7 +37,37 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'name'=>'required|string|max:255',
+            'location'=>'required|string|max:255',
+            'tables'=>'required|string',
+            'hour_price'=>'required|integer',
+            'open_at'=>'required|nullable',
+            'close_at'=>'required|nullable',
+            'status' => 'required|in:active,inactive',
+            'restaurent_id' => 'required|exists:users,id'
+
+        ]);
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('events', 'public');
+        } else {
+            return "erorr";
+        }
+
+        $branch_sender = Branch::create([
+            'image'=>$imagePath,
+            'name'=>$validate['name'],
+            'location'=>$validate['location'],
+            'tables'=>$validate['tables'],
+            'hour_price'=>$validate['hour_price'],
+            'open_at'=>$validate['open_at'],
+            'close_at'=>$validate['close_at'],
+            'status'=>$validate['status'],
+            'restaurent_id'=>Auth::user()->id
+        ]);
+        return redirect()->route('seller.branch.index')->with('success','branch was created');
     }
 
     /**
@@ -37,7 +75,7 @@ class BranchController extends Controller
      */
     public function show(branch $branch)
     {
-        //
+    
     }
 
     /**
@@ -45,7 +83,8 @@ class BranchController extends Controller
      */
     public function edit(branch $branch)
     {
-        //
+        //$categories = Category::active()->where('id', 'user')->get();
+        return view("seller.dashboard.branches.edit",compact('branch'));
     }
 
     /**
@@ -53,14 +92,44 @@ class BranchController extends Controller
      */
     public function update(Request $request, branch $branch)
     {
-        //
+        $validate = $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'name'=>'required|string|max:255',
+            'location'=>'required|string|max:255',
+            'tables'=>'required|string',
+            'hour_price'=>'required|integer',
+            'open_at'=>'required|nullable',
+            'close_at'=>'required|nullable',
+            'status' => 'required|in:active,inactive',
+
+        ]);
+
+        $validated['restaurent_id'] = Auth::id();
+
+        if ($request->hasFile('image')) {
+            // File::delete(public_path($event->image));
+            Storage::disk('public')->delete($branch->image);
+            $validated['image'] = $request->file('image')->store('events', 'public');
+        }else{
+            $validated['image'] = $branch->image; // Keep the old image if no new one is uploaded
+        }
+
+        $branch->update($validated);
+
+        return redirect()->route('seller.branch.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(branch $branch)
+    public function destroy(Branch $branch)
     {
-        //
+        if ($branch->image && Storage::disk('public')->exists($branch->image)) {
+            Storage::disk('public')->delete($branch->image);
+        }
+            $branch->delete();
+    
+        return redirect()->route('seller.branch.index')->with('success', 'Branch deleted successfully.');
     }
+    
 }

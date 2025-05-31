@@ -40,7 +40,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('seller.branche.index') }}"
+                        <a href="{{ route('seller.branch.index') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-git-branch-line text-xl"></i>
                             Branches
