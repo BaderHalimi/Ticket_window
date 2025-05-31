@@ -22,7 +22,7 @@ Route::group(['middleware' => 'auth'], function () {
         ]);
         $events = Event::where('status','active');
         if (isset($validated['search']) && $validated['search'] != '') {
-            $events = $events->where('title', 'like', '%' . $validated['search'] . '%')->orWhere('description', 'like', '%' . $validated['search'] . '%')->orwhere('location', 'like', '%' . $validated['search'] . '%');
+            $events = $events->where('name', 'like', '%' . $validated['search'] . '%')->orWhere('description', 'like', '%' . $validated['search'] . '%')->orwhere('location', 'like', '%' . $validated['search'] . '%');
         }
         if (isset($validated['date']) && $validated['date'] != '') {
             $events = $events->whereDate('date', $validated['date']);
