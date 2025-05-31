@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('events', EventsController::class);
 });
 
+
 Route::get('/sales',function(){
     return view('seller.dashboard.sales');
 })->name('sales');

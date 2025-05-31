@@ -25,6 +25,13 @@ class CategorySeeder extends Seeder
                 'user_id' => 1,
             ],
             [
+                'name' => 'Circus',
+                'slug' => 'circus',
+                'status' => 'active',
+                'type' => 'events',
+                'user_id' => 1,
+            ],
+            [
                 'name' => 'Workshops',
                 'slug' => 'workshops',
                 'status' => 'inactive',

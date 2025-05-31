@@ -72,7 +72,7 @@ class EventsController extends Controller
         if ($request->hasFile('image')){
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path(),$imageName);
+            $image->move(public_path(''),$imageName);
 
             $event_sender->image = $imageName;
             $event_sender->save();
@@ -95,7 +95,9 @@ class EventsController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $event = Event::findOrFail($id);
+        $categories = Category::active()->where('type', 'events')->get();
+        return view('seller.dashboard.events.edit',compact('event',"categories"));
     }
 
     /**
