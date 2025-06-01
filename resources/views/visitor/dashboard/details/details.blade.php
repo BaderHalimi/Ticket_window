@@ -107,7 +107,7 @@
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">تفاصيل الفعالية</h1>
-        <a href="{{ route('visitor.my_events') }}" class="gradient-button text-white px-4 py-2 rounded-lg shadow-md">
+        <a href="{{ route('visitor.events.index') }}" class="gradient-button text-white px-4 py-2 rounded-lg shadow-md">
             <i class="ri-arrow-left-line"></i> العودة للفعاليات
         </a>
     </div>
@@ -122,7 +122,7 @@
                 <img src="{{ Storage::url($image) }}"
                     alt="صورة المعرض {{ $index + 1 }}"
                     class="rounded-lg shadow gallery-img object-cover w-full h-24 mb-2"
-                    onclick="openImageViewer(`{{ $index }}`)"> 
+                    onclick="openImageViewer(`{{ $index }}`)">
                 @endforeach
                 @endif
             </div>
@@ -147,16 +147,19 @@
 
         <!-- Description -->
         <div class="col-span-2">
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">الوصف</h3>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Description</h3>
             <p class="text-gray-700">{{ $event->description }}</p>
         </div>
 
         <!-- Booking Button -->
         <div class="col-span-2 text-right mt-6">
-            <a href="#"
-                class="gradient-button text-white px-6 py-3 rounded-lg shadow-lg text-lg font-semibold inline-flex items-center">
-                <i class="ri-ticket-line mr-2"></i> احجز الآن
-            </a>
+            <form action="{{ route('visitor.tickets.store',['event'=>$event->id]) }}" method="post">
+                @csrf
+                <button type="submit"
+                    class="gradient-button text-white px-6 py-3 rounded-lg shadow-lg text-lg font-semibold inline-flex items-center">
+                    <i class="ri-ticket-line mr-2"></i> book now
+                </button>
+            </form>
         </div>
     </div>
 </div>

@@ -38,14 +38,14 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('visitor.my_tickets') }}"
+                        <a href="{{ route('visitor.tickets.index') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-ticket-line text-xl"></i>
                             Tickets
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('visitor.my_events') }}"
+                        <a href="{{ route('visitor.events.index') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-ticket-2-line text-xl"></i>
                             Explore events

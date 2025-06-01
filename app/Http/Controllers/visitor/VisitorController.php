@@ -42,10 +42,7 @@ class VisitorController extends Controller
      */
     public function show(string $id)
     {
-        $event = Event::findOrFail($id);
-        $user = User::findOrFail($event->id);
 
-        return view('visitor.dashboard.details.details',compact('event','user'));
     }
 
     /**

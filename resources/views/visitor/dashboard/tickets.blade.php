@@ -41,21 +41,32 @@
         <!-- Ticket Card -->
         @foreach($tickets as $ticket)
         <div class="glassmorphism p-6 rounded-xl transition-all duration-300 card-hover flex justify-between items-center">
-            <div>
-                <h3 class="text-xl font-semibold">{{ $ticket->event_name }}</h3>
-                <p class="text-sm text-gray-600">{{ $ticket->event_date }} • {{ $ticket->event_time }}</p>
-                <p class="text-sm text-gray-600">{{ $ticket->venue }}</p>
-                <p class="text-sm text-gray-600">Ticket Code: <span class="font-bold">{{ $ticket->ticket_code }}</span></p>
+            <div class="flex items-center space-x-4">
+                <div class="bg-indigo-100 rounded-full flex items-center justify-center">
+                    <img src="{{ Storage::url($ticket->event->image) }}" alt="{{ $ticket->event->name }}" class="h-20 w-full rounded-md object-cover">
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold">{{ $ticket->event->name }}</h3>
+                    <p class="text-sm text-gray-600">{{ $ticket->event->date->format('d-m-Y') }} • {{ $ticket->event->date->format('h:i A') }}</p>
+                    <p class="text-sm text-gray-600">{{ $ticket->venue }}</p>
+                    <p class="text-sm text-gray-600"><span>Ticket Code:</span> <span class="font-bold @if($ticket->status == 'paid') text-green-400 @elseif($ticket->status == 'cancled') text-red-400 @else text-blue-400 @endif">{{ $ticket->code }}</span></p>
+                </div>
             </div>
 
             <div class="flex flex-col items-end space-y-2">
-                <a href="{{ route('visitor.view_qr', $ticket->id) }}" class="flex items-center gap-1 bg-white px-4 py-2 rounded-full border border-gray-200 text-sm">
+                @if($ticket->status == 'pending')
+                    <form action="{{ route('visitor.tickets.update',['ticket'=>$ticket->id]) }}" method="post">@csrf <button class="bg-green-600 border border-green-600 px-3 py-1 rounded-md mt-2 transition duration-50 text-white hover:bg-white hover:text-green-600">checkout</button></form></span> <span>
+                        <form action="{{ route('visitor.tickets.destroy',['ticket'=>$ticket->id]) }}" method="post"> @csrf @method('delete') <button type="submit" class="bg-red-600 border border-red-600 px-3 py-1 rounded-md mt-2 transition duration-50 text-white hover:bg-white hover:text-red-600">delete ticket</button></form>
+                    </span>
+                @elseif($ticket->status == 'paid')
+                <a href="" class="flex items-center gap-1 bg-white hover:bg-gray-600 hover:border-gray-600 hover:text-white px-4 py-2 rounded-full border border-gray-200 text-sm transition duration-50">
                     <i class="ri-qr-code-line ri-sm"></i> View QR
                 </a>
 
-                <a href="{{ route('visitor.download_pdf', $ticket->id) }}" class="flex items-center gap-1 bg-white px-4 py-2 rounded-full border border-gray-200 text-sm">
+                <a href="" class="flex items-center gap-1 bg-white hover:bg-gray-600 hover:border-gray-600 hover:text-white px-4 py-2 rounded-full border border-gray-200 text-sm transition duration-50">
                     <i class="ri-file-pdf-line ri-sm"></i> Download PDF
                 </a>
+                @endif
             </div>
         </div>
         @endforeach

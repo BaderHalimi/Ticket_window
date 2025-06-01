@@ -255,30 +255,31 @@
         <div id="cards_conatiner" class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Event Card 1 -->
             @foreach($events as $event)
-            <div class="card-hover glassmorphism p-3 rounded-lg shadow-lg transition-transform">
-                <div>
-                    <div
-                        class="absolute top-3 left-3 bg-orange-600 text-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
-                        {{ $event->category->name }}
+            <a href="{{route('visitor.events.show',$event->id)}}">
+                <div class="card-hover glassmorphism p-3 rounded-lg shadow-lg transition-transform">
+                    <div>
+                        <div
+                            class="absolute top-3 left-3 bg-orange-600 text-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
+                            {{ $event->category->name }}
+                        </div>
+                        <img src="{{ Storage::url($event->image) }}" alt="{{ $event->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <div
+                            class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
+                            {{ $event->ticket_price }} SAR
+                        </div>
                     </div>
-                    <img src="{{ Storage::url($event->image) }}" alt="{{ $event->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <div
-                        class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
-                        {{ $event->ticket_price }} SAR
-                    </div>
+                    <h2 class="text-xl font-semibold text-gray-800">{{ $event->name }}</h2>
+                    <p class="text-gray-600 mt-2">
+                        {{ Str::limit($event->description, 50) }}
+                    </p>
+                    <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-calendar-line ri-sm"></i></span> {{ Carbon\Carbon::create($event->date)->diffForHumans() }}</p>
+                    <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-map-pin-line ri-sm"></i></span> <span class="rounded-full px-2 bg-green-200">{{ $event->location }}</span></p>
+                    <button
+                        class="w-full mt-4 py-2 gradient-button text-white rounded-lg !rounded-button whitespace-nowrap font-medium">
+                        Book Now
+                    </button>
                 </div>
-                <h2 class="text-xl font-semibold text-gray-800">{{ $event->name }}</h2>
-                <p class="text-gray-600 mt-2">
-                    {{ Str::limit($event->description, 50) }}
-                </p>
-                <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-calendar-line ri-sm"></i></span> {{ Carbon\Carbon::create($event->date)->diffForHumans() }}</p>
-                <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-map-pin-line ri-sm"></i></span> <span class="rounded-full px-2 bg-green-200">{{ $event->location }}</span></p>
-                <a href="{{route('visitor.details.show',$event->id)}}">
-                <button
-                    class="w-full mt-4 py-2 gradient-button text-white rounded-lg !rounded-button whitespace-nowrap font-medium">
-                    Book Now
-                </button></a>
-            </div>
+            </a>
             @endforeach
         </div>
     </div>

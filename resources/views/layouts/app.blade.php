@@ -43,9 +43,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+
     @stack('styles')
 </head>
 @yield('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+@if (session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: '{{ session('success') }}',
+            confirmButtonText: 'تمام',
+            confirmButtonColor: '#6366F1',
+            customClass: {
+                popup: 'rounded-lg',
+                title: 'text-lg font-bold',
+                confirmButton: 'px-6 py-2 text-white bg-indigo-600 rounded-lg text-base font-semibold shadow'
+            },
+        });
+    });
+</script>
+@endif
 
 </html>
-
