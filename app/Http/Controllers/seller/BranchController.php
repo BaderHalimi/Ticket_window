@@ -99,6 +99,14 @@ class BranchController extends Controller
         return view("seller.dashboard.branches.edit",compact('branch'));
     }
 
+    public function edit_gallery(Branch $branch)
+    {
+        //$categories = Category::active()->where('id', 'user')->get();
+        
+        dd($branch->gallery);
+        return view("seller.dashboard.branches.edit_gallery",compact('branch'));
+    }
+    
     /**
      * Update the specified resource in storage.
      */

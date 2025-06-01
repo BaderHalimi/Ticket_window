@@ -211,6 +211,7 @@
             <div class="profile-details">
                 <h3>{{ $event->name }}</h3>
                 <p>Click pencil icon to change image</p>
+                <a href="">change gallery</a>
             </div>
         </div>
 

@@ -158,6 +158,8 @@
             <div class="profile-details">
                 <h3>{{ $branch->name }}</h3>
                 <p>Click pencil icon to change image</p>
+                <a href="{{route('seller.branch.gallery',$branch)}}">change gallery</a>
+
             </div>
         </div>
 
