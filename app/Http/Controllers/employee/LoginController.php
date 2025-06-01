@@ -25,6 +25,9 @@ class LoginController extends Controller
             'password' => 'required|min:6',
         ]);
         $user = User::where('email', $validated['email'])->first();
+        if (!$user) {
+            return redirect()->back()->withErrors(['email' => 'Invalid credentials'])->withInput();
+        }
         if($user->role !== 'employee') {
             return redirect()->back()->withErrors(['email' => 'You are not authorized to access this area'])->withInput();
         }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->enum('type', ['events', 'restaurents'])->default('events');
+            $table->enum('type', ['events', 'restaurants'])->default('events');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
