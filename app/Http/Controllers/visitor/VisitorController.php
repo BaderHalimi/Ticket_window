@@ -15,7 +15,7 @@ class VisitorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(string $id)
+    public function index()
     {
 
 

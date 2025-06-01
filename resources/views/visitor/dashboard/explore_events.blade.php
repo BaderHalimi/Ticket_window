@@ -353,7 +353,7 @@
                 </div>
 
                 <!-- Filter button -->
-                <button type="submit" class="w-full glassmorphism mt-6 py-3 rounded-xl text-indigo-900 font-medium !rounded-button whitespace-nowrap">
+                <button type="submit" class="w-full glassmorphism gradient-button mt-6 py-3 rounded-xl text-white font-medium !rounded-button whitespace-nowrap">
                     Filter Events
                 </button>
             </form>

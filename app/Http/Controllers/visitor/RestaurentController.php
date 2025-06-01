@@ -5,6 +5,7 @@ namespace App\Http\Controllers\visitor;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Branch;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,8 +18,8 @@ class RestaurentController extends Controller
     public function index()
     {
         $branchs = Branch::all();
-        
-        return view('visitor.dashboard.restaurent.explore_restaurents',compact('branchs'));
+        $categories = Category::where('type', 'restaurants')->where('status', 'active')->get();
+        return view('visitor.dashboard.restaurent.explore_restaurents',compact('branchs','categories'));
     }
 
     /**

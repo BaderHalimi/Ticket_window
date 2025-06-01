@@ -15,7 +15,7 @@ class CategorySeeder extends Seeder
                 'slug' => 'concerts',
                 'status' => 'active',
                 'type' => 'events',
-                'user_id' => 1, 
+                'user_id' => 1,
             ],
             [
                 'name' => 'Conferences',
@@ -38,6 +38,42 @@ class CategorySeeder extends Seeder
                 'type' => 'events',
                 'user_id' => 1,
             ],
+            [
+                'name' => 'Fast Food',
+                'slug' => 'fast-food',
+                'status' => 'active',
+                'type' => 'restaurants',
+                'user_id' => 1,
+            ],
+            [
+                'name' => 'Seafood',
+                'slug' => 'seafood',
+                'status' => 'active',
+                'type' => 'restaurants',
+                'user_id' => 1,
+            ],
+            [
+                'name' => 'Italian Cuisine',
+                'slug' => 'italian-cuisine',
+                'status' => 'active',
+                'type' => 'restaurants',
+                'user_id' => 1,
+            ],
+            [
+                'name' => 'Desserts & Sweets',
+                'slug' => 'desserts-sweets',
+                'status' => 'active',
+                'type' => 'restaurants',
+                'user_id' => 1,
+            ],
+            [
+                'name' => 'Steakhouses',
+                'slug' => 'steakhouses',
+                'status' => 'inactive',
+                'type' => 'restaurants',
+                'user_id' => 1,
+            ],
+
         ];
 
         foreach ($categories as $category) {

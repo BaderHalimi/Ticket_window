@@ -151,13 +151,14 @@
         <!-- Search Section -->
         <div class="mb-10 flex justify-between">
             <div class="glassmorphism rounded-full p-2 flex items-center w-full max-w-3xl">
-                <form action="" method="GET" class="flex items-center w-full">
-                    <div class="w-10 h-10 flex items-center justify-center text-gray-500">
+                <form action="{{ route('visitor.restaurent.index') }}" method="GET" class="flex items-center w-full max-w-4xl">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center text-gray-500">
                         <i class="ri-search-line ri-xl"></i>
                     </div>
                     <input
                         type="text" name="search"
-                        placeholder="Search for restaurants..."
+                        placeholder="Search for restaurent, location..."
                         class="search-bar w-full bg-transparent border-none outline-none px-3 py-2 text-gray-700 placeholder-gray-500" />
                     <button
                         class="gradient-button text-white px-5 mx-3 py-2 rounded-full whitespace-nowrap font-medium">
@@ -165,25 +166,26 @@
                     </button>
                 </form>
             </div>
+            <button class="glassmorphism rounded-full px-3 py-2 z-50" id="calender_toggle"><i class="ri-filter-line text-lg"></i></button>
         </div>
 
         <div id="cards_container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
             @foreach($branchs as $restaurant)
             <div class="card-hover glassmorphism p-3 rounded-lg shadow-lg transition-transform">
                 <div>
-                    @if($restaurant->status === 'open')
+                    @if($restaurant->open_at <= now() && $restaurant->close_at >= now())
                         <div class="absolute top-3 left-3 bg-green-600 text-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
                             Open
                         </div>
-                    @else
+                        @else
                         <div class="absolute top-3 left-3 bg-red-600 text-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
                             Closed
                         </div>
-                    @endif
-                    <img src="{{ Storage::url($restaurant->image) }}" alt="{{ $restaurant->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <div class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
-                        {{ $restaurant->hour_price }} SAR/hr
-                    </div>
+                        @endif
+                        <img src="{{ Storage::url($restaurant->image) }}" alt="{{ $restaurant->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <div class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
+                            {{ $restaurant->hour_price }} SAR/hr
+                        </div>
                 </div>
                 <h2 class="text-xl font-semibold text-gray-800">{{ $restaurant->name }}</h2>
                 <p class="text-gray-600 mt-2">Tables: {{ $restaurant->tables }}</p>
@@ -198,6 +200,35 @@
                 </a>
             </div>
             @endforeach
+        </div>
+    </div>
+    <div id="calender" class="lg:col-span-1 hidden">
+        <div class="glassmorphism rounded-3xl p-6 sticky top-32">
+            <form method="GET" action="{{ route('visitor.restaurent.index') }}">
+                <div>
+                    <h4 class="text-md font-bold text-indigo-900 mb-4 font-['Space_Grotesk']">Categories</h4>
+                    <button id="calender_toggle_1" class="absolute top-4 mt-3 right-5 decoration-0 text-primary p-0"><i class="ri-close-line text-indigo-400"></i></button>
+                </div>
+                <!-- Categories -->
+                <div class="">
+                    <div class="flex flex-col gap-2 mb-4">
+                        @foreach ($categories as $category)
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="categories[]" value="{{ $category->id }}"
+                                class="form-checkbox text-indigo-600 rounded focus:ring-indigo-500"
+                                {{ in_array($category->id, request()->input('categories', [])) ? 'checked' : '' }}>
+                            <span class="text-sm text-indigo-800">{{ $category->name }}</span>
+                        </label>
+                        @endforeach
+                    </div>
+                </div>
+
+
+                <!-- Filter button -->
+                <button type="submit" class="w-full glassmorphism gradient-button mt-6 py-3 rounded-xl text-white font-medium !rounded-button whitespace-nowrap">
+                    Filter Restaurents
+                </button>
+            </form>
         </div>
     </div>
 </div>
@@ -263,181 +294,18 @@
     });
 
     function calenderToggle() {
+        console.log('hi');
+
         const calenderBtn = document.getElementById('calender_toggle');
         calenderBtn.classList.toggle('hidden');
         const calender = document.getElementById('calender');
         calender.classList.toggle('hidden');
-        const cardsConatiner = document.getElementById('cards_conatiner');
+        const cardsConatiner = document.getElementById('cards_container');
         cardsConatiner.classList.toggle('md:grid-cols-3');
         cardsConatiner.classList.toggle('md:grid-cols-2');
-        const events = document.getElementById('events');
-        events.classList.toggle('lg:col-span-3');
-        events.classList.toggle('lg:col-span-2');
+        const restaurants = document.getElementById('restaurants');
+        restaurants.classList.toggle('lg:col-span-3');
+        restaurants.classList.toggle('lg:col-span-2');
     }
-
-    // Calendar functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        const calendarDays = document.querySelectorAll('.calendar-day');
-
-        calendarDays.forEach(day => {
-            day.addEventListener('click', function() {
-                // Skip if it's a previous month day
-                if (this.classList.contains('text-indigo-300')) return;
-
-                // Toggle active state
-                const isActive = this.classList.contains('calendar-day-active');
-
-                if (!isActive) {
-                    this.classList.add('calendar-day-active', 'text-primary', 'font-bold', 'glow');
-                    this.classList.remove('text-indigo-700');
-                } else {
-                    this.classList.remove('calendar-day-active', 'text-primary', 'font-bold', 'glow');
-                    this.classList.add('text-indigo-700');
-                }
-            });
-        });
-
-        // Initialize current month and year
-        const monthYear = document.getElementById('monthYear');
-        const currentDate = new Date();
-        monthYear.textContent = currentDate.toLocaleString('default', {
-            month: 'long',
-            year: 'numeric'
-        });
-
-        // Load current month days
-        loadMonthDays(currentDate.getFullYear(), currentDate.getMonth());
-
-        document.getElementById('prevMonth').addEventListener('click', function() {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            monthYear.textContent = currentDate.toLocaleString('default', {
-                month: 'long',
-                year: 'numeric'
-            });
-            loadMonthDays(currentDate.getFullYear(), currentDate.getMonth());
-        });
-
-        document.getElementById('nextMonth').addEventListener('click', function() {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            monthYear.textContent = currentDate.toLocaleString('default', {
-                month: 'long',
-                year: 'numeric'
-            });
-            loadMonthDays(currentDate.getFullYear(), currentDate.getMonth());
-        });
-    });
-
-    function loadMonthDays(year, month) {
-        const calendarDays = document.getElementById('calendarDays');
-        calendarDays.innerHTML = '';
-
-        const firstDay = new Date(year, month, 1);
-        const lastDay = new Date(year, month + 1, 0);
-        const numDays = lastDay.getDate();
-        const startDay = firstDay.getDay();
-
-        // Empty slots for previous month
-        for (let i = 0; i < startDay; i++) {
-            const emptyDay = document.createElement('button');
-            emptyDay.classList.add('calendar-day', 'w-8', 'h-8', 'flex', 'items-center', 'justify-center', 'rounded-full', 'text-transparent', 'text-sm');
-            calendarDays.appendChild(emptyDay);
-        }
-
-        // Days of current month
-        for (let day = 1; day <= numDays; day++) {
-            const dayButton = document.createElement('button');
-            dayButton.textContent = day;
-            dayButton.classList.add('calendar-day', 'w-8', 'h-8', 'flex', 'items-center', 'justify-center', 'rounded-full', 'text-indigo-700', 'text-sm');
-
-            dayButton.addEventListener('click', function(e) {
-                e.preventDefault(); // منع الحدث الافتراضي
-
-                // إزالة التحديد من كل الأيام
-                document.querySelectorAll('.calendar-day-active').forEach(el => {
-                    el.classList.remove('calendar-day-active', 'text-primary', 'font-bold', 'glow', 'gradient-button');
-                    // el.classList.add('text-indigo-700');
-                });
-
-                // تفعيل التحديد لليوم الحالي
-                this.classList.add('active', 'glow', 'gradient-button');
-                // this.classList.remove('text-indigo-700');
-
-                // تعيين التاريخ المحدد في hidden input
-                const selectedDate = new Date(year, month, day);
-                const yearStr = selectedDate.getFullYear();
-                const monthStr = ('0' + (selectedDate.getMonth() + 1)).slice(-2);
-                const dayStr = ('0' + selectedDate.getDate()).slice(-2);
-                document.getElementById('selectedDate').value = `${yearStr}-${monthStr}-${dayStr}`;
-            });
-
-            calendarDays.appendChild(dayButton);
-        }
-
-        // Empty slots for next month
-        const endDay = lastDay.getDay();
-        for (let i = endDay + 1; i < 7; i++) {
-            const emptyDay = document.createElement('button');
-            emptyDay.classList.add('calendar-day', 'w-8', 'h-8', 'flex', 'items-center', 'justify-center', 'rounded-full', 'text-transparent', 'text-sm');
-            calendarDays.appendChild(emptyDay);
-        }
-    }
-</script>
-<script id="calendarInteraction">
-    document.addEventListener('DOMContentLoaded', function() {
-        const calendarDays = document.querySelectorAll('.calendar-day');
-
-        calendarDays.forEach(day => {
-            day.addEventListener('click', function() {
-                // Skip if it's a previous month day
-                if (this.classList.contains('text-indigo-300')) return;
-
-                // Toggle active state
-                const isActive = this.classList.contains('calendar-day-active');
-
-                if (!isActive) {
-                    this.classList.add('calendar-day-active', 'glow');
-                    this.classList.remove('text-indigo-700');
-                } else {
-                    this.classList.remove('calendar-day-active', 'glow');
-                    this.classList.add('text-indigo-700');
-                }
-            });
-        });
-    });
-</script>
-<script>
-    const minPrice = document.getElementById("minPrice");
-    const maxPrice = document.getElementById("maxPrice");
-    const minPriceBubble = document.getElementById("minPriceBubble");
-    const maxPriceBubble = document.getElementById("maxPriceBubble");
-    const progress = document.getElementById("progress");
-
-    function updatePriceRange() {
-        document.getElementById("priceChanged").value = "true";
-        let minVal = parseInt(minPrice.value);
-        let maxVal = parseInt(maxPrice.value);
-
-        if (minVal >= maxVal) {
-            minVal = maxVal - 1;
-            minPrice.value = minVal;
-        }
-
-        const minPercent = ((minVal - minPrice.min) / (minPrice.max - minPrice.min)) * 100;
-        const maxPercent = ((maxVal - minPrice.min) / (minPrice.max - minPrice.min)) * 100;
-
-        progress.style.left = minPercent + "%";
-        progress.style.width = (maxPercent - minPercent) + "%";
-
-        minPriceBubble.textContent = `${minVal} SAR`;
-        maxPriceBubble.textContent = `${maxVal==3000?'100,000':maxVal} SAR`;
-
-        minPriceBubble.style.left = minPercent + "%";
-        maxPriceBubble.style.left = maxPercent + "%";
-    }
-
-    minPrice.addEventListener("input", updatePriceRange);
-    maxPrice.addEventListener("input", updatePriceRange);
-
-    updatePriceRange();
 </script>
 @endpush
