@@ -106,7 +106,7 @@ class EventsController extends Controller
     public function update(Request $request, Event $event)
     {
         $validated = $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg',
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'date' => 'required|date|after_or_equal:now',

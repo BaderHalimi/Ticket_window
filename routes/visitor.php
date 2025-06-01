@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\visitor\LoginController;
+use App\Http\Controllers\visitor\VisitorController;
 use App\Models\Category;
 use App\Models\Event;
 use Illuminate\Http\Request as HttpRequest;
@@ -96,3 +97,4 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 
+Route::resource('visitor', VisitorController::class)->middleware("auth")->names('details');

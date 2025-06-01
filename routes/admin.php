@@ -22,4 +22,4 @@ Route::get('/sellers', function () {
 
 
 Route::resource('employees', EmployeeController::class)->middleware("auth")->names('employees');
-Route::put('employees/{employee}', [EmployeeController::class, 'update'])->name('admin.employees.update');
+//Route::put('employees/{employee}', [EmployeeController::class, 'update'])->name('admin.employees.update');

@@ -68,7 +68,9 @@
                 </div>
             </div>
             <h2 class="text-xl font-semibold text-gray-800">{{ $event->name }}</h2>
-            <p class="text-gray-600 mt-2">{{ $event->description }}</p>
+            <p class="text-gray-600 mt-2">
+                {{ Str::limit($event->description, 50) }}
+            </p>
             <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-calendar-line ri-sm"></i></span> {{ Carbon\Carbon::create($event->date)->diffForHumans() }}</p>
             <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-map-pin-line ri-sm"></i></span> <span class="rounded-full px-2 bg-green-200">{{ $event->location }}</span></p>
             <div class="mt-4 flex justify-between items-center">
