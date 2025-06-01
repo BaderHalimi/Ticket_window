@@ -99,5 +99,5 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 
-Route::resource('visitor/dashboard/details', VisitorController::class)->middleware("auth")->names('details');
-Route::resource('visitor/dashboard/restaurent', RestaurentController::class)->middleware("auth")->names('restaurent');
+Route::resource('dashboard/details', VisitorController::class)->middleware("auth")->names('details');
+Route::resource('dashboard/restaurent', RestaurentController::class)->middleware("auth")->names('restaurent');

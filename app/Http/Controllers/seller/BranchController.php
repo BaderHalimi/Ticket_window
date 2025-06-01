@@ -38,7 +38,7 @@ class BranchController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg',
             'name'=>'required|string|max:255',
             'location'=>'required|string|max:255',
             'tables'=>'required|integer',
@@ -51,6 +51,7 @@ class BranchController extends Controller
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('events', 'public');
         } else {
+            //$imagePath = Branch::all()->image;
             return "erorr";
         }
 
@@ -63,7 +64,7 @@ class BranchController extends Controller
             'open_at'=>$validate['open_at'],
             'close_at'=>$validate['close_at'],
             'status'=>$validate['status'],
-            'restaurent_id'=>Auth::user()->id
+            'restaurent_id'=>Auth::id()
         ]);
         return redirect()->route('seller.branch.index')->with('success','branch was created');
     }
@@ -104,7 +105,7 @@ class BranchController extends Controller
         ]);
 
 
-        $validated['restaurent_id'] = Auth::id();
+        
 
         if ($request->hasFile('image')) {
             // File::delete(public_path($event->image));
@@ -115,6 +116,7 @@ class BranchController extends Controller
         }
 
         $branch->update($validated);
+
 
         return redirect()->route('seller.branch.index');
     }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\visitor;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Branch;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 
 class RestaurentController extends Controller
@@ -40,7 +42,10 @@ class RestaurentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $restaurant = Branch::findOrFail($id);
+        $user = User::findOrFail($restaurant->restaurent_id);
+
+        return view('visitor.dashboard.restaurent.table_details',compact('restaurant','user'));
     }
 
     /**
