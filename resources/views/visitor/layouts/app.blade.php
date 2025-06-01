@@ -52,7 +52,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('visitor.my_restaurents') }}"
+                        <a href="{{ route('visitor.restaurent.index') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-restaurant-line text-xl"></i>
                             Explore restaurents

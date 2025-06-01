@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\visitor\LoginController;
 use App\Http\Controllers\visitor\VisitorController;
+use App\Http\Controllers\visitor\RestaurentController;
+use App\Models\Branch;
 use App\Models\Category;
 use App\Models\Event;
 use Illuminate\Http\Request as HttpRequest;
@@ -97,4 +99,5 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 
-Route::resource('visitor', VisitorController::class)->middleware("auth")->names('details');
+Route::resource('visitor/dashboard/details', VisitorController::class)->middleware("auth")->names('details');
+Route::resource('visitor/dashboard/restaurent', RestaurentController::class)->middleware("auth")->names('restaurent');

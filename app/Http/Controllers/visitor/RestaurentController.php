@@ -4,21 +4,19 @@ namespace App\Http\Controllers\visitor;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Models\Event;
-use App\Models\Category;
+use App\Models\Branch;
 
-class VisitorController extends Controller
+
+class RestaurentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(string $id)
+    public function index()
     {
-
-
+        $branchs = Branch::all();
+        
+        return view('visitor.dashboard.restaurent.explore_restaurents',compact('branchs'));
     }
 
     /**
@@ -42,10 +40,7 @@ class VisitorController extends Controller
      */
     public function show(string $id)
     {
-        $event = Event::findOrFail($id);
-        $user = User::findOrFail($event->id);
-
-        return view('visitor.dashboard.details.details',compact('event','user'));
+        //
     }
 
     /**
