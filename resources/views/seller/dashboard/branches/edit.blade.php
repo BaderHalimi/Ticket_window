@@ -8,7 +8,12 @@
         min-height: 100vh;
     }
 
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         font-family: 'Space Grotesk', sans-serif;
     }
 
@@ -142,7 +147,17 @@
     <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
         <i class="ri-edit-line text-primary text-3xl"></i> Edit Branch
     </h2>
-
+    @if ($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+        <strong class="font-bold">Whoops!</strong>
+        <span class="block sm:inline">There were some problems with your input.</span>
+        <ul class="mt-2 list-disc list-inside">
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <form action="{{ route('seller.branch.update', $branch->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -162,6 +177,35 @@
 
             </div>
         </div>
+        <div class="mt-8">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Edit Gallery</h3>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                @php
+                $gallery = json_decode($branch->gallery ?? '[]', true);
+                @endphp
+
+                @foreach ($gallery as $index => $image)
+                <div class="relative border rounded-lg p-2 bg-gray-100">
+                    <img src="{{ Storage::url($image) }}" class="rounded w-full h-32 object-cover mb-2">
+
+                    <input type="file" name="updated_images[{{ $index }}]" class="block w-full mb-2">
+
+                    <button type="button" onclick="removeImage(this, '{{ $index }}')" class="absolute top-1 right-1 bg-red-600 text-white py-1 px-3 rounded-full">
+                        &times;
+                    </button>
+
+                    <input type="hidden" name="keep_images[]" value="{{ $image }}">
+                </div>
+                @endforeach
+            </div>
+
+            <div>
+                <label class="block mb-2 font-semibold text-gray-700">Add New Images:</label>
+                <input type="file" name="new_images[]" multiple class="w-full border p-2 rounded">
+            </div>
+        </div>
+
 
         <div class="form-grid">
             <div>
@@ -203,24 +247,24 @@
                 <select name="restaurent_id" id="restaurent_id">
                     @foreach($categories as $restaurent)
                     <option value="{{ $restaurent->id }}" {{ $branch->restaurent_id == $restaurent->id ? 'selected' : '' }}>
-                        {{ $restaurent->name }}
-                    </option>
-                    @endforeach
-                </select>
-            </div> --}}
-        </div>
+            {{ $restaurent->name }}
+            </option>
+            @endforeach
+            </select>
+        </div> --}}
+</div>
 
-        <div class="mt-6">
-            <label for="location">Location</label>
-            <input type="text" name="location" id="location" value="{{ old('location', $branch->location) }}" />
-        </div>
+<div class="mt-6">
+    <label for="location">Location</label>
+    <input type="text" name="location" id="location" value="{{ old('location', $branch->location) }}" />
+</div>
 
-        <div class="mt-8">
-            <button type="submit" class="gradient-button">
-                <i class="ri-save-line"></i> Save Changes
-            </button>
-        </div>
-    </form>
+<div class="mt-8">
+    <button type="submit" class="gradient-button">
+        <i class="ri-save-line"></i> Save Changes
+    </button>
+</div>
+</form>
 </div>
 @endsection
 
@@ -236,5 +280,17 @@
             reader.readAsDataURL(input.files[0]);
         }
     });
+</script>
+<script>
+    function removeImage(button, index) {
+        // نخفي العنصر بالكامل من الواجهة
+        button.closest('div').remove();
+
+        // نحذف قيمة الصورة من الحقول المرسلة للسيرفر
+        const input = document.querySelector(`input[name="keep_images[]"][value="${index}"]`);
+        if (input) {
+            input.remove();
+        }
+    }
 </script>
 @endpush

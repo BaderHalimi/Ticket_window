@@ -34,7 +34,7 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::resource('branch', BranchController::class)->middleware("auth");
-Route::get('branch/gallery/{id}', [BranchController::class, 'edit_gallery'])->middleware("auth")->name('branch.gallery');
+Route::get('branch/gallery/{branch}', [BranchController::class, 'edit_gallery'])->middleware("auth")->name('branch.gallery');
 
 Route::get('/sales',function(){
     return view('seller.dashboard.sales');

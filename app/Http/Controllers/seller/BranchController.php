@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\seller;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -20,7 +21,7 @@ class BranchController extends Controller
     {
         $branchs = Branch::all();
 
-        return view('seller.dashboard.branches.index',compact('branchs'));
+        return view('seller.dashboard.branches.index', compact('branchs'));
     }
 
     /**
@@ -39,10 +40,10 @@ class BranchController extends Controller
     {
         $validate = $request->validate([
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg',
-            'name'=>'required|string|max:255',
-            'location'=>'required|string|max:255',
-            'tables'=>'required|integer',
-            'hour_price'=>'required|numeric',
+            'name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'tables' => 'required|integer',
+            'hour_price' => 'required|numeric',
             'open_at' => 'nullable|date_format:H:i',
             'close_at' => 'required_with:open_at|date_format:H:i|after:open_at',
             'status' => 'required|in:active,inactive',
@@ -67,18 +68,18 @@ class BranchController extends Controller
         }
 
         $branch_sender = Branch::create([
-            'image'=>$imagePath,
-            'name'=>$validate['name'],
-            'location'=>$validate['location'],
-            'tables'=>$validate['tables'],
-            'hour_price'=>$validate['hour_price'],
-            'open_at'=>$validate['open_at'],
-            'close_at'=>$validate['close_at'],
-            'status'=>$validate['status'],
-            'restaurent_id'=>Auth::id(),
+            'image' => $imagePath,
+            'name' => $validate['name'],
+            'location' => $validate['location'],
+            'tables' => $validate['tables'],
+            'hour_price' => $validate['hour_price'],
+            'open_at' => $validate['open_at'],
+            'close_at' => $validate['close_at'],
+            'status' => $validate['status'],
+            'restaurent_id' => Auth::id(),
             'gallery' => json_encode($imagePaths)
         ]);
-        return redirect()->route('seller.branch.index')->with('success','branch was created');
+        return redirect()->route('seller.branch.index')->with('success', 'branch was created');
     }
 
     /**
@@ -96,17 +97,17 @@ class BranchController extends Controller
     public function edit(branch $branch)
     {
         //$categories = Category::active()->where('id', 'user')->get();
-        return view("seller.dashboard.branches.edit",compact('branch'));
+        return view("seller.dashboard.branches.edit", compact('branch'));
     }
 
     public function edit_gallery(Branch $branch)
     {
         //$categories = Category::active()->where('id', 'user')->get();
-        
-        dd($branch->gallery);
-        return view("seller.dashboard.branches.edit_gallery",compact('branch'));
+
+        // dd($branch->gallery);
+        return view("seller.dashboard.branches.edit_gallery", compact('branch'));
     }
-    
+
     /**
      * Update the specified resource in storage.
      */
@@ -114,31 +115,69 @@ class BranchController extends Controller
     {
         $validate = $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-            'name'=>'nullable|string|max:255',
-            'location'=>'nullable|string|max:255',
-            'tables'=>'nullable|integer',
-            'hour_price'=>'nullable|numeric',
-            'open_at' => 'nullable|date_format:H:i',
-            'close_at' => 'required_with:open_at|date_format:H:i|after:open_at',
+            'name' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'tables' => 'nullable|integer',
+            'hour_price' => 'nullable|numeric',
+            'open_at' => 'nullable|date_format:H:i:s',
+            'close_at' => 'required_with:open_at|date_format:H:i:s|after:open_at',
             'status' => 'in:active,inactive',
 
+            // أضف هنا فحص الصور الجديدة والمعدلة
+            'new_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            'updated_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+        ]);
+
+        if ($request->hasFile('image')) {
+            Storage::disk('public')->delete($branch->image);
+            $validate['image'] = $request->file('image')->store('branches', 'public');
+        } else {
+            $validate['image'] = $branch->image;
+        }
+        // جلب الصور التي بقيت كما هي
+        $gallery = $request->input('keep_images', []);
+
+        // تحديث الصور التي تم تعديلها
+        if ($request->hasFile('updated_images')) {
+            foreach ($request->file('updated_images') as $index => $updatedImage) {
+                if ($updatedImage) {
+                    // حذف الصورة القديمة إن وجدت
+                    if (isset($gallery[$index])) {
+                        Storage::disk('public')->delete($gallery[$index]);
+                    }
+
+                    // رفع الصورة الجديدة بنفس مكان القديمة
+                    $gallery[$index] = $updatedImage->store('branches/gallery', 'public');
+                }
+            }
+        }
+
+        // إضافة الصور الجديدة المضافة
+        if ($request->hasFile('new_images')) {
+            foreach ($request->file('new_images') as $newImage) {
+                $gallery[] = $newImage->store('branches/gallery', 'public');
+            }
+        }
+
+        // ترتيب الصور بعد التعديلات (لضمان ترتيب الفهرسة بشكل نظيف)
+        $gallery = array_values($gallery);
+
+        // تخزين البيانات الجديدة
+        $branch->update([
+            'image' => $validate['image'],
+            'name' => $validate['name'],
+            'location' => $validate['location'],
+            'tables' => $validate['tables'],
+            'hour_price' => $validate['hour_price'],
+            'open_at' => $validate['open_at'],
+            'close_at' => $validate['close_at'],
+            'status' => $validate['status'],
+            'gallery' => json_encode($gallery),
         ]);
 
 
-        
 
-        if ($request->hasFile('image')) {
-            // File::delete(public_path($event->image));
-            Storage::disk('public')->delete($branch->image);
-            $validated['image'] = $request->file('image')->store('events', 'public');
-        }else{
-            $validated['image'] = $branch->image; // Keep the old image if no new one is uploaded
-        }
-
-        $branch->update($validated);
-
-
-        return redirect()->route('seller.branch.index');
+        return redirect()->route('seller.branch.index')->with('success', 'Branch updated successfully!');
     }
 
     /**
@@ -149,9 +188,8 @@ class BranchController extends Controller
         if ($branch->image && Storage::disk('public')->exists($branch->image)) {
             Storage::disk('public')->delete($branch->image);
         }
-            $branch->delete();
-    
+        $branch->delete();
+
         return redirect()->route('seller.branch.index')->with('success', 'Branch deleted successfully.');
     }
-    
 }
