@@ -2,6 +2,56 @@
 @section('title', 'Dashboard - ')
 @push('styles')
 <style>
+    .imgsContainer {
+        scrollbar-width: thin;
+        /* للفايرفوكس */
+        scrollbar-color: #61B2E5 transparent;
+        /* لون المقبض والمسار */
+
+        /* كروم و سفاري و ايدج */
+    }
+
+    .imgsContainer::-webkit-scrollbar {
+        height: 8px;
+        width: 8px;
+    }
+
+    .imgsContainer::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .imgsContainer::-webkit-scrollbar-thumb {
+        background-color: rgba(100, 100, 100, 0.5);
+        border-radius: 10px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+    }
+
+    .imgsContainer::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(100, 100, 100, 0.8);
+    }
+    .gallery-img {
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+    .gallery-img:hover {
+        transform: scale(1.05);
+    }
+    .gallery-img:active {
+        transform: scale(0.95);
+    }
+    .gallery-img:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(87, 181, 231, 0.5);
+    }
+    .gallery-img:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(87, 181, 231, 0.5);
+    }
+    .gallery-img:focus:not(:focus-visible) {
+        box-shadow: none;
+    }
+
     .price-slider {
         position: relative;
         width: 100%;
@@ -153,16 +203,31 @@
     </div>
 
     <div class="glassmorphism p-10 rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-            <img src="{{ Storage::url($restaurant->image) }}" alt="Restaurant Image" class="rounded-lg shadow-lg w-full h-auto object-cover">
+        <div class="grid grid-cols-4 gap-3">
+            <div style="height:190px;" class="imgsContainer col-span-1 overflow-y-scroll overflow-x-hidden">
+                @if (!empty($restaurant->gallery))
+                @foreach (json_decode($restaurant->gallery,true) as $index => $image)
+                <img src="{{ Storage::url($image) }}"
+                    alt="صورة المعرض {{ $index + 1 }}"
+                    class="rounded-lg shadow gallery-img object-cover w-full h-24 mb-2"
+                    onclick="openImageViewer(`{{ $index }}`)">
+                @endforeach
+                @endif
+            </div>
+            <div id="imageViewerContainer" class="mb-6 col-span-3">
+                <img height="190px" style="max-height: 190px;" id="imageView" src="{{ Storage::url($restaurant->image) }}" alt="صورة الفعالية" class="rounded-lg shadow-lg object-cover">
+            </div>
         </div>
+        <!-- <div>
+            <img src="{{ Storage::url($restaurant->image) }}" alt="Restaurant Image" class="rounded-lg shadow-lg w-full h-auto object-cover">
+        </div> -->
         <div>
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">{{ $user->name }}</h2>
             <p class="text-gray-600 mb-2"><strong>Location:</strong> {{ $restaurant->name }}</p>
             <p class="text-gray-600 mb-2"><strong>Branch:</strong> {{ $restaurant->location }}</p>
             <p class="text-gray-600 mb-2"><strong>Average Price:</strong> SAR {{ number_format($restaurant->hour_price, 2) }}</p>
             <p class="text-gray-600 mb-2"><strong>Rating:</strong> ⭐ {{ number_format($restaurant->rating, 1) }} / 5</p>
-            <p class="text-gray-600 mb-4"><strong>Status:</strong> 
+            <p class="text-gray-600 mb-4"><strong>Status:</strong>
                 <span class="{{ $restaurant->status === 'open' ? 'text-green-600' : 'text-red-600' }}">
                     {{ ucfirst($restaurant->status) }}
                 </span>
@@ -171,10 +236,10 @@
         <div class="col-span-2">
             <h3 class="text-xl font-semibold text-gray-800 mb-2">Description</h3>
             <p class="text-gray-700 mb-6">{{ $restaurant->description }}</p>
-        
+
             <div class="text-right">
-                <a href="#" 
-                   class="gradient-button text-white px-6 py-3 rounded-lg shadow-lg text-lg font-semibold inline-flex items-center">
+                <a href="#"
+                    class="gradient-button text-white px-6 py-3 rounded-lg shadow-lg text-lg font-semibold inline-flex items-center">
                     <i class="ri-restaurant-line mr-2"></i> احجز طاولة
                 </a>
             </div>
@@ -182,7 +247,7 @@
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto mt-12 px-4">
+<!-- <div class="max-w-7xl mx-auto mt-12 px-4">
     <h3 class="text-2xl font-bold text-gray-800 mb-6">📷 صور توضيحية</h3>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -195,30 +260,30 @@
             </div>
         @endforeach
     </div>
-</div>
+</div> -->
 
 <!-- Image Viewer Modal -->
-<div id="imageViewer" 
-     class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-md flex items-center justify-center z-50 hidden">
+<div id="imageViewer"
+    class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-md flex items-center justify-center z-50 hidden">
     <div class="relative max-w-4xl max-h-[80vh] w-full mx-4 bg-white rounded-lg overflow-hidden shadow-lg flex flex-col items-center">
         <!-- Close Button -->
-        <button onclick="closeImageViewer()" 
-                class="absolute top-4 right-4 text-black bg-white bg-opacity-70 rounded-full p-3 hover:bg-opacity-90 transition shadow-lg text-2xl font-bold">
+        <button onclick="closeImageViewer()"
+            class="absolute top-4 right-4 text-black bg-white bg-opacity-70 rounded-full p-3 hover:bg-opacity-90 transition shadow-lg text-2xl font-bold">
             &#10005;
         </button>
 
         <!-- Image Display -->
-        <img id="viewerImage" src="" alt="عرض الصورة" 
-             class="max-w-full max-h-[70vh] object-contain select-none">
+        <img id="viewerImage" src="" alt="عرض الصورة"
+            class="max-w-full max-h-[70vh] object-contain select-none">
 
         <!-- Navigation Buttons -->
         <div class="flex justify-between w-full bg-white bg-opacity-70 p-4">
-            <button onclick="previousImage()" 
-                    class="text-black bg-white bg-opacity-80 px-6 py-3 rounded shadow hover:bg-opacity-100 transition font-semibold text-lg">
+            <button onclick="previousImage()"
+                class="text-black bg-white bg-opacity-80 px-6 py-3 rounded shadow hover:bg-opacity-100 transition font-semibold text-lg">
                 السابق
             </button>
-            <button onclick="nextImage()" 
-                    class="text-black bg-white bg-opacity-80 px-6 py-3 rounded shadow hover:bg-opacity-100 transition font-semibold text-lg">
+            <button onclick="nextImage()"
+                class="text-black bg-white bg-opacity-80 px-6 py-3 rounded shadow hover:bg-opacity-100 transition font-semibold text-lg">
                 التالي
             </button>
         </div>
@@ -228,14 +293,14 @@
 
 <script>
     // جلب الصور من المتغير المرسل من الباك إند
-    const images = @json(json_decode($restaurant->gallery ?? '[]', true));
+    const images = @json(json_decode($restaurant -> gallery ?? '[]', true));
 
     let currentIndex = 0;
 
     function openImageViewer(index) {
         currentIndex = index;
-        document.getElementById('viewerImage').src = images[currentIndex] ? `{{ asset('storage') }}/` + images[currentIndex] : '';
-        document.getElementById('imageViewer').classList.remove('hidden');
+        document.getElementById('imageView').src = images[currentIndex] ? `{{ asset('storage') }}/` + images[currentIndex] : '';
+        // document.getElementById('imageViewer').classList.remove('hidden');
     }
 
     function closeImageViewer() {

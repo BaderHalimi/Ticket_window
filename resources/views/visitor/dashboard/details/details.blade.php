@@ -32,6 +32,33 @@
         background-color: rgba(100, 100, 100, 0.8);
     }
 
+    .gallery-img {
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .gallery-img:hover {
+        transform: scale(1.05);
+    }
+
+    .gallery-img:active {
+        transform: scale(0.95);
+    }
+
+    .gallery-img:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(87, 181, 231, 0.5);
+    }
+
+    .gallery-img:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(87, 181, 231, 0.5);
+    }
+
+    .gallery-img:focus:not(:focus-visible) {
+        box-shadow: none;
+    }
+
     body {
         font-family: 'Quicksand', sans-serif;
         background: linear-gradient(135deg, #f0f9ff 0%, #e6e6fa 100%);
