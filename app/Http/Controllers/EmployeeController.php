@@ -18,7 +18,7 @@ class EmployeeController extends Controller
     public function index()
     {
 
-        $employees = User::where('role', '!=', 'visitor')->get();
+        $employees = User::whereIn('role', ['admin','employee','checker'])->get();
 
         return view('admin.dashboard.employees.index', compact('employees'));
     }
