@@ -122,7 +122,7 @@
                 <img src="{{ Storage::url($image) }}"
                     alt="صورة المعرض {{ $index + 1 }}"
                     class="rounded-lg shadow gallery-img object-cover w-full h-24 mb-2"
-                    onclick="openImageViewer(`{{ $index }}`)">
+                    onclick="openImageViewer(`{{ $index }}`)"> 
                 @endforeach
                 @endif
             </div>
