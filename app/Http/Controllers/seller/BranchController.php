@@ -45,7 +45,9 @@ class BranchController extends Controller
             'hour_price'=>'required|numeric',
             'open_at' => 'nullable|date_format:H:i',
             'close_at' => 'required_with:open_at|date_format:H:i|after:open_at',
-            'status' => 'required|in:active,inactive'
+            'status' => 'required|in:active,inactive',
+            'gallery.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048'
+
         ]);
 
         if ($request->hasFile('image')) {
@@ -53,6 +55,15 @@ class BranchController extends Controller
         } else {
             //$imagePath = Branch::all()->image;
             return "erorr";
+        }
+
+        $imagePaths = [];
+
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $image) {
+                $path = $image->store('restaurants/gallery', 'public');
+                $imagePaths[] = $path;
+            }
         }
 
         $branch_sender = Branch::create([
@@ -64,7 +75,8 @@ class BranchController extends Controller
             'open_at'=>$validate['open_at'],
             'close_at'=>$validate['close_at'],
             'status'=>$validate['status'],
-            'restaurent_id'=>Auth::id()
+            'restaurent_id'=>Auth::id(),
+            'gallery' => json_encode($imagePaths)
         ]);
         return redirect()->route('seller.branch.index')->with('success','branch was created');
     }

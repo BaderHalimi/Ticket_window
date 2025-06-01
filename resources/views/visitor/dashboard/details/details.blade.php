@@ -1,5 +1,5 @@
 @extends('visitor.layouts.app')
-@section('title', 'Event Details - ')
+@section('title', 'Event Details')
 
 @push('styles')
 <style>
@@ -29,50 +29,126 @@
         background: linear-gradient(135deg, #4da8d9 0%, #a28cc7 100%);
         transform: translateY(-2px);
     }
+
+    .gallery-img {
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-img:hover {
+        transform: scale(1.05);
+    }
 </style>
 @endpush
 
 @section('sub_content')
 <div class="max-w-5xl mx-auto py-12">
+    <!-- Header -->
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">Event Details</h1>
+        <h1 class="text-3xl font-bold text-gray-800">تفاصيل الفعالية</h1>
         <a href="{{ route('visitor.my_events') }}" class="gradient-button text-white px-4 py-2 rounded-lg shadow-md">
-            <i class="ri-arrow-left-line"></i> Back to Events
+            <i class="ri-arrow-left-line"></i> العودة للفعاليات
         </a>
     </div>
 
+    <!-- Event Details -->
     <div class="glassmorphism p-10 rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Event Image -->
         <div>
-            <img src="{{ Storage::url($event->image) }}" alt="Event Image" class="rounded-lg shadow-lg w-full h-auto object-cover">
+            <img src="{{ Storage::url($event->image) }}" alt="صورة الفعالية" class="rounded-lg shadow-lg w-full h-auto object-cover">
         </div>
+
+        <!-- Info -->
         <div>
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">{{ $event->name }}</h2>
-            <p class="text-gray-600 mb-2"><strong>Date:</strong> {{ $event->date->format('F d, Y h:i A') }}</p>
-            <p class="text-gray-600 mb-2"><strong>Location:</strong> {{ $event->location }}</p>
-            <p class="text-gray-600 mb-2"><strong>Total Tickets:</strong> {{ $event->total_tickets }}</p>
-            <p class="text-gray-600 mb-2"><strong>Ticket Price:</strong> SAR {{ number_format($event->ticket_price, 2) }}</p>
-            <p class="text-gray-600 mb-4"><strong>Status:</strong> 
+            <p class="text-gray-600 mb-2"><strong>التاريخ:</strong> {{ $event->date->format('Y-m-d H:i A') }}</p>
+            <p class="text-gray-600 mb-2"><strong>الموقع:</strong> {{ $event->location }}</p>
+            <p class="text-gray-600 mb-2"><strong>عدد التذاكر:</strong> {{ $event->total_tickets }}</p>
+            <p class="text-gray-600 mb-2"><strong>سعر التذكرة:</strong> {{ number_format($event->ticket_price, 2) }} ريال</p>
+            <p class="text-gray-600 mb-4"><strong>الحالة:</strong> 
                 <span class="{{ $event->status === 'active' ? 'text-green-600' : 'text-red-600' }}">
-                    {{ ucfirst($event->status) }}
+                    {{ $event->status === 'active' ? 'فعالة' : 'منتهية' }}
                 </span>
             </p>
         </div>
+
+        <!-- Description -->
         <div class="col-span-2">
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">Description</h3>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">الوصف</h3>
             <p class="text-gray-700">{{ $event->description }}</p>
         </div>
-        <div class="col-span-2">
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">Description</h3>
-            <p class="text-gray-700 mb-6">{{ $event->description }}</p>
-        
-            <div class="text-right">
-                <a href="" 
-                   class="gradient-button text-white px-6 py-3 rounded-lg shadow-lg text-lg font-semibold inline-flex items-center">
-                    <i class="ri-ticket-line mr-2"></i> احجز الآن
-                </a>
+
+        <!-- Gallery -->
+        @if (!empty($event->gallery))
+        <div class="col-span-2 mt-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">معرض الصور</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                @foreach (json_decode($event->gallery, true) as $index => $image)
+                    <img src="{{ asset('storage/' . $image) }}"
+                         alt="صورة المعرض"
+                         class="rounded-lg shadow gallery-img object-cover w-full h-40"
+                         onclick="openImageViewer({{ $index }})">
+                @endforeach
             </div>
         </div>
-        
+        @endif
+
+        <!-- Booking Button -->
+        <div class="col-span-2 text-right mt-6">
+            <a href="#"
+               class="gradient-button text-white px-6 py-3 rounded-lg shadow-lg text-lg font-semibold inline-flex items-center">
+                <i class="ri-ticket-line mr-2"></i> احجز الآن
+            </a>
+        </div>
     </div>
 </div>
+
+<!-- Image Modal -->
+<div id="imageViewer"
+     class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-md flex items-center justify-center z-50 hidden">
+    <div class="relative max-w-4xl max-h-[80vh] w-full mx-4 bg-white rounded-lg overflow-hidden shadow-lg flex flex-col items-center">
+        <button onclick="closeImageViewer()"
+                class="absolute top-4 right-4 text-black bg-white bg-opacity-70 rounded-full p-3 hover:bg-opacity-90 transition shadow-lg text-2xl font-bold">
+            &times;
+        </button>
+        <img id="viewerImage" src="" alt="عرض الصورة"
+             class="max-w-full max-h-[70vh] object-contain select-none">
+
+        <div class="flex justify-between w-full bg-white bg-opacity-70 p-4">
+            <button onclick="previousImage()"
+                    class="text-black bg-white bg-opacity-80 px-6 py-3 rounded shadow hover:bg-opacity-100 transition font-semibold text-lg">
+                السابق
+            </button>
+            <button onclick="nextImage()"
+                    class="text-black bg-white bg-opacity-80 px-6 py-3 rounded shadow hover:bg-opacity-100 transition font-semibold text-lg">
+                التالي
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const images = @json(json_decode($event->gallery ?? '[]', true));
+    let currentIndex = 0;
+
+    function openImageViewer(index) {
+        currentIndex = index;
+        document.getElementById('viewerImage').src = `{{ asset('storage') }}/` + images[currentIndex];
+        document.getElementById('imageViewer').classList.remove('hidden');
+    }
+
+    function closeImageViewer() {
+        document.getElementById('imageViewer').classList.add('hidden');
+    }
+
+    function previousImage() {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        document.getElementById('viewerImage').src = `{{ asset('storage') }}/` + images[currentIndex];
+    }
+
+    function nextImage() {
+        currentIndex = (currentIndex + 1) % images.length;
+        document.getElementById('viewerImage').src = `{{ asset('storage') }}/` + images[currentIndex];
+    }
+</script>
 @endsection

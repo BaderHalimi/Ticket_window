@@ -1,5 +1,5 @@
 @extends('seller.layouts.app')
-@section('title', 'Create Branch - ')
+@section('title', 'Create Branch')
 
 @push('styles')
 <style>
@@ -50,10 +50,11 @@
         class="glassmorphism p-10 rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-2 gap-6">
         @csrf
 
+        {{-- صورة واحدة --}}
         <div class="col-span-2">
             <label for="image" class="block text-gray-700 font-medium mb-2">Branch Image</label>
-            <div id="drop-area" class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-white hover:bg-gray-50 transition cursor-pointer"
-                onclick="document.getElementById('image').click();"
+            <div onclick="document.getElementById('image').click();"
+                class="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-white hover:bg-gray-50 transition"
                 ondragover="event.preventDefault();" ondrop="handleDrop(event);">
                 <svg class="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 48 48">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -65,13 +66,14 @@
             </div>
         </div>
 
+        {{-- اسم الفرع --}}
         <div>
             <label for="name" class="block text-gray-700 font-medium mb-2">Branch Name</label>
             <input type="text" name="name" id="name" required
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
         </div>
 
-
+        {{-- الحالة --}}
         <div>
             <label for="status" class="block text-gray-700 font-medium mb-2">Status</label>
             <select name="status" id="status"
@@ -80,43 +82,60 @@
                 <option value="inactive">Inactive</option>
             </select>
         </div>
+
+        {{-- عدد الطاولات --}}
         <div>
             <label for="tables" class="block text-gray-700 font-medium mb-2">Number of Tables</label>
             <input type="number" name="tables" id="tables" required min="1"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
         </div>
 
+        {{-- السعر لكل ساعة --}}
         <div>
             <label for="hour_price" class="block text-gray-700 font-medium mb-2">Hourly Price (SAR)</label>
             <input type="number" name="hour_price" id="hour_price" required min="0"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
         </div>
 
+        {{-- وقت الفتح --}}
         <div>
             <label for="open_at" class="block text-gray-700 font-medium mb-2">Opening Time</label>
             <input type="time" name="open_at" id="open_at" required
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
         </div>
 
+        {{-- وقت الإغلاق --}}
         <div>
             <label for="close_at" class="block text-gray-700 font-medium mb-2">Closing Time</label>
             <input type="time" name="close_at" id="close_at" required
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
         </div>
 
-        
-
-        <div class=" col-span-2">
+        {{-- الموقع --}}
+        <div class="col-span-2">
             <label for="location" class="block text-gray-700 font-medium mb-2">Location</label>
             <input type="text" name="location" id="location" required
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
         </div>
 
+        {{-- معرض الصور (أكثر من صورة) --}}
+        <div class="col-span-2">
+            <label for="gallery" class="block text-gray-700 font-medium mb-2">Branch Gallery (Multiple Images)</label>
+            <div onclick="document.getElementById('gallery').click();"
+                class="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-white hover:bg-gray-50 transition"
+                ondragover="event.preventDefault();">
+                <svg class="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M14 32l7-7 7 7M12 20v12a2 2 0 002 2h20a2 2 0 002-2V20M20 12h8m-4-4v16" />
+                </svg>
+                <span class="text-gray-500">Drag & drop or <span class="text-primary font-semibold underline">browse</span> to upload</span>
+                <input type="file" name="gallery[]" id="gallery" multiple accept="image/*" class="hidden" onchange="previewImages(event)">
+                <div id="preview-container" class="flex flex-wrap gap-4 mt-4"></div>
+            </div>
+        </div>
 
-
+        {{-- زر الإرسال --}}
         <div class="col-span-2 text-center">
-
-            
             <button type="submit"
                 class="gradient-button text-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                 Create Branch
@@ -125,18 +144,38 @@
     </form>
 </div>
 
+{{-- JavaScript --}}
 <script>
     function previewImage(event) {
-        const input = event.target;
-        const preview = document.getElementById('preview');
-        if (input.files && input.files[0]) {
+        const file = event.target.files[0];
+        if (!file || !file.type.startsWith('image/')) return;
+
+        const reader = new FileReader();
+        reader.onload = e => {
+            const preview = document.getElementById('preview');
+            preview.src = e.target.result;
+            preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function previewImages(event) {
+        const files = event.target.files;
+        const previewContainer = document.getElementById('preview-container');
+        previewContainer.innerHTML = ""; // تصفير الصور القديمة
+
+        Array.from(files).forEach(file => {
+            if (!file.type.startsWith('image/')) return;
+
             const reader = new FileReader();
             reader.onload = e => {
-                preview.src = e.target.result;
-                preview.classList.remove('hidden');
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = "h-32 w-32 rounded shadow object-cover";
+                previewContainer.appendChild(img);
             };
-            reader.readAsDataURL(input.files[0]);
-        }
+            reader.readAsDataURL(file);
+        });
     }
 
     function handleDrop(event) {

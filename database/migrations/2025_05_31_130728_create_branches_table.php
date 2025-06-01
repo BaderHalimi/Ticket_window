@@ -21,6 +21,7 @@ return new class extends Migration
             $table->time('open_at')->nullable();
             $table->time('close_at')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->json('gallery')->nullable();
             $table->foreignId('restaurent_id')->constrained('users','id')->cascadeOnDelete();
             $table->timestamps();
         });

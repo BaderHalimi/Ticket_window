@@ -46,6 +46,8 @@ class RestaurentController extends Controller
         $restaurant = Branch::findOrFail($id);
         $user = User::findOrFail($restaurant->restaurent_id);
 
+        
+
         return view('visitor.dashboard.restaurent.table_details',compact('restaurant','user'));
     }
 

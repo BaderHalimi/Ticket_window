@@ -17,7 +17,11 @@ class Branch extends Model
         'open_at',
         'close_at',
         'status',
-        'restaurent_id'
+        'restaurent_id',
+        'gallery'
+    ];
+    protected $casts = [
+    'gallery' => 'array',
     ];
     
    

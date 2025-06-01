@@ -46,6 +46,7 @@ class EventsController extends Controller
             'total_tickets' => 'required|integer|min:1',
             'ticket_price' => 'required|numeric|min:0',
             'status' => 'required|in:active,inactive',
+            'gallery.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048'
         ]);
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('events', 'public');
@@ -53,7 +54,13 @@ class EventsController extends Controller
             return "erorr";
         }
 
-
+        $imagePaths = [];
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $image) {
+                $path = $image->store('restaurants/gallery', 'public');
+                $imagePaths[] = $path;
+            }
+        }
 
         $event_sender = Event::create([
             'image' => $imagePath,
@@ -65,7 +72,9 @@ class EventsController extends Controller
             'total_tickets' => $request->total_tickets,
             'ticket_price' => $request->ticket_price,
             'status' => $request->status,
-            'user_id' => Auth::user()->id
+            'user_id' => Auth::user()->id,
+            'gallery' => json_encode($imagePaths)
+            
         ]);
 
 
@@ -115,7 +124,21 @@ class EventsController extends Controller
             'total_tickets' => 'required|integer|min:1',
             'ticket_price' => 'required|numeric|min:0',
             'status' => 'required|in:active,inactive',
+            'gallery.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048'
         ]);
+        $imagePaths = [];
+
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $image) {
+                $path = $image->store('restaurants/gallery', 'public');
+                $imagePaths[] = $path;
+            }
+            $validated['gallery'] = json_encode($imagePaths);
+        }else{
+            $imagePaths = $event->gallery;
+            $validated['gallery'] = $imagePaths;
+
+        }
 
         if ($request->hasFile('image')) {
             // File::delete(public_path($event->image));

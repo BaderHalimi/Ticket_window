@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('total_tickets')->default(0);
             $table->float('ticket_price')->default(0);
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->json('gallery')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

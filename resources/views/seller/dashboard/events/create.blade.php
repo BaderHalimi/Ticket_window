@@ -56,18 +56,18 @@
         @csrf
         <div class="mb-3 col-span-2">
             <label for="image" class="block text-gray-700 font-medium mb-2">Event Image</label>
-            <div
-                id="drop-area"
-                class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-white hover:bg-gray-50 transition cursor-pointer"
-                onclick="document.getElementById('image').click();"
-                ondragover="event.preventDefault();"
-                ondrop="handleDrop(event);">
-                <svg class="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 32l7-7 7 7M12 20v12a2 2 0 002 2h20a2 2 0 002-2V20M20 12h8m-4-4v16" />
-                </svg>
-                <span class="text-gray-500">Drag & drop or <span class="text-primary font-semibold underline">browse</span> to upload</span>
-                <input type="file" name="image" id="image" accept="image/*" class="hidden" onchange="previewImage(event)">
-                <img id="preview" class="mt-4 max-h-48 rounded shadow hidden" />
+            <div class="col-span-2">
+                <div onclick="document.getElementById('image').click();"
+                    class="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-white hover:bg-gray-50 transition"
+                    ondragover="event.preventDefault();" ondrop="handleDrop(event);">
+                    <svg class="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14 32l7-7 7 7M12 20v12a2 2 0 002 2h20a2 2 0 002-2V20M20 12h8m-4-4v16" />
+                    </svg>
+                    <span class="text-gray-500">Drag & drop or <span class="text-primary font-semibold underline">browse</span> to upload</span>
+                    <input type="file" name="image" id="image" accept="image/*" class="hidden" onchange="previewImage(event)">
+                    <img id="preview" class="mt-4 max-h-48 rounded shadow hidden" />
+                </div>
             </div>
         </div>
         <div class="mb-3">
@@ -131,6 +131,23 @@
                 <option value="inactive">Inactive</option>
             </select>
         </div>
+
+                {{-- معرض الصور (أكثر من صورة) --}}
+                <div class="col-span-2">
+                    <label for="gallery" class="block text-gray-700 font-medium mb-2">event Gallery (Multiple Images)</label>
+                    <div onclick="document.getElementById('gallery').click();"
+                        class="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-white hover:bg-gray-50 transition"
+                        ondragover="event.preventDefault();">
+                        <svg class="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M14 32l7-7 7 7M12 20v12a2 2 0 002 2h20a2 2 0 002-2V20M20 12h8m-4-4v16" />
+                        </svg>
+                        <span class="text-gray-500">Drag & drop or <span class="text-primary font-semibold underline">browse</span> to upload</span>
+                        <input type="file" name="gallery[]" id="gallery" multiple accept="image/*" class="hidden" onchange="previewImages(event)">
+                        <div id="preview-container" class="flex flex-wrap gap-4 mt-4"></div>
+                    </div>
+                </div>
+
         <button type="submit"
             class="gradient-button text-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition duration-300 mx-auto col-span-2">
             Create Event
@@ -138,19 +155,38 @@
     </form>
 
 </div>
-
+{{-- JavaScript --}}
 <script>
     function previewImage(event) {
-        const input = event.target;
-        const preview = document.getElementById('preview');
-        if (input.files && input.files[0]) {
+        const file = event.target.files[0];
+        if (!file || !file.type.startsWith('image/')) return;
+
+        const reader = new FileReader();
+        reader.onload = e => {
+            const preview = document.getElementById('preview');
+            preview.src = e.target.result;
+            preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function previewImages(event) {
+        const files = event.target.files;
+        const previewContainer = document.getElementById('preview-container');
+        previewContainer.innerHTML = ""; // تصفير الصور القديمة
+
+        Array.from(files).forEach(file => {
+            if (!file.type.startsWith('image/')) return;
+
             const reader = new FileReader();
             reader.onload = e => {
-                preview.src = e.target.result;
-                preview.classList.remove('hidden');
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = "h-32 w-32 rounded shadow object-cover";
+                previewContainer.appendChild(img);
             };
-            reader.readAsDataURL(input.files[0]);
-        }
+            reader.readAsDataURL(file);
+        });
     }
 
     function handleDrop(event) {
@@ -158,13 +194,8 @@
         const files = event.dataTransfer.files;
         if (files.length > 0) {
             document.getElementById('image').files = files;
-            previewImage({
-                target: {
-                    files
-                }
-            });
+            previewImage({ target: { files } });
         }
     }
 </script>
-
 @endsection
