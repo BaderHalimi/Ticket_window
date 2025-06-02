@@ -19,6 +19,7 @@ class Tickets_sellerController extends Controller
 
 
         $tickets = Ticket::where('additional_data->vendor_id', (string)Auth::id())
+        ->where('status', 'paid')
         ->with([
             'user' => function ($query) {
                 $query->select('id', 'name', 'email');
