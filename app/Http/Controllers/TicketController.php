@@ -21,7 +21,7 @@ class TicketController extends Controller
         }])
         ->orderBy('created_at', 'desc')
         ->paginate(10);
-    
+
         return view('visitor.dashboard.tickets', compact('tickets'));
     }
 
@@ -44,12 +44,14 @@ class TicketController extends Controller
             'status' => 'pending',
             'code' => 'TICKET-' . strtoupper(uniqid()),
             'additional_data' => [
-                'event_id' => $event->id,
-                'event_name' => $event->name,
-                'vendor_id' => $event->user_id,
-                'vendor_name' => $event->user->name,
-                'event_date' => $event->date,
-                'image' => $event->image,
+                'event'=>[
+                    'id' => $event->id,
+                    'name' => $event->name,
+                    'vendor_id' => $event->user_id,
+                    'vendor_name' => $event->user->name,
+                    'date' => $event->date,
+                    'image' => $event->image,
+                ]
             ],
         ]);
         return redirect()->back()->with('success', 'Ticket booked successfully!');
