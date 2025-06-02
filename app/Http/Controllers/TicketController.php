@@ -14,14 +14,14 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $events = Event::where('user_id', Auth::id())->pluck('id');
-
         $tickets = Ticket::where('user_id', Auth::id())
+        ->whereHas('event')
         ->with(['event' => function ($query) {
-                $query->select('id','image', 'name', 'date', 'location');
-            }])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            $query->select('id', 'image', 'name', 'date', 'location');
+        }])
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+    
         return view('visitor.dashboard.tickets', compact('tickets'));
     }
 
