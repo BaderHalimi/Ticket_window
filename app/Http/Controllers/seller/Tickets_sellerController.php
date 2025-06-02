@@ -15,10 +15,10 @@ class Tickets_sellerController extends Controller
     public function index()
     {
         //$tickets = Ticket::all();
-        $events = Event::where('user_id', Auth::id())->pluck('id');
+        $events = Auth::user()->events()->pluck('id');
 
-
-        $tickets = Ticket::where('additional_data->vendor_id', (string)Auth::id())
+        $tickets = Ticket::where('additional_data->event->vendor_id', (string)Auth::id())
+        ->orWhere('event_id', $events)
         ->where('status', 'paid')
         ->with([
             'user' => function ($query) {
@@ -31,7 +31,7 @@ class Tickets_sellerController extends Controller
 
 
         return view('seller.dashboard.sales', compact('tickets', 'events'));
-        
+
     }
 
     /**

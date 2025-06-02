@@ -45,4 +45,11 @@ class User extends Authenticatable
         'password' => 'hashed',
         'additional_data' => 'array',
     ];
+    /**
+     * Get the events created by the user.
+     */
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
 }

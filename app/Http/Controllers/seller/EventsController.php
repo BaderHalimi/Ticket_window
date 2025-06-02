@@ -17,7 +17,10 @@ class EventsController extends Controller
      */
     public function index()
     {
-        $events = Event::all();
+        $events = Auth::user()->events()
+            ->with('category')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         return view('seller.dashboard.events.index', compact('events'));
     }
@@ -74,7 +77,7 @@ class EventsController extends Controller
             'status' => $request->status,
             'user_id' => Auth::user()->id,
             'gallery' => json_encode($imagePaths)
-            
+
         ]);
 
 
