@@ -14,8 +14,9 @@ class TicketController extends Controller
      */
     public function index()
     {
+        
         $tickets = Ticket::where('user_id', Auth::id())
-            ->with(['event' => function ($query) {
+        ->with(['event' => function ($query) {
                 $query->select('id','image', 'name', 'date', 'location');
             }])
             ->orderBy('created_at', 'desc')

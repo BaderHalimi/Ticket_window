@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Event;
 class Tickets_sellerController extends Controller
 {
     /**
@@ -14,11 +15,12 @@ class Tickets_sellerController extends Controller
     public function index()
     {
         //$tickets = Ticket::all();
-        $tickets = Ticket::where('user_id', Auth::id())->get();
-        $events = $tickets->pluck('event')->unique('id');
-        $users = $tickets->pluck('user')->unique('id');
+        $events = Event::where('user_id', Auth::id())->pluck('id');
 
-        return view('seller.dashboard.sales', compact('tickets', 'events', 'users'));
+
+        $tickets = Ticket::whereIn('event_id', $events)->get();
+
+        return view('seller.dashboard.sales', compact('tickets', 'events'));
         
     }
 
