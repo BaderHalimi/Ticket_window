@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
 <body class="text-gray-800 grid grid-cols-10">
     <!-- Sidebar -->
     <div id="sidebar" class="fixed top-0 left-0 h-full w-64 glassmorphism shadow-lg z-20 hidden md:block">

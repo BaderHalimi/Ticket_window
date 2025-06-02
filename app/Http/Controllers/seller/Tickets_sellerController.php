@@ -18,7 +18,16 @@ class Tickets_sellerController extends Controller
         $events = Event::where('user_id', Auth::id())->pluck('id');
 
 
-        $tickets = Ticket::whereIn('event_id', $events)->get();
+        $tickets = Ticket::where('additional_data->vendor_id', (string)Auth::id())
+        ->with([
+            'user' => function ($query) {
+                $query->select('id', 'name', 'email');
+            }
+        ])
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+        //dd($tickets);
+
 
         return view('seller.dashboard.sales', compact('tickets', 'events'));
         

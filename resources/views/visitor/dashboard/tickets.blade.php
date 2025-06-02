@@ -62,14 +62,23 @@
 
     <div class="space-y-6">
         @foreach($tickets as $ticket)
+        @php
+
+        $data = $ticket->additional_data;
+        $formatted_y = \Carbon\Carbon::parse($data['event_date'])->format('d-m-Y');
+        $formatted_h = \Carbon\Carbon::parse($data['event_date'])->format('h:i A');
+
+        @endphp
+
         <div class="glassmorphism p-6 rounded-xl transition-all duration-300 card-hover flex justify-between items-center">
             <div class="flex items-center space-x-4">
                 <div class="bg-indigo-100 rounded-full flex items-center justify-center">
-                    <img src="{{ Storage::url($ticket->event->image) }}" alt="{{ $ticket->event->name }}" class="h-20 w-full rounded-md object-cover">
+                    <img src="{{Storage::url($data['image'])  }}" alt="" class="h-20 w-full rounded-md object-cover">
+
                 </div>
                 <div>
-                    <h3 class="text-xl font-semibold">{{ $ticket->event->name }}</h3>
-                    <p class="text-sm text-gray-600">{{ $ticket->event->date->format('d-m-Y') }} • {{ $ticket->event->date->format('h:i A') }}</p>
+                    <h3 class="text-xl font-semibold">{{ $data['event_name'] }}</h3>
+                    <p class="text-sm text-gray-600">{{ $formatted_y }} • {{ $formatted_h }}</p>
                     <p class="text-sm text-gray-600">{{ $ticket->venue }}</p>
                     <p class="text-sm text-gray-600">
                         <span>Ticket Code:</span>

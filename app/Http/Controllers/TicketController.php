@@ -14,7 +14,8 @@ class TicketController extends Controller
      */
     public function index()
     {
-        
+        $events = Event::where('user_id', Auth::id())->pluck('id');
+
         $tickets = Ticket::where('user_id', Auth::id())
         ->with(['event' => function ($query) {
                 $query->select('id','image', 'name', 'date', 'location');
@@ -42,6 +43,14 @@ class TicketController extends Controller
             'price' => $event->ticket_price,
             'status' => 'pending',
             'code' => 'TICKET-' . strtoupper(uniqid()),
+            'additional_data' => [
+                'event_id' => $event->id,
+                'event_name' => $event->name,
+                'vendor_id' => $event->user_id,
+                'vendor_name' => $event->user->name,
+                'event_date' => $event->date,
+                'image' => $event->image,
+            ],
         ]);
         return redirect()->back()->with('success', 'Ticket booked successfully!');
     }
