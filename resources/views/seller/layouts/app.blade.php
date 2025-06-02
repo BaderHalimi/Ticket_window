@@ -74,7 +74,7 @@
             </div>
             <ul id="settings-menu" class="fixed bg-white glassmorphism shadow-lg rounded-lg py-2 z-[99999] hidden">
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-4 py-2 text-gray-700 font-medium hover:bg-gray-100 transition">
+                    <a href="{{ route('seller.profile.index') }}" class="flex items-center gap-3 px-4 py-2 text-gray-700 font-medium hover:bg-gray-100 transition">
                         <i class="ri-settings-3-line text-xl"></i> Settings
                     </a>
                 </li>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\visitor\EventController;
 use App\Http\Controllers\visitor\LoginController;
+use App\Http\Controllers\visitor\ProfileController;
 use App\Http\Controllers\visitor\VisitorController;
 use App\Http\Controllers\visitor\RestaurentController;
 use App\Models\Branch;
@@ -65,18 +66,18 @@ Route::group(['middleware' => 'auth'], function () {
         $restaurents = [];
         return view('visitor.dashboard.explore_restaurents', compact('restaurents'));
     })->name('my_restaurents');
+    Route::resource('dashboard/details', VisitorController::class)->middleware("auth")->names('details');
+    Route::resource('restaurent', RestaurentController::class)->middleware("auth")->names('restaurent');
+
+    Route::post('event{event}-tickets', [TicketController::class, 'store'])
+        ->name('tickets.store');
+    Route::resource('tickets', TicketController::class)
+        ->except(['store'])
+        ->names('tickets')->parameters([
+            'event' => 'event',
+            'tickets' => 'ticket'
+        ]);
+    Route::get('profile', [ProfileController::class,'index']);
 });
 
 
-Route::resource('dashboard/details', VisitorController::class)->middleware("auth")->names('details');
-Route::resource('restaurent', RestaurentController::class)->middleware("auth")->names('restaurent');
-
-Route::post('event{event}-tickets', [TicketController::class, 'store'])
-    ->middleware("auth")
-    ->name('tickets.store');
-Route::resource('tickets', TicketController::class)
-    ->except(['store'])
-    ->middleware("auth")->names('tickets')->parameters([
-        'event' => 'event',
-        'tickets' => 'ticket'
-    ]);

@@ -3,6 +3,7 @@
 use App\Http\Controllers\seller\BranchController;
 use App\Http\Controllers\seller\EventsController;
 use App\Http\Controllers\seller\LoginController;
+use App\Http\Controllers\seller\ProfileController;
 use App\Http\Controllers\seller\Tickets_sellerController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,11 +33,13 @@ Route::group(['middleware' => 'auth'], function () {
         ));
     })->name('dashboard');
     Route::resource('events', EventsController::class);
+    Route::resource('branch', BranchController::class);
+    Route::get('branch/gallery/{branch}', [BranchController::class, 'edit_gallery'])->name('branch.gallery');
+    Route::get('sales', [Tickets_sellerController::class,'index'])->name('sales');
+    Route::get('profile',[ProfileController::class,'index'])->name('profile.index');
+    Route::put('profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
-Route::resource('branch', BranchController::class)->middleware("auth");
-Route::get('branch/gallery/{branch}', [BranchController::class, 'edit_gallery'])->middleware("auth")->name('branch.gallery');
-Route::get('sales', [Tickets_sellerController::class,'index'])->middleware("auth")->name('sales');
 
 
 /*
