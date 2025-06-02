@@ -66,7 +66,19 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        //
+        if($ticket->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'You are not authorized to update this ticket.');
+        }
+        if($ticket->status !== 'pending') {
+            return redirect()->back()->with('error', 'Only pending tickets can be updated.');
+        }
+
+        if ($ticket->status !== 'paid') {
+            $ticket->status = 'paid';
+            $ticket->save();
+        }
+
+        return redirect()->route('visitor.tickets.index')->with('success', 'Ticket updated ');
     }
 
     /**

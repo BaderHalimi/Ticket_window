@@ -3,6 +3,7 @@
 use App\Http\Controllers\seller\BranchController;
 use App\Http\Controllers\seller\EventsController;
 use App\Http\Controllers\seller\LoginController;
+use App\Http\Controllers\seller\Tickets_sellerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('login', [LoginController::class, 'login'])->middleware('guest')->name('login');
@@ -35,10 +36,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::resource('branch', BranchController::class)->middleware("auth");
 Route::get('branch/gallery/{branch}', [BranchController::class, 'edit_gallery'])->middleware("auth")->name('branch.gallery');
+Route::get('sales', [Tickets_sellerController::class,'index'])->middleware("auth")->name('sales');
 
-Route::get('/sales',function(){
-    return view('seller.dashboard.sales');
-})->name('sales');
 
 /*
 Route::get('/branches',function(){

@@ -70,6 +70,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::resource('dashboard/details', VisitorController::class)->middleware("auth")->names('details');
 Route::resource('restaurent', RestaurentController::class)->middleware("auth")->names('restaurent');
+
 Route::post('event{event}-tickets', [TicketController::class, 'store'])
     ->middleware("auth")
     ->name('tickets.store');

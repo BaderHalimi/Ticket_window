@@ -49,6 +49,8 @@
 @yield('content')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
 @if (session('success'))
 <script>
     document.addEventListener('DOMContentLoaded', function() {
