@@ -164,6 +164,58 @@
         </form>
     </div>
 </div>
+<!-- سكشن تغيير كلمة المرور -->
+<div class="max-w-4xl mx-auto py-12">
+    <div class="glassmorphism p-8 rounded-3xl">
+        <h2 class="text-2xl font-bold mb-6 text-center">Change Password</h2>
+        <form action="{{ route('seller.profile.changePassword') }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <div class="mb-6">
+                <label class="block text-lg font-medium mb-2">Current Password</label>
+                <input type="password" name="current_password" class="w-full border rounded-lg p-3" required>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-lg font-medium mb-2">New Password</label>
+                <input type="password" name="new_password" class="w-full border rounded-lg p-3" required>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-lg font-medium mb-2">Confirm New Password</label>
+                <input type="password" name="new_password_confirmation" class="w-full border rounded-lg p-3" required>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="gradient-button text-white font-bold py-3 px-8 rounded-2xl text-lg">
+                    Update Password
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- سكشن حذف الحساب -->
+<div class="max-w-4xl mx-auto py-12">
+    <div class="glassmorphism p-8 rounded-3xl border border-red-300">
+        <h2 class="text-2xl font-bold mb-6 text-center text-red-600">Delete Account</h2>
+        <p class="text-center text-gray-700 mb-6">
+            Warning: Once you delete your account, there is no going back. Please be certain.
+        </p>
+        <form action="{{ route('seller.profile.delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete your account?');">
+            @csrf
+            @method('DELETE')
+
+            <div class="text-center">
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-2xl text-lg">
+                    Delete My Account
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 @endsection
 @push('scripts')

@@ -74,8 +74,29 @@ class ProfileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy()
     {
-        //
+        Auth::user()->delete();
+        session()->regenerate();
+        return redirect()->route('home')->with('success', 'Your account has been deleted successfully.');
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        if (!password_verify($request->current_password, $user->password)) {
+            return redirect()->back()->withErrors(['current_password' => 'Current password is incorrect.']);
+        }
+
+        $user->password = bcrypt($request->new_password);
+        $user->save();
+
+        return redirect()->back()->with('success', 'Password changed successfully!');
     }
 }

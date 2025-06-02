@@ -38,6 +38,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('sales', [Tickets_sellerController::class,'index'])->name('sales');
     Route::get('profile',[ProfileController::class,'index'])->name('profile.index');
     Route::put('profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.changePassword');
+Route::delete('/profile/delete', [ProfileController::class, 'destroy'])->name('profile.delete');
+
 });
 
 
