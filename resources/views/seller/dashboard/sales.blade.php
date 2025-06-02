@@ -39,29 +39,29 @@
     <div class="glassmorphism p-6 rounded-3xl overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 text-right">
             <thead>
-                <tr class="text-gray-700 bg-white bg-opacity-60">
-                    <th class="px-6 py-3 text-sm font-semibold">اسم العرض</th>
+                <tr class="text-gray-700 bg-white bg-opacity-60 text-center bg-blue-200 hover:bg-blue-400 hover:bg-opacity-50 transition duration-300">
+                    <th class="px-6 py-3 text-sm font-semibold rounded-tl-md">اسم العرض</th>
                     <th class="px-6 py-3 text-sm font-semibold">المشتري</th>
                     <th class="px-6 py-3 text-sm font-semibold">السعر</th>
                     <th class="px-6 py-3 text-sm font-semibold">التاريخ</th>
                     <th class="px-6 py-3 text-sm font-semibold">الحالة</th>
-                    <th class="px-6 py-3 text-sm font-semibold">الإجراءات</th>
+                    <th class="px-6 py-3 text-sm font-semibold rounded-tr-md">الإجراءات</th>
                 </tr>
             </thead>
             <tbody class="bg-white bg-opacity-40 divide-y divide-gray-200">
 
                 @foreach($tickets as $ticket)
-                <tr>
+                <tr class="text-center hover:bg-gray-200 hover:bg-opacity-50 transition duration-300">
                     {{-- اسم العرض (event name from additional_data) --}}
                     <td class="px-6 py-4">
-                        {{ $ticket->additional_data['event_name'] ?? '-' }}
+                        {{ $ticket->additional_data['event']['name'] ?? $ticket->event->name ?? 'deleted event' }}
                     </td>
 
                     {{-- اسم المشتري --}}
                     <td class="px-6 py-4">{{ $ticket->user->name ?? 'مستخدم مجهول' }}</td>
 
                     {{-- السعر --}}
-                    <td class="px-6 py-4 text-green-600 font-bold">${{ number_format($ticket->price, 2) }}</td>
+                    <td class="px-6 py-4 text-green-600 font-bold">{{ number_format($ticket->price, 2) }} SAR</td>
 
                     {{-- التاريخ --}}
                     <td class="px-6 py-4">{{ $ticket->created_at->format('Y-m-d') }}</td>
