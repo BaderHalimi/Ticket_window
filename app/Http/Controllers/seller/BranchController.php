@@ -76,7 +76,7 @@ class BranchController extends Controller
             'open_at' => $validate['open_at'],
             'close_at' => $validate['close_at'],
             'status' => $validate['status'],
-            'restaurent_id' => Auth::id(),
+            'restaurant_id' => Auth::id(),
             'gallery' => json_encode($imagePaths)
         ]);
         return redirect()->route('seller.branch.index')->with('success', 'branch was created');

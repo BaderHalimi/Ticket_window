@@ -48,7 +48,7 @@ class BranchController extends Controller
     public function show(User $restaurant)
     {
 
-        $branches = Branch::where('restaurent_id', $restaurant->id)->get();
+        $branches = Branch::where('restaurant_id', $restaurant->id)->get();
 
         //dd($branches);
         $categories = Category::active()->where('type', 'events')->get();
