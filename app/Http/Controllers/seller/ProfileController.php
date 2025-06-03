@@ -30,6 +30,8 @@ class ProfileController extends Controller
             'phone' => 'required|string|max:20',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'open_at' => 'nullable|date_format:H:i',
+            'close_at' => 'nullable|date_format:H:i',
         ];
         if ($user->role == 'restaurent') {
             $rule['open_at'] = 'required';

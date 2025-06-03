@@ -62,6 +62,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('events', [EventController::class, 'index'])->name('events.index');
     Route::get('events/{event}', [EventController::class, 'show'])->name('events.show');
+
+    Route::get('restaurent/{id}', [EventController::class, 'show'])->name('restaurent.show');
     Route::get('explore_restaurents', function () {
         $restaurents = [];
         return view('visitor.dashboard.explore_restaurents', compact('restaurents'));

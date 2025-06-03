@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title','register - ')
+
 @push('styles')
 <style>
     body {
@@ -15,45 +16,92 @@
     }
 </style>
 @endpush
-@section('content')
 
+@section('content')
 <body class="min-h-screen flex items-center justify-center px-4 py-10">
     <nav class="fixed top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center">
-        <div class="flex items-center">
-            <h1 class="text-3xl font-['Pacifico'] text-primary">{{ config('app.name') }}</h1>
-        </div>
+        <h1 class="text-3xl font-['Pacifico'] text-primary">{{ config('app.name') }}</h1>
     </nav>
-    <div class="max-w-4xl w-full mx-auto">
 
-        <!-- Register Form -->
+    <div class="max-w-4xl w-full mx-auto">
         <div class="glassmorphism p-10 rounded-3xl">
             <h2 class="text-3xl font-bold text-indigo-900 mb-6">Create Account</h2>
 
-            <form class="space-y-5" method="post" action="{{ route('seller.register_logic') }}">
+            <form class="space-y-5" method="POST" action="{{ route('seller.register_logic') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block mb-1 text-indigo-700 font-medium">Full Name</label>
-                        <input type="text" id="name" name="name" placeholder="John Doe" class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 placeholder-indigo-400 text-indigo-900 outline-none border border-blue-200" />
+                        <input type="text" name="name" class="w-full px-4 py-3 rounded-lg border border-blue-200" required />
                     </div>
 
                     <div>
                         <label class="block mb-1 text-indigo-700 font-medium">Email</label>
-                        <input type="email" id="email" name="email" placeholder="example@email.com" class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 placeholder-indigo-400 text-indigo-900 outline-none border border-blue-200" />
+                        <input type="email" name="email" class="w-full px-4 py-3 rounded-lg border border-blue-200" required />
                     </div>
 
                     <div>
                         <label class="block mb-1 text-indigo-700 font-medium">Password</label>
-                        <input type="password" id="password" name="password" placeholder="********" class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 placeholder-indigo-400 text-indigo-900 outline-none border border-blue-200" />
+                        <input type="password" name="password" class="w-full px-4 py-3 rounded-lg border border-blue-200" required />
                     </div>
 
                     <div>
                         <label class="block mb-1 text-indigo-700 font-medium">Password Confirmation</label>
-                        <input type="password" id="password_confirmation" name="password_confirmation" placeholder="********" class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 placeholder-indigo-400 text-indigo-900 outline-none border border-blue-200" />
+                        <input type="password" name="password_confirmation" class="w-full px-4 py-3 rounded-lg border border-blue-200" required />
+                    </div>
+
+                    <div>
+                        <label class="block mb-1 text-indigo-700 font-medium">Role</label>
+                        <select id="role" name="role" class="w-full px-4 py-3 rounded-lg border border-blue-200" required>
+                            <option value="seller">events</option>
+                            <option value="restaurant">restaurant </option>
+                        </select>
                     </div>
                 </div>
 
-                <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg text-lg font-semibold">Sign Up</button>
+                <!-- Restaurant Only Fields -->
+                <div id="restaurant-fields" style="display: none;" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block mb-1 text-indigo-700 font-medium">Phone</label>
+                        <input type="text" name="phone" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-indigo-700 font-medium">table</label>
+                        <input type="text" name="table" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-indigo-700 font-medium">location</label>
+                        <input type="text" name="location" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
+                    </div>
+
+                    <div>
+                        <label class="block mb-1 text-indigo-700 font-medium">hourly price</label>
+                        <input type="text" name="hour_price" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
+                    </div>
+
+                    <div>
+                        <label class="block mb-1 text-indigo-700 font-medium">Description</label>
+                        <textarea name="description" class="w-full px-4 py-3 rounded-lg border border-blue-200"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block mb-1 text-indigo-700 font-medium">Open At</label>
+                        <input type="time" name="open_at" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
+                    </div>
+
+                    <div>
+                        <label class="block mb-1 text-indigo-700 font-medium">Close At</label>
+                        <input type="time" name="close_at" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
+                    </div>
+
+                    <div>
+                        <label class="block mb-1 text-indigo-700 font-medium">Image</label>
+                        <input type="file" name="image" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg text-lg font-semibold mt-6">Sign Up</button>
+
                 <div class="relative my-6">
                     <div class="absolute inset-0 flex items-center">
                         <div class="w-full border-t border-indigo-200"></div>
@@ -63,7 +111,6 @@
                     </div>
                 </div>
 
-                <!-- Social Login Buttons -->
                 <a href="#" class="w-full flex items-center justify-center bg-white bg-opacity-80 border border-indigo-200 text-indigo-900 font-medium py-3 rounded-lg hover:bg-opacity-100 transition">
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6 mr-3" alt="Google Logo">
                     Continue with Google
@@ -74,8 +121,23 @@
                 </p>
             </form>
         </div>
-
     </div>
-
 </body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const roleSelect = document.getElementById('role');
+        const restaurantFields = document.getElementById('restaurant-fields');
+
+        roleSelect.addEventListener('change', function () {
+            if (roleSelect.value === 'restaurant') {
+                restaurantFields.style.display = 'block';
+            } else {
+                restaurantFields.style.display = 'none';
+            }
+        });
+    });
+</script>
 @endsection
+
+
