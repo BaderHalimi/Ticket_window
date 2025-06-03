@@ -175,10 +175,10 @@
             @php
             $data = json_decode($restaurant->additional_data, true);
             $formatted_y = \Carbon\Carbon::parse($data['open_at']??'')->format('g:i A');
-            $formatted_h = \Carbon\Carbon::parse($data['close_at']??'')->format('g:i A');  
+            $formatted_h = \Carbon\Carbon::parse($data['close_at']??'')->format('g:i A');
             @endphp
 
-            
+
 
             <div class="card-hover glassmorphism p-3 rounded-lg shadow-lg transition-transform">
                 <div>
@@ -192,14 +192,9 @@
                         </div>
                         @endif
                         <img src="{{ Storage::url($data['image']) }}" alt="{{ $restaurant->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
-                        <div class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
-                            {{ $data['hour_price'] }} SAR/hr
-                        </div>
+
                 </div>
                 <h2 class="text-xl font-semibold text-gray-800">{{ $restaurant->name }}</h2>
-                <p class="text-gray-600 mt-2">Tables: {{ $data['table'] }}</p>
-                <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-map-pin-line ri-sm"></i></span> {{ $data['location'] }}</p>
-                <p class="text-gray-500 mt-1">
                     <i class="ri-time-line"></i> {{ $formatted_y }} - {{ $formatted_h}}
                 </p>
                 <a href="{{ route('visitor.restaurent.show', $restaurant->id) }}">

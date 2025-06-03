@@ -23,6 +23,9 @@ class Branch extends Model
     protected $casts = [
     'gallery' => 'array',
     ];
-    
-   
+    public function restaurant()
+    {
+        return $this->belongsTo(User::class, 'restaurent_id');
+    }
+
 }
