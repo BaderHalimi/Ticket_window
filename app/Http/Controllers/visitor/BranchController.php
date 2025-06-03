@@ -17,17 +17,15 @@ class BranchController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Branch $branch)
-    
+    public function index(User $restaurent, Branch $branch)
+
     {
 
-        //dd($branch);
-        //$branch = Branch::findOrFail($branch->id);
-        $user = $branch->restaurant;
-        //$user = User::where('restaurent_id', $branch->restaurent_id)->first();
-
-
-        return view('visitor.dashboard.restaurent.table_details',compact('branch','user'));
+        $user = $restaurent;
+        if ($branch->restaurent_id != $user->id) {
+            return redirect()->back()->with('error', 'You are not authorized to view this branch.');
+        }
+        return view('visitor.dashboard.restaurent.table_details', compact('branch', 'user'));
     }
 
     /**
@@ -41,25 +39,21 @@ class BranchController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        
-    }
+    public function store(Request $request) {}
 
     /**
      * Display the specified resource.
      */
     public function show(User $restaurant)
     {
-        
+
         $branches = Branch::where('restaurent_id', $restaurant->id)->get();
 
         //dd($branches);
         $categories = Category::active()->where('type', 'events')->get();
 
 
-        return view('visitor.dashboard.restaurent.branch_preview', compact('branches','categories'));
-
+        return view('visitor.dashboard.restaurent.branch_preview', compact('branches', 'categories'));
     }
 
     /**
