@@ -17,12 +17,13 @@ class BranchController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(User $branch)
+    public function index(Branch $branch)
     
     {
+
         //dd($branch);
         //$branch = Branch::findOrFail($branch->id);
-        $user = User::where('restaurent_id', $branch->restaurent_id)->first();
+        $user = $branch->restaurant;
         //$user = User::where('restaurent_id', $branch->restaurent_id)->first();
 
 
