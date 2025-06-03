@@ -173,10 +173,10 @@
             @foreach($branches as $branch)
 
 
-           
+
 
             <div class="card-hover glassmorphism p-3 rounded-lg shadow-lg transition-transform">
-                <a href="{{ route('visitor.branch_preview', $branch) }}" >
+                <a href="{{ route('visitor.branch_preview', ['branch'=>$branch,'restaurant'=>$restaurant->id]) }}" >
                 <div>
                     @if($branch->open_at <= now() && $branch->close_at >= now())
                         <div class="absolute top-3 left-3 bg-green-600 text-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
@@ -190,15 +190,15 @@
                         <img src="{{ Storage::url($branch->image) }}" alt="{{ $branch->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
                         <div class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
                             {{ $branch->hour_price ?? 0}} SAR/hr
-                        </div> 
+                        </div>
                 </div>
                 <h2 class="text-xl font-semibold text-gray-800">{{ $branch->name }}</h2>
-                 <p class="text-gray-600 mt-2">Tables: {{ $branch->tables }}</p> 
-                 <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-map-pin-line ri-sm"></i></span> {{ $branch->location ?? 0}}</p> 
+                 <p class="text-gray-600 mt-2">Tables: {{ $branch->tables }}</p>
+                 <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-map-pin-line ri-sm"></i></span> {{ $branch->location ?? 0}}</p>
                 <p class="text-gray-500 mt-1">
                     <i class="ri-time-line"></i> {{ $branch->open_at }} - {{ $branch->close_at}}
                 </p></a>
-                <a href="{{ route('visitor.branch_preview', $branch) }}">
+                <a href="{{ route('visitor.branch_preview', ['branch'=>$branch,'restaurant'=>$restaurant->id]) }}">
                     <button class="w-full mt-4 py-2 gradient-button text-white rounded-lg whitespace-nowrap font-medium">
 
                         Booking Now

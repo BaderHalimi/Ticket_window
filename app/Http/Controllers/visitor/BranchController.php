@@ -53,7 +53,7 @@ class BranchController extends Controller
         $categories = Category::active()->where('type', 'events')->get();
 
 
-        return view('visitor.dashboard.restaurent.branch_preview', compact('branches', 'categories'));
+        return view('visitor.dashboard.restaurent.branch_preview', compact('branches', 'categories','restaurant'));
     }
 
     /**
