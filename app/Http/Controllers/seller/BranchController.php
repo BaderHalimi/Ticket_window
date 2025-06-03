@@ -87,7 +87,7 @@ class BranchController extends Controller
      */
     public function show(branch $branch)
     {
-        //$restaurant = Branch::findOrFail($branch);
+        $restaurant = Branch::findOrFail($branch);
 
     }
 

@@ -26,8 +26,8 @@ class Tickets_sellerController extends Controller
             );
             }
         ])
-        ->orderBy('created_at', 'desc')
-        ->paginate(10);
+          ->orderBy('created_at', 'desc');
+        //->paginate(10);
         //dd($tickets);
 
 

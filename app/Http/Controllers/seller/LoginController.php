@@ -45,14 +45,14 @@ class LoginController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
             'role' => 'required',
-            'phone' => 'required_if:role,restaurant',
-            'description' => 'required_if:role,restaurant',
-            'open_at' => 'required_if:role,restaurant',
-            'close_at' => 'required_if:role,restaurant',
+            'phone' => 'nullable|role,restaurant',
+            'description' => 'nullable|role,restaurant',
+            'open_at' => 'nullable|role,restaurant',
+            'close_at' => 'nullable|role,restaurant',
             'image' => 'nullable|image|max:2048',
-            'table' => 'required_if:role,restaurant',
-            'location' => 'required_if:role,restaurant',
-            'hour_price' => 'required_if:role,restaurant',
+            'table' => 'nullable|role,restaurant',
+            'location' => 'nullable|role,restaurant',
+            'hour_price' => 'nullable|role,restaurant',
         ]);
         $user = User::create([
             'name' => $validated['name'],
@@ -70,7 +70,7 @@ class LoginController extends Controller
                 'close_at' => $validated['close_at'] ?? null,
             ]),
         ]);
-        if ($validated['image']) {
+        if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('images/sellers', 'public');
             $user->additional_data = json_encode(array_merge(
                 json_decode($user->additional_data, true),
