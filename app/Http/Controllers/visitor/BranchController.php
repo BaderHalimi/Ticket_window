@@ -17,13 +17,14 @@ class BranchController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(User $restaurent,$branch)
+    public function index(User $restaurant,$branch)
     {
         $branch = Branch::findOrFail($branch);
 
-        $user = $restaurent;
+        $user = $restaurant;
+        // dd($branch);
         if ($branch->restaurent_id != $user->id) {
-            return redirect()->back()->with('error', 'You are not authorized to view this branch.');
+            return redirect()->route('visitor.bran.show',['restaurant'=>$restaurant->id])->with('error', 'You are not authorized to view this branch.');
         }
         return view('visitor.dashboard.restaurent.table_details', compact('branch', 'user'));
     }
