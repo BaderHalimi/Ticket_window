@@ -62,40 +62,40 @@
                 <!-- Restaurant Only Fields -->
                 <div id="restaurant-fields" style="display: none;" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block mb-1 text-indigo-700 font-medium">Phone</label>
+                        <label class="block mb-1 text-indigo-700 font-medium">Phone (opitional now)</label>
                         <input type="text" name="phone" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
                     </div>
-                    <div>
+                    {{-- <div>
                         <label class="block mb-1 text-indigo-700 font-medium">table</label>
                         <input type="text" name="table" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
-                    </div>
+                    </div> --}}
                     <div>
-                        <label class="block mb-1 text-indigo-700 font-medium">location</label>
+                        <label class="block mb-1 text-indigo-700 font-medium">location (opitional now)</label>
                         <input type="text" name="location" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
                     </div>
 
                     <div>
-                        <label class="block mb-1 text-indigo-700 font-medium">hourly price</label>
+                        <label class="block mb-1 text-indigo-700 font-medium">hourly price (opitional now)</label>
                         <input type="text" name="hour_price" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
                     </div>
 
                     <div>
-                        <label class="block mb-1 text-indigo-700 font-medium">Description</label>
+                        <label class="block mb-1 text-indigo-700 font-medium">Description (opitional now)</label>
                         <textarea name="description" class="w-full px-4 py-3 rounded-lg border border-blue-200"></textarea>
                     </div>
 
                     <div>
-                        <label class="block mb-1 text-indigo-700 font-medium">Open At</label>
+                        <label class="block mb-1 text-indigo-700 font-medium">Open At (opitional now)</label>
                         <input type="time" name="open_at" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
                     </div>
 
                     <div>
-                        <label class="block mb-1 text-indigo-700 font-medium">Close At</label>
+                        <label class="block mb-1 text-indigo-700 font-medium">Close At (opitional now)</label>
                         <input type="time" name="close_at" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
                     </div>
 
                     <div>
-                        <label class="block mb-1 text-indigo-700 font-medium">Image</label>
+                        <label class="block mb-1 text-indigo-700 font-medium">Image (opitional now)</label>
                         <input type="file" name="image" class="w-full px-4 py-3 rounded-lg border border-blue-200" />
                     </div>
                 </div>

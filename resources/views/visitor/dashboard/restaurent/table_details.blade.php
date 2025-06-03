@@ -205,42 +205,37 @@
     <div class="glassmorphism p-10 rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="grid grid-cols-4 gap-3">
             <div style="height:190px;" class="imgsContainer col-span-1 overflow-y-scroll overflow-x-hidden">
-                {{-- @if (!empty($restaurant->gallery))
-                @foreach (json_decode($restaurant->gallery,true) as $index => $image)
+                @if (!empty($branch->gallery))
+                @foreach (json_decode($branch->gallery,true) as $index => $image)
                 <img src="{{ Storage::url($image) }}"
                     alt="صورة المعرض {{ $index + 1 }}"
                     class="rounded-lg shadow gallery-img object-cover w-full h-24 mb-2"
-                    onclick="openImageViewer(`{{ $index }}`)">
+                    onclick="openImageViewer({{ $index }})">
                 @endforeach
-                @endif --}}
-                @php
-                $data = json_decode($restaurant->additional_data, true);
-                $formatted_y = \Carbon\Carbon::parse($data['open_at']??'')->format('g:i A');
-                $formatted_h = \Carbon\Carbon::parse($data['close_at']??'')->format('g:i A');  
-                @endphp
+                @endif
             </div>
             <div id="imageViewerContainer" class="mb-6 col-span-3">
-                <img height="190px" style="max-height: 190px;" id="imageView" src="{{ Storage::url($data['image']) }}" alt="صورة الفعالية" class="rounded-lg shadow-lg object-cover">
+                <img height="190px" style="max-height: 190px;" id="imageView" src="{{ Storage::url($branch->image) }}" alt="صورة الفعالية" class="rounded-lg shadow-lg object-cover">
             </div>
         </div>
         <!-- <div>
-            <img src="{{ Storage::url($data['image']) }}" alt="Restaurant Image" class="rounded-lg shadow-lg w-full h-auto object-cover">
+            <img src="{{ Storage::url($branch->image) }}" alt="Restaurant Image" class="rounded-lg shadow-lg w-full h-auto object-cover">
         </div> -->
         <div>
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">{{ $user->name }}</h2>
-            <p class="text-gray-600 mb-2"><strong>Location:</strong> {{ $restaurant->name }}</p>
-            <p class="text-gray-600 mb-2"><strong>Branch:</strong> {{ $data['location'] }}</p>
-            <p class="text-gray-600 mb-2"><strong>Average Price:</strong> SAR {{ number_format($data['hour_price'], 2) }}</p>
-            <p class="text-gray-600 mb-2"><strong>Rating:</strong> ⭐ {{ number_format(1, 1) }} / 5</p>
+            <p class="text-gray-600 mb-2"><strong>Location:</strong> {{ $branch->name }}</p>
+            <p class="text-gray-600 mb-2"><strong>Branch:</strong> {{ $branch->location }}</p>
+            <p class="text-gray-600 mb-2"><strong>Average Price:</strong> SAR {{ number_format($branch->hour_price, 2) }}</p>
+            <p class="text-gray-600 mb-2"><strong>Rating:</strong> ⭐ {{ number_format($branch->rating, 1) }} / 5</p>
             <p class="text-gray-600 mb-4"><strong>Status:</strong>
-                <span class="{{ $restaurant->status === 'open' ? 'text-green-600' : 'text-red-600' }}">
-                    {{ ucfirst($restaurant->status) }}
+                <span class="{{ $branch->status === 'open' ? 'text-green-600' : 'text-red-600' }}">
+                    {{ ucfirst($branch->status) }}
                 </span>
             </p>
         </div>
         <div class="col-span-2">
             <h3 class="text-xl font-semibold text-gray-800 mb-2">Description</h3>
-            <p class="text-gray-700 mb-6">{{ $$data['description'] }}</p>
+            <p class="text-gray-700 mb-6">{{ $branch->description }}</p>
 
             <div class="text-right">
                 <a href="#"
@@ -251,12 +246,12 @@
         </div>
     </div>
 </div>
-{{-- 
+
 <!-- <div class="max-w-7xl mx-auto mt-12 px-4">
     <h3 class="text-2xl font-bold text-gray-800 mb-6">📷 صور توضيحية</h3>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        @foreach (json_decode($restaurant->gallery ?? '[]', true) as $index => $image)
+        @foreach (json_decode($branch->gallery ?? '[]', true) as $index => $image)
             <div class="cursor-pointer">
                 <img src="{{ Storage::url($image) }}" 
                      alt="صورة"
@@ -298,13 +293,13 @@
 
 <script>
     // جلب الصور من المتغير المرسل من الباك إند
-    const images = @json(json_decode($restaurant -> gallery ?? '[]', true));
+    const images = @json(json_decode($branch -> gallery ?? '[]', true));
 
     let currentIndex = 0;
 
     function openImageViewer(index) {
         currentIndex = index;
-        document.getElementById('imageView').src = images[currentIndex] ? `{{ asset('storage') }}/` + images[currentIndex] : '';
+        document.getElementById('imageView').src = images[currentIndex] ? {{ asset('storage') }}/ + images[currentIndex] : '';
         // document.getElementById('imageViewer').classList.remove('hidden');
     }
 
@@ -318,7 +313,7 @@
         } else {
             currentIndex = images.length - 1; // رجوع للصورة الأخيرة
         }
-        document.getElementById('viewerImage').src = `{{ asset('storage') }}/` + images[currentIndex];
+        document.getElementById('viewerImage').src = {{ asset('storage') }}/ + images[currentIndex];
     }
 
     function nextImage() {
@@ -327,10 +322,107 @@
         } else {
             currentIndex = 0; // العودة للأولى
         }
-        document.getElementById('viewerImage').src = `{{ asset('storage') }}/` + images[currentIndex];
+        document.getElementById('viewerImage').src = {{ asset('storage') }}/ + images[currentIndex];
     }
-</script> --}}
+</script>
 
 
 
 @endsection
+البيانات المجودة في المتغيرات عندي ياها في جسون فايل فا بدي كل البيانات التي اسمها ريتسرنت تستبدلها  زي كذا 
+
+div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div id="restaurants" class="lg:col-span-3">
+        <!-- Search Section -->
+        <div class="mb-10 flex justify-between">
+            <div class="glassmorphism rounded-full p-2 flex items-center w-full max-w-3xl">
+                <form action="{{ route('visitor.restaurent.index') }}" method="GET" class="flex items-center w-full max-w-4xl">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center text-gray-500">
+                        <i class="ri-search-line ri-xl"></i>
+                    </div>
+                    <input
+                        type="text" name="search"
+                        placeholder="Search for restaurent, location..."
+                        class="search-bar w-full bg-transparent border-none outline-none px-3 py-2 text-gray-700 placeholder-gray-500" />
+                    <button
+                        class="gradient-button text-white px-5 mx-3 py-2 rounded-full whitespace-nowrap font-medium">
+                        Search
+                    </button>
+                </form>
+            </div>
+            <button class="glassmorphism rounded-full px-3 py-2 z-50" id="calender_toggle"><i class="ri-filter-line text-lg"></i></button>
+        </div>
+
+        <div id="cards_container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            @foreach($restaurants as $restaurant)
+
+            @php
+            $data = json_decode($restaurant->additional_data, true);
+            $formatted_y = \Carbon\Carbon::parse($data['open_at']??'')->format('g:i A');
+            $formatted_h = \Carbon\Carbon::parse($data['close_at']??'')->format('g:i A');  
+            @endphp
+
+            
+
+            <div class="card-hover glassmorphism p-3 rounded-lg shadow-lg transition-transform">
+                <div>
+                    @if($formatted_y <= now() && $formatted_h >= now())
+                        <div class="absolute top-3 left-3 bg-green-600 text-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
+                            Open
+                        </div>
+                        @else
+                        <div class="absolute top-3 left-3 bg-red-600 text-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
+                            Closed
+                        </div>
+                        @endif
+                        <img src="{{ Storage::url($data['image']) }}" alt="{{ $restaurant->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <div class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
+                            {{ $data['hour_price'] }} SAR/hr
+                        </div>
+                </div>
+                <h2 class="text-xl font-semibold text-gray-800">{{ $restaurant->name }}</h2>
+                <p class="text-gray-600 mt-2">Tables: {{ $data['table'] }}</p>
+                <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-map-pin-line ri-sm"></i></span> {{ $data['location'] }}</p>
+                <p class="text-gray-500 mt-1">
+                    <i class="ri-time-line"></i> {{ $formatted_y }} - {{ $formatted_h}}
+                </p>
+                <a href="{{ route('visitor.restaurent.show', $restaurant->id) }}">
+                    <button class="w-full mt-4 py-2 gradient-button text-white rounded-lg whitespace-nowrap font-medium">
+                        Book a Table
+                    </button>
+                </a>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    <div id="calender" class="lg:col-span-1 hidden">
+        <div class="glassmorphism rounded-3xl p-6 sticky top-32">
+            <form method="GET" action="{{ route('visitor.restaurent.index') }}">
+                <div>
+                    <h4 class="text-md font-bold text-indigo-900 mb-4 font-['Space_Grotesk']">Categories</h4>
+                    <button id="calender_toggle_1" class="absolute top-4 mt-3 right-5 decoration-0 text-primary p-0"><i class="ri-close-line text-indigo-400"></i></button>
+                </div>
+                <!-- Categories -->
+                <div class="">
+                    <div class="flex flex-col gap-2 mb-4">
+                        @foreach ($categories as $category)
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="categories[]" value="{{ $category->id }}"
+                                class="form-checkbox text-indigo-600 rounded focus:ring-indigo-500"
+                                {{ in_array($category->id, request()->input('categories', [])) ? 'checked' : '' }}>
+                            <span class="text-sm text-indigo-800">{{ $category->name }}</span>
+                        </label>
+                        @endforeach
+                    </div>
+                </div>
+
+
+                <!-- Filter button -->
+                <button type="submit" class="w-full glassmorphism gradient-button mt-6 py-3 rounded-xl text-white font-medium !rounded-button whitespace-nowrap">
+                    Filter Restaurents
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

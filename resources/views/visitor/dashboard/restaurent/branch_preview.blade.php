@@ -170,19 +170,15 @@
         </div>
 
         <div id="cards_container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            @foreach($restaurants as $restaurant)
-
-            @php
-            $data = json_decode($restaurant->additional_data, true);
-            $formatted_y = \Carbon\Carbon::parse($data['open_at']??'')->format('g:i A');
-            $formatted_h = \Carbon\Carbon::parse($data['close_at']??'')->format('g:i A');
-            @endphp
+            @foreach($branches as $branch)
 
 
+           
 
             <div class="card-hover glassmorphism p-3 rounded-lg shadow-lg transition-transform">
+                <a href="{{ route('visitor.branch_preview', $branch) }}" >
                 <div>
-                    @if($formatted_y <= now() && $formatted_h >= now())
+                    @if($branch->open_at <= now() && $branch->close_at >= now())
                         <div class="absolute top-3 left-3 bg-green-600 text-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
                             Open
                         </div>
@@ -191,16 +187,21 @@
                             Closed
                         </div>
                         @endif
-                        <img src="{{ Storage::url($data['image']) }}" alt="{{ $restaurant->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
-
+                        <img src="{{ Storage::url($branch->image) }}" alt="{{ $branch->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <div class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
+                            {{ $branch->hour_price ?? 0}} SAR/hr
+                        </div> 
                 </div>
-                <h2 class="text-xl font-semibold text-gray-800">{{ $restaurant->name }}</h2>
+                <h2 class="text-xl font-semibold text-gray-800">{{ $branch->name }}</h2>
+                 <p class="text-gray-600 mt-2">Tables: {{ $branch->tables }}</p> 
+                 <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-map-pin-line ri-sm"></i></span> {{ $branch->location ?? 0}}</p> 
                 <p class="text-gray-500 mt-1">
-                    <i class="ri-time-line"></i> {{ $formatted_y }} - {{ $formatted_h}}
-                </p>
-                <a href="{{ route('visitor.restaurent.show', $restaurant->id) }}">
+                    <i class="ri-time-line"></i> {{ $branch->open_at }} - {{ $branch->close_at}}
+                </p></a>
+                <a href="{{ route('visitor.branch_preview', $branch) }}">
                     <button class="w-full mt-4 py-2 gradient-button text-white rounded-lg whitespace-nowrap font-medium">
-                        Book a Table
+
+                        Booking Now
                     </button>
                 </a>
             </div>

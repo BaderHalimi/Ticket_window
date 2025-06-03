@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Models\Ticket;
 
 
-
+    
 class ResturanteController extends Controller
 {
     /**

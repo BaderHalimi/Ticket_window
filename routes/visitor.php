@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\seller\BranchController;
+use App\Http\Controllers\visitor\BranchController as VisitorBranchController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\visitor\EventController;
 use App\Http\Controllers\visitor\LoginController;
@@ -63,7 +65,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('events', [EventController::class, 'index'])->name('events.index');
     Route::get('events/{event}', [EventController::class, 'show'])->name('events.show');
 
-    Route::get('restaurent/{id}', [EventController::class, 'show'])->name('restaurent.show');
+    Route::get('restaurent/{restaurant}', [VisitorBranchController::class, 'show'])->name('bran.show');
+    Route::get('restaurent/{restaurant}/preview', [VisitorBranchController::class, 'index'])->name('branch_preview');
+
     Route::get('explore_restaurents', function () {
         $restaurents = [];
         return view('visitor.dashboard.explore_restaurents', compact('restaurents'));
