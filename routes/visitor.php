@@ -66,7 +66,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('events/{event}', [EventController::class, 'show'])->name('events.show');
 
     Route::get('restaurent/{restaurant}', [VisitorBranchController::class, 'show'])->name('bran.show');
-    Route::get('restaurent/{restaurant}/preview-{branch}', [VisitorBranchController::class, 'index'])->name('branch_preview');
+    Route::get('restaurent/{restaurant}/preview/{branch}', [VisitorBranchController::class, 'index'])->name('branch_preview');
 
     Route::get('explore_restaurents', function () {
         $restaurents = [];

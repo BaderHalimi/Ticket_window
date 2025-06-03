@@ -17,9 +17,9 @@ class BranchController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(User $restaurent, Branch $branch)
-
+    public function index(User $restaurent,$branch)
     {
+        $branch = Branch::findOrFail($branch);
 
         $user = $restaurent;
         if ($branch->restaurent_id != $user->id) {
