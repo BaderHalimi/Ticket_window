@@ -17,7 +17,7 @@ class Branch extends Model
         'open_at',
         'close_at',
         'status',
-        'restaurent_id',
+        'restaurant_id',
         'gallery'
     ];
     protected $casts = [
@@ -25,7 +25,7 @@ class Branch extends Model
     ];
     public function restaurant()
     {
-        return $this->belongsTo(User::class, 'restaurent_id');
+        return $this->belongsTo(User::class, 'restaurant_id');
     }
 
 }

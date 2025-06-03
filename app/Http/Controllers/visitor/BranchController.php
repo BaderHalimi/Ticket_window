@@ -23,7 +23,7 @@ class BranchController extends Controller
 
         $user = $restaurant;
         // dd($branch);
-        if ($branch->restaurent_id != $user->id) {
+        if ($branch->restaurant_id != $user->id) {
             return redirect()->route('visitor.bran.show',['restaurant'=>$restaurant->id])->with('error', 'You are not authorized to view this branch.');
         }
         return view('visitor.dashboard.restaurent.table_details', compact('branch', 'user'));
