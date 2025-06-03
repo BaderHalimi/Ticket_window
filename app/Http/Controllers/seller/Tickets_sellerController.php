@@ -22,7 +22,8 @@ class Tickets_sellerController extends Controller
         ->where('status', 'paid')
         ->with([
             'user' => function ($query) {
-                $query->select('id', 'name', 'email');
+                $query->select('id', 'name', 'email'
+            );
             }
         ])
         ->orderBy('created_at', 'desc')

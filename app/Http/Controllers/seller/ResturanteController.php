@@ -1,28 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\visitor;
+namespace App\Http\Controllers\seller;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Branch;
-use App\Models\Category;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Models\Ticket;
 
 
-class RestaurentController extends Controller
+
+class ResturanteController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $restaurants = User::where('role', 'restaurant')->get();
-
-        
-        //$branchs = Branch::all();
-        $categories = Category::where('type', 'restaurants')->where('status', 'active')->get();
-        return view('visitor.dashboard.restaurent.explore_restaurents',compact('restaurants','categories'));
+        //
     }
 
     /**
@@ -46,12 +41,7 @@ class RestaurentController extends Controller
      */
     public function show(string $id)
     {
-        $restaurant = Branch::findOrFail($id);
-        $user = User::findOrFail($restaurant->restaurent_id);
-
-        
-
-        return view('visitor.dashboard.restaurent.table_details',compact('restaurant','user'));
+        //
     }
 
     /**

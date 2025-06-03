@@ -205,28 +205,33 @@
     <div class="glassmorphism p-10 rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="grid grid-cols-4 gap-3">
             <div style="height:190px;" class="imgsContainer col-span-1 overflow-y-scroll overflow-x-hidden">
-                @if (!empty($restaurant->gallery))
+                {{-- @if (!empty($restaurant->gallery))
                 @foreach (json_decode($restaurant->gallery,true) as $index => $image)
                 <img src="{{ Storage::url($image) }}"
                     alt="صورة المعرض {{ $index + 1 }}"
                     class="rounded-lg shadow gallery-img object-cover w-full h-24 mb-2"
                     onclick="openImageViewer(`{{ $index }}`)">
                 @endforeach
-                @endif
+                @endif --}}
+                @php
+                $data = json_decode($restaurant->additional_data, true);
+                $formatted_y = \Carbon\Carbon::parse($data['open_at']??'')->format('g:i A');
+                $formatted_h = \Carbon\Carbon::parse($data['close_at']??'')->format('g:i A');  
+                @endphp
             </div>
             <div id="imageViewerContainer" class="mb-6 col-span-3">
-                <img height="190px" style="max-height: 190px;" id="imageView" src="{{ Storage::url($restaurant->image) }}" alt="صورة الفعالية" class="rounded-lg shadow-lg object-cover">
+                <img height="190px" style="max-height: 190px;" id="imageView" src="{{ Storage::url($data['image']) }}" alt="صورة الفعالية" class="rounded-lg shadow-lg object-cover">
             </div>
         </div>
         <!-- <div>
-            <img src="{{ Storage::url($restaurant->image) }}" alt="Restaurant Image" class="rounded-lg shadow-lg w-full h-auto object-cover">
+            <img src="{{ Storage::url($data['image']) }}" alt="Restaurant Image" class="rounded-lg shadow-lg w-full h-auto object-cover">
         </div> -->
         <div>
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">{{ $user->name }}</h2>
             <p class="text-gray-600 mb-2"><strong>Location:</strong> {{ $restaurant->name }}</p>
-            <p class="text-gray-600 mb-2"><strong>Branch:</strong> {{ $restaurant->location }}</p>
-            <p class="text-gray-600 mb-2"><strong>Average Price:</strong> SAR {{ number_format($restaurant->hour_price, 2) }}</p>
-            <p class="text-gray-600 mb-2"><strong>Rating:</strong> ⭐ {{ number_format($restaurant->rating, 1) }} / 5</p>
+            <p class="text-gray-600 mb-2"><strong>Branch:</strong> {{ $data['location'] }}</p>
+            <p class="text-gray-600 mb-2"><strong>Average Price:</strong> SAR {{ number_format($data['hour_price'], 2) }}</p>
+            <p class="text-gray-600 mb-2"><strong>Rating:</strong> ⭐ {{ number_format(1, 1) }} / 5</p>
             <p class="text-gray-600 mb-4"><strong>Status:</strong>
                 <span class="{{ $restaurant->status === 'open' ? 'text-green-600' : 'text-red-600' }}">
                     {{ ucfirst($restaurant->status) }}
@@ -235,7 +240,7 @@
         </div>
         <div class="col-span-2">
             <h3 class="text-xl font-semibold text-gray-800 mb-2">Description</h3>
-            <p class="text-gray-700 mb-6">{{ $restaurant->description }}</p>
+            <p class="text-gray-700 mb-6">{{ $$data['description'] }}</p>
 
             <div class="text-right">
                 <a href="#"
@@ -246,7 +251,7 @@
         </div>
     </div>
 </div>
-
+{{-- 
 <!-- <div class="max-w-7xl mx-auto mt-12 px-4">
     <h3 class="text-2xl font-bold text-gray-800 mb-6">📷 صور توضيحية</h3>
 
@@ -324,7 +329,7 @@
         }
         document.getElementById('viewerImage').src = `{{ asset('storage') }}/` + images[currentIndex];
     }
-</script>
+</script> --}}
 
 
 

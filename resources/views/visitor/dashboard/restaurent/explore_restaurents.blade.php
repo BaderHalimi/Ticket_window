@@ -170,10 +170,19 @@
         </div>
 
         <div id="cards_container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            @foreach($branchs as $restaurant)
+            @foreach($restaurants as $restaurant)
+
+            @php
+            $data = json_decode($restaurant->additional_data, true);
+            $formatted_y = \Carbon\Carbon::parse($data['open_at']??'')->format('g:i A');
+            $formatted_h = \Carbon\Carbon::parse($data['close_at']??'')->format('g:i A');  
+            @endphp
+
+            
+
             <div class="card-hover glassmorphism p-3 rounded-lg shadow-lg transition-transform">
                 <div>
-                    @if($restaurant->open_at <= now() && $restaurant->close_at >= now())
+                    @if($formatted_y <= now() && $formatted_h >= now())
                         <div class="absolute top-3 left-3 bg-green-600 text-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
                             Open
                         </div>
@@ -182,16 +191,16 @@
                             Closed
                         </div>
                         @endif
-                        <img src="{{ Storage::url($restaurant->image) }}" alt="{{ $restaurant->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <img src="{{ Storage::url($data['image']) }}" alt="{{ $restaurant->name }}" class="w-full h-48 object-cover rounded-lg mb-4">
                         <div class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
-                            {{ $restaurant->hour_price }} SAR/hr
+                            {{ $data['hour_price'] }} SAR/hr
                         </div>
                 </div>
                 <h2 class="text-xl font-semibold text-gray-800">{{ $restaurant->name }}</h2>
-                <p class="text-gray-600 mt-2">Tables: {{ $restaurant->tables }}</p>
-                <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-map-pin-line ri-sm"></i></span> {{ $restaurant->location }}</p>
+                <p class="text-gray-600 mt-2">Tables: {{ $data['table'] }}</p>
+                <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-map-pin-line ri-sm"></i></span> {{ $data['location'] }}</p>
                 <p class="text-gray-500 mt-1">
-                    <i class="ri-time-line"></i> {{ \Carbon\Carbon::parse($restaurant->open_at)->format('g:i A') }} - {{ \Carbon\Carbon::parse($restaurant->close_at)->format('g:i A') }}
+                    <i class="ri-time-line"></i> {{ $formatted_y }} - {{ $formatted_h}}
                 </p>
                 <a href="{{ route('visitor.restaurent.show', $restaurant->id) }}">
                     <button class="w-full mt-4 py-2 gradient-button text-white rounded-lg whitespace-nowrap font-medium">

@@ -44,13 +44,40 @@ class LoginController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
+            'role' => 'required',
+            'phone' => 'required_if:role,restaurant',
+            'description' => 'required_if:role,restaurant',
+            'open_at' => 'required_if:role,restaurant',
+            'close_at' => 'required_if:role,restaurant',
+            'image' => 'nullable|image|max:2048',
+            'table' => 'required_if:role,restaurant',
+            'location' => 'required_if:role,restaurant',
+            'hour_price' => 'required_if:role,restaurant',
         ]);
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'seller',
+            'role' => $validated['role'],
+            'additional_data' => json_encode([
+                'phone' => $validated['phone'] ?? null,
+                'description' => $validated['description'] ?? null,
+                'location' => $validated['location'] ?? null,
+                'hour_price' => $validated['hour_price'] ?? null,
+                'table' => $validated['table'] ?? null,
+                'image' => $validated['image'] ?? null,
+                'open_at' => $validated['open_at'] ?? null,
+                'close_at' => $validated['close_at'] ?? null,
+            ]),
         ]);
+        if ($validated['image']) {
+            $imagePath = $request->file('image')->store('images/sellers', 'public');
+            $user->additional_data = json_encode(array_merge(
+                json_decode($user->additional_data, true),
+                ['image' => $imagePath]
+            ));
+            $user->save();
+        }
         auth()->login($user);
         return redirect()->route('seller.dashboard')->with('success', 'Login successful');
     }
