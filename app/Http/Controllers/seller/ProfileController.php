@@ -31,9 +31,11 @@ class ProfileController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ];
-        if ($user->role == 'restaurent') {
-            $rule['open_at'] = 'required';
-            $rule['close_at'] = 'required';
+        if ($user->role == 'restaurant') {
+            // dd('hi');
+            $rules['open_at'] = 'required';
+            $rules['close_at'] = 'required';
+            $rules['chairs_count'] = 'required|min:1';
         }
         // التحقق من البيانات
         $validated = $request->validate($rules);
@@ -41,14 +43,17 @@ class ProfileController extends Controller
         // تحديث الاسم الرئيسي
         $user->name = $validated['name'];
 
+
         // نحضّر البيانات الإضافية
         $additionalData = [
-            'open_at' => $validated['open_at'],
-            'close_at' => $validated['close_at'],
             'phone' => $validated['phone'],
             'description' => $validated['description'],
         ];
-
+        if ($user->role == 'restaurant') {
+            $additionalData['open_at'] = $request['open_at'];
+            $additionalData['close_at'] = $request['close_at'];
+            $additionalData['chairs_count'] = $request['chairs_count'];
+        }
         // في حال رفع صورة جديدة
         if ($request->hasFile('image')) {
             $imagePath = Storage::disk('public')->put('restaurant_images', $request->file('image'));
