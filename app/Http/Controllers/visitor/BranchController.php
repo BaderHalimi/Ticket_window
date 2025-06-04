@@ -11,20 +11,22 @@ use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Reservation;
+use Carbon\Carbon;
 
 class BranchController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(User $restaurant,$branch)
+    public function index(User $restaurant, $branch)
     {
         $branch = Branch::findOrFail($branch);
 
         $user = $restaurant;
         // dd($branch);
         if ($branch->restaurant_id != $user->id) {
-            return redirect()->route('visitor.bran.show',['restaurant'=>$restaurant->id])->with('error', 'You are not authorized to view this branch.');
+            return redirect()->route('visitor.bran.show', ['restaurant' => $restaurant->id])->with('error', 'You are not authorized to view this branch.');
         }
         return view('visitor.dashboard.restaurent.table_details', compact('branch', 'user'));
     }
@@ -54,7 +56,7 @@ class BranchController extends Controller
         $categories = Category::active()->where('type', 'events')->get();
 
 
-        return view('visitor.dashboard.restaurent.branch_preview', compact('branches', 'categories','restaurant'));
+        return view('visitor.dashboard.restaurent.branch_preview', compact('branches', 'categories', 'restaurant'));
     }
 
     /**
@@ -79,5 +81,22 @@ class BranchController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function getSchedule(Request $request)
+    {
+        $branchId = $request->branch_id;
+        $date = $request->date;
+
+        $branch = Branch::findOrFail($branchId);
+        $tablesCount = $branch->tables;
+
+        $reservations = Reservation::where('branch_id', $branchId)
+            ->whereDate('reservation_date', $date)
+            ->get(['start_time', 'end_time']);
+
+        return response()->json([
+            'tables' => $tablesCount,
+            'reservations' => $reservations
+        ], 200);
     }
 }

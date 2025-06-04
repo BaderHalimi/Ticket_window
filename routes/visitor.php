@@ -67,7 +67,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('restaurent/{restaurant}', [VisitorBranchController::class, 'show'])->name('bran.show');
     Route::get('restaurent/{restaurant}/preview/{branch}', [VisitorBranchController::class, 'index'])->name('branch_preview');
-
+    Route::post('/visitor/get-schedule', [VisitorBranchController::class, 'getSchedule'])->name('get_schedule');
     Route::get('explore_restaurents', function () {
         $restaurents = [];
         return view('visitor.dashboard.explore_restaurents', compact('restaurents'));
@@ -83,7 +83,5 @@ Route::group(['middleware' => 'auth'], function () {
             'event' => 'event',
             'tickets' => 'ticket'
         ]);
-    Route::get('profile', [ProfileController::class,'index']);
+    Route::get('profile', [ProfileController::class, 'index']);
 });
-
-

@@ -30,24 +30,30 @@
     .imgsContainer::-webkit-scrollbar-thumb:hover {
         background-color: rgba(100, 100, 100, 0.8);
     }
+
     .gallery-img {
         cursor: pointer;
         transition: transform 0.2s ease;
     }
+
     .gallery-img:hover {
         transform: scale(1.05);
     }
+
     .gallery-img:active {
         transform: scale(0.95);
     }
+
     .gallery-img:focus {
         outline: none;
         box-shadow: 0 0 0 2px rgba(87, 181, 231, 0.5);
     }
+
     .gallery-img:focus-visible {
         outline: none;
         box-shadow: 0 0 0 2px rgba(87, 181, 231, 0.5);
     }
+
     .gallery-img:focus:not(:focus-visible) {
         box-shadow: none;
     }
@@ -236,6 +242,43 @@
         <div class="col-span-2">
             <h3 class="text-xl font-semibold text-gray-800 mb-2">Description</h3>
             <p class="text-gray-700 mb-6">{{ $branch->description }}</p>
+            <div class="max-w-5xl mx-auto my-12 glassmorphism p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold mb-6">📅 جدول الحجوزات لليوم</h2>
+
+                <!-- الفورم -->
+                <form id="reservation-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8" method="POST">
+                    @csrf
+                    <div>
+                        <label for="reservation_date" class="block font-medium text-gray-700 mb-1">اختر اليوم</label>
+                        <input type="date" id="reservation_date" name="reservation_date" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label for="start_time" class="block font-medium text-gray-700 mb-1">من الساعة</label>
+                        <input type="time" id="start_time" name="start_time" class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label for="end_time" class="block font-medium text-gray-700 mb-1">الى الساعة</label>
+                        <input type="time" id="end_time" name="end_time" class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label for="chairs" class="block font-medium text-gray-700 mb-1">عدد الكراسي</label>
+                        <input type="number" id="chairs" name="chairs" class="w-full p-2 border rounded" min="1">
+                    </div>
+                </form>
+                <!-- جدول الحجز -->
+                <div id="schedule-container" class="mt-6">
+                    <div id="calendar" style="height: 800px;"></div>
+
+                    <script>
+                        const BRANCH_ID = {
+                            {
+                                $branch - > id
+                            }
+                        };
+                    </script>
+
+                </div>
+            </div>
 
             <div class="text-right">
                 <a href="#"
@@ -253,7 +296,7 @@
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         @foreach (json_decode($branch->gallery ?? '[]', true) as $index => $image)
             <div class="cursor-pointer">
-                <img src="{{ Storage::url($image) }}" 
+                <img src="{{ Storage::url($image) }}"
                      alt="صورة"
                      onclick="openImageViewer({{ $index }})"
                      class="rounded-lg shadow-md object-cover w-full h-32 sm:h-40 md:h-48 hover:scale-105 transition-transform duration-300">
@@ -299,7 +342,12 @@
 
     function openImageViewer(index) {
         currentIndex = index;
-        document.getElementById('imageView').src = images[currentIndex] ? {{ asset('storage') }}/ + images[currentIndex] : '';
+        document.getElementById('imageView').src = images[currentIndex] ? {
+            {
+                asset('storage')
+            }
+        }
+        / + images[currentIndex] : '';
         // document.getElementById('imageViewer').classList.remove('hidden');
     }
 
@@ -313,7 +361,12 @@
         } else {
             currentIndex = images.length - 1; // رجوع للصورة الأخيرة
         }
-        document.getElementById('viewerImage').src = {{ asset('storage') }}/ + images[currentIndex];
+        document.getElementById('viewerImage').src = {
+            {
+                asset('storage')
+            }
+        }
+        / + images[currentIndex];
     }
 
     function nextImage() {
@@ -322,10 +375,102 @@
         } else {
             currentIndex = 0; // العودة للأولى
         }
-        document.getElementById('viewerImage').src = {{ asset('storage') }}/ + images[currentIndex];
+        document.getElementById('viewerImage').src = {
+            {
+                asset('storage')
+            }
+        } + images[currentIndex];
     }
 </script>
+<script>
+    import Calendar from '@toast-ui/calendar';
+    import '@toast-ui/calendar/dist/toastui-calendar.min.css';
+    // تعريف الكاليندر لما الصفحة تحمل
+    document.addEventListener("DOMContentLoaded", function() {
+        const calendar = new Calendar('#calendar', {
+            defaultView: 'time',
+            taskView: false,
+            scheduleView: ['time'],
+            useDetailPopup: false,
+            useCreationPopup: false,
+            week: {
+                showTimezoneCollapseButton: false,
+                showNowIndicator: true,
+                hourStart: 10, // ساعة فتح الفرع
+                hourEnd: 22 // ساعة إغلاق الفرع
+            },
+            theme: {
+                common: {
+                    backgroundColor: '#fff',
+                    border: '1px solid #ddd'
+                }
+            }
+        });
 
+        // الحدث لما يختار تاريخ من الانبوت
+        const dateInput = document.getElementById("reservation_date");
+        dateInput.addEventListener("change", function() {
+            const selectedDate = this.value;
+            fetchReservations(selectedDate, calendar);
+        });
+    });
+
+    function fetchReservations(date, calendar) {
+        fetch(`/visitor/get-schedule`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    branch_id: BRANCH_ID, // مرر قيمة الـ branch_id من الباك اند عبر Blade
+                    date: date
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                renderReservations(calendar, data, date);
+            }).catch(err => {
+                console.error("خطأ في جلب البيانات:", err);
+            });
+    }
+
+    function renderReservations(calendar, data, date) {
+        calendar.clear(); // نمسح أي بيانات قديمة
+
+        let startHour = 10;
+        let endHour = 22;
+
+        for (let hour = startHour; hour < endHour; hour++) {
+            for (let minute = 0; minute < 60; minute += 30) {
+                const slotStart = `${date}T${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}:00`;
+
+                const overlappingReservations = data.reservations.filter(res => {
+                    return slotStart >= res.start_time && slotStart < res.end_time;
+                });
+
+                if (overlappingReservations.length >= data.tables) {
+                    calendar.createSchedules([{
+                        id: Math.random().toString(),
+                        calendarId: '1',
+                        title: 'محجوز بالكامل',
+                        category: 'time',
+                        start: slotStart,
+                        end: addMinutes(slotStart, 30),
+                        bgColor: '#FF4B4B',
+                        color: '#fff'
+                    }]);
+                }
+            }
+        }
+    }
+
+    function addMinutes(dateTimeStr, minutesToAdd) {
+        const date = new Date(dateTimeStr);
+        date.setMinutes(date.getMinutes() + minutesToAdd);
+        return date.toISOString();
+    }
+</script>
 
 
 @endsection
