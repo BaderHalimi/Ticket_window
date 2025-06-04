@@ -53,10 +53,10 @@ Route::group(['middleware' => 'auth'], function () {
         $categories = Category::where('type', 'events')->where('status', 'active')->get();
         return view('visitor.dashboard.index', compact('events', 'categories'));
     })->name('dashboard');
-    Route::get('my_bookings', function () {
-        $bookings = [];
-        return view('visitor.dashboard.my_booking', compact('bookings'));
-    })->name('my_bookings');
+    // Route::get('my_bookings', function () {
+    //     $bookings = [];
+    //     return view('visitor.dashboard.my_booking', compact('bookings'));
+    // })->name('my_bookings');
     // Route::get('tickets', function () {
     //     $tickets = [];
     //     // return view('visitor.dashboard.tickets', compact('tickets'));
@@ -70,7 +70,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('restaurent/{restaurant}/preview/{branch}', [VisitorBranchController::class, 'index'])->name('branch_preview');
     // Route::post('/visitor/get-schedule', [VisitorBranchController::class, 'getSchedule'])->name('get_schedule');
     // Route::post('/check-availability', [ReservationController::class, 'checkAvailability']);
-    Route::post('/check-availability-full', [ReservationController::class, 'checkAvailabilityFull']);
+    Route::post('/check-availability-full', [ReservationController::class, 'checkAvailabilityFull'])->name('check_availability_full');
+    Route::post('/check-availability', [ReservationController::class, 'checkAvailability'])->name('check_availability');
+    Route::post('/reservation', [ReservationController::class, 'store'])->name('reservation.store');
+    
+    Route::resource('/my_bookings', ReservationController::class)->middleware("auth")->names('my_bookings');
+    Route::post('my_bookings/pay/{id}', [ReservationController::class, 'confirm'])->name('my_bookings.pay');
+
 
     Route::get('explore_restaurents', function () {
         $restaurents = [];

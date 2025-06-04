@@ -19,7 +19,9 @@ class BranchController extends Controller
      */
     public function index()
     {
-        $branchs = Branch::all();
+        $branchs = Branch::where('restaurant_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         return view('seller.dashboard.branches.index', compact('branchs'));
     }

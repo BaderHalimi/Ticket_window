@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Branch;
 
 class Reservation extends Model
 {
@@ -17,7 +18,8 @@ class Reservation extends Model
         'price',
         'chairs',
         'status',
-        'additional_data'
+        'additional_data',
+        'code'
     ];
     protected $casts = [
         'reservation_date' => 'date',
@@ -42,4 +44,5 @@ class Reservation extends Model
     {
         return \Carbon\Carbon::createFromFormat('H:i:s', $value);
     }
+
 }

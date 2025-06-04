@@ -248,8 +248,10 @@
                 <h2 class="text-2xl font-bold mb-6">📅 جدول الحجوزات لليوم</h2>
 
                 <!-- الفورم -->
-                <form id="reservation-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8" method="POST">
+                <form id="reservation-form" action="{{ route('visitor.reservation.store') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8" method="POST">
                     @csrf
+                    <input type="hidden" name="branch_id" value="{{ $branch->id }}">
+
                     <div>
                         <label for="reservation_date" class="block font-medium text-gray-700 mb-1">اختر اليوم</label>
                         <input type="date" id="reservation_date" name="reservation_date" class="w-full p-2 border rounded" required>
@@ -268,14 +270,17 @@
                         <label for="chairs" class="block font-medium text-gray-700 mb-1">عدد الكراسي</label>
                         <input type="number" min="1" value="1" max="{{ json_decode($branch->restaurant->additional_data,true)['chairs_count'] }}" id="chairs" name="chairs" class="w-full p-2 border rounded">
                     </div>
+                    <div class="text-right">
+                        {{-- <a href="{{ route('visitor.reservation.store', $branch->id) }}" class="gradient-button text-white px-6 py-3 rounded-lg shadow-lg text-lg font-semibold inline-flex items-center"> --}}
+                        <button type="submit">
+                            
+                            <i class="ri-restaurant-line mr-2"></i> احجز طاولة
+                        </button>
+                        {{-- </a> --}}
+                    </div>
                 </form>
 
-            <div class="text-right">
-                <a href="#"
-                    class="gradient-button text-white px-6 py-3 rounded-lg shadow-lg text-lg font-semibold inline-flex items-center">
-                    <i class="ri-restaurant-line mr-2"></i> احجز طاولة
-                </a>
-            </div>
+
         </div>
     </div>
 </div>
@@ -323,7 +328,7 @@
     </div>
 </div>
 
-
+{{-- 
 <script>
     // جلب الصور من المتغير المرسل من الباك إند
     const images = @json(json_decode($branch -> gallery ?? '[]', true));
@@ -371,7 +376,7 @@
             }
         } + images[currentIndex];
     }
-</script>
+</script> --}}
 <!-- <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script> -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -429,6 +434,29 @@
     });
 
 </script>
+<script>
+    const images = @json(json_decode($branch->gallery ?? '[]', true));
+    let currentIndex = 0;
 
+    function openImageViewer(index) {
+        currentIndex = index;
+        document.getElementById('imageView').src = `{{ asset('storage') }}/` + images[currentIndex];
+        // document.getElementById('imageViewer').classList.remove('hidden');
+    }
+
+    function closeImageViewer() {
+        document.getElementById('imageViewer').classList.add('hidden');
+    }
+
+    function previousImage() {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        document.getElementById('viewerImage').src = `{{ asset('storage') }}/` + images[currentIndex];
+    }
+
+    function nextImage() {
+        currentIndex = (currentIndex + 1) % images.length;
+        document.getElementById('viewerImage').src = `{{ asset('storage') }}/` + images[currentIndex];
+    }
+</script>
 
 @endsection

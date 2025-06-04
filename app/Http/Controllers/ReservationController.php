@@ -6,6 +6,7 @@ use App\Models\Branch;
 use App\Models\Reservation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
@@ -14,35 +15,50 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $bookings = Reservation::where('user_id', Auth::id())
+        ->with(['branch' => function ($query) {
+            $query->select('id', 'image','open_at','close_at', 'name', 'location');
+        }])
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+
+        return view('visitor.dashboard.my_booking', compact('bookings'));
+   }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
-    }
+
+     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+       
         $validated = $request->validate([
             'branch_id' => 'required|exists:branches,id',
             'reservation_date' => 'required|date',
             'start_time' => 'required|date_format:H:i',
-            'duration' => 'required|integer|min:1',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+            'chairs' => 'required|integer|min:1|max:5', 
         ]);
-
+        //dd($request->all());
         $branch = Branch::findOrFail($validated['branch_id']);
         $reservationDate = $validated['reservation_date'];
 
         $startTime = Carbon::parse("{$reservationDate} {$validated['start_time']}");
-        $endTime = $startTime->copy()->addHours($validated['duration']);
+        $endTime = $startTime->copy()->addHours($validated['end_time']);
 
+        $start_time = Carbon::parse("{$reservationDate} {$validated['start_time']}");
+        $end_time = Carbon::parse("{$reservationDate} {$validated['end_time']}");
+        
+        $durationInMinutes = $start_time->diffInMinutes($end_time); // الفرق بالدقائق
+        $durationInHours = $durationInMinutes / 60;
+        
         $overlappingCount = Reservation::where('branch_id', $branch->id)
             ->whereDate('reservation_date', $reservationDate)
             ->where(function ($q) use ($startTime, $endTime) {
@@ -53,16 +69,24 @@ class ReservationController extends Controller
         if ($overlappingCount >= $branch->tables) {
             return response()->json(['message' => 'لا يوجد طاولات متاحة في هذا الوقت.'], 409);
         }
-
+        //$duration= $startTime - $endTime;
         Reservation::create([
             'branch_id' => $branch->id,
             'reservation_date' => $reservationDate,
             'start_time' => $startTime->format('H:i:s'),
             'end_time' => $endTime->format('H:i:s'),
-            'status' => 'confirmed'
+            'status' => 'pending',
+            'price' => $branch->hour_price *  $durationInHours,
+            'user_id' => auth()->id(), 
+            'chairs' => $validated['chairs'],
+            'code' => 'Res-' . strtoupper(uniqid()),
+
         ]);
+        //dd( $durationInHours,$start_time);
+
 
         return response()->json(['message' => 'تم الحجز بنجاح'], 201);
+
     }
     public function checkAvailability(Request $request)
 {
@@ -241,10 +265,23 @@ private function findNextAvailableSlot($branch, $date, $startTime, $endTime)
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Reservation $reservation)
+    public function confirm(Request $request, string $id)
     {
-        //
+        $reservation = Reservation::findOrFail($id);
+        if ($reservation->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'You are not authorized to update this ticket.');
+        }
+    
+        if ($reservation->status !== 'pending') {
+            return redirect()->back()->with('error', 'Only pending reservations can be confirmed.');
+        }
+    
+        $reservation->status = 'confirmed';
+        $reservation->save();
+    
+        return view('visitor.dashboard.my_booking')->with('success', 'Reservation confirmed successfully!');
     }
+    
 
     /**
      * Remove the specified resource from storage.
