@@ -1,6 +1,8 @@
 @extends('visitor.layouts.app')
 @section('title', 'Dashboard - ')
 @push('styles')
+<link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
+
 <style>
     .imgsContainer {
         scrollbar-width: thin;
@@ -180,11 +182,11 @@
         scroll-snap-align: start;
     }
 
-    input[type="number"]::-webkit-inner-spin-button,
+    /* input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button {
         -webkit-appearance: none;
         margin: 0;
-    }
+    } */
 
     .gradient-button {
         background: linear-gradient(135deg, #57B5E7 0%, #B19CD9 100%);
@@ -255,30 +257,18 @@
                     <div>
                         <label for="start_time" class="block font-medium text-gray-700 mb-1">من الساعة</label>
                         <input type="time" id="start_time" name="start_time" class="w-full p-2 border rounded">
+                        <small id="availability-message" class="text-sm font-medium mt-1"></small>
                     </div>
+
                     <div>
                         <label for="end_time" class="block font-medium text-gray-700 mb-1">الى الساعة</label>
                         <input type="time" id="end_time" name="end_time" class="w-full p-2 border rounded">
                     </div>
                     <div>
                         <label for="chairs" class="block font-medium text-gray-700 mb-1">عدد الكراسي</label>
-                        <input type="number" id="chairs" name="chairs" class="w-full p-2 border rounded" min="1">
+                        <input type="number" min="1" value="1" max="{{ json_decode($branch->restaurant->additional_data,true)['chairs_count'] }}" id="chairs" name="chairs" class="w-full p-2 border rounded">
                     </div>
                 </form>
-                <!-- جدول الحجز -->
-                <div id="schedule-container" class="mt-6">
-                    <div id="calendar" style="height: 800px;"></div>
-
-                    <script>
-                        const BRANCH_ID = {
-                            {
-                                $branch - > id
-                            }
-                        };
-                    </script>
-
-                </div>
-            </div>
 
             <div class="text-right">
                 <a href="#"
@@ -382,94 +372,62 @@
         } + images[currentIndex];
     }
 </script>
+<!-- <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script> -->
 <script>
-    import Calendar from '@toast-ui/calendar';
-    import '@toast-ui/calendar/dist/toastui-calendar.min.css';
-    // تعريف الكاليندر لما الصفحة تحمل
-    document.addEventListener("DOMContentLoaded", function() {
-        const calendar = new Calendar('#calendar', {
-            defaultView: 'time',
-            taskView: false,
-            scheduleView: ['time'],
-            useDetailPopup: false,
-            useCreationPopup: false,
-            week: {
-                showTimezoneCollapseButton: false,
-                showNowIndicator: true,
-                hourStart: 10, // ساعة فتح الفرع
-                hourEnd: 22 // ساعة إغلاق الفرع
-            },
-            theme: {
-                common: {
-                    backgroundColor: '#fff',
-                    border: '1px solid #ddd'
-                }
-            }
-        });
-
-        // الحدث لما يختار تاريخ من الانبوت
+    document.addEventListener("DOMContentLoaded", function () {
+        const startTimeInput = document.getElementById("start_time");
+        const endTimeInput = document.getElementById("end_time");
         const dateInput = document.getElementById("reservation_date");
-        dateInput.addEventListener("change", function() {
-            const selectedDate = this.value;
-            fetchReservations(selectedDate, calendar);
-        });
-    });
+        const message = document.getElementById("availability-message");
 
-    function fetchReservations(date, calendar) {
-        fetch(`/visitor/get-schedule`, {
+        startTimeInput.addEventListener("change", function () {
+            checkAvailability();
+        });
+
+        endTimeInput.addEventListener("change", function () {
+            checkAvailability();
+        });
+
+        dateInput.addEventListener("change", function () {
+            checkAvailability();
+        });
+
+        function checkAvailability() {
+            const date = dateInput.value;
+            const startTime = startTimeInput.value;
+            const endTime = endTimeInput.value;
+
+            if (!date || !startTime || !endTime) return;
+
+            fetch(`/visitor/check-availability-full`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({
-                    branch_id: BRANCH_ID, // مرر قيمة الـ branch_id من الباك اند عبر Blade
-                    date: date
+                    branch_id: {{ $branch->id }},
+                    date: date,
+                    start_time: startTime,
+                    end_time: endTime
                 })
             })
             .then(res => res.json())
             .then(data => {
-                renderReservations(calendar, data, date);
-            }).catch(err => {
-                console.error("خطأ في جلب البيانات:", err);
-            });
-    }
-
-    function renderReservations(calendar, data, date) {
-        calendar.clear(); // نمسح أي بيانات قديمة
-
-        let startHour = 10;
-        let endHour = 22;
-
-        for (let hour = startHour; hour < endHour; hour++) {
-            for (let minute = 0; minute < 60; minute += 30) {
-                const slotStart = `${date}T${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}:00`;
-
-                const overlappingReservations = data.reservations.filter(res => {
-                    return slotStart >= res.start_time && slotStart < res.end_time;
-                });
-
-                if (overlappingReservations.length >= data.tables) {
-                    calendar.createSchedules([{
-                        id: Math.random().toString(),
-                        calendarId: '1',
-                        title: 'محجوز بالكامل',
-                        category: 'time',
-                        start: slotStart,
-                        end: addMinutes(slotStart, 30),
-                        bgColor: '#FF4B4B',
-                        color: '#fff'
-                    }]);
+                if (data.available) {
+                    message.textContent = '✅ هذا الوقت متاح بالكامل للحجز';
+                    message.style.color = 'green';
+                } else {
+                    message.textContent = `❌ غير متاح - أقرب وقت مناسب: ${data.next_available}`;
+                    message.style.color = 'red';
                 }
-            }
+            })
+            .catch(err => {
+                console.error("خطأ في جلب التوافر:", err);
+            });
         }
-    }
+    });
 
-    function addMinutes(dateTimeStr, minutesToAdd) {
-        const date = new Date(dateTimeStr);
-        date.setMinutes(date.getMinutes() + minutesToAdd);
-        return date.toISOString();
-    }
 </script>
 
 

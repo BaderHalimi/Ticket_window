@@ -52,4 +52,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Event::class);
     }
+    public function getAdditionalDataAttribute($value)
+    {
+        return json_decode($value, true);
+    }
 }

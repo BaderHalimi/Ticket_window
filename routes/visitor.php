@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\seller\BranchController;
 use App\Http\Controllers\visitor\BranchController as VisitorBranchController;
 use App\Http\Controllers\TicketController;
@@ -67,7 +68,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('restaurent/{restaurant}', [VisitorBranchController::class, 'show'])->name('bran.show');
     Route::get('restaurent/{restaurant}/preview/{branch}', [VisitorBranchController::class, 'index'])->name('branch_preview');
-    Route::post('/visitor/get-schedule', [VisitorBranchController::class, 'getSchedule'])->name('get_schedule');
+    // Route::post('/visitor/get-schedule', [VisitorBranchController::class, 'getSchedule'])->name('get_schedule');
+    // Route::post('/check-availability', [ReservationController::class, 'checkAvailability']);
+    Route::post('/check-availability-full', [ReservationController::class, 'checkAvailabilityFull']);
+
     Route::get('explore_restaurents', function () {
         $restaurents = [];
         return view('visitor.dashboard.explore_restaurents', compact('restaurents'));
