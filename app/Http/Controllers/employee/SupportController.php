@@ -53,7 +53,7 @@ class SupportController extends Controller
      */
     public function edit(string $id)
     {
-        //
+
     }
 
     /**
@@ -70,7 +70,8 @@ class SupportController extends Controller
     public function destroy(string $id)
     {
         $ticket = SupportTicket::findOrFail($id);
-        $ticket->delete();
-        return redirect()->route('employee.support.index')->with('success', 'Ticket deleted successfully.');
+        $ticket->status = 'deny';
+        $ticket->save();
+        return redirect()->route('employee.support.index')->with('success', 'Ticket has been denied successfully.');
     }
 }
