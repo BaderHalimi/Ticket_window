@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
@@ -40,20 +41,28 @@ class LoginController extends Controller
     }
     public function register_logic(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
-            'role' => 'required',
-            'phone' => 'nullable|role,restaurant',
-            'description' => 'nullable|role,restaurant',
-            'open_at' => 'nullable|role,restaurant',
-            'close_at' => 'nullable|role,restaurant',
+            'role' => 'required|in:seller,restaurant',
             'image' => 'nullable|image|max:2048',
-            'table' => 'nullable|role,restaurant',
-            'location' => 'nullable|role,restaurant',
-            'hour_price' => 'nullable|role,restaurant',
         ]);
+        
+        if ($request->role === 'restaurant') {
+            $validator->addRules([
+                'phone' => 'nullable|string|max:255',
+                'description' => 'nullable|string|max:1000',
+                'open_at' => 'nullable',
+                'close_at' => 'nullable',
+                'table' => 'nullable',
+                'location' => 'nullable|string',
+                'hour_price' => 'nullable|numeric',
+            ]);
+        }
+        $validated = $validator->validate();
+
+        
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],

@@ -52,6 +52,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Event::class);
     }
+    
+    public function branches()
+    {
+        return $this->hasMany(Branch::class, 'restaurant_id');
+    }
+    
     public function getAdditionalDataAttribute($value)
     {
         return json_decode($value, true);

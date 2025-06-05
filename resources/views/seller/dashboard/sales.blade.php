@@ -40,7 +40,15 @@
         <table class="min-w-full divide-y divide-gray-200 text-right">
             <thead>
                 <tr class="text-gray-700 bg-white bg-opacity-60 text-center bg-blue-200 hover:bg-blue-400 hover:bg-opacity-50 transition duration-300">
-                    <th class="px-6 py-3 text-sm font-semibold rounded-tl-md">اسم العرض</th>
+                    <th class="px-6 py-3 text-sm font-semibold rounded-tl-md">
+                        @if (auth()->user()->role == 'seller')
+                            اسم العرض
+                        @elseif (auth()->user()->role == 'restaurant')
+                            اسم الفرع
+                        @else
+                            الاسم
+                        @endif
+                    </th>
                     <th class="px-6 py-3 text-sm font-semibold">المشتري</th>
                     <th class="px-6 py-3 text-sm font-semibold">السعر</th>
                     <th class="px-6 py-3 text-sm font-semibold">التاريخ</th>
@@ -49,50 +57,79 @@
                 </tr>
             </thead>
             <tbody class="bg-white bg-opacity-40 divide-y divide-gray-200">
-
+                @if (auth()->user()->role == 'seller')
                 @foreach($tickets as $ticket)
-                <tr class="text-center hover:bg-gray-200 hover:bg-opacity-50 transition duration-300">
-                    {{-- اسم العرض (event name from additional_data) --}}
-                    <td class="px-6 py-4">
-                        {{ $ticket->additional_data['event']['name'] ?? $ticket->event->name ?? 'deleted event' }}
-                    </td>
-
-                    {{-- اسم المشتري --}}
-                    <td class="px-6 py-4">{{ $ticket->user->name ?? 'مستخدم مجهول' }}</td>
-
-                    {{-- السعر --}}
-                    <td class="px-6 py-4 text-green-600 font-bold">{{ number_format($ticket->price, 2) }} SAR</td>
-
-                    {{-- التاريخ --}}
-                    <td class="px-6 py-4">{{ $ticket->created_at->format('Y-m-d') }}</td>
-
-                    {{-- الحالة --}}
-                    <td class="px-6 py-4">
-                        @if($ticket->status == 'paid')
-                        <span class="text-green-700 font-medium">تم الدفع</span>
-                        @elseif($ticket->status == 'pending')
-                        <span class="text-yellow-600 font-medium">قيد الانتظار</span>
-                        @elseif($ticket->status == 'canceled')
-                        <span class="text-red-600 font-medium">ملغاة</span>
-                        @else
-                        <span class="text-gray-600 font-medium">{{ $ticket->status }}</span>
-                        @endif
-                    </td>
-
-                    {{-- الإجراءات --}}
-                    <td class="px-6 py-4 space-x-2 space-x-reverse">
-                        <button class="text-blue-700 hover:bg-blue-700 rounded-full px-3 py-2 hover:text-white transition duration-500" title="عرض">
-                            <i class="ri-eye-line text-lg"></i>
-                        </button>
-
-                        <button class="text-gray-700 hover:bg-gray-700 rounded-full px-3 py-2 hover:text-white transition duration-500" title="طباعة">
-                            <i class="ri-printer-line text-lg"></i>
-                        </button>
-                    </td>
-                </tr>
+                    <tr class="text-center hover:bg-gray-200 hover:bg-opacity-50 transition duration-300">
+                        {{-- محتوى الجدول --}}
+                        <td class="px-6 py-4">
+                            {{ $ticket->additional_data['event']['name'] ?? $ticket->event->name ?? 'deleted event' }}
+                        </td>
+                        <td class="px-6 py-4">{{ $ticket->user->name ?? 'مستخدم مجهول' }}</td>
+                        <td class="px-6 py-4 text-green-600 font-bold">{{ number_format($ticket->price, 2) }} SAR</td>
+                        <td class="px-6 py-4">{{ $ticket->created_at->format('Y-m-d') }}</td>
+                        <td class="px-6 py-4">
+                            @if($ticket->status == 'paid')
+                                <span class="text-green-700 font-medium">تم الدفع</span>
+                            @elseif($ticket->status == 'pending')
+                                <span class="text-yellow-600 font-medium">قيد الانتظار</span>
+                            @elseif($ticket->status == 'canceled')
+                                <span class="text-red-600 font-medium">ملغاة</span>
+                            @else
+                                <span class="text-gray-600 font-medium">{{ $ticket->status }}</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 space-x-2 space-x-reverse">
+                            <button class="text-blue-700 hover:bg-blue-700 rounded-full px-3 py-2 hover:text-white transition duration-500" title="عرض">
+                                <i class="ri-eye-line text-lg"></i>
+                            </button>
+                            <button class="text-gray-700 hover:bg-gray-700 rounded-full px-3 py-2 hover:text-white transition duration-500" title="طباعة">
+                                <i class="ri-printer-line text-lg"></i>
+                            </button>
+                        </td>
+                    </tr>
                 @endforeach
-
-
+            
+            @elseif (auth()->user()->role == 'restaurant' or auth()->user()->role == 'admin')
+            
+                
+                @foreach($bookings as $ticket)
+                    <tr class="text-center hover:bg-gray-200 hover:bg-opacity-50 transition duration-300">
+                        {{-- محتوى الجدول --}}
+                        <td class="px-6 py-4">
+                            {{ $ticket->branch->name ?? $ticket->user->name ?? 'deleted event' }}
+                        </td>
+                        <td class="px-6 py-4">{{ $ticket->user->name ?? 'مستخدم مجهول' }}</td>
+                        <td class="px-6 py-4 text-green-600 font-bold">{{ number_format($ticket->price, 2) }} SAR</td>
+                        <td class="px-6 py-4">{{ \Carbon\Carbon::parse($ticket->reservation_date)->format('Y-m-d') }}
+                        </td>
+                        <td class="px-6 py-4">
+                            @if($ticket->status == 'paid')
+                                <span class="text-green-700 font-medium">تم الدفع</span>
+                            @elseif($ticket->status == 'pending')
+                                <span class="text-yellow-600 font-medium">قيد الانتظار</span>
+                            @elseif($ticket->status == 'canceled')
+                                <span class="text-red-600 font-medium">ملغاة</span>
+                            @else
+                                <span class="text-gray-600 font-medium">{{ $ticket->status }}</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 space-x-2 space-x-reverse">
+                            <button class="text-blue-700 hover:bg-blue-700 rounded-full px-3 py-2 hover:text-white transition duration-500" title="عرض">
+                                <i class="ri-eye-line text-lg"></i>
+                            </button>
+                            <button class="text-gray-700 hover:bg-gray-700 rounded-full px-3 py-2 hover:text-white transition duration-500" title="طباعة">
+                                <i class="ri-printer-line text-lg"></i>
+                            </button>
+                        </td>
+                    </tr>
+                @endforeach
+            
+            @else
+                <tr>
+                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">لا توجد مبيعات لعرضها</td>
+                </tr>
+            @endif
+            
             </tbody>
 
         </table>

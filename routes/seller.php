@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\seller\Bookings_restaurant;
 use App\Http\Controllers\seller\BranchController;
 use App\Http\Controllers\seller\EventsController;
 use App\Http\Controllers\seller\LoginController;
@@ -35,7 +36,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('events', EventsController::class);
     Route::resource('branch', BranchController::class);
     Route::get('branch/gallery/{branch}', [BranchController::class, 'edit_gallery'])->name('branch.gallery');
-    Route::get('sales', [Tickets_sellerController::class,'index'])->name('sales');
+
+    Route::middleware(['auth', 'role:seller'])->group(function () {
+        Route::get('sales', [Tickets_sellerController::class, 'index'])->name('sales');
+    });
+
+    Route::middleware(['auth', 'role:restaurant,admin'])->group(function () {
+        Route::get('sales', [Bookings_restaurant::class, 'index'])->name('sales');
+    });
+
     Route::get('profile',[ProfileController::class,'index'])->name('profile.index');
     Route::put('profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.changePassword');

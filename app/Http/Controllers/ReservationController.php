@@ -279,7 +279,7 @@ private function findNextAvailableSlot($branch, $date, $startTime, $endTime)
         $reservation->status = 'confirmed';
         $reservation->save();
     
-        return view('visitor.dashboard.my_booking')->with('success', 'Reservation confirmed successfully!');
+        return view('visitor.dashboard.index')->with('success', 'Reservation confirmed successfully!');
     }
     
 
