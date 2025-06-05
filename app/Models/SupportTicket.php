@@ -14,7 +14,8 @@ class SupportTicket extends Model
         'response',
         'status',
         'user_id',
-        'staff_id'
+        'staff_id',
+        'code',
     ];
     protected $casts = [
         'status' => 'string',

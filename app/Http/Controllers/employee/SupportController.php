@@ -1,10 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\employee;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SupportTicket;
+use App\Models\User;
+use App\Models\Employee;
+
 class SupportController extends Controller
 {
     /**
@@ -12,11 +16,12 @@ class SupportController extends Controller
      */
     public function index()
     {
-        $tickets = SupportTicket::where('user_id', Auth::id())
+
+        $tickets = SupportTicket::where('status', 'pending')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('visitor.dashboard.support.index',compact('tickets'));
+        return view('employee.dashboard.support',compact('tickets'));
     }
 
     /**
@@ -24,7 +29,7 @@ class SupportController extends Controller
      */
     public function create()
     {
-        return view('visitor.dashboard.support.help');
+        //
     }
 
     /**
@@ -32,20 +37,7 @@ class SupportController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'message' => 'required|string|max:5000',
-        ]);
-
-        SupportTicket::create([
-            'title' => $validated['name'],
-            'content' => $validated['message'],
-            'user_id' => Auth::id(),
-            'status' => 'pending',
-            'code' => 'SUPPORT-' . strtoupper(uniqid()),
-        ]);
-        return redirect()->route('visitor.support.index')->with('success', 'Your support ticket has been created successfully.');
+        //
     }
 
     /**
@@ -77,6 +69,8 @@ class SupportController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $ticket = SupportTicket::findOrFail($id);
+        $ticket->delete();
+        return redirect()->route('employee.support.index')->with('success', 'Ticket deleted successfully.');
     }
 }

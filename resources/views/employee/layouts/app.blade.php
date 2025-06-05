@@ -33,7 +33,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('employee.support') }}"
+                        <a href="{{ route('employee.support.index') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-customer-service-2-line"></i>
                             Support

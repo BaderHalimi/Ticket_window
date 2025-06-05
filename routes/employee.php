@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\employee\LoginController;
+//use App\Models\SupportTicket;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\employee\SupportController;
 
 Route::get('login', [LoginController::class, 'login'])->middleware('guest')->name('login');
 Route::post('login', [LoginController::class, 'login_logic'])->middleware('guest')->name('login_logic');
@@ -14,11 +16,14 @@ Route::get('',function(){
 })->middleware('auth')->name('dashboard');
 
 
+Route::resource('/support', SupportController::class)->names("support");
 
 
-Route::get('/support',function(){
-    return view('employee.dashboard.support');
-})->middleware('auth')->name('support');
+// Route::get('/support',function(){
+//     return view('employee.dashboard.support');
+// })->middleware('auth')->name('support');
+
+
 
 /*
 Route::get('/employee', function () {
