@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\seller\BranchController;
+use App\Http\Controllers\SupportController;
 use App\Http\Controllers\visitor\BranchController as VisitorBranchController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\visitor\EventController;
@@ -95,3 +96,5 @@ Route::group(['middleware' => 'auth'], function () {
         ]);
     Route::get('profile', [ProfileController::class, 'index']);
 });
+
+Route::resource('support', SupportController::class)->middleware("auth")->names('support');

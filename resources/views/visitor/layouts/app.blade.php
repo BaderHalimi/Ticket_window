@@ -57,6 +57,13 @@
                             Explore restaurents
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('visitor.support.index') }}"
+                            class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
+                            <i class="ri-customer-service-2-line"></i>
+                            Get Support
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>
