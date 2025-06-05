@@ -37,13 +37,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('branch', BranchController::class);
     Route::get('branch/gallery/{branch}', [BranchController::class, 'edit_gallery'])->name('branch.gallery');
 
-    Route::middleware(['auth', 'role:seller'])->group(function () {
-        Route::get('sales', [Tickets_sellerController::class, 'index'])->name('sales');
+    Route::middleware(['auth', 'role:seller,admin'])->group(function () {
+        Route::get('seller/sales', [Tickets_sellerController::class, 'index'])->name('sales.seller');
     });
-
+    
     Route::middleware(['auth', 'role:restaurant,admin'])->group(function () {
-        Route::get('sales', [Bookings_restaurant::class, 'index'])->name('sales');
+        Route::get('restaurant/sales', [Bookings_restaurant::class, 'index'])->name('sales.restaurant');
     });
+    
 
     Route::get('profile',[ProfileController::class,'index'])->name('profile.index');
     Route::put('profile/update', [ProfileController::class, 'update'])->name('profile.update');

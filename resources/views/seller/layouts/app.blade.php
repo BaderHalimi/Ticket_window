@@ -47,12 +47,21 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('seller.sales') }}"
-                            class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
-                            <i class="ri-money-dollar-circle-line text-xl"></i>
-                            Sales
-                        </a>
+                        @if(auth()->user()->role == 'seller')
+                            <a href="{{ route('seller.sales.seller') }}"
+                                class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
+                                <i class="ri-money-dollar-circle-line text-xl"></i>
+                                Sales
+                            </a>
+                        @elseif(auth()->user()->role == 'restaurant' || auth()->user()->role == 'admin')
+                            <a href="{{ route('seller.sales.restaurant') }}"
+                                class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
+                                <i class="ri-money-dollar-circle-line text-xl"></i>
+                                Sales
+                            </a>
+                        @endif
                     </li>
+                    
 
                 </ul>
             </nav>
