@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string("title");
             $table->text("content");
             $table->string('response')->nullable();
-            $table->string("code")->unique();
             $table->enum("status",['deny','allow','pending'])->default("pending");
             $table->foreignId("user_id")->constrained('users','id')->cascadeOnDelete();
             $table->foreignId("staff_id")->nullable()->constrained('users','id')->nullOnDelete();
