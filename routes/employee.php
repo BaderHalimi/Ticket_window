@@ -11,18 +11,20 @@ Route::post('login', [LoginController::class, 'login_logic'])->middleware('guest
 // Route::post('register', [LoginController::class, 'register_logic'])->middleware('guest')->name('register_logic');
 
 
-Route::get('',function(){
-    return view('employee.dashboard.index');
-})->middleware('auth')->name('dashboard');
+Route::middleware(['auth', 'role:employee'])->group(function () {
+    Route::get('', function () {
+        return view('employee.dashboard.index');
+    })->middleware('auth')->name('dashboard');
 
 
-Route::resource('/support', SupportController::class)->names("support");
+    Route::resource('/support', SupportController::class)->names("support");
 
 
-// Route::get('/support',function(){
-//     return view('employee.dashboard.support');
-// })->middleware('auth')->name('support');
+    // Route::get('/support',function(){
+    //     return view('employee.dashboard.support');
+    // })->middleware('auth')->name('support');
 
+});
 
 
 /*

@@ -21,7 +21,7 @@ Route::get('login', [LoginController::class, 'login'])->middleware('guest')->nam
 Route::post('login', [LoginController::class, 'login_logic'])->middleware('guest')->name('login_logic');
 Route::get('register', [LoginController::class, 'register'])->middleware('guest')->name('register');
 Route::post('register', [LoginController::class, 'register_logic'])->middleware('guest')->name('register_logic');
-Route::group(['middleware' => 'auth'], function () {
+Route::middleware(['auth', 'role:visitor'])->group(function () {
     Route::get('', function (HttpRequest $request) {
         $validated = $request->validate([
             'search' => 'nullable|string|max:255',
@@ -74,7 +74,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/check-availability-full', [ReservationController::class, 'checkAvailabilityFull'])->name('check_availability_full');
     Route::post('/check-availability', [ReservationController::class, 'checkAvailability'])->name('check_availability');
     Route::post('/reservation', [ReservationController::class, 'store'])->name('reservation.store');
-    
+
     Route::resource('/my_bookings', ReservationController::class)->middleware("auth")->names('my_bookings');
     Route::post('my_bookings/pay/{id}', [ReservationController::class, 'confirm'])->name('my_bookings.pay');
 
@@ -95,6 +95,6 @@ Route::group(['middleware' => 'auth'], function () {
             'tickets' => 'ticket'
         ]);
     Route::get('profile', [ProfileController::class, 'index']);
-});
 
-Route::resource('support', SupportController::class)->middleware("auth")->names('support');
+    Route::resource('support', SupportController::class)->middleware("auth")->names('support');
+});

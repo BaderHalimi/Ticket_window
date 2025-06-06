@@ -26,42 +26,39 @@
             <nav class="flex-1">
                 <ul class="space-y-4">
                     <li>
-                        <a href="{{ route('seller.dashboard') }}"
+                        <a href="{{ route(Auth::user()->role.'.dashboard') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-dashboard-line text-xl"></i>
                             Dashboard
                         </a>
                     </li>
+                    @can('sellerAccess')
                     <li>
-                        <a href="{{ route('seller.events.index') }}"
+                        <a href="{{ route(Auth::user()->role.'.events.index') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-calendar-event-line text-xl"></i>
                             Events
                         </a>
                     </li>
+                    @endcan
+                    @can('restaurantAccess')
                     <li>
-                        <a href="{{ route('seller.branch.index') }}"
+                        <a href="{{ route(Auth::user()->role.'.branch.index') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-git-branch-line text-xl"></i>
                             Branches
                         </a>
                     </li>
+                    @endcan
+
                     <li>
-                        @if(auth()->user()->role == 'seller')
-                            <a href="{{ route('seller.sales.seller') }}"
-                                class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
-                                <i class="ri-money-dollar-circle-line text-xl"></i>
-                                Sales
-                            </a>
-                        @elseif(auth()->user()->role == 'restaurant' || auth()->user()->role == 'admin')
-                            <a href="{{ route('seller.sales.restaurant') }}"
-                                class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
-                                <i class="ri-money-dollar-circle-line text-xl"></i>
-                                Sales
-                            </a>
-                        @endif
+                        <a href="{{ route(Auth::user()->role.'.sales-'.str_split(Auth::user()->role)[0]) }}"
+                            class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
+                            <i class="ri-money-dollar-circle-line text-xl"></i>
+                            Sales
+                        </a>
                     </li>
-                    
+
 
                 </ul>
             </nav>

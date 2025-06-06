@@ -38,7 +38,7 @@ Route::post('login', function (Request $request) {
         if (Auth::user()->role == 'admin') {
             return redirect()->intended('admin/')->with('success', 'You have been logged in successfully.');
         } elseif (Auth::user()->role == 'restaurant') {
-            return redirect()->intended('restaurant/')->with('success', 'You have been logged in successfully.');
+            return redirect()->intended(route('restaurant.dashboard'))->with('success', 'You have been logged in successfully.');
         } elseif (Auth::user()->role == 'seller') {
             return redirect()->intended('seller/')->with('success', 'You have been logged in successfully.');
         } elseif (Auth::user()->role == 'visitor') {

@@ -12,7 +12,7 @@ Route::get('login', [LoginController::class, 'login'])->middleware('guest')->nam
 Route::post('login', [LoginController::class, 'login_logic'])->middleware('guest')->name('login_logic');
 Route::get('register', [LoginController::class, 'register'])->middleware('guest')->name('register');
 Route::post('register', [LoginController::class, 'register_logic'])->middleware('guest')->name('register_logic');
-Route::group(['middleware' => 'auth'], function () {
+Route::middleware(['auth','role:seller,restaurant'])->group(function () {
     Route::get('', function () {
         $withdraw_balance = 20;
         $hold_balance = 10;
@@ -33,24 +33,23 @@ Route::group(['middleware' => 'auth'], function () {
             'total_canceled'
         ));
     })->name('dashboard');
-    Route::resource('events', EventsController::class);
-    Route::resource('branch', BranchController::class);
-    Route::get('branch/gallery/{branch}', [BranchController::class, 'edit_gallery'])->name('branch.gallery');
+    Route::resource('events', EventsController::class)->middleware('role:seller');
+    Route::resource('branch', BranchController::class)->middleware('role:restaurant');
+    Route::get('branch/gallery/{branch}', [BranchController::class, 'edit_gallery'])->name('branch.gallery')->middleware('role:restaurant');
 
-    Route::middleware(['auth', 'role:seller,admin'])->group(function () {
-        Route::get('seller/sales', [Tickets_sellerController::class, 'index'])->name('sales.seller');
+    Route::middleware(['auth', 'role:seller'])->group(function () {
+        Route::get('sales', [Tickets_sellerController::class, 'index'])->name('sales-s');
     });
-    
-    Route::middleware(['auth', 'role:restaurant,admin'])->group(function () {
-        Route::get('restaurant/sales', [Bookings_restaurant::class, 'index'])->name('sales.restaurant');
-    });
-    
 
-    Route::get('profile',[ProfileController::class,'index'])->name('profile.index');
+    Route::middleware(['auth', 'role:restaurant'])->group(function () {
+        Route::get('reservations', [Bookings_restaurant::class, 'index'])->name('sales-r');
+    });
+
+
+    Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.changePassword');
-Route::delete('/profile/delete', [ProfileController::class, 'destroy'])->name('profile.delete');
-
+    Route::delete('/profile/delete', [ProfileController::class, 'destroy'])->name('profile.delete');
 });
 
 

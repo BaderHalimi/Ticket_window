@@ -57,7 +57,8 @@
                 </tr>
             </thead>
             <tbody class="bg-white bg-opacity-40 divide-y divide-gray-200">
-                @if (auth()->user()->role == 'seller')
+                @can('sellerAccess')
+
                 @foreach($tickets as $ticket)
                     <tr class="text-center hover:bg-gray-200 hover:bg-opacity-50 transition duration-300">
                         {{-- محتوى الجدول --}}
@@ -88,10 +89,11 @@
                         </td>
                     </tr>
                 @endforeach
-            
-            @elseif (auth()->user()->role == 'restaurant' or auth()->user()->role == 'admin')
-            
-                
+
+            @endcan
+            @can('restaurantAccess')
+
+
                 @foreach($bookings as $ticket)
                     <tr class="text-center hover:bg-gray-200 hover:bg-opacity-50 transition duration-300">
                         {{-- محتوى الجدول --}}
@@ -123,13 +125,19 @@
                         </td>
                     </tr>
                 @endforeach
-            
-            @else
-                <tr>
+
+            @endcan
+            @cannot('sellerAccess')
+            @cannot('restaurantAccess')
+                <tr class="text-center hover:bg-gray-200 hover:bg-opacity-50 transition duration-300">
                     <td colspan="6" class="px-6 py-4 text-center text-gray-500">لا توجد مبيعات لعرضها</td>
                 </tr>
-            @endif
-            
+                @endcannot
+            @endcannot
+                <!-- <tr>
+                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">لا توجد مبيعات لعرضها</td>
+                </tr> -->
+
             </tbody>
 
         </table>
