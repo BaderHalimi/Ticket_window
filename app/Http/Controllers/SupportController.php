@@ -61,15 +61,32 @@ class SupportController extends Controller
      */
     public function edit(string $id)
     {
-        //
-    }
+        $ticket = SupportTicket::findOrFail($id);
+        return view('visitor.dashboard.support.edit',compact('ticket'));    }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $ticket = SupportTicket::findOrFail($id);
+        if ($ticket->status !== 'pending') {
+            return redirect()->route('visitor.support.index')->with('error', 'You can only update tickets that are pending.');
+        }
+        $validated = $request->validate([
+            'email' => 'required|email|max:255',
+            'name' => 'required|string|max:255',
+            'message' => 'required|string|max:5000',
+        ]);
+
+        $ticket->update([
+            'title' => $validated['name'],
+            'content' => $validated['message'],
+            'email' => $validated['email'],
+            //'status' => 'pending',
+        ]);
+
+        return redirect()->route('visitor.support.index')->with('success', 'Your response has been updated successfully.');
     }
 
     /**
@@ -77,6 +94,8 @@ class SupportController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $ticket = SupportTicket::findOrFail($id);
+        $ticket->delete();
+        return redirect()->route('visitor.support.index')->with('success', 'Your support ticket has been deleted successfully.');
     }
 }
