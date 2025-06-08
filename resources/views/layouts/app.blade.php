@@ -60,7 +60,25 @@
             icon: 'success',
             title: 'Success',
             text: '{{ session('success') }}',
-            confirmButtonText: 'تمام',
+            confirmButtonText: 'ok!',
+            confirmButtonColor: '#6366F1',
+            customClass: {
+                popup: 'rounded-lg',
+                title: 'text-lg font-bold',
+                confirmButton: 'px-6 py-2 text-white bg-indigo-600 rounded-lg text-base font-semibold shadow'
+            },
+        });
+    });
+</script>
+@endif
+@if (session('error'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'error',
+            title: 'error',
+            text: '{{ session("error") }}',
+            confirmButtonText: 'ok!',
             confirmButtonColor: '#6366F1',
             customClass: {
                 popup: 'rounded-lg',

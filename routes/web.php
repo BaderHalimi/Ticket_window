@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -28,24 +29,8 @@ Route::post('/logout', function () {
     return redirect()->route('home')->with('success', 'You have been logged out successfully.');
 })->middleware('auth')->name('logout');
 // login
-Route::get('login', function () {
-    return view('auth.login');
-})->middleware('guest')->name('login');
-Route::post('login', function (Request $request) {
-    $credentials = $request->only('email', 'password');
-    if (auth()->attempt($credentials)) {
-        session()->regenerate();
-        if (Auth::user()->role == 'admin') {
-            return redirect()->intended('admin/')->with('success', 'You have been logged in successfully.');
-        } elseif (Auth::user()->role == 'restaurant') {
-            return redirect()->intended(route('restaurant.dashboard'))->with('success', 'You have been logged in successfully.');
-        } elseif (Auth::user()->role == 'seller') {
-            return redirect()->intended('seller/')->with('success', 'You have been logged in successfully.');
-        } elseif (Auth::user()->role == 'visitor') {
-            return redirect()->intended('visitor/')->with('success', 'You have been logged in successfully.');
-        }
-    }
-    return back()->withErrors([
-        'email' => 'The provided credentials do not match our records.',
-    ]);
-})->middleware('guest')->name('visitor.login.post');
+Route::get('login', [AuthController::class,'showLoginForm'])->middleware('guest')->name('login');
+Route::post('login', [AuthController::class,'login'])->middleware('guest')->name('signin');
+Route::get('register', [AuthController::class,'showRegisterForm'])->middleware('guest')->name('register');
+Route::post('register', [AuthController::class,'register'])->middleware('guest')->name('signup');
+Route::get('dashboard', [AuthController::class,'dashboard'])->middleware('auth')->name('dashboard');

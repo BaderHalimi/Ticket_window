@@ -30,11 +30,14 @@
         <div class="glassmorphism p-10 rounded-3xl">
             <h2 class="text-3xl font-bold text-indigo-900 mb-6">Sign In</h2>
 
-            <form class="space-y-5" method="post" action="{{ route('login') }}">
+            <form class="space-y-5" method="post" action="{{ route('signin') }}">
                 @csrf
                 <div>
                     <label class="block mb-1 text-indigo-700 font-medium">Email</label>
-                    <input type="email" id="email" name="email" placeholder="example@email.com" class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 placeholder-indigo-400 text-indigo-900 outline-none border border-blue-200" />
+                    <input type="email" id="email" name="email" placeholder="example@email.com" value="{{ old('email') }}" class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 placeholder-indigo-400 text-indigo-900 outline-none border @if($errors->has('email')) border-red-600 @else border-blue-200 @endif" />
+                    @error('email')
+                    <label for="name" class="text-red-600">{{ $message }}</label>
+                    @enderror
                 </div>
 
                 <div>
@@ -60,7 +63,7 @@
                 </a>
 
                 <p class="text-center text-indigo-700 mt-4">Don't have an account?
-                    <a href="{{ route('seller.register') }}" class="text-primary font-semibold">Register</a>
+                    <a href="{{ route('register') }}" class="text-primary font-semibold">Register</a>
                 </p>
             </form>
         </div>
