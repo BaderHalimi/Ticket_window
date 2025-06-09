@@ -157,7 +157,7 @@
                 <button class="nav-button glassmorphism px-6 py-3 rounded-full text-indigo-900 font-medium tracking-wide !rounded-button whitespace-nowrap">Events</button>
                 <button class="nav-button glassmorphism px-6 py-3 rounded-full text-indigo-900 font-medium tracking-wide !rounded-button whitespace-nowrap">Artists</button>
                 <button class="nav-button glassmorphism px-6 py-3 rounded-full text-indigo-900 font-medium tracking-wide !rounded-button whitespace-nowrap">About</button>
-                <a href="{{ Auth::user()?route('visitor.dashboard'):route('login') }}" class="nav-button bg-primary bg-opacity-20 px-6 py-3 rounded-full text-primary font-semibold tracking-wide !rounded-button whitespace-nowrap">{{ Auth::user()?'Dashboard':'Sign In' }}</a>
+                <a href="{{ Auth::user()?route('dashboard'):route('login') }}" class="nav-button bg-primary bg-opacity-20 px-6 py-3 rounded-full text-primary font-semibold tracking-wide !rounded-button whitespace-nowrap">{{ Auth::user()?'Dashboard':'Sign In' }}</a>
             </div>
         </nav>
 
