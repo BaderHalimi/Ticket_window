@@ -50,11 +50,17 @@ class ProfileController extends Controller
             'phone' => $validated['phone'],
             'description' => $validated['description'],
             'location' => $validated['location'], 
+            'accepted' => 'no',
+            'accepted_at' => null,
+            'acceptes_by' => null,
         ];
         if ($user->role == 'restaurant') {
             $additionalData['open_at'] = $request['open_at'];
             $additionalData['close_at'] = $request['close_at'];
             $additionalData['chairs_count'] = $request['chairs_count'];
+            $additionalData['accepted'] = 'no';
+            $additionalData['accepted_at'] = null;
+            $additionalData['acceptes_by'] = null;
         }
         // في حال رفع صورة جديدة
         if ($request->hasFile('image')) {

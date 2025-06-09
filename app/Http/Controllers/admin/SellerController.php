@@ -14,17 +14,19 @@ class SellerController extends Controller
     public function index()
     {
         $sellers = User::where('role', 'seller')
-            ->orWhere('role', 'restaurant')
+            ->orwhere('role','restaurant')
             ->whereNotNull('additional_data')
-            //->where('additional_data->status', 'active')
+            //->where('additional_data->accepted', json_encode('no'))
             ->orderBy('created_at', 'desc')
-            ->paginate(10)
+            ->paginate(100)
             ->filter(function ($user) {
                 $data = json_decode($user->additional_data);
-                return isset($data->phone, $data->location) && !empty($data->phone) && !empty($data->location);
+                return isset($data->phone, $data->location,$data->accepted) && !empty($data->phone) && !empty($data->location) && $data->accepted == 'no';
             });
 
+
         //dd($sellers);
+        
         return view('admin.dashboard.sellers',compact('sellers'));
     }
 
@@ -65,7 +67,17 @@ class SellerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        
+        $data = json_decode($user->additional_data, true) ?? [];
+
+        $data['accepted'] = 'yes';
+        $data['accepted_at'] = now();
+        
+        $user->additional_data = json_encode($data);
+        
+        $user->save();
+        return redirect()->route('admin.sellers.index')->with('success', 'Seller accepted successfully.');
     }
 
     /**
@@ -76,3 +88,4 @@ class SellerController extends Controller
         //
     }
 }
+

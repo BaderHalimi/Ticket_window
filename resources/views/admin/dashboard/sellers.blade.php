@@ -44,10 +44,13 @@
                             <td class="px-6 py-4">{{$data->phone ?? null}}</td>
                             <td class="px-6 py-4">{{$data->location ?? null}}</td>
                             <td class="px-6 py-4 text-right">
-                                <button title="accept" class="inline-flex items-center justify-center text-sm hover:text-white text-green-500 hover:bg-green-600 px-2 py-1 rounded-full transition">
-                                    <i class="ri-check-line text-base"></i>
-                                </button>
-                                
+                                <form action="{{route('admin.sellers.update',$seller->id)}}" method="POST">
+                                    @method('PUT')
+                            <button title="accept" class="inline-flex items-center justify-center text-sm hover:text-white text-green-500 hover:bg-green-600 px-2 py-1 rounded-full transition">
+                                <i class="ri-check-line text-base"></i>
+                            </button>
+                                @csrf
+                                </form>
                                 <a href="{{ route('admin.sellers.show', $seller->id) }}" class="inline-flex items-center justify-center text-sm hover:text-white text-blue-500 hover:bg-blue-600 px-2 py-1 rounded-full transition">
                                     
                                     

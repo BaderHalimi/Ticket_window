@@ -72,6 +72,9 @@ class AuthController extends Controller
                 'image' => $validated['image'] ?? null,
                 'open_at' => $validated['open_at'] ?? null,
                 'close_at' => $validated['close_at'] ?? null,
+                'accepted' => 'no',
+                'accepted_at' => null,
+                'acceptes_by' => null,
             ]),
         ]);
         if ($request->hasFile('image')) {
