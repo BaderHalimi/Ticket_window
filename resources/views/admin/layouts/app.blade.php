@@ -31,7 +31,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.sellers') }}"
+                        <a href="{{ route('admin.sellers.index') }}"
                             class="flex items-center gap-3 text-gray-700 font-medium hover:text-primary transition">
                             <i class="ri-user-line text-xl"></i>
                             Sellers

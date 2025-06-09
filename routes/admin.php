@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\LoginController;
+use App\Http\Controllers\admin\SellerController;
 use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,11 +16,8 @@ Route::get('',function(){
 })->middleware('auth')->name('dashboard');
 
 
-Route::get('/sellers', function () {
-    $sellers = [];
-    return view('admin.dashboard.sellers', compact('sellers'));
-})->name('sellers');
 
+Route::resource('sellers', SellerController::class)->middleware("auth")->names('sellers');
 
 Route::resource('employees', EmployeeController::class)->middleware("auth")->names('employees');
 //Route::put('employees/{employee}', [EmployeeController::class, 'update'])->name('admin.employees.update');

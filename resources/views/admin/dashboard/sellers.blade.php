@@ -24,32 +24,50 @@
                     <thead class="bg-gradient-to-r from-blue-100 to-purple-100">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Type</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Shop Name</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Phone</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">City</th>
                             <th class="px-6 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
+                    @foreach ($sellers as $seller)
+                    @php
+                        $data = json_decode($seller->additional_data);
+                    @endphp
+
                     <tbody class="bg-white divide-y divide-gray-100 text-gray-800">
                         <tr class="hover:bg-purple-50 transition">
-                            <td class="px-6 py-4">1</td>
-                            <td class="px-6 py-4">Mohamed Salem</td>
-                            <td class="px-6 py-4">Salem Electronics</td>
-                            <td class="px-6 py-4">01012345678</td>
-                            <td class="px-6 py-4">Cairo</td>
+                            <td class="px-6 py-4">{{$seller->id ?? null }}</td>
+                            <td class="px-6 py-4">{{$seller->role ?? null }}</td>
+                            <td class="px-6 py-4">{{$seller->name ?? null }}</td>
+                            <td class="px-6 py-4">{{$data->phone ?? null}}</td>
+                            <td class="px-6 py-4">{{$data->location ?? null}}</td>
                             <td class="px-6 py-4 text-right">
-                                <button title="view" class="inline-flex items-center justify-center text-sm hover:text-white text-indigo-500 hover:bg-indigo-600 px-2 py-1 rounded-full transition">
-                                    <i class="ri-eye-line text-base"></i>
+                                <button title="accept" class="inline-flex items-center justify-center text-sm hover:text-white text-green-500 hover:bg-green-600 px-2 py-1 rounded-full transition">
+                                    <i class="ri-check-line text-base"></i>
                                 </button>
-                                <button title="edit" class="inline-flex items-center justify-center text-sm hover:text-white text-green-500 hover:bg-green-600 px-2 py-1 rounded-full transition">
-                                   <i class="ri-pencil-line text-base"></i>
+                                
+                                <a href="{{ route('admin.sellers.show', $seller->id) }}" class="inline-flex items-center justify-center text-sm hover:text-white text-blue-500 hover:bg-blue-600 px-2 py-1 rounded-full transition">
+                                    
+                                    
+                                <button title="view" class="inline-flex items-center justify-center text-sm hover:text-white text-red-500 hover:bg-red-600 px-2 py-1 rounded-full transition">
+                                    <i class="ri-eye-line"></i>
+                                </button>
+                            </a>
 
+                                <button title="deny" class="inline-flex items-center justify-center text-sm hover:text-white text-red-500 hover:bg-red-600 px-2 py-1 rounded-full transition">
+                                    <i class="ri-close-line text-base"></i>
                                 </button>
+
+
+                                
                             </td>
                         </tr>
                         <!-- مزيد من التجار -->
                     </tbody>
+                    @endforeach
+
                 </table>
             </div>
         </div>

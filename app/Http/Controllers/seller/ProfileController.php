@@ -28,6 +28,7 @@ class ProfileController extends Controller
         $rules = [
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
+            'location' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ];
@@ -48,6 +49,7 @@ class ProfileController extends Controller
         $additionalData = [
             'phone' => $validated['phone'],
             'description' => $validated['description'],
+            'location' => $validated['location'], 
         ];
         if ($user->role == 'restaurant') {
             $additionalData['open_at'] = $request['open_at'];

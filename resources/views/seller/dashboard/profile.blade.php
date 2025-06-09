@@ -157,6 +157,14 @@
             </div>
             @endif
 
+                <div class="mb-6">
+                    <label class="block text-lg font-medium mb-2">Location</label>
+                    <input type="text" name="location" value="{{ old('location', $additional_data['location']??'') }}" class="w-full border rounded-lg p-3">
+                </div>
+                @if($user->role == 'restaurant')
+            </div>
+            @endif
+
             <!-- وصف المطعم -->
             <div class="mb-6">
                 <label class="block text-lg font-medium mb-2">Description</label>
