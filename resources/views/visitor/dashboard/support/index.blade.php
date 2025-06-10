@@ -1,4 +1,4 @@
-@extends('seller.layouts.app')
+@extends('visitor.layouts.app')
 @section('title', 'Dashboard - ')
 
 @push('styles')

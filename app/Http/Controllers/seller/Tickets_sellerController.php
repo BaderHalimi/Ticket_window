@@ -19,7 +19,7 @@ class Tickets_sellerController extends Controller
             $events = Auth::user()->events()->pluck('id');
 
             $tickets = Ticket::where('additional_data->event->vendor_id', (string)Auth::id())
-            ->orWhere('event_id', $events)
+            ->orWhereIn('event_id', $events)
             ->where('status', 'paid')
             ->with([
                 'user' => function ($query) {
@@ -28,7 +28,7 @@ class Tickets_sellerController extends Controller
                 }
             ])
               ->orderBy('created_at', 'desc')->paginate(10);
-      
+
 
 
         //dd($tickets);

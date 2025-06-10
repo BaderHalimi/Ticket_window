@@ -202,16 +202,19 @@
         {{-- قسم الصورة والنص مع بعض --}}
         <div class="profile-section">
             <div class="image-container">
-                <div class="event-image-bg" style="background-image: url('{{ Storage::url($event->image) }}');"></div>
+                <div class="event-image-bg @error('image') border-red-400 @enderror" style="background-image: url('{{ Storage::url($event->image) }}');"></div>
                 <label for="image" title="Change Image">
                     <i class="ri-pencil-line"></i>
                 </label>
             </div>
+            @error('image')
+            <span class="text-red-400">{{ $message }}</span>
+            @enderror
             <input type="file" name="image" id="image" class="hidden" />
             <div class="profile-details">
                 <h3>{{ $event->name }}</h3>
                 <p>Click pencil icon to change image</p>
-                <a href="">change gallery</a>
+                <a href="{{ route('seller.events.gallery',['event'=>$event->id]) }}">change gallery</a>
             </div>
         </div>
 
@@ -219,51 +222,76 @@
         <div class="form-grid">
             <div>
                 <label for="name">Name</label>
-                <input type="text" name="name" id="name" value="{{ old('name', $event->name) }}" />
+                <input type="text" name="name" id="name" class="@error('name') border-red-400 @enderror" value="{{ old('name', $event->name) }}" />
+                @error('name')
+                <span class="text-red-400">{{ $message }}</span>
+                @enderror
             </div>
 
             <div>
                 <label for="category_id">Category</label>
-                <select name="category_id" id="category_id">
+                <select name="category_id" class="@error('category_id') border-red-400 @enderror" id="category_id">
+                    <option value="" disabled>Select Category</option>
                     @foreach($categories as $category)
                     <option value="{{ $category->id }}" {{ $event->category_id == $category->id ? 'selected' : '' }}>
                         {{ $category->name }}
                     </option>
                     @endforeach
                 </select>
+                @error('category_id')
+                <span class="text-red-400">{{ $message }}</span>
+                @enderror
             </div>
 
             <div>
                 <label for="date">Date</label>
-                <input type="datetime-local" name="date" id="date" value="{{ old('date', \Carbon\Carbon::parse($event->date)->format('Y-m-d\TH:i')) }}" />
+                <input type="datetime-local" name="date" id="date" class="@error('date') border-red-400 @enderror" value="{{ old('date', \Carbon\Carbon::parse($event->date)->format('Y-m-d\TH:i')) }}" />
+                @error('date')
+                <span class="text-red-400">{{ $message }}</span>
+                @enderror
             </div>
 
             <div>
                 <label for="total_tickets">Total Tickets</label>
-                <input type="number" name="total_tickets" id="total_tickets" value="{{ old('total_tickets', $event->total_tickets) }}" />
+                <input type="number" name="total_tickets" id="total_tickets" class="@error('total_tickets') border-red-400 @enderror" value="{{ old('total_tickets', $event->total_tickets) }}" />
+                @error('total_tickets')
+                <span class="text-red-400">{{ $message }}</span>
+                @enderror
             </div>
 
             <div>
                 <label for="ticket_price">Ticket Price</label>
-                <input type="number" step="0.01" name="ticket_price" id="ticket_price" value="{{ old('ticket_price', $event->ticket_price) }}" />
+                <input type="number" step="0.01" name="ticket_price" id="ticket_price" class="@error('ticket_price') border-red-400 @enderror" value="{{ old('ticket_price', $event->ticket_price) }}" />
+                @error('ticket_price')
+                <span class="text-red-400">{{ $message }}</span>
+                @enderror
             </div>
 
             <div>
                 <label for="status">Status</label>
-                <select name="status" id="status">
+                <select name="status" class="@error('status') border-red-400 @enderror" id="status">
                     <option value="active" {{ $event->status == 'active' ? 'selected' : '' }}>Active</option>
                     <option value="inactive" {{ $event->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
                 </select>
+                @error('status')
+                <span class="text-red-400">{{ $message }}</span>
+                @enderror
             </div>
         </div>
         <div class="mt-6">
             <label for="location">Location</label>
-            <input type="text" name="location" id="location" value="{{ old('location', $event->location) }}" />
+            <input type="text" name="location" id="location" class="@error('location') border-red-400 @enderror" value="{{ old('location', $event->location) }}" />
+            @error('location')
+            <span class="text-red-400">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="mt-6">
             <label for="description">Description</label>
-            <textarea name="description" id="description" rows="4">{{ old('description', $event->description) }}</textarea>
+            <textarea name="description" id="description" class="@error('description') border-red-400 @enderror" rows="4">{{ old('description', $event->description) }}</textarea>
+            @error('description')
+            <span class="text-red-400">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="mt-8">

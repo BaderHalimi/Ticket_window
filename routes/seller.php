@@ -34,6 +34,7 @@ Route::middleware(['auth','role:seller,restaurant'])->group(function () {
         ));
     })->name('dashboard');
     Route::resource('events', EventsController::class)->middleware('role:seller');
+    Route::get('events/gallery/{event}', [EventsController::class, 'edit_gallery'])->name('events.gallery')->middleware('role:seller');
     Route::resource('branch', BranchController::class)->middleware('role:restaurant');
     Route::get('branch/gallery/{branch}', [BranchController::class, 'edit_gallery'])->name('branch.gallery')->middleware('role:restaurant');
 

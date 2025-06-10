@@ -113,6 +113,8 @@ class EventsController extends Controller
     public function edit(string $id)
     {
         $event = Event::findOrFail($id);
+        if ($event->user_id != Auth::id())
+            abort(403);
         $categories = Category::active()->where('type', 'events')->get();
         return view('seller.dashboard.events.edit', compact('event', "categories"));
     }
@@ -122,6 +124,8 @@ class EventsController extends Controller
      */
     public function update(Request $request, Event $event)
     {
+        if ($event->user_id != Auth::id())
+            abort(403);
         $validated = $request->validate([
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg',
             'name' => 'required|string|max:255',
@@ -142,17 +146,16 @@ class EventsController extends Controller
                 $imagePaths[] = $path;
             }
             $validated['gallery'] = json_encode($imagePaths);
-        }else{
+        } else {
             $imagePaths = $event->gallery;
             $validated['gallery'] = $imagePaths;
-
         }
 
         if ($request->hasFile('image')) {
             // File::delete(public_path($event->image));
             Storage::disk('public')->delete($event->image);
             $validated['image'] = $request->file('image')->store('events', 'public');
-        }else{
+        } else {
             $validated['image'] = $event->image; // Keep the old image if no new one is uploaded
         }
 
@@ -171,5 +174,12 @@ class EventsController extends Controller
         }
         $event->delete();
         return redirect()->route('seller.events.index')->with("success", "event deleted successfully");
+    }
+    public function edit_gallery(Event $event)
+    {
+        if ($event->user_id != Auth::id()) {
+            abort('403');
+        }
+        return view('seller.dashboard.events.edit_gallery', compact('event'));
     }
 }
