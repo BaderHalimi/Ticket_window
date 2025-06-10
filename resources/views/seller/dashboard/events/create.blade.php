@@ -68,7 +68,7 @@
                         </svg>
                         <span class="text-gray-500">Drag & drop or <span
                                 class="text-primary font-semibold underline">browse</span> to upload</span>
-                        <input type="file" name="image" id="image" accept="image/*" class="hidden"
+                        <input type="file" name="image" id="image" accept="image/*" class="hidden" required
                             onchange="previewImage(event)">
                         <img id="preview" class="mt-4 max-h-48 rounded shadow hidden" />
                     </div>
@@ -100,7 +100,7 @@
             <div class="mb-3">
                 <label for="name" class="block text-gray-700 font-medium mb-2">Event Name</label>
                 <input type="text" name="name" id="name"
-                    class="w-full p-3 border @error('name') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    class="w-full p-3 border @error('name') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
                 @error('name')
                     <span class="text-red-400">{{ $message }}</span>
                 @enderror
@@ -109,7 +109,7 @@
                 <label for="date" class="block text-gray-700 font-medium mb-2">Event Date</label>
                 <!-- <input type="datetime-local" name="" id=""> -->
                 <input type="datetime-local" name="date" id="date" min="{{ now()->format('Y-m-d\TH:i') }}"
-                    class="w-full p-3 border @error('date') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    class="w-full p-3 border @error('date') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
                 @error('date')
                     <span class="text-red-400">{{ $message }}</span>
                 @enderror
@@ -118,7 +118,7 @@
             <div class="mb-3 col-span-2">
                 <label for="description" class="block text-gray-700 font-medium mb-2">Description</label>
                 <textarea name="description" id="description" rows="4"
-                    class="w-full p-3 border @error('description') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+                    class="w-full p-3 border @error('description') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required></textarea>
                 @error('description')
                     <span class="text-red-400">{{ $message }}</span>
                 @enderror
@@ -127,7 +127,7 @@
             <div class="mb-3">
                 <label for="category_id" class="block text-gray-700 font-medium mb-2">Category</label>
                 <select name="category_id" id="category_id"
-                    class="w-full p-4 border @error('category_id') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    class="w-full p-4 border @error('category_id') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
                     <option value="" @selected(old('category_id',-1) == -1) disabled>Select Category</option>
                     @foreach ($categories as $category)
                         <option value="{{ $category->id }}" @selected(old('category_id',-1)==$category->id)>{{ $category->name }}</option>
@@ -140,7 +140,7 @@
             <div class="mb-3">
                 <label for="location" class="block text-gray-700 font-medium mb-2">Location</label>
                 <input type="text" name="location" id="location"
-                    class="w-full p-3 border @error('location') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    class="w-full p-3 border @error('location') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
                 @error('location')
                     <span class="text-red-400">{{ $message }}</span>
                 @enderror
@@ -149,7 +149,7 @@
             <div class="mb-3">
                 <label for="total_tickets" class="block text-gray-700 font-medium mb-2">Total Tickets</label>
                 <input type="number" name="total_tickets" id="total_tickets" min="1"
-                    class="w-full p-3 border @error('total_tickets') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    class="w-full p-3 border @error('total_tickets') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
                 @error('total_tickets')
                     <span class="text-red-400">{{ $message }}</span>
                 @enderror
@@ -160,7 +160,7 @@
                     <span class="absolute left-4 top-6 -translate-y-1/2 text-gray-500 font-semibold">SAR</span>
                     <input type="number" name="ticket_price" id="ticket_price" min="0"
                         class="w-full p-3 pl-16 border @error('ticket_price') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                        style="direction: ltr; padding-left: 4rem;">
+                        style="direction: ltr; padding-left: 4rem;" required>
                     @error('ticket_price')
                         <span class="text-red-400">{{ $message }}</span>
                     @enderror
@@ -170,7 +170,7 @@
             <div class="mb-3 col-span-2">
                 <label for="status" class="block text-gray-700 font-medium mb-2">Status</label>
                 <select name="status" id="status"
-                    class="w-full p-3 border @error('status') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    class="w-full p-3 border @error('status') border-red-400 @else border-gray-300 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
                 </select>
