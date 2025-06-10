@@ -22,7 +22,6 @@ return new class extends Migration
             $table->json('additional_data')->nullable(); // بيانات إضافية (اختياري)
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete(); // معرف المستخدم الذي قام بالحجز
-            $table->string('code')->unique();
             $table->timestamps();
         });
     }

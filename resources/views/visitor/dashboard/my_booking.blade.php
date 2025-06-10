@@ -81,48 +81,49 @@
 
         <div class="glassmorphism p-6 rounded-xl transition-all duration-300 card-hover flex justify-between items-center">
             <div class="flex items-center space-x-4">
-            <div class="bg-indigo-100 rounded-full flex items-center justify-center">
-                <img src="{{Storage::url($booking->branch->image)  }}" alt="" class="h-20 w-full rounded-md object-cover">
+                <div class="bg-indigo-100 rounded-full flex items-center justify-center">
+                    <img src="{{Storage::url($booking->branch->image)  }}" alt="" class="h-20 w-full rounded-md object-cover">
 
-            </div>
-
-            <div>
-                <h3 class="text-xl font-semibold">{{ $booking->branch->name }}</h3>
-                <p class="text-sm text-gray-600">{{ $formatted_y }} • {{ $formatted_h }}</p>
-                <p class="text-sm text-gray-600">code : {{ $booking->code }}</p>
-            </div>
-            <div class="flex flex-col items-end">
-                <span class="px-4 py-1 rounded-full text-sm font-medium
-                    @if($booking->status == 'confirmed') status-confirmed
-                    @elseif($booking->status == 'pending') status-pending
-                    @else status-canceled @endif">
-                    {{ ucfirst($booking->status) }}
-                </span>
-
-                <div class="flex mt-4 space-x-2">
-                    <a href="#" class="view-qr-btn flex items-center gap-1 bg-white hover:bg-gray-600 hover:border-gray-600 hover:text-white px-4 py-2 rounded-full border border-gray-200 text-sm transition duration-50"
-                    data-code="{{ $booking->code }}">
-                    <i class="ri-qr-code-line ri-sm"></i> View QR
-                </a>
-
-                    <a href="{{-- route('visitor.download_pdf', $booking->id) --}}" class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 text-sm">
-                        <i class="ri-file-pdf-line ri-sm"></i> PDF
-                    </a>
-                    @if($booking->status == 'pending')
-                    <form action ="{{route('visitor.my_bookings.pay', $booking->id)}} " method="POST"><button type="submit" class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 text-sm">
-                    @csrf
-                        <i class="ri-bank-card-line ri-sm"></i> Pay Now
-                    </button>
-                    </form>
-                    @endif
-                    @if($booking->status == 'canceled')
-                    <a href="{{-- route('visitor.rebook', $booking->id) --}}" class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 text-sm">
-                        <i class="ri-refresh-line ri-sm"></i> Rebook
-                    </a>
-                    @endif
                 </div>
-                
-            </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold"><a href="{{ route('visitor.branch_preview',['branch'=>$booking->branch->id,'restaurant'=>$booking->branch->restaurant->id]) }}">{{ $booking->branch->name }}</a></h3>
+                    <p class="text-sm text-gray-600">{{ $formatted_y }} • {{ $formatted_h }}</p>
+                    <p class="text-sm text-gray-600">code : {{ $booking->code }}</p>
+                </div>
+                <div class="flex flex-col items-start">
+                    <span class="px-4 py-1 rounded-full text-sm font-medium
+                    @if($booking->status == 'confirmed') bg-green-400
+                    @elseif($booking->status == 'pending') bg-blue-400
+                    @else bg-red-400 @endif">
+                        {{ ucfirst($booking->status) }}
+                    </span>
+
+                    <div class="flex mt-4 space-x-2">
+
+                        @if($booking->status == 'pending')
+                        <form action="{{route('visitor.my_bookings.pay', $booking->id)}} " method="POST"><button type="submit" class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 text-sm">
+                                @csrf
+                                <i class="ri-bank-card-line ri-sm"></i> Pay Now
+                            </button>
+                        </form>
+                        @elseif($booking->status == 'confirmed')
+                        <a href="#" class="view-qr-btn flex items-center gap-1 bg-white hover:bg-gray-600 hover:border-gray-600 hover:text-white px-4 py-2 rounded-full border border-gray-200 text-sm transition duration-50"
+                            data-code="{{ $booking->code }}">
+                            <i class="ri-qr-code-line ri-sm"></i> View QR
+                        </a>
+
+                        <a href="{{-- route('visitor.download_pdf', $booking->id) --}}" class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 text-sm">
+                            <i class="ri-file-pdf-line ri-sm"></i> PDF
+                        </a>
+                        @else
+                        <!-- <a href="{{-- route('visitor.rebook', $booking->id) --}}" class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 text-sm">
+                            <i class="ri-refresh-line ri-sm"></i> Rebook
+                        </a> -->
+                        @endif
+                    </div>
+
+                </div>
             </div>
         </div>
         @endforeach
@@ -225,46 +226,46 @@
 
         <div class="glassmorphism p-6 rounded-xl transition-all duration-300 card-hover flex justify-between items-center">
             <div class="flex items-center space-x-4">
-            <div class="bg-indigo-100 rounded-full flex items-center justify-center">
-                <img src="{{Storage::url($booking->branch->image)  }}" alt="" class="h-20 w-full rounded-md object-cover">
+                <div class="bg-indigo-100 rounded-full flex items-center justify-center">
+                    <img src="{{Storage::url($booking->branch->image)  }}" alt="" class="h-20 w-full rounded-md object-cover">
 
-            </div>
+                </div>
 
-            <div>
-                <h3 class="text-xl font-semibold">{{ $booking->branch->name }}</h3>
-                <p class="text-sm text-gray-600">{{ $formatted_y }} • {{ $formatted_h }}</p>
-                <p class="text-sm text-gray-600">code : {{ $booking->code }}</p>
-            </div>
-            <div class="flex flex-col items-end">
-                <span class="px-4 py-1 rounded-full text-sm font-medium
+                <div>
+                    <h3 class="text-xl font-semibold">{{ $booking->branch->name }}</h3>
+                    <p class="text-sm text-gray-600">{{ $formatted_y }} • {{ $formatted_h }}</p>
+                    <p class="text-sm text-gray-600">code : {{ $booking->code }}</p>
+                </div>
+                <div class="flex flex-col items-end">
+                    <span class="px-4 py-1 rounded-full text-sm font-medium
                     @if($booking->status == 'confirmed') status-confirmed
                     @elseif($booking->status == 'pending') status-pending
                     @else status-canceled @endif">
-                    {{ ucfirst($booking->status) }}
-                </span>
+                        {{ ucfirst($booking->status) }}
+                    </span>
 
-                <div class="flex mt-4 space-x-2">
-                    <a href="#" class="view-qr-btn flex items-center gap-1 bg-white hover:bg-gray-600 hover:border-gray-600 hover:text-white px-4 py-2 rounded-full border border-gray-200 text-sm transition duration-50"
-                    data-code="{{ $booking->code }}">
-                    <i class="ri-qr-code-line ri-sm"></i> View QR
-                </a>
+                    <div class="flex mt-4 space-x-2">
+                        <a href="#" class="view-qr-btn flex items-center gap-1 bg-white hover:bg-gray-600 hover:border-gray-600 hover:text-white px-4 py-2 rounded-full border border-gray-200 text-sm transition duration-50"
+                            data-code="{{ $booking->code }}">
+                            <i class="ri-qr-code-line ri-sm"></i> View QR
+                        </a>
 
-                    <a href="{{-- route('visitor.download_pdf', $booking->id) --}}" class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 text-sm">
-                        <i class="ri-file-pdf-line ri-sm"></i> PDF
-                    </a>
-                    @if($booking->status == 'pending')
-                    <a href="{{-- route('visitor.pay_now', $booking->id) --}}" class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 text-sm">
-                        <i class="ri-bank-card-line ri-sm"></i> Pay Now
-                    </a>
-                    @endif
-                    @if($booking->status == 'canceled')
-                    <a href="{{-- route('visitor.rebook', $booking->id) --}}" class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 text-sm">
-                        <i class="ri-refresh-line ri-sm"></i> Rebook
-                    </a>
-                    @endif
+                        <a href="{{-- route('visitor.download_pdf', $booking->id) --}}" class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 text-sm">
+                            <i class="ri-file-pdf-line ri-sm"></i> PDF
+                        </a>
+                        @if($booking->status == 'pending')
+                        <a href="{{-- route('visitor.pay_now', $booking->id) --}}" class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 text-sm">
+                            <i class="ri-bank-card-line ri-sm"></i> Pay Now
+                        </a>
+                        @endif
+                        @if($booking->status == 'canceled')
+                        <a href="{{-- route('visitor.rebook', $booking->id) --}}" class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 text-sm">
+                            <i class="ri-refresh-line ri-sm"></i> Rebook
+                        </a>
+                        @endif
+                    </div>
+
                 </div>
-                
-            </div>
             </div>
         </div>
         @endforeach

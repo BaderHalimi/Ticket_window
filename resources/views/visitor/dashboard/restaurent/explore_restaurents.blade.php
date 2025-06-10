@@ -174,14 +174,15 @@
 
             @php
             $data = json_decode($restaurant->additional_data, true);
-            $formatted_y = \Carbon\Carbon::parse($data['open_at']??'')->format('g:i A');
-            $formatted_h = \Carbon\Carbon::parse($data['close_at']??'')->format('g:i A');
+            $formatted_y = \Carbon\Carbon::parse($data['open_at']??'');
+            $formatted_h = \Carbon\Carbon::parse($data['close_at']??'');
             @endphp
 
 
 
             <div class="card-hover glassmorphism p-3 rounded-lg shadow-lg transition-transform">
                 <div>
+
                     @if($formatted_y <= now() && $formatted_h >= now())
                         <div class="absolute top-3 left-3 bg-green-600 text-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-semibold">
                             Open
@@ -196,7 +197,7 @@
                 </div>
                 <h2 class="text-xl font-semibold text-gray-800">{{ $restaurant->name }}</h2>
                 <p class="text-gray-500 mt-1">
-                    <i class="ri-time-line"></i> {{ $formatted_y }} - {{ $formatted_h}}
+                    <i class="ri-time-line"></i> {{ $formatted_y->format('g:i A') }} - {{ $formatted_h->format('g:i A')}}
                 </p>
                 <a href="{{ route('visitor.restaurent.show', $restaurant->id) }}">
                     <button class="w-full mt-4 py-2 gradient-button text-white rounded-lg whitespace-nowrap font-medium">

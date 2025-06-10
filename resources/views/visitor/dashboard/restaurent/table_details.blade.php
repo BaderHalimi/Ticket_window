@@ -212,7 +212,7 @@
 
     <div class="glassmorphism p-10 rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="grid grid-cols-4 gap-3">
-            <div style="height:190px;" class="imgsContainer col-span-1 overflow-y-scroll overflow-x-hidden">
+            <div style="height:190px;" @if(empty($branch->gallery) || $branch->gallery == "[]") hidden @endif class="imgsContainer col-span-1 overflow-y-scroll overflow-x-hidden">
                 @if (!empty($branch->gallery))
                 @foreach (json_decode($branch->gallery,true) as $index => $image)
                 <img src="{{ Storage::url($image) }}"
@@ -222,7 +222,8 @@
                 @endforeach
                 @endif
             </div>
-            <div id="imageViewerContainer" class="mb-6 col-span-3">
+            <div id="imageViewerContainer" class="mb-6 @if (empty($branch->gallery) || $branch->gallery == "[]") col-span-4 @else col-span-3 @endif">
+                {{-- <img height="190px" style="max-height: 190px;" id="imageView" src="{{ asset('storage/' . $branch->image) }}" alt="صورة الفعالية" class="rounded-lg shadow-lg object-cover"> --}}
                 <img height="190px" style="max-height: 190px;" id="imageView" src="{{ Storage::url($branch->image) }}" alt="صورة الفعالية" class="rounded-lg shadow-lg object-cover">
             </div>
         </div>
@@ -245,7 +246,7 @@
             <h3 class="text-xl font-semibold text-gray-800 mb-2">Description</h3>
             <p class="text-gray-700 mb-6">{{ $branch->description }}</p>
             <div class="max-w-5xl mx-auto my-12 glassmorphism p-6 rounded-lg shadow-lg">
-                <h2 class="text-2xl font-bold mb-6">📅 جدول الحجوزات لليوم</h2>
+                <h2 class="text-2xl font-bold mb-6">نموذج حجز طاولة</h2>
 
                 <!-- الفورم -->
                 <form id="reservation-form" action="{{ route('visitor.reservation.store') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8" method="POST">
@@ -253,28 +254,28 @@
                     <input type="hidden" name="branch_id" value="{{ $branch->id }}">
 
                     <div>
-                        <label for="reservation_date" class="block font-medium text-gray-700 mb-1">اختر اليوم</label>
+                        <label for="reservation_date" class="block font-medium text-gray-700 mb-1">select date</label>
                         <input type="date" id="reservation_date" name="reservation_date" class="w-full p-2 border rounded" required>
                     </div>
                     <div>
-                        <label for="start_time" class="block font-medium text-gray-700 mb-1">من الساعة</label>
+                        <label for="start_time" class="block font-medium text-gray-700 mb-1">from</label>
                         <input type="time" id="start_time" name="start_time" class="w-full p-2 border rounded">
                         <small id="availability-message" class="text-sm font-medium mt-1"></small>
                     </div>
 
                     <div>
-                        <label for="end_time" class="block font-medium text-gray-700 mb-1">الى الساعة</label>
+                        <label for="end_time" class="block font-medium text-gray-700 mb-1">to</label>
                         <input type="time" id="end_time" name="end_time" class="w-full p-2 border rounded">
                     </div>
                     <div>
-                        <label for="chairs" class="block font-medium text-gray-700 mb-1">عدد الكراسي</label>
+                        <label for="chairs" class="block font-medium text-gray-700 mb-1">chairs</label>
                         <input type="number" min="1" value="1" max="{{ json_decode($branch->restaurant->additional_data,true)['chairs_count'] }}" id="chairs" name="chairs" class="w-full p-2 border rounded">
                     </div>
-                    <div class="text-right">
+                    <div>
                         {{-- <a href="{{ route('visitor.reservation.store', $branch->id) }}" class="gradient-button text-white px-6 py-3 rounded-lg shadow-lg text-lg font-semibold inline-flex items-center"> --}}
-                        <button type="submit">
-                            
-                            <i class="ri-restaurant-line mr-2"></i> احجز طاولة
+                        <button type="submit" class="gradient-button text-white px-6 py-3 rounded-lg shadow-lg text-lg font-semibold inline-flex items-center">
+
+                            <i class="ri-restaurant-line mr-2"></i> book now
                         </button>
                         {{-- </a> --}}
                     </div>
@@ -328,7 +329,7 @@
     </div>
 </div>
 
-{{-- 
+{{--
 <script>
     // جلب الصور من المتغير المرسل من الباك إند
     const images = @json(json_decode($branch -> gallery ?? '[]', true));
