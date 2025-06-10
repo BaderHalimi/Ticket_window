@@ -19,12 +19,14 @@ class Event extends Model
         'ticket_price',
         'status',
         'user_id',
-        'gallery'
+        'gallery',
+        'additional_data',
     ];
     protected $casts = [
         'date' => 'datetime',
         'status' => 'string',
         'gallery'=> 'array',
+        'additional_data' => 'array',
     ];
     public function user()
     {

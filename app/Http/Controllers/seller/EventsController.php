@@ -76,7 +76,12 @@ class EventsController extends Controller
             'ticket_price' => $request->ticket_price,
             'status' => $request->status,
             'user_id' => Auth::user()->id,
-            'gallery' => json_encode($imagePaths)
+            'gallery' => json_encode($imagePaths),
+            'additional_data' => json_encode([
+                'accepted' => 'no',
+                'accepted_at' => null,
+                'acceptes_by' => null,
+            ]),
 
         ]);
 
@@ -150,6 +155,7 @@ class EventsController extends Controller
         }else{
             $validated['image'] = $event->image; // Keep the old image if no new one is uploaded
         }
+
         $event->update($validated);
 
         return redirect()->route('seller.events.index')->with("success", "تم التحديث بنجاح");
