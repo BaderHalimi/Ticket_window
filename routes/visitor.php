@@ -97,15 +97,10 @@ Route::middleware(['auth', 'role:visitor'])->group(function () {
         ]);
     Route::get('profile', [ProfileController::class, 'index']);
 
+    Route::resource('support', SupportController::class)->middleware("auth")->names('support');
+    Route::resource('support/chat', ChatController::class)->middleware("auth")->names('support_chat');
+    Route::post('support/chat/{id}', [ChatController::class,'store'])->middleware("auth")->name('support_chat.send');
 
-    Route::resource('support', SupportController::class)->names('support');
-
- Route::get('support/chat/{id}', [ChatController::class, 'show'])->name('support_chat.show');
-
- Route::post('support/chat/{id}', [ChatController::class, 'store'])->name('support_chat.send');
-
- Route::get('support/chat/ajax/{id}', [ChatController::class, 'ajaxMessages'])->name('support_chat.ajax');
-
-    
 });
+
 

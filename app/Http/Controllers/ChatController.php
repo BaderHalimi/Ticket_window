@@ -2,40 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Message;
+use App\Models\message;
 use App\Models\SupportTicket;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
-    // عرض صفحة المحادثة
-    public function show(string $id)
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
     {
-        $chat = SupportTicket::findOrFail($id);
-
-        return view('visitor.dashboard.support_chat.chat', compact('chat'));
+        
     }
 
-    // حفظ رسالة جديدة
-    public function store(Request $request, string $id)
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request,string $id)
     {
         $chat = SupportTicket::findOrFail($id);
+        //dd($chat);
 
         $validated = $request->validate([
             'message' => 'required|string|max:5000',
         ]);
 
-        Message::create([
+        $message=  message::create([
+
             'user_id' => Auth::id(),
             'message' => $validated['message'],
             'ticket_id' => $chat->id,
-        ]);
 
-        return redirect()->route('visitor.support_chat.show', $chat->id);
+        ]);
+        //$message->save();
+        return redirect()->route('visitor.support_chat.show',$chat->id);
     }
 
-    // جلب الرسائل عبر AJAX
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $chat = SupportTicket::findOrFail($id);
+
+        //$messages = message::where('ticket_id',$id)->get();
+
+        $messages = Message::with(['user', 'staff']) 
+            ->where('ticket_id', $id)
+            ->get();
+
+
+        return view('visitor.dashboard.support_chat.chat',compact('messages','chat'));
+    }
+
     public function ajaxMessages($id)
     {
         $messages = Message::where('ticket_id', $id)
@@ -52,10 +81,34 @@ class ChatController extends Controller
                 'staff_id' => $msg->staff_id,
                 'sender_name' => $sender->name ?? 'غير معروف',
                 'sender_image' => $sender->additional_data['image'] ?? null,
-                'created_at' => $msg->created_at->diffForHumans(),
             ];
         });
 
         return response()->json($data);
+    }
+
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
     }
 }
