@@ -274,11 +274,11 @@ class ReservationController extends Controller
         if ($reservation->status !== 'pending') {
             return redirect()->back()->with('error', 'Only pending reservations can be confirmed.');
         }
-        if ($reservation->start_time <= now()) {
-            $reservation->status = 'cancelled';
-            $reservation->save();
-            return redirect()->back()->with('error', 'You cannot confirm a reservation that has already started.');
-        }
+        // if ($reservation->start_time <= now()) {
+        //     //$reservation->status = 'cancelled';
+        //     $reservation->save();
+        //     return redirect()->back()->with('error', 'You cannot confirm a reservation that has already started.');
+        // }
 
         $reservation->status = 'confirmed';
         $reservation->save();

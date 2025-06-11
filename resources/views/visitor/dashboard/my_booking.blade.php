@@ -90,7 +90,7 @@
                 <img src="{{ Storage::url($booking->branch->image ?? null )  }}" alt="Branch Image" class="h-20 w-28 rounded-md object-cover">
                 <div>
                     <h3 class="text-lg font-semibold">
-                        <a href="{{ route('visitor.branch_preview', ['branch' => $booking->branch->id ?? null, 'restaurant' => $booking->branch->restaurant->id ?? null]) }}">
+                        <a href="{{ route('visitor.branch_preview', ['branch' => $booking->branch->id, 'restaurant' => $booking->branch->restaurant->id]) }}">
                             {{ $booking->branch->name }}
                         </a>
                     </h3>
@@ -119,9 +119,18 @@
                     <a href="#" class="btn view-qr-btn" data-code="{{ $booking->code }}">
                         <i class="ri-qr-code-line ri-sm"></i> View QR
                     </a>
-                    <a href="#" class="btn">
-                        <i class="ri-file-pdf-line ri-sm"></i> PDF
-                    </a>
+                        <button
+                        onclick="downloadPDF(this)"
+                        class="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition"
+                        data-name="{{ $booking->branch->name }}"
+                        data-location="{{ $booking->branch->location }}"
+                        data-code="{{ $booking->code }}"
+                        data-date="{{ $formatted_y }} - {{ $formatted_h }}"
+                        data-image="{{ Storage::url($booking->branch->image ?? '') }}"
+                    >
+                        تحميل PDF
+                    </button>
+                
                     @endif
                 </div>
             </div>
@@ -140,6 +149,8 @@
 </div>
 
 @push('scripts')
+
+  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -180,5 +191,44 @@
             }
         });
     });
+</script>
+
+
+@endpush
+
+@push('scripts')
+<!-- استدعاء jsPDF من CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+    function downloadPDF(button) {
+        const name = button.dataset.name;
+        const location = button.dataset.location;
+        const code = button.dataset.code;
+        const date = button.dataset.date;
+        const imageUrl = button.dataset.image;
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFontSize(16);
+        doc.text(`branch name: ${name}`, 10, 20);
+        doc.text(`location : ${location}`, 10, 30);
+        doc.text(`Reservation date : ${date}`, 10, 40);
+        doc.text(`Reservation code : ${code}`, 10, 50);
+
+        fetch(imageUrl)
+            .then(res => res.blob())
+            .then(blob => {
+                const reader = new FileReader();
+                reader.onload = function () {
+                    const imgData = reader.result;
+                    doc.addImage(imgData, 'JPEG', 10, 60, 60, 40);
+                    doc.save(`reservation_${code}.pdf`);
+                };
+                reader.readAsDataURL(blob);
+            });
+    }
 </script>
 @endpush

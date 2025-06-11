@@ -273,7 +273,7 @@
                 </p>
                 <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-calendar-line ri-sm"></i></span> {{ Carbon\Carbon::create($event->date)->diffForHumans() }}</p>
                 <p class="text-gray-500 mt-1"><span class="text-black"><i class="ri-map-pin-line ri-sm"></i></span> <span class="rounded-full px-2 bg-green-200">{{ $event->location }}</span></p>
-                <a href="{{route('visitor.details.show',$event->id)}}">
+                <a href="{{route('visitor.events.show',$event->id)}}">
                 <button
                     class="w-full mt-4 py-2 gradient-button text-white rounded-lg !rounded-button whitespace-nowrap font-medium">
                     Book Now

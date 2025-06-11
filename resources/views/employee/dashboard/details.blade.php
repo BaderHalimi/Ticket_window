@@ -189,7 +189,9 @@
 </div>
 
 <script>
-    const images = @json(json_decode($event -> gallery ?? '[]', true));
+    let images = @json(json_decode($event -> gallery ?? '[]', true));
+    //images.push(@json($event->image));
+    
     let currentIndex = 0;
 
     function openImageViewer(index) {

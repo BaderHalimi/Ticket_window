@@ -84,7 +84,7 @@
 
                 </div>
                 <div>
-                    <h3 class="text-xl font-semibold">{{ $data['name'] }}</h3>
+                   <a href="{{route('visitor.events.show', $ticket->event)}}"> <h3 class="text-xl font-semibold">{{ $data['name'] }}</h3></a>
                     <p class="text-sm text-gray-600">{{ $formatted_y }} • {{ $formatted_h }}</p>
                     <p class="text-sm text-gray-600">{{ $ticket->venue }}</p>
                     <p class="text-sm text-gray-600">
@@ -115,9 +115,17 @@
                     <i class="ri-qr-code-line ri-sm"></i> View QR
                 </a>
 
-                <a href="" class="flex items-center gap-1 bg-white hover:bg-gray-600 hover:border-gray-600 hover:text-white px-4 py-2 rounded-full border border-gray-200 text-sm transition duration-50">
-                    <i class="ri-file-pdf-line ri-sm"></i> Download PDF
-                </a>
+                <button
+                onclick="downloadPDF(this)"
+                class="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition"
+                data-name="{{ $ticket->event->name ?? "not found"}} "
+                data-location="{{ $ticket->event->location ?? "not found"}}"
+                data-code="{{ $ticket->code?? "not found" }}"
+                data-date="{{ $formatted_y ?? "not found"}} - {{ $formatted_h?? "not found" }}"
+                data-image="{{ Storage::url($data['image'] ?? '') }}"
+            >
+                تحميل PDF
+            </button>
                 @endif
             </div>
         </div>
@@ -200,4 +208,38 @@
         });
     });
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+    function downloadPDF(button) {
+        const name = button.dataset.name;
+        const location = button.dataset.location;
+        const code = button.dataset.code;
+        const date = button.dataset.date;
+        const imageUrl = button.dataset.image;
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFontSize(16);
+        doc.text(`event name: ${name}`, 10, 20);
+        doc.text(`location : ${location}`, 10, 30);
+        doc.text(`event date : ${date}`, 10, 40);
+        doc.text(`ticket code : ${code}`, 10, 50);
+
+        fetch(imageUrl)
+            .then(res => res.blob())
+            .then(blob => {
+                const reader = new FileReader();
+                reader.onload = function () {
+                    const imgData = reader.result;
+                    doc.addImage(imgData, 'JPEG', 10, 60, 60, 40);
+                    doc.save(`${code}.pdf`);
+                };
+                reader.readAsDataURL(blob);
+            });
+    }
+</script>
+
 @endpush
