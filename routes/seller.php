@@ -8,10 +8,10 @@ use App\Http\Controllers\seller\ProfileController;
 use App\Http\Controllers\seller\Tickets_sellerController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('login', [LoginController::class, 'login'])->middleware('guest')->name('login');
-Route::post('login', [LoginController::class, 'login_logic'])->middleware('guest')->name('login_logic');
-Route::get('register', [LoginController::class, 'register'])->middleware('guest')->name('register');
-Route::post('register', [LoginController::class, 'register_logic'])->middleware('guest')->name('register_logic');
+// Route::get('login', [LoginController::class, 'login'])->middleware('guest')->name('login');
+// Route::post('login', [LoginController::class, 'login_logic'])->middleware('guest')->name('login_logic');
+// Route::get('register', [LoginController::class, 'register'])->middleware('guest')->name('register');
+// Route::post('register', [LoginController::class, 'register_logic'])->middleware('guest')->name('register_logic');
 Route::middleware(['auth','role:seller,restaurant'])->group(function () {
     Route::get('', function () {
         $withdraw_balance = 20;

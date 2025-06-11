@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\employee\SupportController;
 use Psy\VersionUpdater\Checker;
 
-Route::get('login', [LoginController::class, 'login'])->middleware('guest')->name('login');
-Route::post('login', [LoginController::class, 'login_logic'])->middleware('guest')->name('login_logic');
+// Route::get('login', [LoginController::class, 'login'])->middleware('guest')->name('login');
+// Route::post('login', [LoginController::class, 'login_logic'])->middleware('guest')->name('login_logic');
 // Route::get('register', [LoginController::class, 'register'])->middleware('guest')->name('register');
 // Route::post('register', [LoginController::class, 'register_logic'])->middleware('guest')->name('register_logic');
 
