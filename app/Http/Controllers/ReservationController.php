@@ -16,6 +16,8 @@ class ReservationController extends Controller
     public function index()
     {
         $bookings = Reservation::where('user_id', Auth::id())
+            ->whereHas('branch')
+
             ->with(['branch' => function ($query) {
                 $query->select('id', 'image', 'open_at', 'close_at', 'name', 'location','restaurant_id');
             }])
@@ -81,7 +83,8 @@ class ReservationController extends Controller
         ]);
         //dd( $durationInHours,$start_time);
 
-        return redirect()->route('visitor.dashboard.my_booking')->with('success', 'Booking successful');
+        return redirect()->route('visitor.my_bookings.index')->with('success', 'Booking successful');
+
         // return response()->json(['message' => 'تم الحجز بنجاح'], 201);
     }
     public function checkAvailability(Request $request)
@@ -272,7 +275,7 @@ class ReservationController extends Controller
             return redirect()->back()->with('error', 'Only pending reservations can be confirmed.');
         }
         if ($reservation->start_time <= now()) {
-            $reservation->status = 'canceled';
+            $reservation->status = 'cancelled';
             $reservation->save();
             return redirect()->back()->with('error', 'You cannot confirm a reservation that has already started.');
         }
@@ -289,6 +292,15 @@ class ReservationController extends Controller
      */
     public function destroy(Reservation $reservation)
     {
-        //
+        if ($reservation->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'You are not authorized to delete this reservation.');
+        }
+
+        if ($reservation->status === 'confirmed') {
+            return redirect()->back()->with('error', 'You cannot delete a confirmed reservation.');
+        }
+
+        $reservation->delete();
+        return redirect()->back()->with('success', 'Reservation deleted successfully!');
     }
 }
