@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\seller\BranchController;
 use App\Http\Controllers\SupportController;
@@ -96,5 +97,15 @@ Route::middleware(['auth', 'role:visitor'])->group(function () {
         ]);
     Route::get('profile', [ProfileController::class, 'index']);
 
-    Route::resource('support', SupportController::class)->middleware("auth")->names('support');
+
+    Route::resource('support', SupportController::class)->names('support');
+
+ Route::get('support/chat/{id}', [ChatController::class, 'show'])->name('support_chat.show');
+
+ Route::post('support/chat/{id}', [ChatController::class, 'store'])->name('support_chat.send');
+
+ Route::get('support/chat/ajax/{id}', [ChatController::class, 'ajaxMessages'])->name('support_chat.ajax');
+
+    
 });
+
