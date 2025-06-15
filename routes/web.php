@@ -19,12 +19,24 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
-Route::view('/features','features')->name('features');
-Route::view('/merchant','merchant')->name('merchant');
-Route::view('/partners','partners')->name('partners');
-Route::view('/wallet','wallet')->name('wallet');
-Route::view('/roles','roles')->name('roles');
-Route::view('/pricing','pricing')->name('pricing');
+Route::get('/features', function () {
+    return view('features');
+})->name('features');
+Route::get('/merchant', function () {
+    return view('merchant');
+})->name('merchant');
+Route::get('/partners', function () {
+    return view('partners');
+})->name('partners');
+Route::get('/wallet', function () {
+    return view('wallet');
+})->name('wallet');
+Route::get('/roles', function () {
+    return view('roles');
+})->name('roles');
+Route::get('/pricing', function () {
+    return view('pricing');
+})->name('pricing');
 // Route::get('/login', function () {
 //     return redirect()->route('visitor.login');
 // })->middleware('guest')->name('login');
