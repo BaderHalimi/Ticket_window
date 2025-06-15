@@ -20,6 +20,8 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 Route::view('/features','features')->name('features');
+Route::view('/merchant','merchant')->name('merchant');
+Route::view('/partners','partners')->name('partners');
 // Route::get('/login', function () {
 //     return redirect()->route('visitor.login');
 // })->middleware('guest')->name('login');
