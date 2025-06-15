@@ -1,124 +1,19 @@
-@extends('layouts.app')
-@push('styles')
-<style>
-    :where([class^="ri-"])::before {
-        content: "\f3c2";
-    }
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
-    body {
-        font-family: 'Quicksand', sans-serif;
-        background: linear-gradient(135deg, #f0f9ff 0%, #e6e6fa 100%);
-        overflow-x: hidden;
-    }
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>شباك التذاكر</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .floating-animation {
+            animation: float 3s ease-in-out infinite;
+        }
 
-    .glassmorphism {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 8px 32px rgba(106, 90, 205, 0.1);
-    }
-
-    .neumorphism {
-        box-shadow:
-            8px 8px 16px rgba(106, 90, 205, 0.1),
-            -8px -8px 16px rgba(255, 255, 255, 0.7);
-    }
-
-    .event-card {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow:
-            0 8px 32px rgba(106, 90, 205, 0.1),
-            inset 0 0 16px rgba(224, 255, 255, 0.05);
-        transform-style: preserve-3d;
-        transition: all 0.5s ease;
-    }
-
-    .event-card:hover {
-        transform: translateY(-10px) scale(1.02);
-        box-shadow:
-            0 16px 48px rgba(106, 90, 205, 0.15),
-            inset 0 0 24px rgba(224, 255, 255, 0.1);
-    }
-
-    .light-beam {
-        background: linear-gradient(90deg,
-                rgba(224, 255, 255, 0) 0%,
-                rgba(224, 255, 255, 0.1) 50%,
-                rgba(224, 255, 255, 0) 100%);
-        transform: rotate(-45deg);
-        position: absolute;
-        width: 200%;
-        height: 100px;
-        top: -50px;
-        left: -50%;
-        animation: beam-move 8s infinite linear;
-    }
-
-    /* @keyframes beam-move {
+        @keyframes float {
             0% {
-                transform: rotate(-45deg) translateX(-100%);
-            }
-
-            100% {
-                transform: rotate(-45deg) translateX(100%);
-            }
-        } */
-
-    .nav-button {
-        transition: all 0.3s ease;
-    }
-
-    .nav-button:hover {
-        background: rgba(255, 255, 255, 0.2);
-        box-shadow: 0 0 15px rgba(87, 181, 231, 0.5);
-    }
-
-    .calendar-day {
-        transition: all 0.3s ease;
-    }
-
-    .calendar-day:hover:not(.calendar-day-active) {
-        background: rgba(255, 255, 255, 0.2);
-        transform: scale(1.1);
-    }
-
-    .calendar-day-active {
-        background: rgba(87, 181, 231, 0.2);
-        box-shadow: 0 0 10px rgba(87, 181, 231, 0.3);
-    }
-
-    .grid-background {
-        background-image:
-            linear-gradient(rgba(177, 156, 217, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(177, 156, 217, 0.1) 1px, transparent 1px);
-        background-size: 40px 40px;
-        background-position: center center;
-        perspective: 1000px;
-        transform-style: preserve-3d;
-        transform: rotateX(60deg) scale(1.5);
-        opacity: 0.3;
-    }
-
-    .hero-bg {
-        background-image: radial-gradient(circle at 20% 30%, rgba(224, 255, 255, 0.15) 0%, transparent 60%),
-            radial-gradient(circle at 80% 70%, rgba(177, 156, 217, 0.15) 0%, transparent 60%);
-    }
-
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    .floating-animation {
-        animation: float 6s ease-in-out infinite;
-    }
-
-    /* @keyframes float {
-            0% {
-                transform: translateY(0px);
+                transform: translateY(0);
             }
 
             50% {
@@ -126,494 +21,476 @@
             }
 
             100% {
-                transform: translateY(0px);
+                transform: translateY(0);
             }
-        } */
+        }
+    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    .glow {
-        box-shadow: 0 0 15px rgba(87, 181, 231, 0.5);
-    }
-</style>
-@endpush
-@section('content')
+</head>
 
-<body class="min-h-screen overflow-x-hidden">
-    <div class="hero-bg relative min-h-screen">
-        <!-- Light beams -->
-        <div class="light-beam"></div>
-        <div class="light-beam" style="animation-delay: 4s;"></div>
-
-        <!-- Grid background -->
-        <div class="grid-background absolute inset-0 z-0"></div>
-
-        <!-- Navigation -->
-        <nav class="fixed top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center">
-            <div class="flex items-center">
-                <h1 class="text-3xl font-['Pacifico'] text-primary">{{ config('app.name') }}</h1>
+<body class="font-sans">
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 w-full z-50 px-4 sm:px-8 bg-white bg-opacity-70 backdrop-blur">
+        <div class="mx-[5%] flex justify-between items-center">
+            <div class="flex justify-center items-center">
+                <img style="max-width: 60px; max-height: 100%;" src="{{ asset('assets/logo/Ticket-Window-01.png') }}"
+                    alt="">
+                <h1 class="font-bold text-orange-500">{{ config('app.name') }}</h1>
             </div>
-
-            <div class="flex items-center space-x-6">
-                <button class="nav-button glassmorphism px-6 py-3 rounded-full text-indigo-900 font-medium tracking-wide !rounded-button whitespace-nowrap">Explore</button>
-                <button class="nav-button glassmorphism px-6 py-3 rounded-full text-indigo-900 font-medium tracking-wide !rounded-button whitespace-nowrap">Events</button>
-                <button class="nav-button glassmorphism px-6 py-3 rounded-full text-indigo-900 font-medium tracking-wide !rounded-button whitespace-nowrap">Artists</button>
-                <button class="nav-button glassmorphism px-6 py-3 rounded-full text-indigo-900 font-medium tracking-wide !rounded-button whitespace-nowrap">About</button>
-                <a href="{{ Auth::user()?route('dashboard'):route('login') }}" class="nav-button bg-primary bg-opacity-20 px-6 py-3 rounded-full text-primary font-semibold tracking-wide !rounded-button whitespace-nowrap">{{ Auth::user()?'Dashboard':'Sign In' }}</a>
+            <div class="hidden sm:flex text-sm font-medium text-gray-700 gap-4">
+                <a href="#" class="text-orange-500 border-b-2 border-orange-500 py-2 px-3">الرئيسية</a>
+                <a href="#" class="hover:text-orange-500 transition duration-500 py-2 px-3">المميزات</a>
+                <a href="#" class="hover:text-orange-500 transition duration-500 py-2 px-3">رحلة التاجر</a>
+                <a href="#" class="hover:text-orange-500 transition duration-500 py-2 px-3">نظام الشركاء</a>
+                <a href="#" class="hover:text-orange-500 transition duration-500 py-2 px-3">المحفظة والحماية</a>
+                <a href="#" class="hover:text-orange-500 transition duration-500 py-2 px-3">الأدوار والرحلات</a>
+                <a href="#" class="hover:text-orange-500 transition duration-500 py-2 px-3">الأسعار</a>
+                <a href="#" class="hover:text-orange-500 transition duration-500 py-2 px-3">لوحة التحكم</a>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <!-- Main content -->
-        <main class="container mx-auto pt-32 pb-20 px-8 relative z-10 flex">
-            <!-- Left side - Event cards -->
-            <div class="w-full pr-8">
-                <div class="mb-12">
-                    <h2 class="text-5xl font-bold text-indigo-900 tracking-wider mb-4 font-['Space_Grotesk']">Discover <span class="text-primary">Extraordinary</span> Events</h2>
-                    <p class="text-lg text-indigo-700 max-w-2xl">Step into our virtual exhibition hall where every event is a unique experience waiting to unfold. Explore and book your next adventure.</p>
+    <!-- Hero Section -->
+    <section class="min-h-screen flex flex-col justify-center items-center text-center bg-[#F5EFF1] pt-24 px-4">
+        <img src="{{ asset('assets/logo/Ticket-Window-01.png') }}" alt="logo"
+            class="w-40 h-40 mb-6 floating-animation" />
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 text-orange-500 text-orange-500">
+            {{ config('app.name') }}
+        </h1>
+        <p class="text-lg md:text-xl text-gray-700 max-w-xl mb-6">
+            بوابتك الذكية لإدارة وبيع تذاكر الفعاليات والحجوزات
+        </p>
+        <p class="text-lg text-slate-500 mb-12 max-w-2xl mx-auto">منصة متكاملة تمكّن التجار من إدارة حجوزاتهم وبيع
+            التذاكر بكل سهولة وأمان عبر مواقعهم الخاصة، مع توفير تجربة فريدة للعملاء.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+                class="flex justify-center items-center bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg shadow-lg shadow-orange-300 text-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="ml-2 h-5 w-5">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg> انضم كتاجر الآن
+            </button>
+            <button
+                class="flex justify-center items-center border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white px-6 py-3 rounded-lg text-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="ml-2 h-5 w-5">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+                </svg> استعراض لوحات التحكم
+            </button>
+        </div>
+    </section>
+    <section class="py-24 bg-slate-50">
+        <div class="mx-[5%]">
+            <div class="container mx-auto px-4" bis_skin_checked="1">
+                <div class="text-center mb-16" bis_skin_checked="1" style="opacity: 1; transform: none;">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 text-orange-500">لماذا شباك التذاكر؟</h2>
+                    <p class="text-xl text-slate-600 max-w-3xl mx-auto">نوفر لك كل ما تحتاجه لإدارة أعمالك بكفاءة
+                        واحترافية،
+                        مع التركيز على نموك ونجاحك.</p>
                 </div>
-
-                <!-- Search bar -->
-                <div class="glassmorphism rounded-full flex items-center px-6 py-4 mb-12 max-w-2xl">
-                    <div class="w-5 h-5 flex items-center justify-center mr-3">
-                        <i class="ri-search-line text-indigo-400"></i>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" bis_skin_checked="1">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg card-hover cursor-pointer text-center"
+                        bis_skin_checked="1" style="opacity: 1; transform: none;">
+                        <div class="w-20 h-20 bg-orange-500 rounded-3xl flex items-center justify-center mb-6 mx-auto shadow-md"
+                            bis_skin_checked="1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 text-white">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                                <path d="M2 12h20"></path>
+                            </svg></div>
+                        <h3 class="text-xl font-bold mb-4 text-slate-800">موقع مستقل لكل تاجر</h3>
+                        <p class="text-slate-600 leading-relaxed">احصل على موقعك الخاص بتصميم مخصص وهوية بصرية فريدة
+                            تعكس
+                            علامتك التجارية.</p>
                     </div>
-                    <input type="text" placeholder="Search events, artists, or venues..." class="bg-transparent border-none outline-none flex-1 text-indigo-900 placeholder-indigo-300">
-                    <button class="bg-primary bg-opacity-20 text-primary px-6 py-2 rounded-full font-medium !rounded-button whitespace-nowrap">Search</button>
-                </div>
-
-                <!-- Event cards grid -->
-                <div class="grid grid-cols-4 gap-8">
-                    <!-- Event card 1 -->
-                    <div class="event-card rounded-2xl p-6 h-96 flex flex-col justify-between floating-animation" style="animation-delay: 0s;">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="inline-block px-3 py-1 rounded-full bg-primary bg-opacity-20 text-primary text-sm font-medium mb-3">Music</span>
-                                <h3 class="text-2xl font-bold text-indigo-900 font-['Space_Grotesk']">Neon Horizon Festival</h3>
-                                <p class="text-indigo-700 mt-2">An immersive electronic music experience with top global artists</p>
-                            </div>
-                            <div class="w-10 h-10 flex items-center justify-center rounded-full glassmorphism">
-                                <i class="ri-heart-line text-indigo-400"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex items-center mb-4">
-                                <div class="w-5 h-5 flex items-center justify-center mr-2">
-                                    <i class="ri-map-pin-line text-indigo-400"></i>
-                                </div>
-                                <span class="text-indigo-700">Quantum Arena, San Francisco</span>
-                            </div>
-                            <div class="flex items-center mb-6">
-                                <div class="w-5 h-5 flex items-center justify-center mr-2">
-                                    <i class="ri-calendar-line text-indigo-400"></i>
-                                </div>
-                                <span class="text-indigo-700">June 15-17, 2025</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xl font-bold text-indigo-900">$149.99</span>
-                                <button class="bg-primary px-5 py-2 rounded-full text-white font-medium !rounded-button whitespace-nowrap">Book Now</button>
-                            </div>
-                        </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg card-hover cursor-pointer text-center"
+                        bis_skin_checked="1" style="opacity: 1; transform: none;">
+                        <div class="w-20 h-20 bg-orange-500 rounded-3xl flex items-center justify-center mb-6 mx-auto shadow-md"
+                            bis_skin_checked="1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 text-white">
+                                <rect width="14" height="20" x="5" y="2" rx="2" ry="2">
+                                </rect>
+                                <path d="M12 18h.01"></path>
+                            </svg></div>
+                        <h3 class="text-xl font-bold mb-4 text-slate-800">واجهة سهلة الاستخدام</h3>
+                        <p class="text-slate-600 leading-relaxed">تصميم عصري ومتجاوب يعمل على جميع الأجهزة بسلاسة،
+                            ليضمن
+                            تجربة رائعة لعملائك.</p>
                     </div>
-
-                    <!-- Event card 2 -->
-                    <div class="event-card rounded-2xl p-6 h-96 flex flex-col justify-between floating-animation" style="animation-delay: 1s;">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="inline-block px-3 py-1 rounded-full bg-secondary bg-opacity-20 text-secondary text-sm font-medium mb-3">Art</span>
-                                <h3 class="text-2xl font-bold text-indigo-900 font-['Space_Grotesk']">Digital Dreams Exhibition</h3>
-                                <p class="text-indigo-700 mt-2">Cutting-edge digital art installations from renowned creators</p>
-                            </div>
-                            <div class="w-10 h-10 flex items-center justify-center rounded-full glassmorphism">
-                                <i class="ri-heart-line text-indigo-400"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex items-center mb-4">
-                                <div class="w-5 h-5 flex items-center justify-center mr-2">
-                                    <i class="ri-map-pin-line text-indigo-400"></i>
-                                </div>
-                                <span class="text-indigo-700">Nova Gallery, New York</span>
-                            </div>
-                            <div class="flex items-center mb-6">
-                                <div class="w-5 h-5 flex items-center justify-center mr-2">
-                                    <i class="ri-calendar-line text-indigo-400"></i>
-                                </div>
-                                <span class="text-indigo-700">July 3-28, 2025</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xl font-bold text-indigo-900">$35.00</span>
-                                <button class="bg-secondary px-5 py-2 rounded-full text-white font-medium !rounded-button whitespace-nowrap">Book Now</button>
-                            </div>
-                        </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg card-hover cursor-pointer text-center"
+                        bis_skin_checked="1" style="opacity: 1; transform: none;">
+                        <div class="w-20 h-20 bg-orange-500 rounded-3xl flex items-center justify-center mb-6 mx-auto shadow-md"
+                            bis_skin_checked="1"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="h-10 w-10 text-white">
+                                <rect width="18" height="11" x="3" y="11" rx="2" ry="2">
+                                </rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg></div>
+                        <h3 class="text-xl font-bold mb-4 text-slate-800">أمان متقدم</h3>
+                        <p class="text-slate-600 leading-relaxed">نظام حماية عالي المستوى لبياناتك وبيانات عملائك، مع
+                            تشفير
+                            متطور للمدفوعات.</p>
                     </div>
-
-                    <!-- Event card 3 -->
-                    <div class="event-card rounded-2xl p-6 h-96 flex flex-col justify-between floating-animation" style="animation-delay: 0.5s;">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="inline-block px-3 py-1 rounded-full bg-yellow-100 text-yellow-600 text-sm font-medium mb-3">Conference</span>
-                                <h3 class="text-2xl font-bold text-indigo-900 font-['Space_Grotesk']">Future Tech Summit</h3>
-                                <p class="text-indigo-700 mt-2">Explore emerging technologies with industry pioneers</p>
-                            </div>
-                            <div class="w-10 h-10 flex items-center justify-center rounded-full glassmorphism">
-                                <i class="ri-heart-fill text-red-400"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex items-center mb-4">
-                                <div class="w-5 h-5 flex items-center justify-center mr-2">
-                                    <i class="ri-map-pin-line text-indigo-400"></i>
-                                </div>
-                                <span class="text-indigo-700">Prism Convention Center, Tokyo</span>
-                            </div>
-                            <div class="flex items-center mb-6">
-                                <div class="w-5 h-5 flex items-center justify-center mr-2">
-                                    <i class="ri-calendar-line text-indigo-400"></i>
-                                </div>
-                                <span class="text-indigo-700">August 10-12, 2025</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xl font-bold text-indigo-900">$299.99</span>
-                                <button class="bg-yellow-500 px-5 py-2 rounded-full text-white font-medium !rounded-button whitespace-nowrap">Book Now</button>
-                            </div>
-                        </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg card-hover cursor-pointer text-center"
+                        bis_skin_checked="1" style="opacity: 1; transform: none;">
+                        <div class="w-20 h-20 bg-orange-500 rounded-3xl flex items-center justify-center mb-6 mx-auto shadow-md"
+                            bis_skin_checked="1"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="h-10 w-10 text-white">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg></div>
+                        <h3 class="text-xl font-bold mb-4 text-slate-800">سرعة في الأداء</h3>
+                        <p class="text-slate-600 leading-relaxed">بنية تحتية قوية تضمن نظاماً سريعاً وموثوقاً لضمان
+                            تجربة
+                            مستخدم لا مثيل لها.</p>
                     </div>
-
-                    <!-- Event card 4 -->
-                    <div class="event-card rounded-2xl p-6 h-96 flex flex-col justify-between floating-animation" style="animation-delay: 1.5s;">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-600 text-sm font-medium mb-3">Theater</span>
-                                <h3 class="text-2xl font-bold text-indigo-900 font-['Space_Grotesk']">Celestial: The Experience</h3>
-                                <p class="text-indigo-700 mt-2">Immersive theatrical journey through space and time</p>
-                            </div>
-                            <div class="w-10 h-10 flex items-center justify-center rounded-full glassmorphism">
-                                <i class="ri-heart-line text-indigo-400"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex items-center mb-4">
-                                <div class="w-5 h-5 flex items-center justify-center mr-2">
-                                    <i class="ri-map-pin-line text-indigo-400"></i>
-                                </div>
-                                <span class="text-indigo-700">Lumina Theater, London</span>
-                            </div>
-                            <div class="flex items-center mb-6">
-                                <div class="w-5 h-5 flex items-center justify-center mr-2">
-                                    <i class="ri-calendar-line text-indigo-400"></i>
-                                </div>
-                                <span class="text-indigo-700">September 5-30, 2025</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xl font-bold text-indigo-900">$85.50</span>
-                                <button class="bg-green-500 px-5 py-2 rounded-full text-white font-medium !rounded-button whitespace-nowrap">Book Now</button>
-                            </div>
-                        </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg card-hover cursor-pointer text-center"
+                        bis_skin_checked="1" style="opacity: 1; transform: none;">
+                        <div class="w-20 h-20 bg-orange-500 rounded-3xl flex items-center justify-center mb-6 mx-auto shadow-md"
+                            bis_skin_checked="1"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="h-10 w-10 text-white">
+                                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                                <polyline points="16 7 22 7 22 13"></polyline>
+                            </svg></div>
+                        <h3 class="text-xl font-bold mb-4 text-slate-800">تقارير تفصيلية</h3>
+                        <p class="text-slate-600 leading-relaxed">احصل على إحصائيات شاملة ولوحات بيانات تفاعلية لمتابعة
+                            أداء أعمالك بدقة.</p>
                     </div>
-                </div>
-
-                <!-- View more button -->
-                <div class="mt-12 text-center">
-                    <button class="glassmorphism px-8 py-4 rounded-full text-indigo-900 font-medium tracking-wide inline-flex items-center !rounded-button whitespace-nowrap">
-                        View More Events
-                        <div class="w-5 h-5 flex items-center justify-center ml-2">
-                            <i class="ri-arrow-right-line"></i>
-                        </div>
-                    </button>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg card-hover cursor-pointer text-center"
+                        bis_skin_checked="1" style="opacity: 1; transform: none;">
+                        <div class="w-20 h-20 bg-orange-500 rounded-3xl flex items-center justify-center mb-6 mx-auto shadow-md"
+                            bis_skin_checked="1"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="h-10 w-10 text-white">
+                                <circle cx="12" cy="8" r="6"></circle>
+                                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+                            </svg></div>
+                        <h3 class="text-xl font-bold mb-4 text-slate-800">دعم فني متميز</h3>
+                        <p class="text-slate-600 leading-relaxed">فريق دعم متخصص متاح لمساعدتك في كل خطوة، لضمان تحقيق
+                            أقصى
+                            استفادة من المنصة.</p>
+                    </div>
                 </div>
             </div>
-
-            <!-- Right side - Calendar widget -->
-            <div class="w-1/4 hidden">
-                <div class="glassmorphism rounded-3xl p-6 sticky top-32">
-                    <h3 class="text-xl font-bold text-indigo-900 mb-6 font-['Space_Grotesk']">Event Calendar</h3>
-
-                    <!-- Month selector -->
-                    <div class="flex justify-between items-center mb-6">
-                        <button class="w-8 h-8 flex items-center justify-center rounded-full glassmorphism">
-                            <i class="ri-arrow-left-s-line text-indigo-400"></i>
-                        </button>
-                        <span class="text-indigo-900 font-medium">June 2025</span>
-                        <button class="w-8 h-8 flex items-center justify-center rounded-full glassmorphism">
-                            <i class="ri-arrow-right-s-line text-indigo-400"></i>
-                        </button>
+        </div>
+    </section>
+    <section class="py-24 bg-white">
+        <div class="mx-[5%]">
+            <div class="container mx-auto px-4" bis_skin_checked="1">
+                <div class="text-center mb-16" bis_skin_checked="1" style="opacity: 1; transform: none;">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 text-orange-500">خدماتنا المتكاملة</h2>
+                    <p class="text-xl text-slate-600 max-w-3xl mx-auto">حلول شاملة ومصممة خصيصاً لتلبية جميع احتياجاتك
+                        في
+                        إدارة الفعاليات والحجوزات.</p>
+                </div>
+                <div class="grid lg:grid-cols-3 gap-8" bis_skin_checked="1">
+                    <div class="bg-orange-500/5 p-8 rounded-3xl border border-primary/10 card-hover cursor-pointer"
+                        bis_skin_checked="1" style="opacity: 1; transform: none;">
+                        <div class="w-20 h-20 bg-orange-500 rounded-3xl flex items-center justify-center mb-6 shadow-lg"
+                            bis_skin_checked="1"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="h-10 w-10 text-white">
+                                <rect width="18" height="18" x="3" y="4" rx="2" ry="2">
+                                </rect>
+                                <line x1="16" x2="16" y1="2" y2="6"></line>
+                                <line x1="8" x2="8" y1="2" y2="6"></line>
+                                <line x1="3" x2="21" y1="10" y2="10"></line>
+                            </svg></div>
+                        <h3 class="text-2xl font-bold mb-4 text-slate-800">إدارة الفعاليات</h3>
+                        <p class="text-slate-600 mb-6 leading-relaxed">نظام متكامل لإدارة جميع أنواع الفعاليات مع خرائط
+                            مقاعد تفاعلية.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center text-slate-700 font-medium"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="h-5 w-5 text-green-500 ml-3 flex-shrink-0">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <path d="m9 11 3 3L22 4"></path>
+                                </svg>خرائط مقاعد تفاعلية</li>
+                            <li class="flex items-center text-slate-700 font-medium"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="h-5 w-5 text-green-500 ml-3 flex-shrink-0">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <path d="m9 11 3 3L22 4"></path>
+                                </svg>إدارة الأسعار المرنة</li>
+                            <li class="flex items-center text-slate-700 font-medium"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="h-5 w-5 text-green-500 ml-3 flex-shrink-0">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <path d="m9 11 3 3L22 4"></path>
+                                </svg>تقارير المبيعات الحية</li>
+                            <li class="flex items-center text-slate-700 font-medium"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="h-5 w-5 text-green-500 ml-3 flex-shrink-0">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <path d="m9 11 3 3L22 4"></path>
+                                </svg>نظام إشعارات ذكي</li>
+                        </ul>
                     </div>
-
-                    <!-- Weekdays -->
-                    <div class="grid grid-cols-7 gap-1 mb-2">
-                        <span class="text-center text-xs text-indigo-400">Su</span>
-                        <span class="text-center text-xs text-indigo-400">Mo</span>
-                        <span class="text-center text-xs text-indigo-400">Tu</span>
-                        <span class="text-center text-xs text-indigo-400">We</span>
-                        <span class="text-center text-xs text-indigo-400">Th</span>
-                        <span class="text-center text-xs text-indigo-400">Fr</span>
-                        <span class="text-center text-xs text-indigo-400">Sa</span>
+                    <div class="bg-orange-500/5 p-8 rounded-3xl border border-primary/10 card-hover cursor-pointer"
+                        bis_skin_checked="1" style="opacity: 1; transform: none;">
+                        <div class="w-20 h-20 bg-orange-500 rounded-3xl flex items-center justify-center mb-6 shadow-lg"
+                            bis_skin_checked="1"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="h-10 w-10 text-white">
+                                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg></div>
+                        <h3 class="text-2xl font-bold mb-4 text-slate-800">حجوزات المطاعم</h3>
+                        <p class="text-slate-600 mb-6 leading-relaxed">إدارة طاولات المطاعم وأوقات العمل مع نظام حجز
+                            متطور.
+                        </p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center text-slate-700 font-medium"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="h-5 w-5 text-green-500 ml-3 flex-shrink-0">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <path d="m9 11 3 3L22 4"></path>
+                                </svg>إدارة الطاولات الذكية</li>
+                            <li class="flex items-center text-slate-700 font-medium"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="h-5 w-5 text-green-500 ml-3 flex-shrink-0">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <path d="m9 11 3 3L22 4"></path>
+                                </svg>جدولة المواعيد بسهولة</li>
+                            <li class="flex items-center text-slate-700 font-medium"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="h-5 w-5 text-green-500 ml-3 flex-shrink-0">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <path d="m9 11 3 3L22 4"></path>
+                                </svg>قوائم طعام رقمية</li>
+                            <li class="flex items-center text-slate-700 font-medium"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="h-5 w-5 text-green-500 ml-3 flex-shrink-0">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <path d="m9 11 3 3L22 4"></path>
+                                </svg>نظام تقييمات العملاء</li>
+                        </ul>
                     </div>
-
-                    <!-- Calendar days -->
-                    <div class="grid grid-cols-7 gap-1">
-                        <!-- Previous month -->
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-300 text-sm">26</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-300 text-sm">27</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-300 text-sm">28</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-300 text-sm">29</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-300 text-sm">30</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-300 text-sm">31</button>
-
-                        <!-- Current month -->
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">1</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">2</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">3</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">4</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">5</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">6</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">7</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">8</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">9</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">10</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">11</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">12</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">13</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">14</button>
-                        <button class="calendar-day calendar-day-active w-8 h-8 flex items-center justify-center rounded-full text-primary font-bold text-sm glow">15</button>
-                        <button class="calendar-day calendar-day-active w-8 h-8 flex items-center justify-center rounded-full text-primary font-bold text-sm glow">16</button>
-                        <button class="calendar-day calendar-day-active w-8 h-8 flex items-center justify-center rounded-full text-primary font-bold text-sm glow">17</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">18</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">19</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">20</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">21</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">22</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">23</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">24</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">25</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">26</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">27</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">28</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">29</button>
-                        <button class="calendar-day w-8 h-8 flex items-center justify-center rounded-full text-indigo-700 text-sm">30</button>
+                    <div class="bg-orange-500/5 p-8 rounded-3xl border border-primary/10 card-hover cursor-pointer"
+                        bis_skin_checked="1" style="opacity: 1; transform: none;">
+                        <div class="w-20 h-20 bg-orange-500 rounded-3xl flex items-center justify-center mb-6 shadow-lg"
+                            bis_skin_checked="1"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="h-10 w-10 text-white">
+                                <rect width="16" height="20" x="4" y="2" rx="2" ry="2">
+                                </rect>
+                                <path d="M9 22v-4h6v4"></path>
+                                <path d="M8 6h.01"></path>
+                                <path d="M16 6h.01"></path>
+                                <path d="M12 6h.01"></path>
+                                <path d="M12 10h.01"></path>
+                                <path d="M12 14h.01"></path>
+                                <path d="M16 10h.01"></path>
+                                <path d="M16 14h.01"></path>
+                                <path d="M8 10h.01"></path>
+                                <path d="M8 14h.01"></path>
+                            </svg></div>
+                        <h3 class="text-2xl font-bold mb-4 text-slate-800">تنظيم المعارض</h3>
+                        <p class="text-slate-600 mb-6 leading-relaxed">حلول متخصصة للمعارض مع إصدار بادجات ونظام تسجيل
+                            متقدم.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center text-slate-700 font-medium"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="h-5 w-5 text-green-500 ml-3 flex-shrink-0">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <path d="m9 11 3 3L22 4"></path>
+                                </svg>إصدار بادجات احترافية</li>
+                            <li class="flex items-center text-slate-700 font-medium"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="h-5 w-5 text-green-500 ml-3 flex-shrink-0">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <path d="m9 11 3 3L22 4"></path>
+                                </svg>نظام تسجيل مرن</li>
+                            <li class="flex items-center text-slate-700 font-medium"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="h-5 w-5 text-green-500 ml-3 flex-shrink-0">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <path d="m9 11 3 3L22 4"></path>
+                                </svg>إدارة العارضين والرعاة</li>
+                            <li class="flex items-center text-slate-700 font-medium"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="h-5 w-5 text-green-500 ml-3 flex-shrink-0">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <path d="m9 11 3 3L22 4"></path>
+                                </svg>تقارير الحضور والتفاعل</li>
+                        </ul>
                     </div>
-
-                    <!-- Upcoming events -->
-                    <div class="mt-8">
-                        <h4 class="text-md font-bold text-indigo-900 mb-4 font-['Space_Grotesk']">Upcoming Events</h4>
-
-                        <!-- Event 1 -->
-                        <div class="glassmorphism rounded-xl p-4 mb-3">
-                            <div class="flex items-start">
-                                <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary bg-opacity-20 mr-3">
-                                    <i class="ri-music-line text-primary"></i>
-                                </div>
-                                <div>
-                                    <h5 class="text-sm font-bold text-indigo-900">Neon Horizon Festival</h5>
-                                    <p class="text-xs text-indigo-700 mt-1">June 15-17, 2025</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Event 2 -->
-                        <div class="glassmorphism rounded-xl p-4 mb-3">
-                            <div class="flex items-start">
-                                <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-secondary bg-opacity-20 mr-3">
-                                    <i class="ri-paint-brush-line text-secondary"></i>
-                                </div>
-                                <div>
-                                    <h5 class="text-sm font-bold text-indigo-900">Digital Dreams Exhibition</h5>
-                                    <p class="text-xs text-indigo-700 mt-1">July 3-28, 2025</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Event 3 -->
-                        <div class="glassmorphism rounded-xl p-4">
-                            <div class="flex items-start">
-                                <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-yellow-100 mr-3">
-                                    <i class="ri-global-line text-yellow-600"></i>
-                                </div>
-                                <div>
-                                    <h5 class="text-sm font-bold text-indigo-900">Future Tech Summit</h5>
-                                    <p class="text-xs text-indigo-700 mt-1">August 10-12, 2025</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Filter button -->
-                    <button class="w-full glassmorphism mt-6 py-3 rounded-xl text-indigo-900 font-medium !rounded-button whitespace-nowrap">
-                        Filter Events
-                    </button>
                 </div>
             </div>
-        </main>
-
-        <!-- Newsletter section -->
-        <section class="container mx-auto px-8 py-16 relative z-10">
-            <div class="glassmorphism rounded-3xl p-12 text-center">
-                <h2 class="text-3xl font-bold text-indigo-900 mb-4 font-['Space_Grotesk']">Never Miss an Event</h2>
-                <p class="text-indigo-700 max-w-xl mx-auto mb-8">Subscribe to our newsletter and be the first to know about exclusive events and special offers.</p>
-                <div class="flex max-w-md mx-auto">
-                    <input type="email" placeholder="Your email address" class="bg-white bg-opacity-30 border-none outline-none rounded-l-full px-6 py-3 flex-1 text-indigo-900 placeholder-indigo-300">
-                    <button class="bg-primary px-6 py-3 rounded-r-full text-white font-medium !rounded-button whitespace-nowrap">Subscribe</button>
+        </div>
+    </section>
+    <section class="py-24 bg-slate-50">
+        <div class="mx-[5%]">
+            <div class="container mx-auto px-4" bis_skin_checked="1">
+                <div class="text-center mb-16" bis_skin_checked="1" style="opacity: 1; transform: none;">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 text-orange-500">شركاء النجاح</h2>
+                    <p class="text-xl text-slate-600 max-w-3xl mx-auto">نثق بشركائنا الذين يشاركوننا الرؤية في تقديم
+                        أفضل
+                        الحلول التقنية لتجارنا وعملائهم.</p>
                 </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="container mx-auto px-8 py-12 relative z-10">
-            <div class="flex flex-wrap justify-between">
-                <div class="w-1/4 mb-8">
-                    <h1 class="text-3xl font-['Pacifico'] text-primary mb-4">{{ config('app.name') }}</h1>
-                    <p class="text-indigo-700 mb-6">Experience the future of event booking in our immersive virtual exhibition hall.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full glassmorphism">
-                            <i class="ri-facebook-fill text-indigo-400"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full glassmorphism">
-                            <i class="ri-twitter-x-fill text-indigo-400"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full glassmorphism">
-                            <i class="ri-instagram-fill text-indigo-400"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full glassmorphism">
-                            <i class="ri-linkedin-fill text-indigo-400"></i>
-                        </a>
+                <div class="relative" bis_skin_checked="1">
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8" bis_skin_checked="1">
+                        <div class="flex flex-col items-center text-center" bis_skin_checked="1"
+                            style="opacity: 1; transform: none;">
+                            <div class="w-24 h-24 rounded-full bg-white shadow-lg border-2 border-primary/20 flex items-center justify-center mb-4"
+                                bis_skin_checked="1"><img class="w-16 h-16 object-contain" alt="Global Innovators"
+                                    src="{{ asset('assets/logo/Ticket-Window-02.png') }}"></div>
+                            <h3 class="font-bold text-slate-700">Global Innovators</h3>
+                            <p class="text-xs text-slate-500">شريك استراتيجي في الابتكار التقني</p>
+                        </div>
+                        <div class="flex flex-col items-center text-center" bis_skin_checked="1"
+                            style="opacity: 1; transform: none;">
+                            <div class="w-24 h-24 rounded-full bg-white shadow-lg border-2 border-primary/20 flex items-center justify-center mb-4"
+                                bis_skin_checked="1"><img class="w-16 h-16 object-contain" alt="Future Solutions"
+                                    src="{{ asset('assets/logo/Ticket-Window-02.png') }}"></div>
+                            <h3 class="font-bold text-slate-700">Future Solutions</h3>
+                            <p class="text-xs text-slate-500">حلول دفع آمنة وموثوقة</p>
+                        </div>
+                        <div class="flex flex-col items-center text-center" bis_skin_checked="1"
+                            style="opacity: 1; transform: none;">
+                            <div class="w-24 h-24 rounded-full bg-white shadow-lg border-2 border-primary/20 flex items-center justify-center mb-4"
+                                bis_skin_checked="1"><img class="w-16 h-16 object-contain" alt="Creative Minds"
+                                    src="{{ asset('assets/logo/Ticket-Window-02.png') }}"></div>
+                            <h3 class="font-bold text-slate-700">Creative Minds</h3>
+                            <p class="text-xs text-slate-500">خبراء في تصميم تجارب المستخدم</p>
+                        </div>
+                        <div class="flex flex-col items-center text-center" bis_skin_checked="1"
+                            style="opacity: 1; transform: none;">
+                            <div class="w-24 h-24 rounded-full bg-white shadow-lg border-2 border-primary/20 flex items-center justify-center mb-4"
+                                bis_skin_checked="1"><img class="w-16 h-16 object-contain" alt="Tech Pioneers"
+                                    src="{{ asset('assets/logo/Ticket-Window-02.png') }}"></div>
+                            <h3 class="font-bold text-slate-700">Tech Pioneers</h3>
+                            <p class="text-xs text-slate-500">رواد في تطوير البنية التحتية</p>
+                        </div>
+                        <div class="flex flex-col items-center text-center" bis_skin_checked="1"
+                            style="opacity: 1; transform: none;">
+                            <div class="w-24 h-24 rounded-full bg-white shadow-lg border-2 border-primary/20 flex items-center justify-center mb-4"
+                                bis_skin_checked="1"><img class="w-16 h-16 object-contain" alt="NextGen Events"
+                                    src="{{ asset('assets/logo/Ticket-Window-02.png') }}"></div>
+                            <h3 class="font-bold text-slate-700">NextGen Events</h3>
+                            <p class="text-xs text-slate-500">شريك في تنظيم الفعاليات الكبرى</p>
+                        </div>
+                        <div class="flex flex-col items-center text-center" bis_skin_checked="1"
+                            style="opacity: 1; transform: none;">
+                            <div class="w-24 h-24 rounded-full bg-white shadow-lg border-2 border-primary/20 flex items-center justify-center mb-4"
+                                bis_skin_checked="1"><img class="w-16 h-16 object-contain" alt="Venture Capital"
+                                    src="{{ asset('assets/logo/Ticket-Window-02.png') }}"></div>
+                            <h3 class="font-bold text-slate-700">Venture Capital</h3>
+                            <p class="text-xs text-slate-500">دعم استثماري لتوسيع الأعمال</p>
+                        </div>
                     </div>
                 </div>
-
-                <div class="w-1/6 mb-8">
-                    <h4 class="text-lg font-bold text-indigo-900 mb-4 font-['Space_Grotesk']">Explore</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">All Events</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Categories</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Venues</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Artists</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Virtual Tours</a></li>
+            </div>
+        </div>
+    </section>
+    <section class="py-24 bg-orange-500 text-white">
+        <div class="container mx-auto px-4 text-center" bis_skin_checked="1">
+            <div bis_skin_checked="1" style="opacity: 1; transform: none;">
+                <h2 class="text-4xl font-bold mb-6">هل أنت جاهز لبدء رحلتك معنا؟</h2>
+                <p class="text-xl mb-10 max-w-2xl mx-auto opacity-90">انضم إلى آلاف التجار الذين يثقون في شباك التذاكر
+                    لتحويل أفكارهم إلى واقع ناجح.</p><button
+                    class="inline-flex items-center justify-center ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-11 rounded-md bg-white text-orange-500 hover:bg-gray-100 px-10 py-6 text-lg font-bold shadow-2xl transform hover:scale-105 transition-transform"><svg
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="ml-2 h-5 w-5">
+                        <path
+                            d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z">
+                        </path>
+                        <path d="M13 5v2"></path>
+                        <path d="M13 17v2"></path>
+                        <path d="M13 11v2"></path>
+                    </svg>ابدأ الآن مجاناً</button>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-slate-900 text-white py-12">
+        <div class="mx-[5%]">
+            <div class="container mx-auto px-4" bis_skin_checked="1">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8" bis_skin_checked="1">
+                <div bis_skin_checked="1">
+                    <div class="flex items-center mb-4 cursor-pointer" bis_skin_checked="1"><img
+                            alt="logo" class="w-10 h-10 ml-3"
+                            src="{{asset('assets/logo/Ticket-Window-01.png')}}"><span
+                            class="text-xl font-bold text-white">{{ config('app.name') }}</span></div>
+                    <p class="text-gray-400 text-sm leading-relaxed">البوابة الذكية لحجوزات الفعاليات والمطاعم
+                        والمعارض، بوابتك نحو تجربة فريدة.</p>
+                </div>
+                <div bis_skin_checked="1"><span class="text-lg font-semibold mb-4 block text-gray-200">خدماتنا</span>
+                    <ul class="space-y-3 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-primary transition-colors">إدارة الفعاليات</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">حجوزات المطاعم</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">تنظيم المعارض</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">نظام التحقق</a></li>
                     </ul>
                 </div>
-
-                <div class="w-1/6 mb-8">
-                    <h4 class="text-lg font-bold text-indigo-900 mb-4 font-['Space_Grotesk']">Company</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">About Us</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Blog</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Careers</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Press</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Contact</a></li>
+                <div bis_skin_checked="1"><span class="text-lg font-semibold mb-4 block text-gray-200">روابط
+                        سريعة</span>
+                    <ul class="space-y-3 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-primary transition-colors">الرئيسية</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">المميزات</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">الأدوار والرحلات</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">الأسعار</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">انضم كتاجر</a></li>
                     </ul>
                 </div>
-
-                <div class="w-1/6 mb-8">
-                    <h4 class="text-lg font-bold text-indigo-900 mb-4 font-['Space_Grotesk']">Support</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Help Center</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">FAQs</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Ticket Support</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Refund Policy</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Accessibility</a></li>
-                    </ul>
-                </div>
-
-                <div class="w-1/6 mb-8">
-                    <h4 class="text-lg font-bold text-indigo-900 mb-4 font-['Space_Grotesk']">Legal</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Terms of Service</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Privacy Policy</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Cookie Policy</a></li>
-                        <li><a href="#" class="text-indigo-700 hover:text-primary transition-colors">Copyright</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="pt-8 mt-8 border-t border-indigo-100 flex justify-between items-center">
-                <p class="text-indigo-700">© 2025 logo. All rights reserved.</p>
-                <div class="flex items-center space-x-4">
-                    <div class="flex items-center">
-                        <i class="ri-visa-fill text-indigo-900 text-xl mr-2"></i>
-                        <i class="ri-mastercard-fill text-indigo-900 text-xl mr-2"></i>
-                        <i class="ri-paypal-fill text-indigo-900 text-xl mr-2"></i>
-                        <i class="ri-apple-fill text-indigo-900 text-xl"></i>
+                <div bis_skin_checked="1"><span class="text-lg font-semibold mb-4 block text-gray-200">تواصل
+                        معنا</span>
+                    <div class="space-y-3 text-sm text-gray-400" bis_skin_checked="1">
+                        <p>البريد: <a href="mailto:info@shobaktickets.com"
+                                class="hover:text-primary transition-colors">info@shobaktickets.com</a></p>
+                        <p>الهاتف: <a href="tel:+966111234567" class="hover:text-primary transition-colors">+966 11
+                                XXX XXXX</a></p>
+                        <p>العنوان: الرياض، المملكة العربية السعودية</p>
                     </div>
                 </div>
             </div>
-        </footer>
-    </div>
-
-    <script id="calendarInteraction">
-        document.addEventListener('DOMContentLoaded', function() {
-            const calendarDays = document.querySelectorAll('.calendar-day');
-
-            calendarDays.forEach(day => {
-                day.addEventListener('click', function() {
-                    // Skip if it's a previous month day
-                    if (this.classList.contains('text-indigo-300')) return;
-
-                    // Toggle active state
-                    const isActive = this.classList.contains('calendar-day-active');
-
-                    if (!isActive) {
-                        this.classList.add('calendar-day-active', 'text-primary', 'font-bold', 'glow');
-                        this.classList.remove('text-indigo-700');
-                    } else {
-                        this.classList.remove('calendar-day-active', 'text-primary', 'font-bold', 'glow');
-                        this.classList.add('text-indigo-700');
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script id="eventCardInteraction">
-        document.addEventListener('DOMContentLoaded', function() {
-            const eventCards = document.querySelectorAll('.event-card');
-            const heartIcons = document.querySelectorAll('.ri-heart-line, .ri-heart-fill');
-
-            // Add hover effect to event cards
-            eventCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-10px) scale(1.02)';
-                    this.style.boxShadow = '0 16px 48px rgba(106, 90, 205, 0.15), inset 0 0 24px rgba(224, 255, 255, 0.1)';
-                });
-
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = '';
-                    this.style.boxShadow = '';
-                });
-            });
-
-            // Add heart toggle functionality
-            heartIcons.forEach(icon => {
-                icon.addEventListener('click', function(e) {
-                    e.stopPropagation();
-
-                    if (this.classList.contains('ri-heart-line')) {
-                        this.classList.remove('ri-heart-line', 'text-indigo-400');
-                        this.classList.add('ri-heart-fill', 'text-red-400');
-                    } else {
-                        this.classList.remove('ri-heart-fill', 'text-red-400');
-                        this.classList.add('ri-heart-line', 'text-indigo-400');
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script id="navInteraction">
-        document.addEventListener('DOMContentLoaded', function() {
-            const navButtons = document.querySelectorAll('.nav-button');
-
-            navButtons.forEach(button => {
-                button.addEventListener('mouseenter', function() {
-                    if (!this.classList.contains('bg-primary')) {
-                        this.classList.add('bg-opacity-20');
-                        this.style.boxShadow = '0 0 15px rgba(87, 181, 231, 0.3)';
-                    }
-                });
-
-                button.addEventListener('mouseleave', function() {
-                    if (!this.classList.contains('bg-primary')) {
-                        this.classList.remove('bg-opacity-20');
-                        this.style.boxShadow = '';
-                    }
-                });
-            });
-        });
-    </script>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center" bis_skin_checked="1">
+                <p class="text-gray-500 text-sm">© 2025 شباك التذاكر. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+        </div>
+    </footer>
 </body>
-@endsection
+
+</html>
