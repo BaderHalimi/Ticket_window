@@ -22,6 +22,9 @@ Route::get('/', function () {
 Route::view('/features','features')->name('features');
 Route::view('/merchant','merchant')->name('merchant');
 Route::view('/partners','partners')->name('partners');
+Route::view('/wallet','wallet')->name('wallet');
+Route::view('/roles','roles')->name('roles');
+Route::view('/pricing','pricing')->name('pricing');
 // Route::get('/login', function () {
 //     return redirect()->route('visitor.login');
 // })->middleware('guest')->name('login');

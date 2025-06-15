@@ -11,10 +11,10 @@
                 <a href="{{ route('features') }}" wire:click.prevent="checkAccess('{{ route('features') }}')" class="@if(Route::is('features')) text-orange-500 border-b-2 border-orange-500 transition duration-500 @else hover:text-orange-500 @endif py-2 px-3">المميزات</a>
                 <a href="{{ route('merchant') }}" wire:click.prevent="checkAccess('{{ route('merchant') }}')" class="@if(Route::is('merchant')) text-orange-500 border-b-2 border-orange-500 transition duration-500 @else hover:text-orange-500 @endif py-2 px-3">رحلة التاجر</a>
                 <a href="{{ route('partners') }}" wire:click.prevent="checkAccess('{{ route('partners') }}')" class="@if(Route::is('partners')) text-orange-500 border-b-2 border-orange-500 transition duration-500 @else hover:text-orange-500 @endif py-2 px-3">نظام الشركاء</a>
-                <a href="#" wire:click.prevent="checkAccess('{{ route('partners') }}')" class="@if(Route::is('partners')) text-orange-500 border-b-2 border-orange-500 transition duration-500 @else hover:text-orange-500 @endif py-2 px-3">المحفظة والحماية</a>
-                <a href="#" wire:click.prevent="checkAccess('{{ route('partners') }}')" class="@if(Route::is('partners')) text-orange-500 border-b-2 border-orange-500 transition duration-500 @else hover:text-orange-500 @endif py-2 px-3">الأدوار والرحلات</a>
-                <a href="#" wire:click.prevent="checkAccess('{{ route('partners') }}')" class="@if(Route::is('partners')) text-orange-500 border-b-2 border-orange-500 transition duration-500 @else hover:text-orange-500 @endif py-2 px-3">الأسعار</a>
-                <a href="#" wire:click.prevent="checkAccess('{{ route('partners') }}')" class="@if(Route::is('partners')) text-orange-500 border-b-2 border-orange-500 transition duration-500 @else hover:text-orange-500 @endif py-2 px-3">لوحة التحكم</a>
+                <a href="{{ route('wallet') }}" wire:click.prevent="checkAccess('{{ route('wallet') }}')" class="@if(Route::is('wallet')) text-orange-500 border-b-2 border-orange-500 transition duration-500 @else hover:text-orange-500 @endif py-2 px-3">المحفظة والحماية</a>
+                <a href="{{ route('roles') }}" wire:click.prevent="checkAccess('{{ route('roles') }}')" class="@if(Route::is('roles')) text-orange-500 border-b-2 border-orange-500 transition duration-500 @else hover:text-orange-500 @endif py-2 px-3">الأدوار والرحلات</a>
+                <a href="{{ route('pricing') }}" wire:click.prevent="checkAccess('{{ route('pricing') }}')" class="@if(Route::is('pricing')) text-orange-500 border-b-2 border-orange-500 transition duration-500 @else hover:text-orange-500 @endif py-2 px-3">الأسعار</a>
+                <a href="#" wire:click.prevent="checkAccess('{{ route('pricing') }}')" class="@if(Route::is('pricing')) text-orange-500 border-b-2 border-orange-500 transition duration-500 @else hover:text-orange-500 @endif py-2 px-3">لوحة التحكم</a>
             </div>
         </div>
     </nav>
