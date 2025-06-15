@@ -40,7 +40,7 @@
             </div>
             <div class="hidden sm:flex text-sm font-medium text-gray-700 gap-4">
                 <a href="#" class="text-orange-500 border-b-2 border-orange-500 py-2 px-3">الرئيسية</a>
-                <a href="#" class="hover:text-orange-500 transition duration-500 py-2 px-3">المميزات</a>
+                <a href="{{ route('features') }}" class="hover:text-orange-500 transition duration-500 py-2 px-3">المميزات</a>
                 <a href="#" class="hover:text-orange-500 transition duration-500 py-2 px-3">رحلة التاجر</a>
                 <a href="#" class="hover:text-orange-500 transition duration-500 py-2 px-3">نظام الشركاء</a>
                 <a href="#" class="hover:text-orange-500 transition duration-500 py-2 px-3">المحفظة والحماية</a>
@@ -468,7 +468,7 @@
                         سريعة</span>
                     <ul class="space-y-3 text-sm text-gray-400">
                         <li><a href="#" class="hover:text-primary transition-colors">الرئيسية</a></li>
-                        <li><a href="#" class="hover:text-primary transition-colors">المميزات</a></li>
+                        <li><a href="{{ route('features') }}" class="hover:text-primary transition-colors">المميزات</a></li>
                         <li><a href="#" class="hover:text-primary transition-colors">الأدوار والرحلات</a></li>
                         <li><a href="#" class="hover:text-primary transition-colors">الأسعار</a></li>
                         <li><a href="#" class="hover:text-primary transition-colors">انضم كتاجر</a></li>
