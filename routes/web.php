@@ -37,6 +37,13 @@ Route::get('/roles', function () {
 Route::get('/pricing', function () {
     return view('pricing');
 })->name('pricing');
+Route::get('/customer/dashboard', function () {
+    return view('customer.dashboard.index');
+})->name('customer.dashboard');
+Route::get('/customer/dashboard/tickets', function () {
+    return view('customer.dashboard.tickets');
+})->name('customer.dashboard.tickets');
+
 // Route::get('/login', function () {
 //     return redirect()->route('visitor.login');
 // })->middleware('guest')->name('login');
