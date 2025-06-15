@@ -28,7 +28,7 @@
                 <a href="{{ route('pricing') }}" wire:click.prevent="checkAccess('{{ route('pricing') }}')"
                     class="px-4 py-2 relative font-medium @if (Route::is('pricing')) text-orange-500 border-b-2 border-orange-500 transition-all duration-500 @else text-gray-600 hover:text-orange-500 @endif">لوحات
                     التحكم</a>
-            </div><button id="burgerBtn" class="md:hidden p-2 text-gray-700"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+            </div><button id="burgerBtn" onclick="initBurgerMenu()" class="md:hidden p-2 text-gray-700"><svg xmlns="http://www.w3.org/2000/svg" width="24"
                     height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
                     <line x1="4" x2="20" y1="12" y2="12"></line>

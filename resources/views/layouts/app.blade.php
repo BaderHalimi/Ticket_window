@@ -95,17 +95,27 @@
     @livewireScripts
     @stack('scripts')
     <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const burgerBtn = document.getElementById('burgerBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
+    function initBurgerMenu() {
+        let burgerBtn = document.getElementById('burgerBtn');
+        let mobileMenu = document.getElementById('mobileMenu');
 
-    if (burgerBtn && mobileMenu) {
-      burgerBtn.addEventListener('click', function () {
-        mobileMenu.classList.toggle('hidden');
-      });
+        if (burgerBtn && mobileMenu) {
+            // تخلص من كل الأحداث القديمة عن طريق استبدال العنصر بنفسه (clone)
+            const newBtn = burgerBtn.cloneNode(true);
+            burgerBtn.parentNode.replaceChild(newBtn, burgerBtn);
+            burgerBtn = newBtn;
+
+            burgerBtn.addEventListener('click', function () {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
     }
-  });
+
+    document.addEventListener('DOMContentLoaded', initBurgerMenu);
+    document.addEventListener('livewire:navigated', initBurgerMenu);
 </script>
+
+
 </body>
 
 </html>
