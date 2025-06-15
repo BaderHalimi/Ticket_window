@@ -79,6 +79,7 @@
                         </form>
                     </div>
                 </div>
+                <a href="{{ route('visitor.support_chat.show', $ticket->id) }}">
 
                 <!-- محتوى التذكرة -->
                 <h2 class="text-xl font-bold mb-2 text-indigo-700">

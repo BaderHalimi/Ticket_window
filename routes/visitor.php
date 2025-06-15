@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\seller\BranchController;
 use App\Http\Controllers\SupportController;
@@ -97,4 +98,9 @@ Route::middleware(['auth', 'role:visitor'])->group(function () {
     Route::get('profile', [ProfileController::class, 'index']);
 
     Route::resource('support', SupportController::class)->middleware("auth")->names('support');
+    Route::resource('support/chat', ChatController::class)->middleware("auth")->names('support_chat');
+    Route::post('support/chat/{id}', [ChatController::class,'store'])->middleware("auth")->name('support_chat.send');
+
 });
+
+

@@ -117,7 +117,7 @@
                     <div
                         class="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center overflow-hidden border-2 border-white">
                         <img
-                            src="https://readdy.ai/api/search-image?query=professional%20portrait%20photo%20of%20a%20young%20middle%20eastern%20man%20with%20short%20dark%20hair%20and%20a%20friendly%20smile%2C%20high%20quality%2C%20photorealistic%2C%20soft%20lighting%2C%20neutral%20background&width=200&height=200&seq=avatar1&orientation=squarish"
+                            src="{{ Auth::user()->additional_data->image ?? "https://readdy.ai/api/search-image?query=professional%20portrait%20photo%20of%20a%20young%20middle%20eastern%20man%20with%20short%20dark%20hair%20and%20a%20friendly%20smile%2C%20high%20quality%2C%20photorealistic%2C%20soft%20lighting%2C%20neutral%20background&width=200&height=200&seq=avatar1&orientation=squarish"}}"
                             alt="User Avatar"
                             class="w-full h-full object-cover" />
                     </div>
