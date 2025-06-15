@@ -94,6 +94,18 @@
     </footer>
     @livewireScripts
     @stack('scripts')
+    <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const burgerBtn = document.getElementById('burgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (burgerBtn && mobileMenu) {
+      burgerBtn.addEventListener('click', function () {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+  });
+</script>
 </body>
 
 </html>
