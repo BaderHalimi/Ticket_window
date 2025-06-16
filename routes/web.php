@@ -44,9 +44,15 @@ Route::get('/customer/dashboard/tickets', function () {
     return view('customer.dashboard.tickets');
 })->name('customer.dashboard.tickets');
 
-// Route::get('/login', function () {
-//     return redirect()->route('visitor.login');
-// })->middleware('guest')->name('login');
+Route::get('/login', function () {
+    return view('auth.login');
+})->middleware('guest')->name('login');
+Route::get('/register', function () {
+    return view('auth.register');
+})->middleware('guest')->name('register');
+
+
+// Route::get('register', [AuthController::class,'showRegisterForm'])->middleware('guest')->name('register');
 
 // Route::post('/logout', function () {
 //     auth()->logout();
@@ -56,6 +62,5 @@ Route::get('/customer/dashboard/tickets', function () {
 // // login
 // Route::get('login', [AuthController::class,'showLoginForm'])->middleware('guest')->name('login');
 // Route::post('login', [AuthController::class,'login'])->middleware('guest')->name('signin');
-// Route::get('register', [AuthController::class,'showRegisterForm'])->middleware('guest')->name('register');
 // Route::post('register', [AuthController::class,'register'])->middleware('guest')->name('signup');
 // Route::get('dashboard', [AuthController::class,'dashboard'])->middleware('auth')->name('dashboard');

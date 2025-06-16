@@ -13,7 +13,7 @@
         <p class="text-lg text-slate-500 mb-12 max-w-2xl mx-auto">منصة متكاملة تمكّن التجار من إدارة حجوزاتهم وبيع
             التذاكر بكل سهولة وأمان عبر مواقعهم الخاصة، مع توفير تجربة فريدة للعملاء.</p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
+            <a href="{{ route('register') }}"
                 class="flex justify-center items-center bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg shadow-lg shadow-orange-300 text-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -23,7 +23,7 @@
                     <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg> انضم كتاجر الآن
-            </button>
+            </a>
             <button
                 class="flex justify-center items-center border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white px-6 py-3 rounded-lg text-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
