@@ -11,4 +11,7 @@ Route::prefix('dashboard')->as('dashboard.')->group(function(){
     Route::get('reservations',function(){
         return view('merchant.dashboard.reservations');
     })->name('reservations');
+    Route::get('checking',function(){
+        return view('merchant.dashboard.checking');
+    })->name('checking');
 });
