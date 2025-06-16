@@ -20,17 +20,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'f_name',
-        'l_name',
+        'name',
         'email',
-        'business_name',
-        'business_type',
-        'email_verified_at',
         'password',
         'role',
-        'phone',
         'additional_data',
-        'is_accepted',
     ];
 
     /**
@@ -56,7 +50,15 @@ class User extends Authenticatable
     /**
      * Get the events created by the user.
      */
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
 
+    public function branches()
+    {
+        return $this->hasMany(Branch::class, 'restaurant_id');
+    }
 
     public function getAdditionalDataAttribute($value)
     {

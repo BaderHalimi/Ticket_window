@@ -2,90 +2,123 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function dashboard()
+
+    public function index()
     {
-        if (Auth::check()) {
-            return redirect()->route(Auth::user()->role . '.dashboard')->with('success', 'You have been logged in successfully.');
-        }
-        return redirect()->route('login')->with('error', 'You must be logged in to access the dashboard.');
+        
     }
-    public function showLoginForm()
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
     {
-        return view('auth.login');
+        //
     }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'f_name' => 'required|string|max:255',
+            'l_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'business_name' => 'nullable|string|max:255',
+            'business_type' => 'nullable|in:restaurant,events,show,other',
+            'phone' => 'nullable|string|max:15',
+            'other_business_type' => 'required_if:business_type,other|string|max:255',
+        ]);
+
+        $user = User::create([
+            'f_name' => $request->f_name,
+            'l_name' => $request->l_name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'business_name' => $request->business_name,
+            'business_type' => $request->business_type,
+            'phone' => $request->phone,
+            'additional_data' => [
+                'other_business_type' => $request->business_type === 'other' ? $request->other_business_type : null,
+                
+            ],
+            'role' => 'merchant', 
+
+        ]);
+
+        //Auth::login($user);
+
+        return redirect()->route('home')->with('success', 'Registration successful!');
+    }
+
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
-        if (auth()->attempt($credentials)) {
+        $credentials =  $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        //$credentials = $request->only('email', 'password');
+        if (auth()->attempt($credentials) ) {
+            //Auth::login();
+            //dd(auth()->user());
+            if (auth()->user()->is_accepted == true) {
             session()->regenerate();
-            return redirect()->intended(route('dashboard'))->with('success', 'Login successful');
+            
+            return redirect()->intended(route('customer.dashboard'))->with('success', 'Login successful');
+            } else {
+                auth()->logout();
+                return back()->withErrors([
+                    'email' => 'Your account is not accepted yet. Please wait for approval.',
+                ]);
+            }
+        
         }
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
     }
-    public function showRegisterForm()
+
+    public function show(string $id)
     {
-        return view('auth.register');
+        //
     }
-    public function register(Request $request)
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
-            'role' => 'required|in:visitor,seller,restaurant',
-        ]);
+        //
+    }
 
-        if ($request->role === 'restaurant') {
-            $validator->addRules([
-                'phone' => 'nullable|regex:/^[0-9+\-\s()]{8,20}$/',
-                'description' => 'nullable|string|max:1000',
-                'open_at' => 'required',
-                'close_at' => 'required',
-                'chairs_count' => 'required|integer|min:1',
-                'image' => 'required|image|max:2048',
-                'location' => 'nullable|string',
-            ]);
-        }
-        $validated = $validator->validate();
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
 
-
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role' => $validated['role'],
-            'additional_data' => json_encode([
-                'phone' => $validated['phone'] ?? null,
-                'description' => $validated['description'] ?? null,
-                'location' => $validated['location'] ?? null,
-                'chairs_count' => $validated['chairs_count'] ?? null,
-                'image' => $validated['image'] ?? null,
-                'open_at' => $validated['open_at'] ?? null,
-                'close_at' => $validated['close_at'] ?? null,
-                'accepted' => 'no',
-                'accepted_at' => null,
-                'acceptes_by' => null,
-            ]),
-        ]);
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images/sellers', 'public');
-            $user->additional_data = json_encode(array_merge(
-                json_decode($user->additional_data, true),
-                ['image' => $imagePath]
-            ));
-            $user->save();
-        }
-        auth()->login($user);
-        return redirect()->intended(route('dashboard'))->with('success', 'Signup done successfully');
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+    public function logout(Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('home')->with('success', 'You have been logged out successfully.');
     }
 }

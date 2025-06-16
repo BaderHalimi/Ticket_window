@@ -58,11 +58,16 @@
                     <h1 class="text-xl font-bold text-slate-800">{{ config('app.name') }}</h1>
                 </div>
                 @livewire('customer.aside.nav')
-                <div class="mt-auto p-4 border-t" bis_skin_checked="1"><button class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 w-full justify-start text-base text-red-500 hover:text-red-600 hover:bg-red-50"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 ml-3">
+                
+                <div class="mt-auto p-4 border-t" bis_skin_checked="1">
+                    <form action="{{route('logout')}}"  method="post">
+                        @csrf
+                    <button type="submit" class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 w-full justify-start text-base text-red-500 hover:text-red-600 hover:bg-red-50"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 ml-3">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                             <polyline points="16 17 21 12 16 7"></polyline>
                             <line x1="21" x2="9" y1="12" y2="12"></line>
-                        </svg>تسجيل الخروج</button></div>
+                        </svg>تسجيل الخروج</button></form>
+                    </div>
             </aside>
             <main class="flex-1 overflow-y-auto">
                 <header class="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-30">
