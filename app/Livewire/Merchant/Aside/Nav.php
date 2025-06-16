@@ -10,4 +10,7 @@ class Nav extends Component
     {
         return view('livewire.merchant.aside.nav');
     }
+    public function intended($url){
+        $this->redirectIntended($url,true);
+    }
 }
