@@ -11,7 +11,7 @@ class AuthController extends Controller
 
     public function index()
     {
-        
+
     }
 
     /**
@@ -48,9 +48,9 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'additional_data' => [
                 'other_business_type' => $request->business_type === 'other' ? $request->other_business_type : null,
-                
+
             ],
-            'role' => 'merchant', 
+            'role' => 'merchant',
 
         ]);
 
@@ -72,15 +72,15 @@ class AuthController extends Controller
             //dd(auth()->user());
             if (auth()->user()->is_accepted == true) {
             session()->regenerate();
-            
-            return redirect()->intended(route('customer.dashboard'))->with('success', 'Login successful');
+
+            return redirect()->intended(route('merchant.dashboard'))->with('success', 'Login successful');
             } else {
                 auth()->logout();
                 return back()->withErrors([
                     'email' => 'Your account is not accepted yet. Please wait for approval.',
                 ]);
             }
-        
+
         }
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',

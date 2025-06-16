@@ -37,32 +37,32 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
 
             Route::middleware('web')
-                ->prefix('visitor')
-                ->as('visitor.')
-                ->group(base_path('routes/visitor.php'));
+                ->prefix('merchant')
+                ->as('merchant.')
+                ->group(base_path('routes/merchant.php'));
 
-            Route::middleware('web')
-                ->prefix('seller')
-                ->as('seller.')
-                // ->middleware('sellers')
-                ->group(base_path('routes/seller.php'));
+            // Route::middleware('web')
+            //     ->prefix('seller')
+            //     ->as('seller.')
+            //     // ->middleware('sellers')
+            //     ->group(base_path('routes/seller.php'));
 
-            Route::middleware('web')
-                ->prefix('restaurant')
-                ->as('restaurant.')
-                // ->middleware('sellers')
-                ->group(base_path('routes/seller.php'));
+            // Route::middleware('web')
+            //     ->prefix('restaurant')
+            //     ->as('restaurant.')
+            //     // ->middleware('sellers')
+            //     ->group(base_path('routes/seller.php'));
 
             Route::middleware('web')
                 ->prefix('admin')
                 ->as('admin.')
                 ->group(base_path('routes/admin.php'));
-            
-            Route::middleware('web')
-                ->prefix('checker')
-                ->as('checker.')
-                ->group(base_path('routes/checker.php'));
-            Route::middleware('web')->prefix('employee')->as('employee.')->group(base_path('routes/employee.php'));
+
+            // Route::middleware('web')
+            //     ->prefix('checker')
+            //     ->as('checker.')
+            //     ->group(base_path('routes/checker.php'));
+            // Route::middleware('web')->prefix('employee')->as('employee.')->group(base_path('routes/employee.php'));
         });
     }
 }
