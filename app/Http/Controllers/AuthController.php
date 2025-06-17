@@ -96,51 +96,61 @@ class AuthController extends Controller
         //
     }
 
-
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'social_links' => 'nullable|array',
             'social_links.*' => 'nullable|url|max:255',
         ]);
+    
         $user = User::findOrFail($id);
-        $data = json_decode($user->additional_data ?? []);
-
+    
+        // decode existing data safely
+        $data = is_array($user->additional_data)
+            ? (object) $user->additional_data
+            : (object) (json_decode($user->additional_data, true) ?? []);
+    
+        // ✅ تحديث صورة البروفايل فقط إذا تم رفع صورة جديدة
         if ($request->hasFile('profile_picture')) {
             $file = $request->file('profile_picture');
             $uniqueName = 'profile_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $profilePicturePath = $file->storeAs('', $uniqueName, 'public');
-
+    
+            // حذف القديم إن وجد
             if (!empty($data->profile_picture)) {
                 Storage::disk('public')->delete($data->profile_picture);
-                $data->profile_picture = null;
             }
-
-
+    
             $data->profile_picture = $profilePicturePath;
         }
+    
+        // ✅ تحديث البانر فقط إذا تم رفعه
         if ($request->hasFile('banner')) {
             $file = $request->file('banner');
             $uniqueName = 'banner_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $bannerPath = $file->storeAs('', $uniqueName, 'public');
-
+    
             if (!empty($data->banner)) {
                 Storage::disk('public')->delete($data->banner);
-                $data->banner = null;
             }
-
+    
             $data->banner = $bannerPath;
-            return back()->with('success', 'Profile updated successfully.');
-            //$user->banner = $bannerPath;
         }
-        dd($validated);
-        $data->social_links = array_filter($request->input('social_links', []));
-        $user->additional_data = json_encode($data);
-
+    
+        // ✅ تحديث روابط التواصل فقط إذا وصلت قيمة
+        if ($request->filled('social_links')) {
+            $data->social_links = array_filter($request->input('social_links', []));
+        }
+    
+        // ✅ حفظ json بدون تغيير القيم غير المعدلة
+        $user->additional_data = json_encode($data, JSON_UNESCAPED_UNICODE);
         $user->save();
+    
+        return back()->with('success', 'تم تحديث البيانات بنجاح.');
     }
+    
 
     /**
      * Remove the specified resource from storage.
