@@ -107,6 +107,8 @@ class AuthController extends Controller
         $validated = $request->validate([
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            'social_links' => 'nullable|array',
+            'social_links.*' => 'nullable|url|max:255',
         ]);
         $user = User::findOrFail($id);
         $data = json_decode($user->additional_data ?? []);
@@ -138,6 +140,8 @@ class AuthController extends Controller
             return back()->with('success', 'Profile updated successfully.');
             //$user->banner = $bannerPath;
         }
+        dd($validated);
+        $data->social_links = array_filter($request->input('social_links', []));
         $user->additional_data = json_encode($data);
 
         $user->save();
@@ -158,3 +162,5 @@ class AuthController extends Controller
         return redirect()->route('home')->with('success', 'You have been logged out successfully.');
     }
 }
+
+

@@ -2,6 +2,7 @@
 @section('content')
 
 <div class="flex-1 p-8">
+
   <div class="space-y-8">
     <div class="flex justify-between items-center">
       <h2 class="text-3xl font-bold text-slate-800">إعداد الصفحة الخاصة</h2>
@@ -61,7 +62,48 @@
         
       </div>
     </div>
+
+
+      <!-- وسائل التواصل الاجتماعي -->
+<!-- روابط التواصل الاجتماعي -->
+<div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg my-6">
+  <div class="flex flex-col space-y-1.5 p-6">
+    <h3 class="text-xl font-semibold tracking-tight">وسائل التواصل الاجتماعي</h3>
+    <p class="text-sm text-slate-500">أضف روابط حساباتك وسيتم التعرف تلقائياً على نوع المنصة.</p>
+  </div>
+
+  <div id="social-links-container" class="p-6 pt-0 space-y-4">
+    <!-- عنصر مبدئي -->
+    <div class="flex items-center gap-2 social-input-group">
+      <span class="icon w-6 h-6 text-slate-400 flex items-center justify-center">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+      </span>
+      <input name="social_links[]" type="url" placeholder="https://..." oninput="updateSocialIcon(this)" class="flex-1 border border-slate-300 px-4 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+      <button type="button" onclick="removeSocialLink(this)" class="text-red-500 hover:text-red-700 text-sm">✕</button>
+    </div>
+  </div>
+
+  <div class="p-6 pt-2">
+    <button type="button" onclick="addSocialLink()" class="text-orange-600 hover:text-orange-800 text-sm font-medium flex items-center gap-1">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+      </svg>
+      إضافة رابط جديد
+    </button>
+  </div>
+</div>
+
+
 <form>
+
+
+
+
+
+
+
     <!-- الألوان والقوالب -->
     <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
       <div class="flex flex-col space-y-1.5 p-6">
@@ -140,4 +182,57 @@
   }
 </script>
 
+<script>
+  function addSocialLink() {
+    const container = document.getElementById('social-links-container');
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex items-center gap-2 social-input-group';
+  
+    wrapper.innerHTML = `
+      <span class="icon w-6 h-6 text-slate-400 flex items-center justify-center">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+      </span>
+      <input name="social_links[]" type="url" placeholder="https://..." oninput="updateSocialIcon(this)" class="flex-1 border border-slate-300 px-4 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+      <button type="button" onclick="removeSocialLink(this)" class="text-red-500 hover:text-red-700 text-sm">✕</button>
+    `;
+    container.appendChild(wrapper);
+  }
+  
+  function removeSocialLink(button) {
+    button.parentElement.remove();
+  }
+  
+  function updateSocialIcon(input) {
+    const url = input.value.toLowerCase();
+    const iconSpan = input.parentElement.querySelector('.icon');
+  
+    // نوع الأيقونة حسب الرابط
+    let iconHTML = '';
+  
+    if (url.includes('facebook.com')) {
+      iconHTML = `<i class="fab fa-facebook text-blue-600"></i>`;
+    } else if (url.includes('twitter.com')) {
+      iconHTML = `<i class="fab fa-twitter text-sky-500"></i>`;
+    } else if (url.includes('instagram.com')) {
+      iconHTML = `<i class="ri-instagram-line"></i>`;
+    } else if (url.includes('tiktok.com')) {
+      iconHTML = `<i class="fab fa-tiktok text-black"></i>`;
+    } else if (url.includes('youtube.com')) {
+      iconHTML = `<i class="fab fa-youtube text-red-600"></i>`;
+    } else {
+      // default plus icon
+      iconHTML = `
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+      `;
+    }
+  
+    iconSpan.innerHTML = iconHTML;
+  }
+  </script>
+  
+  
 @endsection
