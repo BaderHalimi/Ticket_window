@@ -74,7 +74,7 @@ class AuthController extends Controller
             if (auth()->user()->is_accepted == true) {
             session()->regenerate();
 
-            return redirect()->intended(route('merchant.dashboard'))->with('success', 'Login successful');
+            return redirect()->intended(route('merchant.dashboard.overview'))->with('success', 'Login successful');
             } else {
                 auth()->logout();
                 return back()->withErrors([
