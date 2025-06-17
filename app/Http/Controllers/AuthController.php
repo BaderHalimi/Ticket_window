@@ -10,10 +10,7 @@ use Illuminate\Support\Facades\Storage;
 class AuthController extends Controller
 {
 
-    public function index()
-    {
-
-    }
+    public function index() {}
 
     /**
      * Show the form for creating a new resource.
@@ -68,20 +65,18 @@ class AuthController extends Controller
         ]);
 
         //$credentials = $request->only('email', 'password');
-        if (auth()->attempt($credentials) ) {
+        if (auth()->attempt($credentials)) {
             //Auth::login();
             //dd(auth()->user());
             if (auth()->user()->is_accepted == true) {
-            session()->regenerate();
-
-            return redirect()->intended(route('merchant.dashboard.overview'))->with('success', 'Login successful');
+                session()->regenerate();
+                return redirect()->intended(route('merchant.dashboard.overview'))->with('success', 'Login successful');
             } else {
                 auth()->logout();
                 return back()->withErrors([
                     'email' => 'Your account is not accepted yet. Please wait for approval.',
                 ]);
             }
-
         }
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
@@ -145,7 +140,6 @@ class AuthController extends Controller
         $user->additional_data = json_encode($data);
 
         $user->save();
-
     }
 
     /**
@@ -155,12 +149,11 @@ class AuthController extends Controller
     {
         //
     }
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('home')->with('success', 'You have been logged out successfully.');
     }
 }
-
-

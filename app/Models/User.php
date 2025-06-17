@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\Merchant\Branch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -61,5 +63,8 @@ class User extends Authenticatable
     public function getAdditionalDataAttribute($value)
     {
         return json_decode($value, true);
+    }
+    public function branches(){
+        return $this->hasMany(Branch::class,'user_id','id');
     }
 }
