@@ -16,8 +16,8 @@ class OffersController extends Controller
      */
     public function index()
     {
-
-        return view('merchant.dashboard.offers.index');
+        $offers = Offering::where('user_id', Auth::id())->get();
+        return view('merchant.dashboard.offers.index',compact('offers'));
     }
 
     /**
@@ -96,7 +96,8 @@ class OffersController extends Controller
      */
     public function edit($id)
     {
-        //return view('merchant.offers.edit', compact('id'));
+        $offer = Offering::findOrFail($id);
+        return view('merchant.dashboard.offers.edit', compact('offer'));
     }
 
     /**
@@ -104,14 +105,63 @@ class OffersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Logic to update the offer
+        $offer = Offering::findOrFail($id);
+    
+        // تحويل قيمة checkbox
+        $request->merge([
+            'has_chairs' => $request->has('has_chairs'),
+        ]);
+    
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            'price' => 'nullable|numeric|min:0',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after_or_equal:start_time',
+            'status' => 'required|in:active,inactive',
+            'type' => 'required|in:event,conference,restaurant,experience,events,conferences,experiences',
+            'category' => 'nullable|in:vip,one_day,several_days,reapeted',
+            'has_chairs' => 'boolean',
+            'chairs_count' => 'required_if:has_chairs,true|integer|min:0',
+        ]);
+    
+        $input = $request->only([
+            'name',
+            'location',
+            'description',
+            'price',
+            'start_time',
+            'end_time',
+            'status',
+            'type',
+            'category',
+            'has_chairs',
+            'chairs_count',
+        ]);
+    
+        if ($request->hasFile('image')) {
+            $input['image'] = $request->file('image')->store('offers', 'public');
+        }
+    
+        $offer->update($input);
+    
+        return redirect()->route('merchant.dashboard.offer.index')->with('success', 'تم تحديث الخدمة بنجاح.');
     }
+    
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
-        // Logic to delete the offer
+        $offer = Offering::findOrFail($id);
+        if ($offer->user_id !== Auth::id()) {
+            return redirect()->route('merchant.dashboard.offer.index')->with('error', 'Unauthorized action.');
+        }
+        if ($offer->image) {
+            Storage::disk('public')->delete($offer->image);
+        }
+        $offer->delete();
+        return redirect()->route('merchant.dashboard.offer.index')->with('success', 'Offer deleted successfully.');
+
     }
 }
