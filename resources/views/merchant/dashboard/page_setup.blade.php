@@ -7,9 +7,9 @@
     <div class="flex justify-between items-center">
       <h2 class="text-3xl font-bold text-slate-800">إعداد الصفحة الخاصة</h2>
       <form method="POST" action="{{ route('merchant.dashboard.update',Auth::id())}}" class="flex items-center space-x-4" enctype="multipart/form-data">
-    
+
         @csrf
-        
+
       <button type="submit" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-orange-500 hover:bg-orange-600 h-10 px-4 py-2 text-white">
         <svg class="w-4 h-4 ml-2" ...></svg>
         حفظ التغييرات
@@ -28,13 +28,13 @@
           <div class="flex items-center gap-4">
             <!-- المعاينة -->
             <div class="w-20 h-20 rounded-full bg-slate-100 overflow-hidden flex items-center justify-center">
-              <img id="preview_logo" src="{{ isset(json_decode(Auth::user()->additional_data)->profile_picture) ? asset('storage/' . json_decode(Auth::user()->additional_data)->profile_picture) : '#' }}"
-              alt="Preview" class="w-full h-full object-cover {{ isset(json_decode(Auth::user()->additional_data)->profile_picture) ? '' : 'hidden' }}"              >
-              <svg id="default_logo_icon" class="w-8 h-8 text-slate-400 {{ isset(json_decode(Auth::user()->additional_data)->profile_picture) ? 'hidden' : '' }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <img id="preview_logo" src="{{ isset(Auth::user()->additional_data->profile_picture) ? asset('storage/' .Auth::user()->additional_data->profile_picture) : '#' }}"
+              alt="Preview" class="w-full h-full object-cover {{ isset(Auth::user()->additional_data->profile_picture) ? '' : 'hidden' }}"              >
+              <svg id="default_logo_icon" class="w-8 h-8 text-slate-400 {{ isset(Auth::user()->additional_data->profile_picture) ? 'hidden' : '' }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
             </div>
-        
+
             <!-- زر الرفع -->
             <label class="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm font-medium">
               رفع صورة
@@ -42,7 +42,7 @@
             </label>
           </div>
         </div>
-        
+
         <div class="space-y-2">
           <label for="banner" class="block text-sm font-medium text-gray-700 mb-2">البنر الرئيسي</label>
           <div class="flex items-center gap-4">
@@ -52,14 +52,14 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
             </div>
-        
+
             <label class="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm font-medium">
               رفع صورة
               <input type="file" name="banner" class="hidden" accept="image/*" onchange="previewImage(this, 'preview_banner', 'default_banner_icon')">
             </label>
           </div>
         </div>
-        
+
       </div>
     </div>
 
@@ -187,7 +187,7 @@
     const container = document.getElementById('social-links-container');
     const wrapper = document.createElement('div');
     wrapper.className = 'flex items-center gap-2 social-input-group';
-  
+
     wrapper.innerHTML = `
       <span class="icon w-6 h-6 text-slate-400 flex items-center justify-center">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -199,18 +199,18 @@
     `;
     container.appendChild(wrapper);
   }
-  
+
   function removeSocialLink(button) {
     button.parentElement.remove();
   }
-  
+
   function updateSocialIcon(input) {
     const url = input.value.toLowerCase();
     const iconSpan = input.parentElement.querySelector('.icon');
-  
+
     // نوع الأيقونة حسب الرابط
     let iconHTML = '';
-  
+
     if (url.includes('facebook.com')) {
       iconHTML = `<i class="fab fa-facebook text-blue-600"></i>`;
     } else if (url.includes('twitter.com')) {
@@ -229,10 +229,10 @@
         </svg>
       `;
     }
-  
+
     iconSpan.innerHTML = iconHTML;
   }
   </script>
-  
-  
+
+
 @endsection
