@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -100,12 +101,47 @@ class AuthController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+        ]);
+        $user = User::findOrFail($id);
+        $data = json_decode($user->additional_data ?? []);
+
+        if ($request->hasFile('profile_picture')) {
+            $file = $request->file('profile_picture');
+            $uniqueName = 'profile_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $profilePicturePath = $file->storeAs('', $uniqueName, 'public');
+
+            if (!empty($data->profile_picture)) {
+                Storage::disk('public')->delete($data->profile_picture);
+                $data->profile_picture = null;
+            }
+
+
+            $data->profile_picture = $profilePicturePath;
+        }
+        if ($request->hasFile('banner')) {
+            $file = $request->file('banner');
+            $uniqueName = 'banner_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $bannerPath = $file->storeAs('', $uniqueName, 'public');
+
+            if (!empty($data->banner)) {
+                Storage::disk('public')->delete($data->banner);
+                $data->banner = null;
+            }
+
+            $data->banner = $bannerPath;
+            return back()->with('success', 'Profile updated successfully.');
+            //$user->banner = $bannerPath;
+        }
+        $user->additional_data = json_encode($data);
+
+        $user->save();
+        
     }
 
     /**

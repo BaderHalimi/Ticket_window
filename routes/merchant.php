@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 Route::prefix('dashboard')->as('dashboard.')->group(function(){
     Route::get('/',function(){
@@ -64,6 +65,9 @@ Route::prefix('dashboard')->as('dashboard.')->group(function(){
     Route::get('activity_log',function(){
         return view('merchant.dashboard.activity_log');
     })->name('activity_log');
+
+    Route::post('update/{id}', [AuthController::class,'update'])->name('update');
+
 
 
 });
