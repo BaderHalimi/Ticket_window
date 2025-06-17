@@ -36,7 +36,7 @@ class AuthController extends Controller
             'business_name' => 'nullable|string|max:255',
             'business_type' => 'nullable|in:restaurant,events,show,other',
             'phone' => 'nullable|string|max:15',
-            'other_business_type' => 'required_if:business_type,other|string|max:255',
+            'other_business_type' => 'nullable|required_if:business_type,other|string|max:255',
         ]);
 
         $user = User::create([
@@ -145,7 +145,7 @@ class AuthController extends Controller
         $user->additional_data = json_encode($data);
 
         $user->save();
-        
+
     }
 
     /**
