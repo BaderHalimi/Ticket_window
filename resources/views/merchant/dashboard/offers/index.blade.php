@@ -5,11 +5,14 @@
         <div bis_skin_checked="1" style="opacity: 1; transform: none;">
             <div class="space-y-8" bis_skin_checked="1">
                 <div class="flex justify-between items-center flex-wrap gap-4" bis_skin_checked="1">
-                    <h2 class="text-3xl font-bold text-slate-800">إدارة الخدمات</h2><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-orange-500 hover:bg-orange-500/90 h-10 px-4 py-2 bg-orange-500 text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 ml-2">
+                    <h2 class="text-3xl font-bold text-slate-800">إدارة الخدمات</h2>
+                    <a href="{{route('merchant.dashboard.offer.create')}}">
+
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-orange-500 hover:bg-orange-500/90 h-10 px-4 py-2 bg-orange-500 text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 ml-2">
                             <circle cx="12" cy="12" r="10"></circle>
                             <path d="M8 12h8"></path>
                             <path d="M12 8v8"></path>
-                        </svg>إضافة خدمة جديدة</button>
+                        </svg>إضافة خدمة جديدة</button></a>
                 </div>
                 <div dir="rtl" data-orientation="horizontal" class="w-full" bis_skin_checked="1">
                     <div role="tablist" aria-orientation="horizontal" class="items-center justify-center text-muted-foreground grid w-full grid-cols-2 md:grid-cols-4 gap-2 h-auto p-2 bg-orange-500/10 rounded-xl mb-6" tabindex="0" data-orientation="horizontal" bis_skin_checked="1" style="outline: none;"><button type="button" role="tab" aria-selected="true" aria-controls="radix-:rv:-content-events" data-state="active" id="radix-:rv:-trigger-events" class="justify-center whitespace-nowrap rounded-sm px-3 font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 flex items-center gap-2 text-sm md:text-base py-2.5 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-gray-400 data-[state=active]:shadow-lg" tabindex="0" data-orientation="horizontal" data-radix-collection-item=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
@@ -124,6 +127,7 @@
                                         </ul>
                                     </div>
                                 </div>
+                                <a href="{{route('merchant.dashboard.offer.create')}}">
                                 <div class="items-center bg-slate-50 p-4 flex justify-start" bis_skin_checked="1"><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 ml-2">
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <path d="M8 12h8"></path>

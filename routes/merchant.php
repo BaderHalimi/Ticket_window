@@ -2,14 +2,15 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Merchant\BranchController;
+use App\Http\Controllers\Merchant\OffersController;
 use Illuminate\Support\Facades\Route;
 Route::prefix('dashboard')->as('dashboard.')->group(function(){
     Route::get('/',function(){
         return view('merchant.dashboard.index');
     })->name('overview');
-    Route::get('services',function(){
-        return view('merchant.dashboard.services');
-    })->name('services');
+    // Route::get('services',function(){
+    //     return view('merchant.dashboard.services');
+    // })->name('services');
     Route::get('reservations',function(){
         return view('merchant.dashboard.reservations');
     })->name('reservations');
@@ -45,6 +46,8 @@ Route::prefix('dashboard')->as('dashboard.')->group(function(){
         return view('merchant.dashboard.wallet_withdrawal');
     })->name('wallet_withdrawal');
     Route::resource('branch', BranchController::class);
+    Route::resource('offer', OffersController::class);
+
     // Route::get('branch_management',function(){
     //     return view('merchant.dashboard.index');
     // })->name('branch_management');
