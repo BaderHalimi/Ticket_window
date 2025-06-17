@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Merchant\BranchController;
 use Illuminate\Support\Facades\Route;
 Route::prefix('dashboard')->as('dashboard.')->group(function(){
     Route::get('/',function(){
@@ -43,9 +44,10 @@ Route::prefix('dashboard')->as('dashboard.')->group(function(){
     Route::get('wallet_withdrawal',function(){
         return view('merchant.dashboard.wallet_withdrawal');
     })->name('wallet_withdrawal');
-    Route::get('branch_management',function(){
-        return view('merchant.dashboard.branch_management');
-    })->name('branch_management');
+    Route::resource('branch', BranchController::class);
+    // Route::get('branch_management',function(){
+    //     return view('merchant.dashboard.index');
+    // })->name('branch_management');
     Route::get('team_management',function(){
         return view('merchant.dashboard.team_management');
     })->name('team_management');

@@ -19,5 +19,5 @@ Route::get('',function(){
 
 Route::resource('sellers', SellerController::class)->middleware("auth")->names('sellers');
 
-Route::resource('employees', EmployeeController::class)->middleware("auth")->names('employees');
+// Route::resource('employees', EmployeeController::class)->middleware("auth")->names('employees');
 //Route::put('employees/{employee}', [EmployeeController::class, 'update'])->name('admin.employees.update');

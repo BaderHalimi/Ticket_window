@@ -1,0 +1,206 @@
+@extends('merchant.layouts.app')
+@section('content')
+
+<div class="flex-1 p-8">
+    <div style="opacity: 1; transform: none;">
+        <div class="space-y-8">
+            <div class="flex justify-between items-center">
+                <h2 class="text-3xl font-bold text-slate-800">إدارة الفروع</h2>
+            </div>
+            <div dir="rtl" data-orientation="horizontal">
+                <div role="tablist" aria-orientation="horizontal" class="h-10 items-center justify-center rounded-md bg-gray-300 p-1 text-gray-300-foreground grid w-full grid-cols-2 gap-3" tabindex="0" data-orientation="horizontal" style="outline: none;">
+                    <button type="button" role="tab" aria-selected="true" aria-controls="radix-:r9r:-content-list" data-state="inactive" id="tab-list" class="justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state1=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex items-center gap-2" tabindex="-1" data-orientation="horizontal" data-radix-collection-item=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                            <line x1="8" x2="21" y1="6" y2="6"></line>
+                            <line x1="8" x2="21" y1="12" y2="12"></line>
+                            <line x1="8" x2="21" y1="18" y2="18"></line>
+                            <line x1="3" x2="3.01" y1="6" y2="6"></line>
+                            <line x1="3" x2="3.01" y1="12" y2="12"></line>
+                            <line x1="3" x2="3.01" y1="18" y2="18"></line>
+                        </svg> قائمة الفروع</button>
+                    <button type="button" role="tab" aria-selected="false" aria-controls="radix-:r9r:-content-create" data-state="inactive" id="tab-create" class="justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state1=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex items-center gap-2" tabindex="-1" data-orientation="horizontal" data-radix-collection-item=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M8 12h8"></path>
+                            <path d="M12 8v8"></path>
+                        </svg> إضافة فرع جديد</button>
+                </div>
+                <div data-state="active" data-orientation="horizontal" role="tabpanel" aria-labelledby="radix-:r9r:-trigger-list" id="radix-:r9r:-content-list" tabindex="0" class="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 pt-6" style="animation-duration: 0s;">
+                    <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
+                        <div class="flex flex-col space-y-1.5 p-6">
+                            <h3 class="text-xl font-semibold leading-none tracking-tight">قائمة الفروع</h3>
+                            <p class="text-sm text-slate-500">عرض وإدارة جميع فروعك من مكان واحد.</p>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <div class="relative w-full overflow-auto">
+                                <table class="w-full caption-bottom text-sm">
+                                    <thead class="[&amp;_tr]:border-b">
+                                        <tr class="border-b transition-colors hover:bg-gray-300/50 data-[state=selected]:bg-gray-300">
+                                            <th class="h-12 px-4 text-right align-middle font-medium text-gray-300-foreground [&amp;:has([role=checkbox])]:pr-0">اسم الفرع</th>
+                                            <th class="h-12 px-4 text-right align-middle font-medium text-gray-300-foreground [&amp;:has([role=checkbox])]:pr-0">الموقع</th>
+                                            <th class="h-12 px-4 text-right align-middle font-medium text-gray-300-foreground [&amp;:has([role=checkbox])]:pr-0">الحالة</th>
+                                            <th class="h-12 px-4 text-right align-middle font-medium text-gray-300-foreground [&amp;:has([role=checkbox])]:pr-0">إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="[&amp;_tr:last-child]:border-0">
+                                        <tr class="border-b transition-colors hover:bg-gray-300/50 data-[state=selected]:bg-gray-300">
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-semibold">مطعم الرياض</td>
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">الرياض، حي الياسمين</td>
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">نشط</span></td>
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 space-x-1 space-x-reverse"><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-slate-500">
+                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                        <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
+                                                    </svg></button><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-red-500">
+                                                        <path d="M3 6h18"></path>
+                                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                                        <line x1="10" x2="10" y1="11" y2="17"></line>
+                                                        <line x1="14" x2="14" y1="11" y2="17"></line>
+                                                    </svg></button></td>
+                                        </tr>
+                                        <tr class="border-b transition-colors hover:bg-gray-300/50 data-[state=selected]:bg-gray-300">
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-semibold">مطعم جدة</td>
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">جدة، حي الشاطئ</td>
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">نشط</span></td>
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 space-x-1 space-x-reverse"><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-slate-500">
+                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                        <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
+                                                    </svg></button><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-red-500">
+                                                        <path d="M3 6h18"></path>
+                                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                                        <line x1="10" x2="10" y1="11" y2="17"></line>
+                                                        <line x1="14" x2="14" y1="11" y2="17"></line>
+                                                    </svg></button></td>
+                                        </tr>
+                                        <tr class="border-b transition-colors hover:bg-gray-300/50 data-[state=selected]:bg-gray-300">
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-semibold">معرض الدمام</td>
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">الدمام، مركز المعارض</td>
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">مؤقت</span></td>
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 space-x-1 space-x-reverse"><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-slate-500">
+                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                        <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
+                                                    </svg></button><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-red-500">
+                                                        <path d="M3 6h18"></path>
+                                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                                        <line x1="10" x2="10" y1="11" y2="17"></line>
+                                                        <line x1="14" x2="14" y1="11" y2="17"></line>
+                                                    </svg></button></td>
+                                        </tr>
+                                        <tr class="border-b transition-colors hover:bg-gray-300/50 data-[state=selected]:bg-gray-300">
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-semibold">كافيه الخبر</td>
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">الخبر، الكورنيش</td>
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600">قريباً</span></td>
+                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 space-x-1 space-x-reverse"><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-slate-500">
+                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                        <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
+                                                    </svg></button><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-red-500">
+                                                        <path d="M3 6h18"></path>
+                                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                                        <line x1="10" x2="10" y1="11" y2="17"></line>
+                                                        <line x1="14" x2="14" y1="11" y2="17"></line>
+                                                    </svg></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-state="inactive" style="display: none;" data-orientation="horizontal" role="tabpanel" aria-labelledby="radix-:rg:-trigger-create" id="radix-:rg:-content-create" tabindex="0" class="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 pt-6" bis_skin_checked="1">
+                    <form method="POST" action="{{ route('merchant.dashboard.branch.store') }}">
+                        @csrf
+                        <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <h3 class="text-xl font-semibold leading-none tracking-tight">إضافة فرع جديد</h3>
+                                <p class="text-sm text-slate-500">أدخل بيانات الفرع الجديد لتبدأ بإدارته.</p>
+                            </div>
+                            <div class="p-6 pt-0 space-y-6">
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2" for="branchName">اسم الفرع</label>
+                                    <div class="relative">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <line x1="6" x2="6" y1="3" y2="15"></line>
+                                            <circle cx="18" cy="6" r="3"></circle>
+                                            <circle cx="6" cy="18" r="3"></circle>
+                                            <path d="M18 9a9 9 0 0 1-9 9"></path>
+                                        </svg>
+                                        <input type="text" name="name" id="branchName" required placeholder="مثال: مطعم فرع العليا"
+                                            class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 pr-10 text-sm placeholder:text-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all">
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2" for="branchLocation">موقع الفرع</label>
+                                    <div class="relative">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                                            <circle cx="12" cy="10" r="3" />
+                                        </svg>
+                                        <input type="text" name="location" id="branchLocation" required placeholder="مثال: الرياض، شارع التحلية"
+                                            class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 pr-10 text-sm placeholder:text-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all">
+                                    </div>
+                                </div>
+
+                                <button type="submit"
+                                    class="inline-flex items-center justify-center text-sm font-medium bg-orange-500 hover:bg-orange-500/90 h-11 rounded-md px-8 w-full text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <path d="M8 12h8"></path>
+                                        <path d="M12 8v8"></path>
+                                    </svg>
+                                    إضافة الفرع
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection
+@push('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const listTab = document.getElementById("tab-list");
+        const createTab = document.getElementById("tab-create");
+        listTab.setAttribute("data-state1", "inactive");
+        setTimeout(() => {
+            listTab.click();
+        }, 200);
+
+        const listContent = document.getElementById("radix-:r9r:-content-list");
+        const formContent = document.getElementById("radix-:rg:-content-create");
+
+        function activateTab(activeBtn, inactiveBtn, activeContent, inactiveContent) {
+            // Toggle display
+            activeContent.style.display = "block";
+            inactiveContent.style.display = "none";
+
+            // Toggle data-state
+            activeContent.setAttribute("data-state1", "active");
+            inactiveContent.setAttribute("data-state1", "inactive");
+
+            // Toggle aria-selected
+            activeBtn.setAttribute("aria-selected", "true");
+            inactiveBtn.setAttribute("aria-selected", "false");
+
+            // Toggle background classes manually
+            activeBtn.classList.add("bg-white", "text-slate-900", "shadow-sm");
+            inactiveBtn.classList.remove("bg-white", "text-slate-900", "shadow-sm");
+        }
+
+        listTab.addEventListener("click", function() {
+            activateTab(listTab, createTab, listContent, formContent);
+        });
+
+        createTab.addEventListener("click", function() {
+            activateTab(createTab, listTab, formContent, listContent);
+        });
+    });
+</script>
+
+@endpush

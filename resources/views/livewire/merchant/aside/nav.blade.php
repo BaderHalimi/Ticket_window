@@ -100,7 +100,7 @@
             <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
         </svg><span>المحفظة والسحب</span>
     </a>
-    <a href="{{ route('merchant.dashboard.branch_management')}}" wire:click.prevent="intended('{{ route('merchant.dashboard.branch_management') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.branch_management')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <a href="{{ route('merchant.dashboard.branch.index')}}" wire:click.prevent="intended('{{ route('merchant.dashboard.branch.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.branch.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <line x1="6" x2="6" y1="3" y2="15"></line>
             <circle cx="18" cy="6" r="3"></circle>
             <circle cx="6" cy="18" r="3"></circle>
