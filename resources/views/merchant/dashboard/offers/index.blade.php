@@ -31,7 +31,31 @@
                 </svg>
                 الفعاليات
             </button>
-            {{-- باقي التبويبات (مؤتمرات، مطاعم، تجارب) يمكن إضافتها لاحقاً إذا لزم --}}
+            <button type="button" role="tab" aria-selected="false" aria-controls="radix-:rv:-content-exhibitions" data-state="inactive" id="radix-:rv:-trigger-exhibitions" class="justify-center whitespace-nowrap rounded-sm px-3 font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 flex items-center gap-2 text-sm md:text-base py-2.5 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-gray-400 data-[state=active]:shadow-lg" tabindex="-1" data-orientation="horizontal" data-radix-collection-item=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                    <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path>
+                    <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path>
+                    <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path>
+                    <path d="M10 6h4"></path>
+                    <path d="M10 10h4"></path>
+                    <path d="M10 14h4"></path>
+                    <path d="M10 18h4"></path>
+                </svg>المعارض والمؤتمرات
+            </button>
+            <button type="button" role="tab" aria-selected="false" aria-controls="radix-:rv:-content-restaurants" data-state="inactive" id="radix-:rv:-trigger-restaurants" class="justify-center whitespace-nowrap rounded-sm px-3 font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 flex items-center gap-2 text-sm md:text-base py-2.5 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-gray-400 data-[state=active]:shadow-lg" tabindex="-1" data-orientation="horizontal" data-radix-collection-item=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                    <path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"></path>
+                    <path d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"></path>
+                    <path d="m2.1 21.8 6.4-6.3"></path>
+                    <path d="m19 5-7 7"></path>
+                </svg>المطاعم واللاونجات
+            </button>
+            <button type="button" role="tab" aria-selected="false" aria-controls="radix-:rv:-content-experiences" data-state="inactive" id="radix-:rv:-trigger-experiences" class="justify-center whitespace-nowrap rounded-sm px-3 font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 flex items-center gap-2 text-sm md:text-base py-2.5 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-gray-400 data-[state=active]:shadow-lg" tabindex="-1" data-orientation="horizontal" data-radix-collection-item=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+                    <path d="M5 3v4"></path>
+                    <path d="M19 17v4"></path>
+                    <path d="M3 5h4"></path>
+                    <path d="M17 19h4"></path>
+                </svg>التجارب (Experiences)
+            </button>
         </div>
 
         {{-- تفاصيل الفعاليات --}}
@@ -47,22 +71,22 @@
                     <h4 class="text-lg font-bold text-slate-700 mb-3 border-b pb-2">🧩 الأنواع المدعومة</h4>
                     <ul class="space-y-3 text-slate-600">
                         @foreach ([
-                            'فعالية يوم واحد',
-                            'فعالية على عدة أيام',
-                            'فعالية متكررة شهريًا',
-                            'فعالية بمقاعد مرقمة (مسرح/سينما)',
-                            'فعالية مفتوحة بدون مقاعد',
-                            'فعالية VIP / دعوات خاصة',
+                        'فعالية يوم واحد',
+                        'فعالية على عدة أيام',
+                        'فعالية متكررة شهريًا',
+                        'فعالية بمقاعد مرقمة (مسرح/سينما)',
+                        'فعالية مفتوحة بدون مقاعد',
+                        'فعالية VIP / دعوات خاصة',
                         ] as $type)
-                            <li class="flex items-center gap-3">
-                                <div class="w-5 h-5 bg-orange-500/20 rounded-md flex items-center justify-center">
-                                    <svg class="w-3 h-3 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" />
-                                        <path d="M13 5v2M13 11v2M13 17v2" />
-                                    </svg>
-                                </div>
-                                <span>{{ $type }}</span>
-                            </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-5 h-5 bg-orange-500/20 rounded-md flex items-center justify-center">
+                                <svg class="w-3 h-3 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" />
+                                    <path d="M13 5v2M13 11v2M13 17v2" />
+                                </svg>
+                            </div>
+                            <span>{{ $type }}</span>
+                        </li>
                         @endforeach
                     </ul>
                 </div>
@@ -72,18 +96,18 @@
                     <h4 class="text-lg font-bold text-slate-700 mb-3 border-b pb-2">⭐ المميزات الخاصة</h4>
                     <ul class="space-y-3 text-slate-600">
                         @foreach ([
-                            'مخطط مقاعد تفاعلي (Seat Map)',
-                            'تذاكر قابلة للتصميم المخصص',
-                            'دعم QR للتحقق من الدخول',
-                            'تحديد الفئة (عامة - نسائية - أطفال…)',
-                            'إمكانية ربط الفعالية بموقع محدد في الخريطة',
+                        'مخطط مقاعد تفاعلي (Seat Map)',
+                        'تذاكر قابلة للتصميم المخصص',
+                        'دعم QR للتحقق من الدخول',
+                        'تحديد الفئة (عامة - نسائية - أطفال…)',
+                        'إمكانية ربط الفعالية بموقع محدد في الخريطة',
                         ] as $feature)
-                            <li class="flex items-start gap-3">
-                                <svg class="w-5 h-5 text-amber-400 mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                                </svg>
-                                <span>{{ $feature }}</span>
-                            </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-amber-400 mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            </svg>
+                            <span>{{ $feature }}</span>
+                        </li>
                         @endforeach
                     </ul>
                 </div>
@@ -126,31 +150,31 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white">
                     @forelse($offers as $service)
-                        <tr>
-                            <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                            <td class="px-4 py-2 font-medium">{{ $service->name }}</td>
-                            <td class="px-4 py-2">{{ ucfirst($service->type) }}</td>
-                            <td class="px-4 py-2">{{ $service->price ?? '—' }}</td>
-                            <td class="px-4 py-2">
-                                <span class="inline-block px-2 py-1 text-xs rounded 
+                    <tr>
+                        <td class="px-4 py-2">{{ $loop->iteration }}</td>
+                        <td class="px-4 py-2 font-medium">{{ $service->name }}</td>
+                        <td class="px-4 py-2">{{ ucfirst($service->type) }}</td>
+                        <td class="px-4 py-2">{{ $service->price ?? '—' }}</td>
+                        <td class="px-4 py-2">
+                            <span class="inline-block px-2 py-1 text-xs rounded
                                     {{ $service->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ $service->status === 'active' ? 'فعال' : 'غير فعال' }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-2">{{ $service->start_time }}</td>
-                            <td class="px-4 py-2">{{ $service->end_time }}</td>
-                            <td class="px-4 py-2 space-x-1 rtl:space-x-reverse">
-                                <a href="{{ route('merchant.dashboard.offer.edit', $service->id) }}" class="text-blue-600 hover:underline text-xs">تعديل</a>
-                                <form method="POST" action="{{ route('merchant.dashboard.offer.destroy', $service->id) }}" class="inline-block" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:underline text-xs">حذف</button>
-                                </form>
-                            </td>
-                        </tr>
+                                {{ $service->status === 'active' ? 'فعال' : 'غير فعال' }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-2">{{ $service->start_time }}</td>
+                        <td class="px-4 py-2">{{ $service->end_time }}</td>
+                        <td class="px-4 py-2 space-x-1 rtl:space-x-reverse">
+                            <a href="{{ route('merchant.dashboard.offer.edit', $service->id) }}" class="text-blue-600 hover:underline text-xs">تعديل</a>
+                            <form method="POST" action="{{ route('merchant.dashboard.offer.destroy', $service->id) }}" class="inline-block" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="text-red-600 hover:underline text-xs">حذف</button>
+                            </form>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="8" class="text-center px-4 py-6 text-slate-500">لا توجد خدمات حالياً.</td>
-                        </tr>
+                    <tr>
+                        <td colspan="8" class="text-center px-4 py-6 text-slate-500">لا توجد خدمات حالياً.</td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
