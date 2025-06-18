@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -67,3 +68,8 @@ Route::post('logout', [AuthController::class,'logout'])->middleware('auth')->nam
 // Route::post('login', [AuthController::class,'login'])->middleware('guest')->name('signin');
 // Route::post('register', [AuthController::class,'register'])->middleware('guest')->name('signup');
 Route::get('dashboard', [AuthController::class,'dashboard'])->middleware('auth')->name('dashboard');
+
+Route::get('/{id}',function($id){
+    $merchant = User::findOrFail($id);
+    return view('templates.tmplate1.index',compact('merchant'));
+});

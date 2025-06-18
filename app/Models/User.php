@@ -60,10 +60,10 @@ class User extends Authenticatable
      */
 
 
-    public function getAdditionalDataAttribute($value)
-    {
-        return json_decode($value, true);
-    }
+    // public function getAdditionalDataAttribute($value)
+    // {
+    //     return json_decode($value, true);
+    // }
     public function branches(){
         return $this->hasMany(Branch::class,'user_id','id');
     }

@@ -145,7 +145,7 @@ class AuthController extends Controller
         }
 
         // ✅ حفظ json بدون تغيير القيم غير المعدلة
-        $user->additional_data = json_encode($data, JSON_UNESCAPED_UNICODE);
+        $user->additional_data = (array) $data;
         $user->save();
 
         return back()->with('success', 'تم تحديث البيانات بنجاح.');
