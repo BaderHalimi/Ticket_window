@@ -12,7 +12,9 @@
         "laravel/socialite": "^5.21",
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.6",
-        "spatie/laravel-permission": "^6.19"
+        "nesbot/carbon": "^2.73",
+        "spatie/laravel-permission": "^6.19",
+        "symfony/translation": "^6.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

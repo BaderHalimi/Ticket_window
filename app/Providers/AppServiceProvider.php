@@ -35,5 +35,7 @@ class AppServiceProvider extends ServiceProvider
         // // ضبط التايمزون للـ Laravel كله
         // date_default_timezone_set($timezone);
         // Carbon::setTimeZone($timezone);
+        \Carbon\Carbon::setLocale(config('app.locale'));
+
     }
 }

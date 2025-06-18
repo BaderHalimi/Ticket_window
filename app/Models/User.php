@@ -67,4 +67,7 @@ class User extends Authenticatable
     public function branches(){
         return $this->hasMany(Branch::class,'user_id','id');
     }
+    public function offers(){
+        return $this->hasMany(Offering::class,'user_id');
+    }
 }
