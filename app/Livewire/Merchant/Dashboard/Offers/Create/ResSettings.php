@@ -93,7 +93,7 @@ class ResSettings extends Component
                 'enable_global_interval' => (bool) $this->enable_global_interval,
                 'global_interval_minutes' => (int) $this->global_interval_minutes,
                 'enable_work_schedule' => (bool) $this->enable_work_schedule,
-                'work_schedule_notes' => $this->work_schedule,
+                'work_schedule' => $this->work_schedule,
                 'enable_closed_days' => (bool) $this->enable_closed_days,
                 'closed_days' => $this->closed_days,
                 'enable_user_limit' => (bool) $this->enable_user_limit,
@@ -105,6 +105,7 @@ class ResSettings extends Component
                 'enable_client_time_selection' => (bool) $this->enable_client_time_selection,
             ]
         ]);
+        
     }
 
     // public function updated($property)
