@@ -20,7 +20,9 @@
   
             
             <div class="col-span-9">
-                @livewire('merchant.dashboard.offers.create.res_settings', ['offering' => $offering])
+             @livewire('merchant.dashboard.offers.create.prices', ['offering' => $offering])
+
+                {{-- @livewire('merchant.dashboard.offers.create.res_settings', ['offering' => $offering]) --}}
 
                 {{-- @if ($currentStep === 1)
                     @livewire('merchant.dashboard.offers.create.information', ['offering' => $offering])
