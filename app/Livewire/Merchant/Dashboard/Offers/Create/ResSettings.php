@@ -20,8 +20,16 @@ class ResSettings extends Component
     public $global_interval_minutes = 0;
 
     public bool $enable_work_schedule = false;
-    public $work_schedule_notes = '';
-
+    public array $work_schedule = [
+        'saturday' => ['enabled' => false, 'start' => '', 'end' => ''],
+        'sunday' => ['enabled' => false, 'start' => '', 'end' => ''],
+        'monday' => ['enabled' => false, 'start' => '', 'end' => ''],
+        'tuesday' => ['enabled' => false, 'start' => '', 'end' => ''],
+        'wednesday' => ['enabled' => false, 'start' => '', 'end' => ''],
+        'thursday' => ['enabled' => false, 'start' => '', 'end' => ''],
+        'friday' => ['enabled' => false, 'start' => '', 'end' => ''],
+    ];
+    
     public bool $enable_closed_days = false;
     public $closed_days = '';
 
@@ -51,7 +59,16 @@ class ResSettings extends Component
             'enable_global_interval' => false,
             'global_interval_minutes' => 0,
             'enable_work_schedule' => false,
-            'work_schedule_notes' => '',
+            'work_schedule' => [
+                'saturday' => ['enabled' => false, 'start' => '', 'end' => ''],
+                'sunday' => ['enabled' => false, 'start' => '', 'end' => ''],
+                'monday' => ['enabled' => false, 'start' => '', 'end' => ''],
+                'tuesday' => ['enabled' => false, 'start' => '', 'end' => ''],
+                'wednesday' => ['enabled' => false, 'start' => '', 'end' => ''],
+                'thursday' => ['enabled' => false, 'start' => '', 'end' => ''],
+                'friday' => ['enabled' => false, 'start' => '', 'end' => ''],
+            ],
+
             'enable_closed_days' => false,
             'closed_days' => '',
             'enable_user_limit' => false,
@@ -76,7 +93,7 @@ class ResSettings extends Component
                 'enable_global_interval' => (bool) $this->enable_global_interval,
                 'global_interval_minutes' => (int) $this->global_interval_minutes,
                 'enable_work_schedule' => (bool) $this->enable_work_schedule,
-                'work_schedule_notes' => $this->work_schedule_notes,
+                'work_schedule_notes' => $this->work_schedule,
                 'enable_closed_days' => (bool) $this->enable_closed_days,
                 'closed_days' => $this->closed_days,
                 'enable_user_limit' => (bool) $this->enable_user_limit,
