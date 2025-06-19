@@ -15,7 +15,6 @@ class Offering extends Model
         'price',
         'start_time',
         'end_time',
-        'max_attendees',
         'status',
         'type',
         'category',
@@ -23,12 +22,14 @@ class Offering extends Model
         'translations',
         'has_chairs',
         'chairs_count',
-        'user_id'
+        'user_id',
+        'features',
     ];
 
     protected $casts = [
         'additional_data' => 'array',
         'translations' => 'array',
+        'features' => 'array',
         'start_time' => 'datetime',
         'end_time' => 'datetime',
         'has_chairs' => 'boolean',

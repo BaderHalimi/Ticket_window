@@ -13,22 +13,23 @@ return new class extends Migration
     {
         Schema::create('offerings', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('location');
+            $table->string('name')->nullable();
+            $table->string('location')->nullable();
             $table->string('description')->nullable();
             $table->string('image')->nullable();
             $table->decimal('price')->nullable();
-            $table->dateTime('start_time');
-            $table->dateTime('end_time');
+            $table->dateTime('start_time')->nullable();
+            $table->dateTime('end_time')->nullable();
             //$table->integer('max_attendees')->default(0);
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->enum('type', ['events', 'conference','restaurant','experiences'])->default('events');
+            $table->enum('status', ['active', 'inactive'])->default('active')->nullable();
+            $table->enum('type', ['events', 'conference','restaurant','experiences'])->default('events')->nullable();
             $table->string('category')->nullable();
             $table->json('additional_data')->nullable();
             $table->json('translations')->nullable();
-            $table->boolean('has_chairs')->default(false);
+            $table->boolean('has_chairs')->default(false)->nullable();
             $table->integer('chairs_count')->nullable();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->nullable();
+            $table->json('features')->nullable();
             $table->timestamps();
         });
     }

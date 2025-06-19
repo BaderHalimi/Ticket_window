@@ -25,7 +25,10 @@ class OffersController extends Controller
      */
     public function create()
     {
-        return view('merchant.dashboard.offers.create');
+        $offering =  \App\Models\Offering::create([
+            'user_id' => Auth::id()
+        ]);
+        return view('merchant.dashboard.offers.create',compact('offering'));
     }
 
     /**
@@ -96,8 +99,8 @@ class OffersController extends Controller
      */
     public function edit($id)
     {
-        $offer = Offering::findOrFail($id);
-        return view('merchant.dashboard.offers.edit', compact('offer'));
+        $offering = Offering::findOrFail($id);
+        return view('merchant.dashboard.offers.edit', compact('offering'));
     }
 
     /**
