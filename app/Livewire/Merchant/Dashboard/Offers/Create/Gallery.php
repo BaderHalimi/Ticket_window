@@ -16,11 +16,13 @@ class Gallery extends Component
     public Offering $offering;
     public $image;
     public $gallery = [];
+    public $gallery1 = [];
 
     public function mount(Offering $offering)
     {
         $this->offering = $offering;
         $this->gallery = $offering->features['gallery'] ?? [];
+        // dd($this->gallery);
     }
 
     public function updatedImage()
@@ -30,7 +32,7 @@ class Gallery extends Component
         $this->dispatch('image-uploaded');
     }
 
-    public function updatedGallery($files)
+    public function updatedGallery1($files)
     {
         foreach ($files as $file) {
             $path = $file->store('offerings/gallery', 'public');
