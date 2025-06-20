@@ -29,7 +29,7 @@ class ResSettings extends Component
         'thursday' => ['enabled' => false, 'start' => '', 'end' => ''],
         'friday' => ['enabled' => false, 'start' => '', 'end' => ''],
     ];
-    
+
     public bool $enable_closed_days = false;
     public $closed_days = '';
 
@@ -83,29 +83,29 @@ class ResSettings extends Component
 
     public function saveTimeSettings()
     {
+        $features = $this->offering->features ?? [];
+        $features['enable_duration']= (bool) $this->enable_duration;
+        $features['booking_duration'] = (int) $this->booking_duration;
+        $features['booking_unit'] = $this->booking_unit;
+        $features['enable_user_interval'] = (bool) $this->enable_user_interval;
+        $features['user_interval_minutes'] = (int) $this->user_interval_minutes;
+        $features['enable_global_interval'] = (bool) $this->enable_global_interval;
+        $features['global_interval_minutes'] = (int) $this->global_interval_minutes;
+        $features['enable_work_schedule'] = (bool) $this->enable_work_schedule;
+        $features['work_schedule'] = $this->work_schedule;
+        $features['enable_closed_days'] = (bool) $this->enable_closed_days;
+        $features['closed_days'] = $this->closed_days;
+        $features['enable_user_limit'] = (bool) $this->enable_user_limit;
+        $features['user_limit'] = (int) $this->user_limit;
+        $features['enable_booking_deadline'] = (bool) $this->enable_booking_deadline;
+        $features['booking_deadline_minutes'] = (int) $this->booking_deadline_minutes;
+        $features['enable_weekly_recurrence'] = (bool) $this->enable_weekly_recurrence;
+        $features['weekly_recurrence_days'] = $this->weekly_recurrence_days;
+        $features['enable_client_time_selection'] = (bool) $this->enable_client_time_selection;
         $this->offering->update([
-            'features' => [
-                'enable_duration' => (bool) $this->enable_duration,
-                'booking_duration' => (int) $this->booking_duration,
-                'booking_unit' => $this->booking_unit,
-                'enable_user_interval' => (bool) $this->enable_user_interval,
-                'user_interval_minutes' => (int) $this->user_interval_minutes,
-                'enable_global_interval' => (bool) $this->enable_global_interval,
-                'global_interval_minutes' => (int) $this->global_interval_minutes,
-                'enable_work_schedule' => (bool) $this->enable_work_schedule,
-                'work_schedule' => $this->work_schedule,
-                'enable_closed_days' => (bool) $this->enable_closed_days,
-                'closed_days' => $this->closed_days,
-                'enable_user_limit' => (bool) $this->enable_user_limit,
-                'user_limit' => (int) $this->user_limit,
-                'enable_booking_deadline' => (bool) $this->enable_booking_deadline,
-                'booking_deadline_minutes' => (int) $this->booking_deadline_minutes,
-                'enable_weekly_recurrence' => (bool) $this->enable_weekly_recurrence,
-                'weekly_recurrence_days' => $this->weekly_recurrence_days,
-                'enable_client_time_selection' => (bool) $this->enable_client_time_selection,
-            ]
+            'features' => $features
         ]);
-        
+
     }
 
     // public function updated($property)
