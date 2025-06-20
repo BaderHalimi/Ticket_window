@@ -57,17 +57,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
         <!-- كارد منتج -->
         @foreach ($merchant->offers as $offer)
-        <div class="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
-            <img src="{{ Storage::url($offer->image) }}" alt="{{ $offer->name }}" class="w-full h-48 object-cover">
-            <div class="p-4">
-                <h3 class="text-lg font-bold">{{ $offer->name }}</h3>
-                <p class="text-sm text-gray-500">{{ $offer->description }}</p>
-                <p class="text-sm text-gray-500">{{ $offer->start_time->translatedFormat('h:i A').' - '.$offer->end_time->translatedFormat('h:i A') }}</p>
-
-                <p class="text-xl text-orange-600 font-bold"><apsn class="text-sm text-gray-500 line-through">{{ $offer->price }} ريال</apsn> {{ $offer->price }} ريال</p>
-                <button class="mt-4 w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600">احجز الآن</button>
-            </div>
-        </div>
+        @livewire('tepmlates.template1.item', ['offer' => $offer,'merchant'=>$merchant])
         @endforeach
         <!-- كرر باقي المنتجات -->
     </div>

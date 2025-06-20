@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Models\Offering;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,3 +74,10 @@ Route::get('/{id}',function($id){
     $merchant = User::findOrFail($id);
     return view('templates.tmplate1.index',compact('merchant'));
 });
+Route::get('/{id}/{offering}',function($id,Offering $offering){
+    $merchant = User::findOrFail($id);
+    if($offering->user_id != $merchant->id){
+        abort(404);
+    }
+    return view('templates.tmplate1.item',compact('merchant','offering'));
+})->name('template1.item');
