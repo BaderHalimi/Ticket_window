@@ -16,7 +16,7 @@
     <div class="container mx-auto flex items-center justify-between">
         <!-- اسم الموقع -->
         <a href="{{ url('/') }}" class="text-xl font-bold text-orange-600">
-            {{ $merchamant->business_name ?? 'اسم الموقع' }}
+            {{ $merchant->business_name ?? 'اسم الموقع' }}
         </a>
 
         <!-- روابط -->
