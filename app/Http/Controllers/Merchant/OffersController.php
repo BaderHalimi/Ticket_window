@@ -28,7 +28,8 @@ class OffersController extends Controller
         $offering =  \App\Models\Offering::create([
             'user_id' => Auth::id()
         ]);
-        return view('merchant.dashboard.offers.create',compact('offering'));
+        // return view('merchant.dashboard.offers.create',compact('offering'));
+        return redirect()->route('merchant.dashboard.offer.edit', $offering->id)->with('success', 'Offer created successfully. Please fill in the details.');
     }
 
     /**
@@ -109,12 +110,12 @@ class OffersController extends Controller
     public function update(Request $request, $id)
     {
         $offer = Offering::findOrFail($id);
-    
+
         // تحويل قيمة checkbox
         $request->merge([
             'has_chairs' => $request->has('has_chairs'),
         ]);
-    
+
         $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
@@ -129,7 +130,7 @@ class OffersController extends Controller
             'has_chairs' => 'boolean',
             'chairs_count' => 'required_if:has_chairs,true|integer|min:0',
         ]);
-    
+
         $input = $request->only([
             'name',
             'location',
@@ -143,16 +144,16 @@ class OffersController extends Controller
             'has_chairs',
             'chairs_count',
         ]);
-    
+
         if ($request->hasFile('image')) {
             $input['image'] = $request->file('image')->store('offers', 'public');
         }
-    
+
         $offer->update($input);
-    
+
         return redirect()->route('merchant.dashboard.offer.index')->with('success', 'تم تحديث الخدمة بنجاح.');
     }
-    
+
 
     public function destroy($id)
     {
