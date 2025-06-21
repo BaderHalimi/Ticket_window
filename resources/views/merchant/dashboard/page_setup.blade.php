@@ -2,12 +2,12 @@
 @section('content')
 
 @php
-    $data = is_array(Auth::user()->additional_data) ? Auth::user()->additional_data : json_decode(Auth::user()->additional_data, true);
+    $data = is_array(Auth::user()->additional_data??null) ? Auth::user()->additional_data : json_decode(Auth::user()->additional_data??'', true);
     $socialLinks = $data['social_links'] ?? [];
 @endphp
 
 <div class="flex-1 p-8">
-  <form method="POST" action="{{ route('merchant.dashboard.update', Auth::id()) }}" enctype="multipart/form-data" class="space-y-8">
+  <form method="POST" action="{{ route('merchant.dashboard.update', ['id'=>Auth::id()]) }}" enctype="multipart/form-data" class="space-y-8">
     @csrf
 
     <!-- الشعار والبنر -->

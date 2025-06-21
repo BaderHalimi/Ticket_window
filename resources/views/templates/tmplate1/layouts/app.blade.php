@@ -45,7 +45,7 @@
 
 <body class="font-sans">
     <!-- Header ثابت وفوق المحتوى -->
-    <header class="fixed top-0 w-full z-50">
+    <header class="fixed top-0 end-0 z-[100]">
         <div class="flex items-center justify-end p-4 space-x-4 rtl:space-x-reverse">
             <!-- زر السلة -->
             <button class="w-10 h-10 bg-black text-white rounded flex items-center justify-center hover:opacity-80 transition">

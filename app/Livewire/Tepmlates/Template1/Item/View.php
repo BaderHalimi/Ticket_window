@@ -2,13 +2,15 @@
 
 namespace App\Livewire\Tepmlates\Template1\Item;
 
+use App\Models\Cart;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class View extends Component
 {
     public $offer;
-    public $availableDays = [2, 4, 10, 15];
+    public $availableDays = [];
     public $currentMonth;
     public $currentYear;
     public $selectedDate = null;
@@ -18,28 +20,26 @@ class View extends Component
 
     public $count = 1;
     public $price = 0;
+    public $couponCode = '';
 
-
-    public function mount($offer, $daysLimit = 10)
+    public function mount($offer, $daysLimit = 0)
     {
         $this->offer = $offer;
-        $this->calcPrice();
         $this->daysLimit = $daysLimit;
         $this->currentMonth = request()->get('month', now()->month);
         $this->currentYear = request()->get('year', now()->year);
 
+        $this->generateAvailableDays();
+        $this->calcPrice();
+    }
+
+    public function generateAvailableDays()
+    {
         $this->availableDays = [];
         $start = now()->startOfDay();
 
-        if ($this->daysLimit > 0) {
-            for ($i = 0; $i < $this->daysLimit; $i++) {
-                $this->availableDays[] = $start->copy()->addDays($i)->toDateString();
-            }
-        } else {
-            // غير محدود: أضف تواريخ سنة كاملة للأمان مثلاً
-            for ($i = 0; $i < 365; $i++) {
-                $this->availableDays[] = $start->copy()->addDays($i)->toDateString();
-            }
+        for ($i = 0; $i < $this->daysLimit; $i++) {
+            $this->availableDays[] = $start->copy()->addDays($i)->toDateString();
         }
     }
 
@@ -57,18 +57,23 @@ class View extends Component
         $this->currentYear = $prev->year;
     }
 
-
-
     public function selectDate($day)
     {
         $selected = Carbon::create($this->currentYear, $this->currentMonth, $day)->toDateString();
 
-        if (in_array($selected, $this->availableDays)) {
+        if ($this->availableDays!=[]) {
+            if(in_array($selected, $this->availableDays)){
+                $this->selectedDate = $selected;
+                $this->generateTimeSlots();
+            }
+        }elseif($selected > now()->addMinutes($this->offer->features['booking_minimum_time'] ?? 0)->toDateString()){
             $this->selectedDate = $selected;
             $this->generateTimeSlots();
         }
     }
-    public function selectTime($time){
+
+    public function selectTime($time)
+    {
         if (in_array($time, $this->timeSlots)) {
             $this->selectedTime = $time;
         } else {
@@ -79,75 +84,97 @@ class View extends Component
     public function subNumber()
     {
         if ($this->count > 1) {
-            $this->count -= 1;
+            $this->count--;
         }
         $this->calcPrice();
     }
+
     public function addNumber()
     {
-        // if($this->count >1) {
-        $this->count += 1;
-        // }
+        $this->count++;
         $this->calcPrice();
     }
 
     public function calcPrice()
     {
-        if ($this->offer && $this->offer->price) {
-            $this->price = $this->offer->price * $this->count;
-        } else {
-            $this->price = 0;
+        $base = $this->offer->features['base_price'] ?? 0;
+        $price = $base * $this->count;
+
+        // Check for discount
+        if (!empty($this->offer->features['enable_discounts']) && $this->offer->features['enable_discounts']) {
+            $now = now();
+            $start = Carbon::parse($this->offer->features['discount_start']);
+            $end = Carbon::parse($this->offer->features['discount_end']);
+            if ($now->between($start, $end)) {
+                $discount = (float) $this->offer->features['discount_percent'];
+                $price -= ($price * $discount / 100);
+            }
         }
+
+        // Apply coupon
+        if (!empty($this->couponCode)) {
+            $coupons = $this->offer->features['coupons'] ?? [];
+            foreach ($coupons as $coupon) {
+                if (strtoupper($coupon['code']) === strtoupper($this->couponCode) && now()->lte($coupon['expires_at'])) {
+                    $discount = (float) $coupon['discount'];
+                    $price -= ($price * $discount / 100);
+                }
+            }
+        }
+        $this->price = max(0, $price);
     }
+
     public function generateTimeSlots()
     {
         $this->timeSlots = [];
 
-        $duration = $this->offer->features['booking_duration'] ?? null;
-        $unit = $this->offer->features['booking_unit'] ?? null;
+        $duration = $this->offer->features['booking_duration'] ?? 1;
+        $unit = $this->offer->features['booking_unit'] ?? 'hour';
 
-        if (!$this->selectedDate) {
-            return;
-        }
+        if (!$this->selectedDate) return;
 
-        if (!$duration || !$unit) {
-            $start = Carbon::parse($this->offer->start_time);
-            $end = Carbon::parse($this->offer->end_time);
-            $interval = 60;
-        } else {
-            switch ($unit) {
-                case 'hour':
-                    $interval = $duration * 60;
-                    break;
-                case 'minute':
-                    $interval = $duration;
-                    break;
-                case 'quarter':
-                    $interval = $duration * 15;
-                    break;
-                case 'day':
-                    $interval = $duration * 24 * 60;
-                    break;
-                default:
-                    $interval = 60;
-            }
+        $interval = match($unit) {
+            'hour' => $duration * 60,
+            'minute' => $duration,
+            'quarter' => $duration * 15,
+            'day' => $duration * 24 * 60,
+            default => 60,
+        };
 
-            $targetDay = Carbon::parse($this->selectedDate)->format('l');
-            $schedule = $this->offer->features['work_schedule'][strtolower($targetDay)] ?? null;
-
-            if ($schedule && $schedule['enabled'] && $schedule['start'] && $schedule['end']) {
-                $start = Carbon::parse($this->selectedDate . ' ' . $schedule['start']);
-                $end = Carbon::parse($this->selectedDate . ' ' . $schedule['end']);
-            } else {
-                $start = Carbon::parse($this->selectedDate . ' ' . ($this->offer->start_time ? Carbon::parse($this->offer->start_time)->format('H:i') : '08:00'));
-                $end = Carbon::parse($this->selectedDate . ' ' . ($this->offer->end_time ? Carbon::parse($this->offer->end_time)->transla('H:i') :  '20:00'));
-            }
-        }
+        $start = Carbon::parse($this->selectedDate . ' 08:00');
+        $end = Carbon::parse($this->selectedDate . ' 20:00');
 
         while ($start->lt($end)) {
             $this->timeSlots[] = $start->translatedFormat('h:i A');
             $start->addMinutes($interval);
         }
+    }
+
+    public function addToCart()
+    {
+        $user = Auth::user();
+        if (!$user || !$this->selectedDate || !$this->selectedTime) {
+            session()->flash('error', 'يرجى اختيار التاريخ والوقت أولاً.');
+            return;
+        }
+
+        Cart::create([
+            'user_id' => $user->id,
+            'item_id' => $this->offer->id,
+            'item_type' => get_class($this->offer),
+            'quantity' => $this->count,
+            'price' => $this->price,
+            'discount' => 0, // الخصم مُطبق مسبقًا ضمن السعر
+            'additional_data' => json_encode([
+                'selected_date' => $this->selectedDate,
+                'selected_time' => $this->selectedTime,
+                'coupon_code' => $this->couponCode,
+            ]),
+        ]);
+
+        session()->flash('success', 'تمت إضافة الحجز إلى السلة بنجاح.');
+        // return redirect()->route('cart.index');
+        $this->redirectIntended(route('template1.item',['id'=> $this->offer->user_id,'offering' => $this->offer->id]),true);
     }
 
     public function render()
@@ -163,4 +190,3 @@ class View extends Component
         ]);
     }
 }
-// return view('livewire.tepmlates.template1.item.view');

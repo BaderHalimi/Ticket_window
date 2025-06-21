@@ -15,15 +15,15 @@
 <nav class="bg-white shadow-md py-4 px-6 fixed top-0 inset-x-0 z-50">
     <div class="container mx-auto flex items-center justify-between">
         <!-- اسم الموقع -->
-        <a href="{{ url('/') }}" class="text-xl font-bold text-orange-600">
+        <a href="{{ route('template1.index',['id'=>$merchant->id]) }}" class="text-xl font-bold text-orange-600">
             {{ $merchant->business_name ?? 'اسم الموقع' }}
         </a>
 
         <!-- روابط -->
-        <div class="space-x-4">
+        <!-- <div class="space-x-4">
             <a href="{{ route('home') }}" class="text-gray-700 hover:text-orange-500 font-medium transition">الصفحة الرئيسية</a>
             {{-- يمكنك إضافة روابط إضافية هنا --}}
-        </div>
+        </div> -->
     </div>
 </nav>
 
