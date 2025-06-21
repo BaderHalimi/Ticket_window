@@ -30,7 +30,8 @@ lg:grid-cols-2
 
         <!-- السعر -->
         <div class="text-right mt-4">
-            <p class="text-2xl font-bold text-orange-600">{{ $price }} ر.س</p>
+
+            <p class="text-2xl font-bold text-orange-600"><apsn class="text-sm text-gray-500 line-through">{{ $offer->features['base_price'] }} ريال</apsn> {{ $price }} ريال</p>
         </div>
     </div>
 
