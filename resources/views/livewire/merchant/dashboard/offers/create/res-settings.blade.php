@@ -166,7 +166,7 @@
         {{-- Toggle: عدد المستخدمين المسموح به لكل حجز --}}
         <div>
             <div class="flex items-center justify-between">
-                <label class="text-sm font-medium">عدد المستخدمين لكل حجز؟</label>
+                <label class="text-sm font-medium">عدد المستخدمين لكل الخدمة ؟</label>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" wire:model.lazy="enable_user_limit" class="sr-only peer">
                     <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all"></div>

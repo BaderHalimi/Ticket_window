@@ -2,29 +2,53 @@
     <div class="space-y-4">
         <div class="grid grid-cols-1 gap-4">
             <div>
-                <label class="block text-sm font-medium mb-1">الاسم</label>
+                <label class="block text-sm font-medium mb-1">الوصف المختصر</label>
                 <input type="text" wire:model.lazy="name" class="w-full border rounded-md p-2">
             </div>
 
+            @if ($type != 'restaurant')
+                
             <div>
                 <label class="block text-sm font-medium mb-1">الموقع</label>
                 <input type="text" wire:model.lazy="location" class="w-full border rounded-md p-2">
             </div>
+            @endif
+
 
             {{-- <div>
                 <label class="block text-sm font-medium mb-1">السعر</label>
                 <input type="number" wire:model.lazy="price" step="0.01" class="w-full border rounded-md p-2">
             </div> --}}
+@if ($type != 'restaurant')
+            
+    
 
             <div>
                 <label class="block text-sm font-medium mb-1">النوع</label>
-                <select wire:model.lazy="type" class="w-full border rounded-md p-2">
-                    <option value="restaurant">مطعم</option>
+                <select wire:model.lazy="services_type" class="w-full border rounded-md p-2">
+                    {{-- <option value="restaurant">مطعم</option> --}}
                     <option value="events">فعالية</option>
-                    <option value="conference">مؤتمر</option>
-                    <option value="experiences">تجربة</option>
+                    <option value="services">خدمة</option>
+                    {{-- <option value="conference">مؤتمر</option> --}}
+                    {{-- <option value="experiences">تجربة</option> --}}
                 </select>
             </div>
+@endif
+
+@if ($type == 'restaurant')
+            
+    
+
+            <div>
+                <label class="block text-sm font-medium mb-1">النوع</label>
+                <select wire:model.lazy="services_type" class="w-full border rounded-md p-2">
+                    {{-- <option value="restaurant">مطعم</option> --}}
+                    <option value="services">خدمة</option>
+                    {{-- <option value="conference">مؤتمر</option> --}}
+                    {{-- <option value="experiences">تجربة</option> --}}
+                </select>
+            </div>
+@endif
 
             <div>
                 <label class="block text-sm font-medium mb-1">الفئة</label>
@@ -40,6 +64,7 @@
                 <label class="block text-sm font-medium mb-1">الوصف</label>
                 <textarea wire:model.lazy="description" rows="3" class="w-full border rounded-md p-2"></textarea>
             </div>
+
 {{-- 
             <div>
                 <label class="flex items-center gap-2">

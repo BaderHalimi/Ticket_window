@@ -12,9 +12,9 @@ class Information extends Component
     public Offering $offering;
 
     public $name, $location, $description, $image;
-    public  $category,$type;
+    public  $category,$type,$services_type;
     //public $has_chairs, $chairs_count; $start_time, $end_time, $status, $type,, $price
-
+    public $tags = [];
     public array $successFields = [];
     public array $errorFields = [];
 
@@ -22,7 +22,7 @@ class Information extends Component
     {
         $this->offering = $offering;
         foreach ([
-            'name', 'location', 'description', 'image', 'category','type'
+            'name', 'location', 'description', 'image', 'category'//,'type'
             //'start_time', 'end_time', 'status', 'type', 'category', 'price',
             //'has_chairs', 'chairs_count'
         ] as $field) {
@@ -49,11 +49,16 @@ class Information extends Component
             //'start_time' => 'nullable|date',
             //'end_time' => 'nullable|date|after_or_equal:start_time',
             //'status' => 'nullable|in:active,inactive',
-            'type' => 'nullable|in:event,conference,restaurant,experience,events,conferences,experiences',
+            //'type' => 'nullable|in:event,services',
             'category' => 'nullable|in:vip,one_day,several_days,reapeted',
             //'has_chairs' => 'boolean',
             //'chairs_count' => 'required_if:has_chairs,true|integer|min:0',
         ];
+        $features = $this->offering->features ?? [];
+        $features['services_type'] = $this->services_type;
+        //$features['tags'] = $this->tags;
+        $this->offering->features = $features;
+    
 
         try {
             // validate only updated field
@@ -61,6 +66,9 @@ class Information extends Component
 
             // Update value
             $this->offering->{$field} = $this->{$field};
+            
+
+            
             $this->offering->save();
 
             // Show success message
