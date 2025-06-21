@@ -28,7 +28,7 @@
             @endif
         </div>
 
-        {{-- Toggle: الوقت بين كل حجز وآخر للمستخدم --}}
+        {{-- Toggle: الوقت بين كل حجز وآخر للمستخدم
         <div>
             <div class="flex items-center justify-between">
                 <label class="text-sm font-medium">الوقت بين كل حجز وآخر للمستخدم؟</label>
@@ -46,7 +46,7 @@
             @endif
         </div>
 
-        {{-- Toggle: الوقت بين كل حجز وآخر للخدمة كاملة --}}
+        {{-- Toggle: الوقت بين كل حجز وآخر للخدمة كاملة 
         <div>
             <div class="flex items-center justify-between">
                 <label class="text-sm font-medium">الوقت بين كل حجز وآخر للخدمة؟</label>
@@ -62,7 +62,7 @@
                     <input type="number" wire:model.lazy="global_interval_minutes" class="w-full border rounded-md p-2">
                 </div>
             @endif
-        </div>
+        </div> --}}
 
         {{-- Toggle: تحديد أيام وأوقات العمل --}}
         <div>
@@ -120,22 +120,42 @@
         </div>
 
         {{-- Toggle: أيام ممنوع العمل فيها --}}
-        <div>
-            <div class="flex items-center justify-between">
-                <label class="text-sm font-medium">أيام مغلقة (مثل الأعياد)؟</label>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" wire:model.lazy="enable_closed_days" class="sr-only peer">
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
-                    <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-full transition-all"></div>
-                </label>
+<div>
+    <div class="flex items-center justify-between">
+        <label class="text-sm font-medium">أيام مغلقة (مثل الأعياد)؟</label>
+        <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" wire:model.lazy="enable_closed_days" class="sr-only peer">
+            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
+            <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-full transition-all"></div>
+        </label>
+    </div>
+
+    @if ($enable_closed_days)
+        <div class="mt-4 space-y-3">
+
+            {{-- إدخال تاريخ جديد --}}
+            <div class="flex items-center gap-2">
+                <input type="date" wire:model.lazy="new_closed_day" class="w-full border rounded-md p-2">
+                <button type="button" wire:click="addClosedDay" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                    إضافة
+                </button>
             </div>
-            @if ($enable_closed_days)
-                <div class="mt-2">
-                    <label class="block text-sm font-medium mb-1">أدخل التواريخ (مفصولة بفواصل)</label>
-                    <input type="text" wire:model.lazy="closed_days" class="w-full border rounded-md p-2">
-                </div>
+
+            {{-- عرض الأيام الحالية --}}
+            @if (!empty($closed_days))
+                <ul class="space-y-1">
+                    @foreach ($closed_days as $index => $day)
+                        <li class="flex items-center justify-between border p-2 rounded-md bg-gray-50">
+                            <span>{{ $day }}</span>
+                            <button type="button" wire:click="removeClosedDay({{ $index }})" class="text-red-600 hover:underline">حذف</button>
+                        </li>
+                    @endforeach
+                </ul>
             @endif
+
         </div>
+    @endif
+</div>
 
         {{-- Toggle: عدد المستخدمين المسموح به لكل حجز --}}
         <div>
@@ -155,6 +175,37 @@
             @endif
         </div>
 
+        <div>
+            <div class="flex items-center justify-between">
+                <label class="text-sm font-medium">اقصى عدد للاشخاص الذين يمكنهم الحجز في نفس الوقت ؟</label>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" wire:model.lazy="enable_max_users" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
+                    <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-full transition-all"></div>
+                </label>
+            </div>
+            @if ($enable_max_users)
+            <div class="mt-2 space-y-2">
+                <div>
+                    <label class="block text-sm font-medium mb-1">العدد المسموح</label>
+                    <input type="number" wire:model.lazy="max_user_time" class="w-full border rounded-md p-2">
+                </div>
+        
+                <div>
+                    <label class="block text-sm font-medium mb-1">الوحدة</label>
+                    <select wire:model.lazy="max_user_unit" class="w-full border rounded-md p-2">
+                        <option value="minute">دقيقة</option>
+                        <option value="hour">ساعة</option>
+                        <option value="day">يوم</option>
+                        <option value="week">أسبوع</option>
+                    </select>
+                </div>
+            </div>
+        @endif
+        
+        
+        </div>
+        
         {{-- Toggle: أقصى وقت للحجز قبل البداية --}}
         <div>
             <div class="flex items-center justify-between">
@@ -174,7 +225,7 @@
         </div>
 
         {{-- Toggle: تفعيل التكرار (مثل جلسات أسبوعية) --}}
-        <div>
+        {{-- <div>
             <div class="flex items-center justify-between">
                 <label class="text-sm font-medium">تفعيل التكرار (مثلاً جلسات أسبوعية)؟</label>
                 <label class="relative inline-flex items-center cursor-pointer">
@@ -189,10 +240,10 @@
                     <input type="text" wire:model.lazy="weekly_recurrence_days" placeholder="مثل: السبت, الثلاثاء" class="w-full border rounded-md p-2">
                 </div>
             @endif
-        </div>
+        </div> --}}
 
         {{-- Toggle: السماح للعميل بتحديد وقت البداية والنهاية بنفسه --}}
-        <div>
+        {{-- <div>
             <div class="flex items-center justify-between">
                 <label class="text-sm font-medium">السماح للعميل باختيار وقت البداية والنهاية؟</label>
                 <label class="relative inline-flex items-center cursor-pointer">
@@ -201,7 +252,7 @@
                     <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-full transition-all"></div>
                 </label>
             </div>
-        </div>
+        </div> --}}
 
     </div>
 </form>

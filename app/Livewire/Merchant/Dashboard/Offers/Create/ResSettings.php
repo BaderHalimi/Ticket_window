@@ -13,12 +13,6 @@ class ResSettings extends Component
     public $booking_duration = 1;
     public $booking_unit = 'hour';
 
-    public bool $enable_user_interval = false;
-    public $user_interval_minutes = 0;
-
-    public bool $enable_global_interval = false;
-    public $global_interval_minutes = 0;
-
     public bool $enable_work_schedule = false;
     public array $work_schedule = [
         'saturday' => ['enabled' => false, 'start' => '', 'end' => ''],
@@ -31,7 +25,8 @@ class ResSettings extends Component
     ];
 
     public bool $enable_closed_days = false;
-    public $closed_days = '';
+    public array $closed_days = [];
+    public string $new_closed_day = '';
 
     public bool $enable_user_limit = false;
     public $user_limit = 1;
@@ -42,7 +37,9 @@ class ResSettings extends Component
     public bool $enable_weekly_recurrence = false;
     public $weekly_recurrence_days = '';
 
-    public bool $enable_client_time_selection = false;
+    public bool $enable_max_users = false;
+    public $max_user_time = 1;
+    public $max_user_unit = 'hour';
 
     public function mount(Offering $offering)
     {
@@ -50,70 +47,90 @@ class ResSettings extends Component
 
         $features = $offering->features ?? [];
 
+        // ✅ تأكد أن closed_days عبارة عن array دائمًا حتى لو كانت string
+        if (isset($features['closed_days']) && is_string($features['closed_days'])) {
+            $features['closed_days'] = array_filter(array_map('trim', explode(',', $features['closed_days'])));
+        }
+
         $this->fill(array_merge([
             'enable_duration' => false,
             'booking_duration' => 1,
             'booking_unit' => 'hour',
-            'enable_user_interval' => false,
-            'user_interval_minutes' => 0,
-            'enable_global_interval' => false,
-            'global_interval_minutes' => 0,
+
             'enable_work_schedule' => false,
-            'work_schedule' => [
-                'saturday' => ['enabled' => false, 'start' => '', 'end' => ''],
-                'sunday' => ['enabled' => false, 'start' => '', 'end' => ''],
-                'monday' => ['enabled' => false, 'start' => '', 'end' => ''],
-                'tuesday' => ['enabled' => false, 'start' => '', 'end' => ''],
-                'wednesday' => ['enabled' => false, 'start' => '', 'end' => ''],
-                'thursday' => ['enabled' => false, 'start' => '', 'end' => ''],
-                'friday' => ['enabled' => false, 'start' => '', 'end' => ''],
-            ],
+            'work_schedule' => $this->work_schedule,
 
             'enable_closed_days' => false,
-            'closed_days' => '',
+            'closed_days' => [],
+            'new_closed_day' => '',
+
             'enable_user_limit' => false,
             'user_limit' => 1,
+
+            'enable_max_users' => false,
+            'max_user_time' => 1,
+            'max_user_unit' => 'hour',
+
             'enable_booking_deadline' => false,
             'booking_deadline_minutes' => 30,
+
             'enable_weekly_recurrence' => false,
             'weekly_recurrence_days' => '',
-            'enable_client_time_selection' => false,
         ], $features));
+    }
+
+    public function addClosedDay()
+    {
+        $day = trim($this->new_closed_day);
+
+        if (
+            $day &&
+            preg_match('/^\d{4}-\d{2}-\d{2}$/', $day) &&
+            !in_array($day, $this->closed_days) &&
+            strtotime($day) >= strtotime(date('Y-m-d')) // ✅ منع تواريخ الماضي
+        ) {
+            $this->closed_days[] = $day;
+            $this->new_closed_day = '';
+        }
+    }
+
+    public function removeClosedDay($index)
+    {
+        unset($this->closed_days[$index]);
+        $this->closed_days = array_values($this->closed_days);
     }
 
     public function saveTimeSettings()
     {
         $features = $this->offering->features ?? [];
-        $features['enable_duration']= (bool) $this->enable_duration;
+
+        $features['enable_duration'] = $this->enable_duration;
         $features['booking_duration'] = (int) $this->booking_duration;
         $features['booking_unit'] = $this->booking_unit;
-        $features['enable_user_interval'] = (bool) $this->enable_user_interval;
-        $features['user_interval_minutes'] = (int) $this->user_interval_minutes;
-        $features['enable_global_interval'] = (bool) $this->enable_global_interval;
-        $features['global_interval_minutes'] = (int) $this->global_interval_minutes;
-        $features['enable_work_schedule'] = (bool) $this->enable_work_schedule;
+
+        $features['enable_work_schedule'] = $this->enable_work_schedule;
         $features['work_schedule'] = $this->work_schedule;
-        $features['enable_closed_days'] = (bool) $this->enable_closed_days;
+
+        $features['enable_closed_days'] = $this->enable_closed_days;
         $features['closed_days'] = $this->closed_days;
-        $features['enable_user_limit'] = (bool) $this->enable_user_limit;
+
+        $features['enable_user_limit'] = $this->enable_user_limit;
         $features['user_limit'] = (int) $this->user_limit;
-        $features['enable_booking_deadline'] = (bool) $this->enable_booking_deadline;
+
+        $features['enable_max_users'] = $this->enable_max_users;
+        $features['max_user_time'] = (int) $this->max_user_time;
+        $features['max_user_unit'] = $this->max_user_unit;
+
+        $features['enable_booking_deadline'] = $this->enable_booking_deadline;
         $features['booking_deadline_minutes'] = (int) $this->booking_deadline_minutes;
-        $features['enable_weekly_recurrence'] = (bool) $this->enable_weekly_recurrence;
+
+        $features['enable_weekly_recurrence'] = $this->enable_weekly_recurrence;
         $features['weekly_recurrence_days'] = $this->weekly_recurrence_days;
-        $features['enable_client_time_selection'] = (bool) $this->enable_client_time_selection;
+
         $this->offering->update([
-            'features' => $features
+            'features' => $features,
         ]);
-
     }
-
-    // public function updated($property)
-    // {
-    //     $this->saveTimeSettings();
-    //     session()->flash('success', 'تم الحفظ تلقائيًا');
-    // }
-
 
     public function render()
     {

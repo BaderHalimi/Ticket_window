@@ -11,9 +11,9 @@ class Information extends Component
 {
     public Offering $offering;
 
-    public $name, $location, $description, $image, $price;
-    public $start_time, $end_time, $status, $type, $category;
-    public $has_chairs, $chairs_count;
+    public $name, $location, $description, $image;
+    public  $category,$type;
+    //public $has_chairs, $chairs_count; $start_time, $end_time, $status, $type,, $price
 
     public array $successFields = [];
     public array $errorFields = [];
@@ -22,15 +22,15 @@ class Information extends Component
     {
         $this->offering = $offering;
         foreach ([
-            'name', 'location', 'description', 'image', 'price',
-            'start_time', 'end_time', 'status', 'type', 'category',
-            'has_chairs', 'chairs_count'
+            'name', 'location', 'description', 'image', 'category','type'
+            //'start_time', 'end_time', 'status', 'type', 'category', 'price',
+            //'has_chairs', 'chairs_count'
         ] as $field) {
             $this->{$field} = $offering->{$field};
         }
 
-        $this->start_time = $offering->start_time ? $offering->start_time->format('Y-m-d H:i') : null;
-        $this->end_time = $offering->end_time ? $offering->end_time->format('Y-m-d H:i') : null;
+        //$this->start_time = $offering->start_time ? $offering->start_time->format('Y-m-d H:i') : null;
+        //$this->end_time = $offering->end_time ? $offering->end_time->format('Y-m-d H:i') : null;
     }
 
     public function updated($field)
@@ -45,14 +45,14 @@ class Information extends Component
             'location' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-            'price' => 'nullable|numeric|min:0',
-            'start_time' => 'nullable|date',
-            'end_time' => 'nullable|date|after_or_equal:start_time',
-            'status' => 'nullable|in:active,inactive',
+            //'price' => 'nullable|numeric|min:0',
+            //'start_time' => 'nullable|date',
+            //'end_time' => 'nullable|date|after_or_equal:start_time',
+            //'status' => 'nullable|in:active,inactive',
             'type' => 'nullable|in:event,conference,restaurant,experience,events,conferences,experiences',
             'category' => 'nullable|in:vip,one_day,several_days,reapeted',
-            'has_chairs' => 'boolean',
-            'chairs_count' => 'required_if:has_chairs,true|integer|min:0',
+            //'has_chairs' => 'boolean',
+            //'chairs_count' => 'required_if:has_chairs,true|integer|min:0',
         ];
 
         try {

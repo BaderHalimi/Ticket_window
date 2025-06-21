@@ -7,7 +7,7 @@
     </div>
 
     {{-- توجل: التسعير بالساعات --}}
-    <div>
+    {{-- <div>
         <div class="flex items-center justify-between">
             <label class="text-sm font-medium">تفعيل التسعير بالساعات؟</label>
             <label class="relative inline-flex items-center cursor-pointer">
@@ -22,7 +22,7 @@
                 <input type="number" step="0.01" wire:model.lazy="hourly_rate" class="w-full border rounded-md p-2">
             </div>
         @endif
-    </div>
+    </div> --}}
 
     {{-- توجل: تفعيل الكوبونات --}}
     <div class="flex items-center justify-between">
@@ -49,17 +49,41 @@
 @endif
 
     {{-- توجل: تفعيل الخصومات --}}
-    <div class="flex items-center justify-between">
-        <label class="text-sm font-medium">السماح باستخدام خصومات؟</label>
-        <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" wire:model.lazy="enable_discounts" class="sr-only peer">
-            <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
-            <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transform peer-checked:translate-x-full transition-all"></div>
-        </label>
+    <div class="space-y-3">
+        {{-- Toggle --}}
+        <div class="flex items-center justify-between">
+            <label class="text-sm font-medium">السماح باستخدام خصومات؟</label>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" wire:model.lazy="enable_discounts" class="sr-only peer">
+                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
+                <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transform peer-checked:translate-x-full transition-all"></div>
+            </label>
+        </div>
+    
+        {{-- إذا كان الخصم مفعل --}}
+        @if ($enable_discounts)
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">بداية الخصم</label>
+                    <input type="datetime-local" wire:model.lazy="discount_start" class="w-full border rounded-md p-2">
+                </div>
+    
+                <div>
+                    <label class="block text-sm font-medium mb-1">نهاية الخصم</label>
+                    <input type="datetime-local" wire:model.lazy="discount_end" class="w-full border rounded-md p-2">
+                </div>
+    
+                <div>
+                    <label class="block text-sm font-medium mb-1">نسبة الخصم (%)</label>
+                    <input type="number" wire:model.lazy="discount_percent" class="w-full border rounded-md p-2" min="1" max="100">
+                </div>
+            </div>
+        @endif
     </div>
+    
 
     {{-- توجل: السماح بالإلغاء --}}
-    <div>
+    {{-- <div>
         <div class="flex items-center justify-between">
             <label class="text-sm font-medium">السماح بإلغاء الحجز؟</label>
             <label class="relative inline-flex items-center cursor-pointer">
@@ -68,28 +92,35 @@
                 <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transform peer-checked:translate-x-full transition-all"></div>
             </label>
         </div>
-    </div>
+    </div> --}}
 
     {{-- توجل: رسوم الإلغاء --}}
     <div>
         <div class="flex items-center justify-between">
             <label class="text-sm font-medium">هل توجد رسوم عند الإلغاء؟</label>
             <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" wire:model.lazy="enable_cancellation_fee" class="sr-only peer">
+                <input type="checkbox" wire:model.lazy="enable_cancellation" class="sr-only peer">
                 <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
                 <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transform peer-checked:translate-x-full transition-all"></div>
             </label>
         </div>
-        @if ($enable_cancellation_fee)
+        @if ($enable_cancellation)
             <div class="mt-2">
                 <label class="block text-sm font-medium mb-1">رسوم الإلغاء</label>
                 <input type="number" step="0.01" wire:model.lazy="cancellation_fee" class="w-full border rounded-md p-2">
             </div>
+            <label class="text-sm font-medium">تحديد آخر وقت للإلغاء؟</label>
+
+            <div class="mt-2">
+                {{-- <label class="block text-sm font-medium mb-1">عدد الدقائق قبل البدء</label> --}}
+                <input type="number" wire:model.lazy="cancellation_deadline_minutes" placeholder="عدد الدقائق قبل البدء" class="w-full border rounded-md p-2">
+            </div>
         @endif
+        
     </div>
 
     {{-- توجل: الأجل الأخير للإلغاء --}}
-    <div>
+    {{-- <div>
         <div class="flex items-center justify-between">
             <label class="text-sm font-medium">تحديد آخر وقت للإلغاء؟</label>
             <label class="relative inline-flex items-center cursor-pointer">
@@ -104,7 +135,7 @@
                 <input type="number" wire:model.lazy="cancellation_deadline_minutes" class="w-full border rounded-md p-2">
             </div>
         @endif
-    </div>
+    </div> --}}
 
     {{-- توجل: تسعير حسب عدد الأشخاص --}}
     <div>
