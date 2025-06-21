@@ -41,12 +41,14 @@ class ResSettings extends Component
     public $max_user_time = 1;
     public $max_user_unit = 'hour';
 
+    public $type;
+
     public function mount(Offering $offering)
     {
         $this->offering = $offering;
 
         $features = $offering->features ?? [];
-
+        $this->type = $offering->type;
         // ✅ تأكد أن closed_days عبارة عن array دائمًا حتى لو كانت string
         if (isset($features['closed_days']) && is_string($features['closed_days'])) {
             $features['closed_days'] = array_filter(array_map('trim', explode(',', $features['closed_days'])));

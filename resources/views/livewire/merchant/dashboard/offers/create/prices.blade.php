@@ -97,7 +97,7 @@
     {{-- توجل: رسوم الإلغاء --}}
     <div>
         <div class="flex items-center justify-between">
-            <label class="text-sm font-medium">هل توجد رسوم عند الإلغاء؟</label>
+            <label class="text-sm font-medium">تفعيل الالغاء ؟</label>
             <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" wire:model.lazy="enable_cancellation" class="sr-only peer">
                 <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
@@ -140,7 +140,7 @@
     {{-- توجل: تسعير حسب عدد الأشخاص --}}
     <div>
         <div class="flex items-center justify-between">
-            <label class="text-sm font-medium">تفعيل تسعير حسب عدد الأشخاص؟</label>
+            <label class="text-sm font-medium">تفعيل الباقات ؟</label>
             <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" wire:model.lazy="enable_pricing_packages" class="sr-only peer">
                 <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition-all"></div>

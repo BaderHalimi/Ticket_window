@@ -65,6 +65,9 @@
         </div> --}}
 
         {{-- Toggle: تحديد أيام وأوقات العمل --}}
+        @if ($type == 'restaurant')
+            
+        
         <div>
             <div class="flex items-center justify-between">
                 <label class="text-sm font-medium">تحديد أوقات وأيام العمل؟</label>
@@ -118,8 +121,11 @@
         
         
         </div>
+        @endif
 
         {{-- Toggle: أيام ممنوع العمل فيها --}}
+        @if ($type == 'restaurant')
+
 <div>
     <div class="flex items-center justify-between">
         <label class="text-sm font-medium">أيام مغلقة (مثل الأعياد)؟</label>
@@ -156,7 +162,7 @@
         </div>
     @endif
 </div>
-
+@endif
         {{-- Toggle: عدد المستخدمين المسموح به لكل حجز --}}
         <div>
             <div class="flex items-center justify-between">

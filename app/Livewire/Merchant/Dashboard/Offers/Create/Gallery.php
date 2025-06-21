@@ -41,7 +41,7 @@ class Gallery extends Component
 
         $this->offering->update([
             'features' => array_merge($this->offering->features ?? [], [
-                'gallery' => $this->gallery
+                'gallery' =>  $this->gallery
             ])
         ]);
 

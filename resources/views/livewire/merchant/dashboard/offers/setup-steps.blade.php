@@ -11,6 +11,7 @@
                         2 => ['title' => 'إعدادات الحجز', 'desc' => 'قواعد الحجز والتوفر', 'icon' => 'ri-settings-3-line'],
                         3 => ['title' => 'معرض الصور', 'desc' => 'صور المنتج', 'icon' => 'ri-image-line'],
                         4 => ['title' => 'التسعير', 'desc' => 'تفاصيل الأسعار', 'icon' => 'ri-money-dollar-circle-line'],
+                        5 => ['title' => 'الأسئلة', 'desc' => 'تفاصيل اكثر', 'icon' => 'ri-money-dollar-circle-line'],
                     ];
                 @endphp
 
@@ -45,6 +46,9 @@
                     @livewire('merchant.dashboard.offers.create.gallery', ['offering' => $offering], key('gallery-'.$offering->id))
                 @elseif ($currentStep === 4)
                     @livewire('merchant.dashboard.offers.create.prices', ['offering' => $offering], key('prices-'.$offering->id))
+                @elseif ($currentStep === 5)
+                    @livewire('merchant.dashboard.offers.create.faqs', ['offering' => $offering], key('faqs-'.$offering->id))
+                      
                 @endif
             </div>
         </div>
