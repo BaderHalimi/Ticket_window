@@ -73,11 +73,11 @@ Route::get('dashboard', [AuthController::class,'dashboard'])->middleware('auth')
 Route::get('/{id}',function($id){
     $merchant = User::findOrFail($id);
     return view('templates.tmplate1.index',compact('merchant'));
-});
+})->where(['id' => '[0-9]+'])->name('template1.index');
 Route::get('/{id}/{offering}',function($id,Offering $offering){
     $merchant = User::findOrFail($id);
     if($offering->user_id != $merchant->id){
         abort(404);
     }
     return view('templates.tmplate1.item',compact('merchant','offering'));
-})->name('template1.item');
+})->where(['id' => '[0-9]+', 'offering' => '[0-9]+'])->name('template1.item');
