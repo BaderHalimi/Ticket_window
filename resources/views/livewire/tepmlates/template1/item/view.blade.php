@@ -77,9 +77,10 @@ lg:grid-cols-2
     </h3>
     <div class="grid grid-cols-2 gap-2 mt-2">
         @foreach($timeSlots as $time)
+            @php $isAvailable = $this->checkTime($time); @endphp
         <button wire:click="selectTime('{{ $time }}')"
-            class="{{ $time == $selectedTime ? 'bg-black text-white' : 'hover:bg-gray-100' }} border px-4 py-2 rounded">
-            {{ $time }}
+        class="{{ $time == $selectedTime ? 'bg-black text-white' : ($isAvailable ? 'hover:bg-gray-100' : 'bg-gray-200 text-gray-400 cursor-not-allowed') }} border px-4 py-2 rounded">
+            {{ Carbon\Carbon::parse(now()->format('Y-m-d ').$time)->translatedFormat("h:i A") }}
         </button>
         @endforeach
     </div>

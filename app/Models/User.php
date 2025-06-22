@@ -64,10 +64,18 @@ class User extends Authenticatable
     // {
     //     return json_decode($value, true);
     // }
+    public function carts(){
+        return $this->hasMany(Cart::class,'user_id','id');
+    }
     public function branches(){
         return $this->hasMany(Branch::class,'user_id','id');
     }
     public function offers(){
         return $this->hasMany(Offering::class,'user_id');
     }
+    public function isMerchant()
+    {
+        return $this->hasRole('merchant');
+    }
+
 }

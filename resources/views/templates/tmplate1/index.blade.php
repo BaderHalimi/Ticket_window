@@ -56,7 +56,7 @@
     <h2 class="text-2xl font-bold text-center text-gray-800 mb-10">الفعاليات</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
         <!-- كارد منتج -->
-        @foreach ($merchant->offers as $offer)
+        @foreach ($merchant->offers()->where('status','active')->get() as $offer)
         @livewire('tepmlates.template1.item', ['offer' => $offer,'merchant'=>$merchant])
         @endforeach
         <!-- كرر باقي المنتجات -->

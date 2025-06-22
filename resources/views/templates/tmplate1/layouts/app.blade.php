@@ -48,11 +48,11 @@
     <header class="fixed top-0 end-0 z-[100]">
         <div class="flex items-center justify-end p-3 space-x-4 rtl:space-x-reverse">
             <!-- زر السلة -->
-            <button class="w-10 h-10 bg-black text-white rounded flex items-center justify-center hover:opacity-80 transition">
+            <a href="{{ route('template1.cart',['id'=>$merchant->id]) }}" class="w-10 h-10 bg-black text-white rounded flex items-center justify-center hover:opacity-80 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 7h13l-1.5-7M7 13h10" />
                 </svg>
-            </button>
+            </a>
 
             <!-- زر الحساب -->
             <button class="w-10 h-10 bg-black text-white rounded flex items-center justify-center hover:opacity-80 transition">

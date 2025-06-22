@@ -48,6 +48,8 @@ class View extends Component
         $next = Carbon::createFromDate($this->currentYear, $this->currentMonth, 1)->addMonth();
         $this->currentMonth = $next->month;
         $this->currentYear = $next->year;
+        $this->selectedDate = null;
+        $this->generateTimeSlots();
     }
 
     public function prevMonth()
@@ -55,27 +57,43 @@ class View extends Component
         $prev = Carbon::createFromDate($this->currentYear, $this->currentMonth, 1)->subMonth();
         $this->currentMonth = $prev->month;
         $this->currentYear = $prev->year;
+        $this->selectedDate = null;
+        $this->generateTimeSlots();
     }
 
     public function selectDate($day)
     {
         $selected = Carbon::create($this->currentYear, $this->currentMonth, $day)->toDateString();
 
-        if ($this->availableDays!=[]) {
-            if(in_array($selected, $this->availableDays)){
+        if ($this->availableDays != []) {
+            if (in_array($selected, $this->availableDays)) {
                 $this->selectedDate = $selected;
                 $this->generateTimeSlots();
             }
-        }elseif($selected > now()->addMinutes($this->offer->features['booking_minimum_time'] ?? 0)->toDateString()){
+        } elseif ($selected > now()->subDay()->toDateString()) {
             $this->selectedDate = $selected;
             $this->generateTimeSlots();
         }
     }
 
+    public function checkTime($time)
+    {
+        if (!in_array($time, $this->timeSlots)) return false;
+
+        $selectedTime = Carbon::parse($this->selectedDate . ' ' . $time);
+        $bookingDeadline = now()->addMinutes($this->offer->features['booking_minimum_time'] ?? 0);
+
+        return $selectedTime->gte($bookingDeadline);
+    }
     public function selectTime($time)
     {
         if (in_array($time, $this->timeSlots)) {
-            $this->selectedTime = $time;
+            if (Carbon::parse($this->selectedDate)->isSameDay(now())) {
+                if (Carbon::parse(now()->format('Y-m-d') . ' ' . $time) >= now()->addMinutes($this->offer->features['booking_minimum_time'] ?? 0))
+                    $this->selectedTime = $time;
+            } else {
+                $this->selectedTime = $time;
+            }
         } else {
             $this->selectedTime = null;
         }
@@ -126,6 +144,7 @@ class View extends Component
 
     public function generateTimeSlots()
     {
+        $this->selectedTime = null;
         $this->timeSlots = [];
 
         $duration = $this->offer->features['booking_duration'] ?? 1;
@@ -133,7 +152,7 @@ class View extends Component
 
         if (!$this->selectedDate) return;
 
-        $interval = match($unit) {
+        $interval = match ($unit) {
             'hour' => $duration * 60,
             'minute' => $duration,
             'quarter' => $duration * 15,
@@ -145,7 +164,7 @@ class View extends Component
         $end = Carbon::parse($this->selectedDate . ' 20:00');
 
         while ($start->lt($end)) {
-            $this->timeSlots[] = $start->translatedFormat('h:i A');
+            $this->timeSlots[] = $start->format('h:i A');
             $start->addMinutes($interval);
         }
     }
@@ -174,7 +193,7 @@ class View extends Component
 
         session()->flash('success', 'تمت إضافة الحجز إلى السلة بنجاح.');
         // return redirect()->route('cart.index');
-        $this->redirectIntended(route('template1.item',['id'=> $this->offer->user_id,'offering' => $this->offer->id]),true);
+        $this->redirectIntended(route('template1.item', ['id' => $this->offer->user_id, 'offering' => $this->offer->id]), true);
     }
 
     public function render()

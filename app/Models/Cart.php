@@ -18,7 +18,7 @@ class Cart extends Model
         'discount',
         'additional_data',
     ];
-    public function items (){
+    public function item (){
         return $this->morphTo();
     }
 }

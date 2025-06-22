@@ -81,3 +81,9 @@ Route::get('/{id}/{offering}',function($id,Offering $offering){
     }
     return view('templates.tmplate1.item',compact('merchant','offering'));
 })->where(['id' => '[0-9]+', 'offering' => '[0-9]+'])->name('template1.item');
+
+Route::get('/{id}/cart',function($id){
+    $merchant = User::findOrFail($id);
+    $carts = Auth::user()->carts;
+    return view('templates.tmplate1.cart',compact('merchant', 'carts'));
+})->middleware('auth')->where(['id' => '[0-9]+'])->name('template1.cart');
