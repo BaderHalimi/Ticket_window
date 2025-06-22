@@ -56,8 +56,12 @@
 
 
     <div class="mt-6 text-right">
-        <button class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-bold">إتمام الدفع</button>
+        <a href="{{ route('template1.checkout.paid') }}" 
+           class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-bold">
+            <button class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-bold">إتمام الدفع</button>
+        </a>
     </div>
+    
     @else
     <div class="text-center text-gray-600">
         لا توجد حجوزات في السلة حالياً.

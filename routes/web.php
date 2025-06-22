@@ -87,3 +87,8 @@ Route::get('/{id}/cart',function($id){
     $carts = Auth::user()->carts;
     return view('templates.tmplate1.cart',compact('merchant', 'carts'));
 })->middleware('auth')->where(['id' => '[0-9]+'])->name('template1.cart');
+
+
+Route::get('/checkout', [\App\Http\Controllers\Checkout::class, 'paid'])
+    ->middleware('auth')
+    ->name('template1.checkout.paid');

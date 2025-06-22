@@ -19,14 +19,18 @@
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
             @foreach ($gallery as $index => $imagePath)
-                <div class="relative group">
-                    <img src="{{ Storage::url($imagePath) ?? null }}" class="w-full h-28 object-cover rounded-md shadow">
-                    <button wire:click="removeGalleryImage({{ $index }})" type="button"
-                        class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 text-xs hidden group-hover:flex items-center justify-center">
-                        ✕
-                    </button>
-                </div>
-            @endforeach
+            @php
+                $url = is_array($imagePath) ? Storage::url($imagePath['path'] ?? '') : Storage::url($imagePath);
+            @endphp
+            <div class="relative group">
+                <img src="{{ $url }}" class="w-full h-28 object-cover rounded-md shadow">
+                <button wire:click="removeGalleryImage({{ $index }})" type="button"
+                    class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 text-xs hidden group-hover:flex items-center justify-center">
+                    ✕
+                </button>
+            </div>
+        @endforeach
+        
         </div>
     </div>
 
