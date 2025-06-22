@@ -76,7 +76,7 @@ Route::get('/{id}',function($id){
 })->where(['id' => '[0-9]+'])->name('template1.index');
 Route::get('/{id}/{offering}',function($id,Offering $offering){
     $merchant = User::findOrFail($id);
-    if($offering->user_id != $merchant->id){
+    if($offering->user_id != $merchant->id || $offering->status =='inactive'){
         abort(404);
     }
     return view('templates.tmplate1.item',compact('merchant','offering'));
