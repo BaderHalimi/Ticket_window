@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PaidReservation;
 use App\Models\Cart;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 class Checkout extends Controller
 {
@@ -31,28 +32,34 @@ class Checkout extends Controller
     {
 
     }
-    
-    public function paid(){
+
+    public function paid($id){
         $user = Auth::user()->id;
-    
+
         $cart = Cart::where('user_id', $user)->get();
-    
+
         foreach ($cart as $item) {
             PaidReservation::create([
-                'item_id' => $item->item_id, 
-                'item_type' => $item->item_type, 
-                'user_id' => $user, 
+                'item_id' => $item->item_id,
+                'item_type' => $item->item_type,
+                'user_id' => $user,
                 'quantity' => $item->quantity,
-                'price' => $item->price, 
-                'discount' => $item->discount, 
-                //'final_price' => $item->price - $item->discount, 
-                'code' => uniqid('code_'), 
+                'price' => $item->price,
+                'discount' => $item->discount,
+                //'final_price' => $item->price - $item->discount,
+                'code' => uniqid('code_'),
                 'additional_data' => $item->additional_data,
             ]);
-            $cart->where('id', $item->id)->delete(); 
+            $item->delete(); // Remove the item from the cart after creating the reservation
         }
-    
-        return response()->json(['message' => 'Reservations created successfully'], 201);
+        return redirect()->route('template1.checkout.success',['id'=>$id])->with('success', 'Reservations created successfully');
+        // return response()->json(['message' => 'Reservations created successfully'], 201);
+    }
+    public function success($id){
+        $merchant = User::findOrFail($id);
+        $user = Auth::user();
+        $reservations = PaidReservation::where('user_id', $user->id)->get();
+        return view('templates.tmplate1.success', compact('user', 'reservations','merchant'));
     }
 
     /**

@@ -10,9 +10,11 @@ class Cart extends Component
 {
     public $carts = [];
     public $totalPrice = 0;
+    public $merchant;
 
-    public function mount($carts = [])
+    public function mount($carts = [],$merchant)
     {
+        $this->merchant = $merchant;
         $user = Auth::user();
         $this->carts = $carts;
         $this->refreshPrices();

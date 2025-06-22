@@ -193,7 +193,7 @@ class View extends Component
 
         session()->flash('success', 'تمت إضافة الحجز إلى السلة بنجاح.');
         // return redirect()->route('cart.index');
-        $this->redirectIntended(route('template1.item', ['id' => $this->offer->user_id, 'offering' => $this->offer->id]), true);
+        $this->redirectIntended(route('template1.cart', ['id' => $this->offer->user_id]), true);
     }
 
     public function render()
