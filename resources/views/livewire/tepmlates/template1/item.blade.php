@@ -1,22 +1,3 @@
-@php
-    function calcPrice($offer)
-    {
-        $price = $offer->features['base_price'] ?? 0;
-
-        // Check for discount
-        if (!empty($offer->features['enable_discounts']) && $offer->features['enable_discounts']) {
-            $now = now();
-            $start = Carbon\Carbon::parse($offer->features['discount_start']);
-            $end = Carbon\Carbon::parse($offer->features['discount_end']);
-            if ($now->between($start, $end)) {
-                $discount = (float) $offer->features['discount_percent'];
-                $price -= ($price * $discount / 100);
-            }
-        }
-
-        return max(0, $price);
-    }
-@endphp
 <a href="{{ route('template1.item',['id'=>$merchant->id,'offering'=>$offer->id]) }}" wire:click.prevent="fullView">
     <div class="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
         <img src="{{ Storage::url($offer->image) }}" alt="{{ $offer->name }}" class="w-full h-48 object-cover">
@@ -28,7 +9,7 @@
             @endif
             <p class="text-xl text-orange-600 font-bold">
                 @php
-                $final = calcPrice($offer);
+                $final = $this->calcPrice($offer);
                 @endphp
                 @if ($offer->features['base_price'] != $final)
                 <apsn class="text-sm text-gray-500 line-through">{{ $offer->features['base_price'] }} ريال</apsn>

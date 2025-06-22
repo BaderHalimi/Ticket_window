@@ -16,6 +16,24 @@ class Item extends Component
         $this->merchant = $merchant;
     }
 
+    function calcPrice($offer)
+    {
+        $price = $offer->features['base_price'] ?? 0;
+
+        // Check for discount
+        if (!empty($offer->features['enable_discounts']) && $offer->features['enable_discounts']) {
+            $now = now();
+            $start = Carbon::parse($offer->features['discount_start']);
+            $end = Carbon::parse($offer->features['discount_end']);
+            if ($now->between($start, $end)) {
+                $discount = (float) $offer->features['discount_percent'];
+                $price -= ($price * $discount / 100);
+            }
+        }
+
+        return max(0, $price);
+    }
+
     public function render()
     {
         return view('livewire.tepmlates.template1.item');
