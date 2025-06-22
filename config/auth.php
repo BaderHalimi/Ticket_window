@@ -40,10 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'merchant' => [
+        'seller' => [
             'driver' => 'session',
             'provider' => 'users',
-            'guard' => 'merchant',  // هنا نحدد أنه سيكون admin
+            // 'guard' => 'seller',  // هنا نحدد أنه سيكون admin
         ],
         'customer' => [
             'driver' => 'session',

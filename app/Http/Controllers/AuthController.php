@@ -161,7 +161,7 @@ class AuthController extends Controller
     }
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('merchant')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('home')->with('success', 'You have been logged out successfully.');
