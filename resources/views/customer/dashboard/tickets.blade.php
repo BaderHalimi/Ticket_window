@@ -27,46 +27,44 @@
                                         <th class="h-12 px-4 align-middle font-medium text-gray-100-foreground [&amp;:has([role=checkbox])]:pr-0 text-left">إجراءات</th>
                                     </tr>
                                 </thead>
-                                <tbody class="[&amp;_tr:last-child]:border-0">
-                                    <tr class="border-b transition-colors hover:bg-gray-100/50 data-[state=selected]:bg-gray-100">
-                                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">تذكرة فعالية</td>
-                                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">فعالية الشتاء</td>
-                                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">2025-12-16</td>
-                                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                            <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-emerald-100 text-emerald-800" bis_skin_checked="1">مدفوع</div>
-                                        </td>
-                                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-left flex gap-1 justify-end"><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-gray-200 hover:text-gray-200-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
-                                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                                                    <circle cx="12" cy="12" r="3"></circle>
-                                                </svg></button><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-gray-200 hover:text-gray-200-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
-                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                                    <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
-                                                </svg></button><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-gray-200 hover:text-gray-200-foreground h-10 w-10 text-red-500"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
-                                                    <circle cx="12" cy="12" r="10"></circle>
-                                                    <path d="m15 9-6 6"></path>
-                                                    <path d="m9 9 6 6"></path>
-                                                </svg></button></td>
-                                    </tr>
-                                    <tr class="border-b transition-colors hover:bg-gray-100/50 data-[state=selected]:bg-gray-100">
-                                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">حجز طاولة</td>
-                                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">مطعم الذواقة</td>
-                                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">2025-12-20</td>
-                                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                            <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-sky-100 text-sky-800" bis_skin_checked="1">مؤكد</div>
-                                        </td>
-                                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-left flex gap-1 justify-end"><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-gray-200 hover:text-gray-200-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
-                                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                                                    <circle cx="12" cy="12" r="3"></circle>
-                                                </svg></button><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-gray-200 hover:text-gray-200-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
-                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                                    <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
-                                                </svg></button><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-gray-200 hover:text-gray-200-foreground h-10 w-10 text-red-500"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
-                                                    <circle cx="12" cy="12" r="10"></circle>
-                                                    <path d="m15 9-6 6"></path>
-                                                    <path d="m9 9 6 6"></path>
-                                                </svg></button></td>
-                                    </tr>
-                                </tbody>
+                                <tbody>
+                                    @forelse ($Reservations as $reservation)
+                                        <tr class="border-b transition-colors hover:bg-gray-100/50">
+                                            <td class="p-4 align-middle font-medium">
+                                                {{ $reservation->item_type === 'event' ? 'تذكرة فعالية' : 'حجز طاولة' }}
+                                            </td>
+                                            <td class="p-4 align-middle">
+                                                {{ $reservation->additional_data['merchant_name'] ?? '-' }}
+                                            </td>
+                                            <td class="p-4 align-middle">
+                                                {{ $reservation->additional_data['date'] ?? '-' }}
+                                            </td>
+                                            <td class="p-4 align-middle">
+                                                @php
+                                                    $status = $reservation->additional_data['status'] ?? 'غير معروف';
+                                                    $statusColor = match($status) {
+                                                        'مدفوع' => ['bg' => 'bg-emerald-100', 'text' => 'text-emerald-800'],
+                                                        'مؤكد' => ['bg' => 'bg-sky-100', 'text' => 'text-sky-800'],
+                                                        'ملغى' => ['bg' => 'bg-red-100', 'text' => 'text-red-800'],
+                                                        default => ['bg' => 'bg-gray-100', 'text' => 'text-gray-800'],
+                                                    };
+                                                @endphp
+                                                <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors {{ $statusColor['bg'] }} {{ $statusColor['text'] }}">
+                                                    {{ $status }}
+                                                </div>
+                                            </td>
+                                            <td class="p-4 align-middle text-left flex gap-1 justify-end">
+                                                {{-- أي أزرار إجراءات إضافية بتحب تحطها هون --}}
+                                                <a href="#" class="text-blue-500 hover:underline text-sm">عرض</a>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center py-4 text-gray-500">لا يوجد حجوزات حتى الآن.</td>
+                                        </tr>
+                                    @endforelse
+                                    </tbody>
+                                    
                             </table>
                         </div>
                     </div>

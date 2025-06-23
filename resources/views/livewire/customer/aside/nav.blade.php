@@ -8,9 +8,9 @@
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>الرئيسية</a>
-        <a href="{{ route('customer.dashboard.tickets') }}"
-            wire:click.prevent="intended('{{ route('customer.dashboard.tickets') }}')"
-            class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('customer.dashboard.tickets')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base"><svg
+        <a href="{{ route('customer.dashboard.tickets.index') }}"
+            wire:click.prevent="intended('{{ route('customer.dashboard.tickets.index') }}')"
+            class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('customer.dashboard.tickets.index')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base"><svg
                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="w-5 h-5 ml-3">

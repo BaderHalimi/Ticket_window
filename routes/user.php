@@ -2,14 +2,15 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Customer\Tickets;
+
 
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->group(function () {
     Route::get('/', function () {
         return view('customer.dashboard.index');
     })->name('overview');
-    Route::get('/tickets', function () {
-    return view('customer.dashboard.tickets');
-})->name('tickets');
+    Route::resource('tickets', Tickets::class)->names('tickets');
+
 });
 
 

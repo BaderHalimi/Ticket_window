@@ -12,7 +12,8 @@
 
     <!-- الشعار والبنر -->
     <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg p-6 space-y-6">
-      <h2 class="text-2xl font-bold">الشعار والبنر</h2>
+      <h2 class="text-2xl font-bold">الشعار والب
+        نر</h2>
 
       <div class="grid md:grid-cols-2 gap-6">
         <!-- الشعار -->
