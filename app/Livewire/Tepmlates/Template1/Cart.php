@@ -15,7 +15,7 @@ class Cart extends Component
     public function mount($carts = [],$merchant)
     {
         $this->merchant = $merchant;
-        $user = Auth::user();
+        $user = Auth::guard('customer')->user();
         $this->carts = $carts;
         $this->refreshPrices();
         $this->calculateTotal();
@@ -58,7 +58,7 @@ class Cart extends Component
     public function removeItem($id)
     {
         CartModel::where('id', $id)->where('user_id', Auth::id())->delete();
-        $this->mount(Auth::user()->carts);
+        $this->mount(Auth::guard('customer')->user()->carts);
         session()->flash('success', 'تم حذف العنصر من السلة.');
     }
 

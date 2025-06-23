@@ -2,7 +2,7 @@
 @section('content')
 
 @php
-    $data = is_array(Auth::user()->additional_data??null) ? Auth::user()->additional_data : json_decode(Auth::user()->additional_data??'', true);
+    $data = is_array(Auth::guard('merchant')->user()->additional_data??null) ? Auth::guard('merchant')->user()->additional_data : json_decode(Auth::guard('merchant')->user()->additional_data??'', true);
     $socialLinks = $data['social_links'] ?? [];
 @endphp
 

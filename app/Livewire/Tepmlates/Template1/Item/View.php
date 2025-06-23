@@ -171,7 +171,7 @@ class View extends Component
 
     public function addToCart()
     {
-        $user = Auth::user();
+        $user = Auth::guard('customer')->user();
         if (!$user || !$this->selectedDate || !$this->selectedTime) {
             session()->flash('error', 'يرجى اختيار التاريخ والوقت أولاً.');
             return;

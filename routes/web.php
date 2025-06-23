@@ -82,14 +82,14 @@ Route::get('/{id}/{offering}', function ($id, Offering $offering) {
 
 Route::get('/{id}/cart', function ($id) {
     $merchant = User::findOrFail($id);
-    $carts = Auth::user()->carts;
+    $carts = Auth::guard('customer')->user()->carts;
     return view('templates.tmplate1.cart', compact('merchant', 'carts'));
-})->middleware('auth')->where(['id' => '[0-9]+'])->name('template1.cart');
+})->middleware('auth:customer')->where(['id' => '[0-9]+'])->name('template1.cart');
 
 
 Route::get('/{id}/checkout', [Checkout::class, 'paid'])
-    ->middleware('auth')
+    ->middleware('auth:customer')
     ->name('template1.checkout.paid');
 Route::get('/{id}/checkout/success', [Checkout::class, 'success'])
-    ->middleware('auth')
+    ->middleware('auth:customer')
     ->name('template1.checkout.success');

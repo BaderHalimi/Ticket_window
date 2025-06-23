@@ -14,7 +14,7 @@ class BranchController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+        $user = Auth::guard('merchant')->user();
         $branches = $user->branches()->paginate(10);
         return view('merchant.dashboard.branch.index', compact('branches'));
     }
@@ -32,7 +32,7 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
+        $user = Auth::guard('merchant')->user();
         $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
@@ -64,7 +64,7 @@ class BranchController extends Controller
      */
     public function update(Request $request, $branch)
     {
-        $user = Auth::user();
+        $user = Auth::guard('merchant')->user();
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
@@ -81,7 +81,7 @@ class BranchController extends Controller
      */
     public function destroy($branch)
     {
-        $user = Auth::user();
+        $user = Auth::guard('merchant')->user();
         $branch = $user->branches()->findOrFail($branch);
         $branch->delete();
         return redirect()->back()->with('success', 'تم حذف الفرع بنجاح');

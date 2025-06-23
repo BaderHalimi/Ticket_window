@@ -34,7 +34,7 @@ class Checkout extends Controller
     }
 
     public function paid($id){
-        $user = Auth::user()->id;
+        $user = Auth::guard('customer')->user()->id;
 
         $cart = Cart::where('user_id', $user)->get();
 
@@ -57,7 +57,7 @@ class Checkout extends Controller
     }
     public function success($id){
         $merchant = User::findOrFail($id);
-        $user = Auth::user();
+        $user = Auth::guard('customer')->user();
         $reservations = PaidReservation::where('user_id', $user->id)->get();
         return view('templates.tmplate1.success', compact('user', 'reservations','merchant'));
     }
