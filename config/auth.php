@@ -43,7 +43,7 @@ return [
         'merchant' => [
             'driver' => 'session',
             'provider' => 'users',
-            // 'guard' => 'seller',  // هنا نحدد أنه سيكون admin
+            'guard' => 'merchant',  // هنا نحدد أنه سيكون admin
         ],
         'customer' => [
             'driver' => 'session',
