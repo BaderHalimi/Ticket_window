@@ -43,9 +43,6 @@ Route::get('/pricing', function () {
 // Route::get('/customer/dashboard', function () {
 //     return view('customer.dashboard.index');
 // })->name('customer.dashboard');
-Route::get('/customer/dashboard/tickets', function () {
-    return view('customer.dashboard.tickets');
-})->name('customer.dashboard.tickets');
 
 Route::get('/login', function () {
     return view('auth.login');

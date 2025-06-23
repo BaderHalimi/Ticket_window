@@ -11,6 +11,9 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->gro
     Route::get('/', function () {
         return view('customer.dashboard.index');
     })->name('overview');
+    Route::get('/tickets', function () {
+    return view('customer.dashboard.tickets');
+})->name('tickets');
 });
 
 
