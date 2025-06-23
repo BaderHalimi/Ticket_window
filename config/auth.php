@@ -40,7 +40,7 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'seller' => [
+        'merchant' => [
             'driver' => 'session',
             'provider' => 'users',
             // 'guard' => 'seller',  // هنا نحدد أنه سيكون admin

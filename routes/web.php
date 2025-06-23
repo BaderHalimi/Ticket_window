@@ -69,7 +69,7 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->na
 // Route::get('login', [AuthController::class,'showLoginForm'])->middleware('guest')->name('login');
 // Route::post('login', [AuthController::class,'login'])->middleware('guest')->name('signin');
 // Route::post('register', [AuthController::class,'register'])->middleware('guest')->name('signup');
-Route::get('dashboard', [AuthController::class, 'dashboard'])->middleware('auth')->name('dashboard');
+Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
 Route::get('/{id}', function ($id) {
     $merchant = User::findOrFail($id);

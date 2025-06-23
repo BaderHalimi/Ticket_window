@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+// use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
@@ -25,36 +28,39 @@ class AuthController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $rules = [
             'f_name' => 'required|string|max:255',
             'l_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'business_name' => 'nullable|string|max:255',
-            'business_type' => 'nullable|in:restaurant,events,show,other',
             'phone' => 'nullable|string|max:15',
-            'other_business_type' => 'nullable|required_if:business_type,other|string|max:255',
-        ]);
-
-        $user = User::create([
-            'f_name' => $request->f_name,
-            'l_name' => $request->l_name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'business_name' => $request->business_name,
-            'business_type' => $request->business_type,
-            'phone' => $request->phone,
-            'additional_data' => [
+        ];
+        if (Route::is('signup')) {
+            $rules['business_name'] = 'nullable|string|max:255';
+            $rules['business_type'] = 'nullable|in:restaurant,events,show,other';
+            $rules['other_business_type'] = 'nullable|required_if:business_type,other|string|max:255';
+        }
+        $validated = $request->validate($rules);
+        $validated['password'] = Hash::make($validated['password']);
+        if (Route::is('signup')) {
+            $validated['additional_data'] = [
                 'other_business_type' => $request->business_type === 'other' ? $request->other_business_type : null,
-
-            ],
-            'role' => 'merchant',
-
-        ]);
+            ];
+            $validated['role'] = 'merchant';
+        } elseif (Route::is('customer.signup')) {
+            $validated['role'] = 'user';
+        }
+        $user = User::create($validated);
 
         //Auth::login($user);
+        if (Route::is('customer.signup')) {
+            Auth::guard('customer')->login($user);
+        } elseif (Route::is('signup')) {
+            Auth::guard('merchant')->login($user);
+        }
+        return redirect()->intended(route('dashboard'))->with('success', 'Registration successful!');
 
-        return redirect()->route('home')->with('success', 'Registration successful!');
+        // return redirect()->route('dashboard')->with('success', 'Registration successful!');
     }
 
     public function login(Request $request)
@@ -77,6 +83,22 @@ class AuthController extends Controller
                     'email' => 'Your account is not accepted yet. Please wait for approval.',
                 ]);
             }
+        }
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
+    }
+    public function userLogin(Request $request)
+    {
+        $credentials =  $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        //$credentials = $request->only('email', 'password');
+        if (Auth::guard('customer')->attempt($credentials)) {
+            session()->regenerate();
+            return redirect()->intended($request->redirect ?? route('customer.dashboard.overview'))->with('success', 'Login successful');
         }
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
@@ -166,11 +188,21 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         return redirect()->route('home')->with('success', 'You have been logged out successfully.');
     }
+    public function userLogout(Request $request)
+    {
+        Auth::guard('customer')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('home')->with('success', 'You have been logged out successfully.');
+    }
     public function dashboard()
     {
-        if (Auth::guard('merchant')->user() && Auth::guard('merchant')->user()->role = 'merchant')
+        // dd('hi');
+        if (Auth::guard('merchant')->user() && Auth::guard('merchant')->user()->role = 'merchant') {
             return redirect()->route('merchant.dashboard.overview');
-        else
-            return redirect()->route('login');
+        }
+        if (Auth::guard('customer')->user() && Auth::guard('customer')->user()->role = 'user')
+            return redirect()->route('customer.dashboard.overview');
+        return redirect()->route('login');
     }
 }

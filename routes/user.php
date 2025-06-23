@@ -20,9 +20,9 @@ Route::get('/login', function () {
     return view('customer.auth.login');
 })->middleware('guest')->name('login');
 Route::get('/register', function () {
-    return view('auth.register');
+    return view('customer.auth.register');
 })->middleware('guest')->name('register');
 Route::post('register', [AuthController::class, 'store'])->middleware('guest')->name('signup');
-Route::post('login', [AuthController::class, 'login'])->middleware('guest')->name('singin');
+Route::post('login', [AuthController::class, 'userLogin'])->middleware('guest')->name('singin');
 
-Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+Route::post('logout', [AuthController::class, 'userLogout'])->middleware('auth:customer')->name('logout');
