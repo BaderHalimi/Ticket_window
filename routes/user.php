@@ -3,10 +3,6 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return 'hello world';
-})->name('home');
-
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->group(function () {
     Route::get('/', function () {
         return view('customer.dashboard.index');
