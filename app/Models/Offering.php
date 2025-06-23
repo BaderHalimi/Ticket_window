@@ -34,5 +34,9 @@ class Offering extends Model
         'end_time' => 'datetime',
         'has_chairs' => 'boolean',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     use HasFactory;
 }

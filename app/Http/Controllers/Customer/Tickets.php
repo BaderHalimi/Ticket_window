@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\PaidReservation;
+use App\Models\PaysHistory;
 //use App\Models\Cart;
 
 class Tickets extends Controller
@@ -34,6 +35,12 @@ class Tickets extends Controller
 
         $reservation->delete();
         return redirect()->back()->with('success', 'Ticket cancelled successfully.');
+    }
+
+    public function payHistory(){
+        $user = Auth::guard('customer')->user();
+        $paysHistory = PaysHistory::where('user_id', $user->id)->get();
+        return view('customer.dashboard.pay_history', compact('paysHistory'));
     }
     public function create()
     {

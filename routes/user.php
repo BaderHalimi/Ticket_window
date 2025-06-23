@@ -11,6 +11,7 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->gro
     })->name('overview');
     Route::get('tickets/print', [Tickets::class, 'tickets_print'])->name('tickets.print');
     Route::get('tickets/{id}/cancel', [Tickets::class, 'tickets_cancel'])->name('tickets.cancel');
+    Route::get('tickets/payHistory', [Tickets::class, 'payHistory'])->name('tickets.payHistory');
 
     Route::resource('tickets', Tickets::class)->names('tickets');
 
