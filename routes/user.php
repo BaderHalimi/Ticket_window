@@ -9,7 +9,11 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->gro
     Route::get('/', function () {
         return view('customer.dashboard.index');
     })->name('overview');
+    Route::get('tickets/print', [Tickets::class, 'tickets_print'])->name('tickets.print');
+    Route::get('tickets/{id}/cancel', [Tickets::class, 'tickets_cancel'])->name('tickets.cancel');
+
     Route::resource('tickets', Tickets::class)->names('tickets');
+
 
 });
 

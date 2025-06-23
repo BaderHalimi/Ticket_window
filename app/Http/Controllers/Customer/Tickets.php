@@ -20,9 +20,21 @@ class Tickets extends Controller
         return view('customer.dashboard.tickets', compact('Reservations'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function tickets_print(){
+        $Reservations = PaidReservation::where('user_id', Auth::id())->get();
+        return view('customer.dashboard.tickets_print', compact('Reservations'));
+    }
+
+    public function tickets_cancel($id){
+        $reservation = PaidReservation::findOrFail($id);
+        if ($reservation->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+        /* هنا استرداد الفلوس لما يوفر لنا بوابة دفع */
+
+        $reservation->delete();
+        return redirect()->back()->with('success', 'Ticket cancelled successfully.');
+    }
     public function create()
     {
         //

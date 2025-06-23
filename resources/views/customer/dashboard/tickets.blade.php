@@ -16,7 +16,7 @@
                     <table class="w-full text-sm border-separate border-spacing-y-2">
                         <thead>
                             <tr class="text-right text-slate-600">
-                                <th class="px-4 py-2">Type</th>
+                                <th class="px-4 py-2">Code</th>
                                 <th class="px-4 py-2">Title</th>
                                 <th class="px-4 py-2">Location</th>
                                 <th class="px-4 py-2">Time</th>
@@ -26,16 +26,19 @@
                         </thead>
                         <tbody>
                             @forelse ($Reservations as $reservation)
-                                @php $offering = $reservation->offering; @endphp
+                                @php 
+                                    $offering = $reservation->offering; 
+                                    $features = is_string($offering->features ?? '') ? json_decode($offering->features) : (object) ($offering->features ?? []);
+                                @endphp
                                 <tr class="bg-white shadow-sm rounded-md">
                                     <td class="px-4 py-2 font-medium">
-                                        {{ $reservation->item_type === 'event' ? 'Event Ticket' : 'Table Booking' }}
+                                        {{ $reservation->code }}
                                     </td>
                                     <td class="px-4 py-2">{{ $offering->name ?? '—' }}</td>
                                     <td class="px-4 py-2">{{ $offering->location ?? '—' }}</td>
                                     <td class="px-4 py-2">{{ $offering->start_time ? $offering->start_time->format('Y-m-d H:i') : '—' }}</td>
                                     <td class="px-4 py-2">{{ $reservation->price }} $</td>
-                                    <td class="px-4 py-2 text-center">
+                                    <td class="px-4 py-2 text-center flex justify-center gap-2">
                                         <!-- QR Icon -->
                                         <button onclick="showQR(`{{ $reservation->code }}`)" class="text-gray-600 hover:text-black text-xl">
                                             <i class="ri-qr-code-line"></i>
@@ -52,6 +55,14 @@
                                         ]) }})" class="text-gray-600 hover:text-black text-xl">
                                             <i class="ri-file-pdf-line"></i>
                                         </button>
+
+                                        <!-- Cancel Icon -->
+                                        @if (!empty($features->enable_cancellation) && $features->enable_cancellation)
+                                            <button onclick="cancelReservation('{{ route('customer.dashboard.tickets.cancel', $reservation->id) }}')"
+                                                    class="text-red-600 hover:text-red-800 text-xl">
+                                                <i class="ri-close-circle-line"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
@@ -119,6 +130,12 @@
         doc.text(`Price: $${data.price}`, 10, 80);
 
         doc.save(`reservation-${data.code}.pdf`);
+    }
+
+    function cancelReservation(url) {
+        if (confirm('هل أنت متأكد أنك تريد إلغاء هذا الحجز؟')) {
+            window.location.href = url;
+        }
     }
 </script>
 @endsection
