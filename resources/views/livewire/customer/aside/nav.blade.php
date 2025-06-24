@@ -48,8 +48,8 @@
                     points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                 </polygon>
             </svg>المكافآت</a>
-        <a href="#"
-            class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('home')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base"><svg
+        <a href="{{ route('customer.dashboard.profile') }}"
+            class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('customer.dashboard.profile')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base"><svg
                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="w-5 h-5 ml-3">
@@ -67,8 +67,8 @@
                 </path>
                 <circle cx="12" cy="12" r="3"></circle>
             </svg>الإعدادات</a>
-        <a href="#"
-            class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('home')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base"><svg
+        <a href="{{route('customer.dashboard.support')}}"
+            class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('customer.dashboard.support')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base"><svg
                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="w-5 h-5 ml-3">
@@ -79,8 +79,8 @@
                 <path d="m9.17 14.83-4.24 4.24"></path>
                 <circle cx="12" cy="12" r="4"></circle>
             </svg>الدعم الفني</a>
-        <a href="#"
-            class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('home')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base">
+        <a href="route('customer.dashboard.support')"
+            class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('customer.dashboard.support')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round" class="w-5 h-5 ml-3">
