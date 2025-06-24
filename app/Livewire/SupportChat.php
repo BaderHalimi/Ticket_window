@@ -16,7 +16,7 @@ class SupportChat extends Component
     public $newMessage = '';
 
     protected $rules = [
-        'newMessage' => 'required|string|max:2000',
+        'newMessage' => 'required|string|max:5000',
     ];
 
     public function deleteMessage($id)
