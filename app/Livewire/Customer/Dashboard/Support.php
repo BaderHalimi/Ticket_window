@@ -23,9 +23,10 @@ class Support extends Component
 
         $this->save();
     }
-    $support = new \App\Models\Supports();
     public function save()
     {
+        $support = new \App\Models\Supports();
+
         
         $support->user_id = auth()->id();
         $support->subject = $this->subject;

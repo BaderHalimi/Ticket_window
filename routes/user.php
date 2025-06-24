@@ -3,7 +3,7 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Customer\Tickets;
-
+use App\Http\Controllers\SupportController;
 
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->group(function () {
     Route::get('/', function () {
@@ -13,8 +13,11 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->gro
     Route::get('tickets/{id}/cancel', [Tickets::class, 'tickets_cancel'])->name('tickets.cancel');
     Route::get('tickets/payHistory', [Tickets::class, 'payHistory'])->name('tickets.payHistory');
     Route::get('profile',function (){return view('customer.dashboard.profile');})->name('profile');
-    Route::get('support', function () {return view('customer.dashboard.support');})->name('support');
+    //Route::get('support', function () {return view('customer.dashboard.support');})->name('support');
+
     Route::resource('tickets', Tickets::class)->names('tickets');
+    Route::resource('support', SupportController::class)->names('support');
+
 
 
 });
