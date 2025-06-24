@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Suppoer_chat extends Model
+class Support_chat extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -14,4 +14,10 @@ class Suppoer_chat extends Model
         'message',
         'type',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

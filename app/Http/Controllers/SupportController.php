@@ -55,8 +55,18 @@ class SupportController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $ticket = Supports::findOrFail($id);
+    
+        if ($ticket->user_id !== auth()->id()) {
+            return redirect()->back()->with('error', 'لا يمكنك عرض هذا الطلب');
+        }
+    
+        return view('customer.dashboard.support.chat', [
+            'ticket' => $ticket,
+            'support_id' => $ticket->id,
+        ]);
     }
+    
 
     /**
      * Show the form for editing the specified resource.
