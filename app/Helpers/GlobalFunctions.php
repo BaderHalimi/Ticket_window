@@ -37,6 +37,7 @@ if (!function_exists('logPayment')) {
             'payment_method'  => getCard(),
             'amount'          => $data['amount'],
             'additional_data' => $data['additional_data'] ?? [],
+            
         ]);
     }
 }

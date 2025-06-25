@@ -32,14 +32,25 @@ class Tickets extends Controller
             return redirect()->back()->with('error', 'Unauthorized action.');
         }
         /* هنا استرداد الفلوس لما يوفر لنا بوابة دفع */
-
+        logPayment([
+            'user_id' => $reservation->user_id,
+            'item_id' =>  $reservation->offering->id,
+            'transaction_id' => uniqid('TXN_'),
+            'payment_method' => 'paypal',
+            'amount' => $reservation->price,
+            'additional_data' => [
+                //'recipient_id' => $item->user_id, 
+                'notes' => 'تم الاغاء بنجاح',
+                'type' => 'refund'
+            ],
+        ]);
         $reservation->delete();
         return redirect()->back()->with('success', 'Ticket cancelled successfully.');
     }
 
     public function payHistory(){
         $user = Auth::guard('customer')->user();
-        $paysHistory = PaysHistory::where('user_id', $user->id)->get();
+        $paysHistory = PaysHistory::where('user_id', $user->id)->latest()->get();
         return view('customer.dashboard.pay_history', compact('paysHistory'));
     }
     public function create()

@@ -60,7 +60,8 @@ class Checkout extends Controller
                 'amount' => $item->price,
                 'additional_data' => [
                     'recipient_id' => $item->user_id, 
-                    'notes' => 'تم الدفع بنجاح'
+                    'notes' => 'تم الدفع بنجاح',
+                    'type' => 'pay' //refund
                 ],
             ]);
             $item->delete(); // Remove the item from the cart after creating the reservation

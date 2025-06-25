@@ -23,16 +23,26 @@
                                 <th class="px-4 py-3">المبلغ</th>
                                 <th class="px-4 py-3">وسيلة الدفع</th>
                                 <th class="px-4 py-3">التاريخ</th>
+                                <th class="px-4 py-3">النوع</th>
                                 <th class="px-4 py-3 text-left">الفاتورة</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($paysHistory as $transaction)
+                                @php
+                                    $type = $transaction->additional_data['type'] ?? 'payment';
+                                @endphp
                                 <tr class="border-b hover:bg-slate-50">
                                     <td class="px-4 py-3 font-medium">#{{ $transaction->id }}</td>
                                     <td class="px-4 py-3">{{ number_format($transaction->amount, 2) }} ريال</td>
                                     <td class="px-4 py-3">{{ $transaction->payment_method ?? '---' }}</td>
                                     <td class="px-4 py-3">{{ $transaction->created_at->format('Y-m-d') }}</td>
+                                    <td class="px-4 py-3">
+                                        <span class="inline-block px-2 py-1 rounded text-xs font-medium
+                                            {{ $type === 'refund' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
+                                            {{ $type === 'refund' ? 'استرداد' : 'دفع' }}
+                                        </span>
+                                    </td>
                                     <td class="px-4 py-3 text-left">
                                         <button onclick="downloadInvoice({{ $transaction->id }})"
                                             class="inline-flex items-center gap-2 rounded-md border text-sm font-medium px-3 py-2 border-slate-300 bg-white text-slate-700 hover:bg-slate-100 shadow-sm transition">
@@ -48,7 +58,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="px-4 py-6 text-center text-slate-500">
+                                    <td colspan="6" class="px-4 py-6 text-center text-slate-500">
                                         لا يوجد عمليات مالية حتى الآن.
                                     </td>
                                 </tr>
@@ -78,6 +88,7 @@
             const transaction = data.transaction;
             const item = transaction.item;
             const user = item.user;
+            const type = transaction.additional_data?.type || 'payment';
 
             doc.setFontSize(18);
             doc.text("فاتورة الدفع", 105, 20, { align: "center" });
@@ -88,7 +99,8 @@
             doc.text(`اسم الخدمة: ${item.title ?? '—'}`, 14, 60);
             doc.text(`المبلغ: ${transaction.amount} ريال`, 14, 70);
             doc.text(`وسيلة الدفع: ${transaction.payment_method ?? '---'}`, 14, 80);
-            doc.text(`تاريخ العملية: ${transaction.created_at}`, 14, 90);
+            doc.text(`النوع: ${type === 'refund' ? 'استرداد' : 'دفع'}`, 14, 90);
+            doc.text(`تاريخ العملية: ${transaction.created_at}`, 14, 100);
 
             doc.save(`فاتورة-${transaction.id}.pdf`);
         } catch (err) {
