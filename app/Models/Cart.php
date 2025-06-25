@@ -21,4 +21,11 @@ class Cart extends Model
     public function item (){
         return $this->morphTo();
     }
+    protected $casts = [
+        'additional_data' => 'array',
+    ];
+    public function offering()
+    {
+        return $this->belongsTo(Offering::class, 'item_id');
+    }
 }

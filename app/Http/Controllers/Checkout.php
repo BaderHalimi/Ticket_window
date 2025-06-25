@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\PaidReservation;
 use App\Models\Cart;
 use App\Models\User;
+
 use Illuminate\Support\Facades\Auth;
 class Checkout extends Controller
 {
@@ -50,7 +51,20 @@ class Checkout extends Controller
                 'code' => uniqid('code_'),
                 'additional_data' => $item->additional_data,
             ]);
+            //dd($item->offering->id);
+            logPayment([
+                'user_id' => $user,
+                'item_id' =>  $item->offering->id,
+                'transaction_id' => uniqid('TXN_'),
+                'payment_method' => 'paypal',
+                'amount' => $item->price,
+                'additional_data' => [
+                    'recipient_id' => $item->user_id, 
+                    'notes' => 'تم الدفع بنجاح'
+                ],
+            ]);
             $item->delete(); // Remove the item from the cart after creating the reservation
+
         }
         return redirect()->route('template1.checkout.success',['id'=>$id])->with('success', 'Reservations created successfully');
         // return response()->json(['message' => 'Reservations created successfully'], 201);
