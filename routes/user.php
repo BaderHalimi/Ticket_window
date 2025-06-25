@@ -14,7 +14,9 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->gro
     Route::get('tickets/payHistory', [Tickets::class, 'payHistory'])->name('tickets.payHistory');
     Route::get('profile',function (){return view('customer.dashboard.profile');})->name('profile');
     //Route::get('support', function () {return view('customer.dashboard.support');})->name('support');
-
+    Route::get('settings', function () {
+        return view('customer.dashboard.user_settings');
+    })->name('settings');
     Route::resource('tickets', Tickets::class)->names('tickets');
     Route::resource('support', SupportController::class)->names('support');
 
