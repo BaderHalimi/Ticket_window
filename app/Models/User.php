@@ -32,7 +32,11 @@ class User extends Authenticatable
         'role',
         'phone',
         'additional_data',
-        'is_accepted',
+        // 'is_accepted',
+        'status',
+        'status_updated_at',
+        'rejection_reason',
+        'acceptance_note',
     ];
 
     /**

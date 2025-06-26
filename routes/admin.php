@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\LoginController;
+use App\Http\Controllers\Admin\MerchantController;
 use App\Http\Controllers\admin\SellerController;
 use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
@@ -10,14 +11,18 @@ use Illuminate\Support\Facades\Route;
 // Route::get('register', [LoginController::class, 'register'])->middleware('guest')->name('register');
 // Route::post('register', [LoginController::class, 'register_logic'])->middleware('guest')->name('register_logic');
 
+Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->group(function () {
 
-Route::get('',function(){
-    return view('admin.dashboard.index');
-})->middleware('auth')->name('dashboard');
+    Route::get('', function () {
+        return view('admin.dashboard.index');
+    })->name('overview');
+    Route::prefix('merchants')->as('merchants.')->group(function(){
+        Route::get('/',[MerchantController::class,'index'])->name('index');
+    });
+});
 
 
 
-Route::resource('sellers', SellerController::class)->middleware("auth")->names('sellers');
-
+// Route::resource('sellers', SellerController::class)->middleware("auth")->names('sellers');
 // Route::resource('employees', EmployeeController::class)->middleware("auth")->names('employees');
 //Route::put('employees/{employee}', [EmployeeController::class, 'update'])->name('admin.employees.update');

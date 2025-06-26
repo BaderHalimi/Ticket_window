@@ -74,7 +74,7 @@ class AuthController extends Controller
         if (Auth::guard('merchant')->attempt($credentials)) {
             //Auth::login();
             //dd(auth()->user());
-            if (Auth::guard('merchant')->user()->is_accepted?? false) {
+            if (Auth::guard('merchant')->user()->status == 'active'?? false) {
                 session()->regenerate();
                 return redirect()->intended(route('merchant.dashboard.overview'))->with('success', 'Login successful');
             } else {
