@@ -2,20 +2,21 @@
 @section('content')
 <!-- غلاف -->
 <div class="relative bg-gray-200 h-64 w-full">
-    <img src="{{ Storage::url($merchant->additional_data['banner']) }}" alt="cover" class="w-full h-full object-cover">
+    <img src="{{ Storage::url($merchant->additional_data['profile_picture']?$merchant->additional_data['banner']??'':'') }}" alt="cover" class="w-full h-full object-cover">
     <!-- صورة النشاط -->
     <div class="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
-        <img src="{{ Storage::url($merchant->additional_data['profile_picture']) }}" alt="logo" class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
+        <img src="{{ Storage::url(isset($merchant->additional_data['profile_picture'])?$merchant->additional_data['profile_picture']??'':'') }}" alt="logo" class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
     </div>
 </div>
 
 <!-- البيانات الأساسية -->
 <div class="mt-20 text-center px-4">
-    <h1 class="text-2xl font-bold text-gray-800">{{ $merchant->business_name }}</h1>
+    <h1 class="text-2xl font-bold text-gray-800">{{ $merchant->business_name??'' }}</h1>
     <p class="text-gray-600 mt-2 max-w-xl mx-auto">نقدم أفضل خدمات التجميل والعناية في بيئة مريحة واحترافية.</p>
 
     <!-- العنوان وأوقات العمل -->
     <div class="mt-4 flex justify-center items-center flex-wrap gap-4 text-sm text-gray-500">
+        @if(isset($merchant->phone))
         <div class="flex items-center gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 2H8a2 2 0 00-2 2v16a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2zM12 18h.01" />
@@ -23,6 +24,7 @@
 
             <a href="tel:{{ $merchant->phone }}">{{ $merchant->phone }}</a>
         </div>
+        @endif
         <!-- <div class="flex items-center gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 12.414a4 4 0 10-5.657 5.657l4.243 4.243a8 8 0 1011.314-11.314z" />
