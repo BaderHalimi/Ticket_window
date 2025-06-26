@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ $merchant->business_name }}</title>
-    <link rel="shortcut icon" href="{{ Storage::url($merchant->additional_data['profile_picture']) }}" type="image/x-icon">
+    <title>{{ $merchant->business_name??'' }}</title>
+    <link rel="shortcut icon" href="{{ Storage::url(isset($merchant->additional_data)?$merchant->additional_data['profile_picture']??'':'') }}" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
