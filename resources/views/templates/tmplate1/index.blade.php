@@ -2,10 +2,10 @@
 @section('content')
 <!-- غلاف -->
 <div class="relative bg-gray-200 h-64 w-full">
-    <img src="{{ Storage::url($merchant->additional_data['profile_picture']?$merchant->additional_data['banner']??'':'') }}" alt="cover" class="w-full h-full object-cover">
+    <img src="{{ Storage::url($merchant->additional_data?$merchant->additional_data['banner']??'':'') }}" alt="cover" class="w-full h-full object-cover">
     <!-- صورة النشاط -->
     <div class="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
-        <img src="{{ Storage::url(isset($merchant->additional_data['profile_picture'])?$merchant->additional_data['profile_picture']??'':'') }}" alt="logo" class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
+        <img src="{{ Storage::url(isset($merchant->additional_data)?$merchant->additional_data['profile_picture']??'':'') }}" alt="logo" class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
     </div>
 </div>
 
