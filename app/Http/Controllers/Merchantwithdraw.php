@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\PaysHistory;
+use App\Http\Controllers\Controller;
 
 class Merchantwithdraw extends Controller
 {
@@ -11,7 +14,27 @@ class Merchantwithdraw extends Controller
      */
     public function index()
     {
-        //
+        $reservations = PaysHistory::whereHas('item', function($query) {
+            $query->where('user_id', Auth::id());
+        })->get();
+        $totalPay = $reservations->filter(function ($reservation) {
+            $type = $reservation->additional_data['type'] ?? null;
+            return $type === 'pay';
+        })->sum('amount');
+        
+        $totalRefund = $reservations->filter(function ($reservation) {
+            $type = $reservation->additional_data['type'] ?? null;
+            return $type === 'refund';
+        })->sum('amount');
+        
+        // صافي الربح
+        $netTotal = $totalPay - $totalRefund;
+        // dd([
+        //     'Total Pay' => $totalPay,
+        //     'Total Refund' => $totalRefund,
+        //     'Net Total' => $netTotal
+        // ]);
+        return view('merchant.dashboard.wallet_withdrawal', compact('reservations', 'totalPay', 'totalRefund', 'netTotal'));
     }
 
     /**

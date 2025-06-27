@@ -94,7 +94,7 @@
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg><span>مركز الرسائل</span>
     </a>
-    <a href="{{ route('merchant.dashboard.wallet_withdrawal')}}" wire:click.prevent="intended('{{ route('merchant.dashboard.wallet_withdrawal') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.wallet_withdrawal')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <a href="{{ route('merchant.dashboard.withdraws.index')}}" wire:click.prevent="intended('{{ route('merchant.dashboard.withdraws.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.withdraws.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
             <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
             <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>

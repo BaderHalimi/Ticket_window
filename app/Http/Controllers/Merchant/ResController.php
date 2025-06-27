@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Merchant;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PaidReservation;
+use App\Models\PaysHistory;
 use Illuminate\Support\Facades\Auth;
 class ResController extends Controller
 {
@@ -13,13 +14,14 @@ class ResController extends Controller
      */
     public function index()
     {
-        $reservations = PaidReservation::whereHas('offering', function($query) {
-            // تحقق إذا كان الـ Offering يخص المستخدم الحالي
+        $reservations = PaysHistory::whereHas('item', function($query) {
             $query->where('user_id', Auth::id());
         })->get();
+
+        
         //dd($reservations);
         
-        return view('merchant.dashboard.reservations', compact('reservations'));
+        return view('merchant.dashboard.reservations.reservations', compact('reservations'));
     }
 
     /**
@@ -43,7 +45,11 @@ class ResController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $reservation = PaysHistory::findOrFail($id);
+        $offering = $reservation->item;
+        $user = $reservation->user;
+        $reservation->load('item', 'user');
+        return view('merchant.dashboard.reservations.info', compact('reservation', 'offering', 'user'));
     }
 
     /**

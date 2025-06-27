@@ -52,18 +52,24 @@ class Checkout extends Controller
                 'additional_data' => $item->additional_data,
             ]);
             //dd($item->offering->id);
+            $oldData = json_decode($item->additional_data ?? '{}', true) ?? [];
+            $newData = [
+                'recipient_id' => $item->user_id,
+                'notes' => 'تم الدفع بنجاح',
+                'type' => 'pay'
+            ];
+            
+            $merged = array_merge($oldData, $newData);
+            
             logPayment([
                 'user_id' => $user,
-                'item_id' =>  $item->offering->id,
+                'item_id' => $item->offering->id,
                 'transaction_id' => uniqid('TXN_'),
                 'payment_method' => 'paypal',
                 'amount' => $item->price,
-                'additional_data' => [
-                    'recipient_id' => $item->user_id, 
-                    'notes' => 'تم الدفع بنجاح',
-                    'type' => 'pay' //refund
-                ],
+                'additional_data' => $merged,
             ]);
+            
             $item->delete(); // Remove the item from the cart after creating the reservation
 
         }

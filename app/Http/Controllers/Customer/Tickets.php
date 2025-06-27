@@ -32,18 +32,24 @@ class Tickets extends Controller
             return redirect()->back()->with('error', 'Unauthorized action.');
         }
         /* هنا استرداد الفلوس لما يوفر لنا بوابة دفع */
+        $oldData = json_decode($reservation->additional_data ?? '{}', true) ?? [];
+
+        $newData = [
+            'notes' => 'تم الاغاء بنجاح',
+            'type' => 'refund',
+        ];
+        
+        $merged = array_merge($oldData, $newData);
+        
         logPayment([
             'user_id' => $reservation->user_id,
-            'item_id' =>  $reservation->offering->id,
+            'item_id' => $reservation->offering->id,
             'transaction_id' => uniqid('TXN_'),
             'payment_method' => 'paypal',
             'amount' => $reservation->price,
-            'additional_data' => [
-                //'recipient_id' => $item->user_id, 
-                'notes' => 'تم الاغاء بنجاح',
-                'type' => 'refund'
-            ],
+            'additional_data' => $merged,
         ]);
+        
         $reservation->delete();
         return redirect()->back()->with('success', 'Ticket cancelled successfully.');
     }

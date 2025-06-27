@@ -24,6 +24,10 @@ class PaysHistory extends Model
     {
         return $this->belongsTo(Offering::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 
 }
