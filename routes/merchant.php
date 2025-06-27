@@ -4,7 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Merchant\BranchController;
 use App\Http\Controllers\Merchant\OffersController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Merchant\ResController;
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->group(function(){
     Route::get('/',function(){
         return view('merchant.dashboard.index');
@@ -12,9 +12,8 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->gro
     // Route::get('services',function(){
     //     return view('merchant.dashboard.services');
     // })->name('services');
-    Route::get('reservations',function(){
-        return view('merchant.dashboard.reservations');
-    })->name('reservations');
+    Route::resource('reservations',ResController::class)->names('reservations');
+
     Route::get('checking',function(){
         return view('merchant.dashboard.checking');
     })->name('checking');

@@ -11,8 +11,12 @@
     <tbody class="[&amp;_tr:last-child]:border-0">
         @foreach($merchants as $merchant)
         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">{{ $merchant->f_name.' '.$merchant->l_name }}</td>
-            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{{ $merchant->business_type!='other'?$merchant->business_type:$merchant->additional_data['other_business_type']??'' }}</td>
+            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
+                <a href="{{ route('template1.index', $merchant->id) }}">
+                    {{ $merchant->f_name.' '.$merchant->l_name }}
+                </a>
+            </td>
+                        <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{{ $merchant->business_type!='other'?$merchant->business_type:$merchant->additional_data['other_business_type']??'' }}</td>
             <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                 <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent {{$merchant->status=='active'?'bg-emerald-100 text-emerald-800':($merchant->status=='rejected'?'bg-red-100 text-red-800':'bg-amber-100 text-amber-800')}}" bis_skin_checked="1">{{ $merchant->status=='active'?'مفعل':($merchant->status=='rejected'?'مرفوض':'طلب جديد')}}</div>
             </td>
