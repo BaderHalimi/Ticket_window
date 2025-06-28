@@ -37,6 +37,8 @@ class Tickets extends Controller
         $newData = [
             'notes' => 'تم الاغاء بنجاح',
             'type' => 'refund',
+            'withdrawal' => false, 
+            'status' => 'pending',
         ];
         
         $merged = array_merge($oldData, $newData);

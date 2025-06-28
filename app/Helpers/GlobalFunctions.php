@@ -41,4 +41,18 @@ if (!function_exists('logPayment')) {
         ]);
     }
 }
+if (!function_exists('calculateNet')) {
 
+function calculateNet($collection)
+{
+    $totalPay = $collection->filter(function ($r) {
+        return ($r->additional_data['type'] ?? null) === 'pay';
+    })->sum('amount');
+
+    $totalRefund = $collection->filter(function ($r) {
+        return ($r->additional_data['type'] ?? null) === 'refund';
+    })->sum('amount');
+
+    return $totalPay - $totalRefund;
+}
+}

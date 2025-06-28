@@ -56,7 +56,9 @@ class Checkout extends Controller
             $newData = [
                 'recipient_id' => $item->user_id,
                 'notes' => 'تم الدفع بنجاح',
-                'type' => 'pay'
+                'type' => 'pay',
+                'withdrawal' => false, 
+                'status' => 'pending',
             ];
             
             $merged = array_merge($oldData, $newData);
