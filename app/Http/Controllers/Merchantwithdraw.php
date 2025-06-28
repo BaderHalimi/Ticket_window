@@ -102,7 +102,8 @@ class Merchantwithdraw extends Controller
             $pay->save();
         }
         
-        dd($withdraw);
+        //dd($withdraw);
+        return redirect()->route('merchant.dashboard.withdraws.index')->with('success', 'تم إرسال طلب السحب بنجاح ✅');
 
     }
 
