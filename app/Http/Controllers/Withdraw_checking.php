@@ -17,7 +17,7 @@ class Withdraw_checking extends Controller
     {
         $logs = withdraws_log::where('status', 'pending')
             ->get();
-        return view('admin.dashboard.withdraws_check', compact('logs'));
+        return view('admin.dashboard.withdraws.withdraws_check', compact('logs'));
     }
 
     /**
@@ -45,13 +45,13 @@ class Withdraw_checking extends Controller
         $log->load('user');
 
         $decoded_transactions = json_decode($log->additional_data, true);
-        $transaction_id =  collect($decoded_transactions)->pluck('transaction_id')->all();
-        $transactions = PaysHistory::whereIn('transaction_id', $transaction_id)->get();
-        dd($transactions, $log, $transaction_id, $decoded_transactions);
+        //$transaction_id =  collect($decoded_transactions)->pluck('transaction_id')->all();
+        $transactions = PaysHistory::whereIn('transaction_id', $decoded_transactions)->get();
+        //dd($transactions, $log, $decoded_transactions);
 
 
 
-        return view('admin.dashboard.withdraws_check_info', compact('log'));
+        return view('admin.dashboard.withdraws.withdraw_see', compact('log','transactions'));
     }
 
     /**
