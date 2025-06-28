@@ -67,7 +67,24 @@ class Withdraw_checking extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $log = withdraws_log::findOrFail($id);
+        $log->status = 'completed';
+        $log->save();
+
+        $decoded_transactions = json_decode($log->additional_data, true);
+        $transactions = PaysHistory::whereIn('transaction_id', $decoded_transactions)->get();
+        
+        foreach ($transactions as $transaction) {
+            $data = $transaction->additional_data ?? [];
+            if (!is_array($data)) {
+                $data = json_decode($data, true) ?? [];
+            }
+            $data['status'] = 'paid';  
+            $transaction->additional_data = json_encode($data);
+            $transaction->save();
+        }
+
+        return redirect()->route('withdraw_checking.index')->with('success', 'Withdraw log updated successfully.');
     }
 
     /**

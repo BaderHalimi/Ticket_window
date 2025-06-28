@@ -51,8 +51,10 @@
             <td class="px-4 py-3 text-center">
               @if($withdraw->status === 'pending')
                 <div class="flex items-center justify-center gap-2">
-                  <form action="" method="POST">
+                  <form action="{{route('admin.dashboard.withdraws.update',$withdraw->id)}}" method="POST">
+                    @method('PUT')
                     @csrf
+                    
                     <button type="submit" class="text-green-600 hover:text-green-800" title="قبول">
                       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -60,7 +62,7 @@
                     </button>
                   </form>
 
-                  <form action="" method="POST">
+                  <form action="{{route('admin.dashboard.withdraws.destroy',$withdraw->id)}} method="POST">
                     @csrf
                     <button type="submit" class="text-red-600 hover:text-red-800" title="رفض">
                       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
