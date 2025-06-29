@@ -29,11 +29,11 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->gro
 
 Route::get('/login', function () {
     return view('customer.auth.login');
-})->middleware('guest')->name('login');
+})->middleware('guest:customer')->name('login');
 Route::get('/register', function () {
     return view('customer.auth.register');
-})->middleware('guest')->name('register');
-Route::post('register', [AuthController::class, 'store'])->middleware('guest')->name('signup');
-Route::post('login', [AuthController::class, 'userLogin'])->middleware('guest')->name('singin');
+})->middleware('guest:customer')->name('register');
+Route::post('register', [AuthController::class, 'store'])->middleware('guest:customer')->name('signup');
+Route::post('login', [AuthController::class, 'login'])->middleware('guest:customer')->name('singin');
 
 Route::post('logout', [AuthController::class, 'userLogout'])->middleware('auth:customer')->name('logout');

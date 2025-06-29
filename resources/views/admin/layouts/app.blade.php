@@ -80,7 +80,7 @@
             </div>
             @livewire('admin.aside.nav')
             <div class="mt-auto p-4 border-t" bis_skin_checked="1">
-                <form action="{{route('logout')}}" method="post">
+                <form action="{{route('admin.logout')}}" method="post">
                     @csrf
                     <button type="submit" class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 w-full justify-start text-base text-orange-500 hover:text-orange-600 hover:bg-orange-500/10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 ml-3">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>

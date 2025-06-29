@@ -71,14 +71,23 @@
             <main class="flex-1 overflow-y-auto flex flex-col">
                 <header class="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-30">
                     <div class="flex-1 min-w-0" bis_skin_checked="1">
-                        <div class="w-64" bis_skin_checked="1"><button type="button" role="combobox" aria-controls="radix-:r8:" aria-expanded="false" aria-autocomplete="none" dir="rtl" data-state="closed" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 ml-2">
+                        <div class="w-64" bis_skin_checked="1">
+                            <a href="{{ route('template1.index',['id'=>Auth::guard('merchant')->id()]) }}" target="_blank" class="flex h-10 items-center gap-2 rounded-md border border-input bg-gray-200 border-gray-400 hover:bg-orange-500 hover:border-orange-500 hover:text-white transition-all duration-500 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"><span class="me-1">
+                                    {{-- أيقونة SVG العين --}}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zm-8 4a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
+                                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z" />
+                                    </svg>
+                                </span>عرض المتجر</a>
+                            <!-- <button type="button" role="combobox" aria-controls="radix-:r8:" aria-expanded="false" aria-autocomplete="none" dir="rtl" data-state="closed" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 ml-2">
                                     <line x1="6" x2="6" y1="3" y2="15"></line>
                                     <circle cx="18" cy="6" r="3"></circle>
                                     <circle cx="6" cy="18" r="3"></circle>
                                     <path d="M18 9a9 9 0 0 1-9 9"></path>
                                 </svg><span style="pointer-events: none;">كل الفروع</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 opacity-50" aria-hidden="true">
                                     <path d="m6 9 6 6 6-6"></path>
-                                </svg></button></div>
+                                </svg></button> -->
+                        </div>
                     </div>
                     <div class="flex items-center gap-4" bis_skin_checked="1"><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 relative text-slate-600"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
                                 <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>

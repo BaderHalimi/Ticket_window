@@ -16,7 +16,13 @@
                             <h1 class="text-3xl md:text-4xl font-bold text-orange-500 mb-2">تسجيل الدخول</h1>
                             <p class="text-gray-600">ابدأ رحلتك في إدارة أعمالك بكفاءة واحترافية.</p>
                         </div>
-                        <form action="{{route('singin')}}" method="POST" class="space-y-6">
+                        @error('email')
+                        <div class="p-4 bg-red-500/10 text-red-500 border border-red-500 rounded-md text-sm mb-4">
+                            {{ $message }}
+                        </div>
+
+                        @enderror
+                        <form action="{{route('singin',['guard'=>'merchant'])}}" method="POST" class="space-y-6">
                             @csrf
                             <div bis_skin_checked="1"><label class="block text-sm font-medium text-gray-700 mb-2" for="email">البريد الإلكتروني</label><input name="email" type="email" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" required="" id="email" placeholder="example@ticket-window.sa"></div>
                             <div bis_skin_checked="1"><label class="block text-sm font-medium text-gray-700 mb-2" for="password">كلمة المرور</label><input name="password" type="password" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" required="" id="password" placeholder="كلمة المرور"></div>

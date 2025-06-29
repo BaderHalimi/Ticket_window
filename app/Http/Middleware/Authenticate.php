@@ -15,6 +15,8 @@ class Authenticate extends Middleware
                 return route('login');  // إذا كان المستخدم مشرف
             } elseif ($request->is('user/*')) {
                 return route('customer.login');  // إذا كان المستخدم عميل
+            } elseif ($request->is('admin/*')) {
+                return route('admin.login');  // إذا كان المستخدم عميل
             }
 
             // توجيه افتراضي في حال عدم تحديد guard

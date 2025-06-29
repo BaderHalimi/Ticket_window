@@ -50,6 +50,11 @@ return [
             'provider' => 'users',
             'guard' => 'customer',  // هنا نحدد أنه سيكون admin
         ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'users',
+            'guard' => 'admin',  // هنا نحدد أنه سيكون admin
+        ],
     ],
 
     /*
