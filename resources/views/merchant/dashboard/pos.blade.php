@@ -6,6 +6,7 @@
     <div class="flex justify-between items-center">
       <h2 class="text-3xl font-bold text-slate-800">البيع الداخلي (POS)</h2>
     </div>
+    @livewire('under-review')
 
     <div dir="rtl">
       <!-- التبويبات -->

@@ -9,7 +9,7 @@
                 <a href="{{ route('home') }}" wire:click.prevent="checkAccess('{{ route('home') }}')"
                     class="px-4 py-2 relative font-medium @if (Route::is('home')) text-orange-500 border-b-2 border-orange-500 transition-all duration-500 @else text-gray-600 hover:text-orange-500 @endif">الرئيسية
                 </a>
-                <a href="{{ route('features') }}" wire:click.prevent="checkAccess('{{ route('features') }}')"
+                <!-- <a href="{{ route('features') }}" wire:click.prevent="checkAccess('{{ route('features') }}')"
                     class="px-4 py-2 relative font-medium @if (Route::is('features')) text-orange-500 border-b-2 border-orange-500 transition-all duration-500 @else text-gray-600 hover:text-orange-500 @endif">المميزات</a>
                 <a href="{{ route('merchant') }}" wire:click.prevent="checkAccess('{{ route('merchant') }}')"
                     class="px-4 py-2 relative font-medium @if (Route::is('merchant')) text-orange-500 border-b-2 border-orange-500 transition-all duration-500 @else text-gray-600 hover:text-orange-500 @endif">رحلة
@@ -22,12 +22,12 @@
                     والحماية</a><a href="{{ route('roles') }}"
                     wire:click.prevent="checkAccess('{{ route('roles') }}')"
                     class="px-4 py-2 relative font-medium @if (Route::is('roles')) text-orange-500 border-b-2 border-orange-500 transition-all duration-500 @else text-gray-600 hover:text-orange-500 @endif">الأدوار
-                    والرحلات</a><a href="{{ route('pricing') }}"
+                    والرحلات</a> -->
+                    <a href="{{ route('pricing') }}"
                     wire:click.prevent="checkAccess('{{ route('pricing') }}')"
                     class="px-4 py-2 relative font-medium @if (Route::is('pricing')) text-orange-500 border-b-2 border-orange-500 transition-all duration-500 @else text-gray-600 hover:text-orange-500 @endif">الأسعار</a>
-                <a href="{{ route('pricing') }}" wire:click.prevent="checkAccess('{{ route('pricing') }}')"
-                    class="px-4 py-2 relative font-medium @if (Route::is('pricing')) text-orange-500 border-b-2 border-orange-500 transition-all duration-500 @else text-gray-600 hover:text-orange-500 @endif">لوحات
-                    التحكم</a>
+                <a href="{{ Auth::guard('merchant')->user()?route('merchant.dashboard.overview'):route('login') }}" wire:click.prevent="checkAccess('{{ Auth::guard('merchant')->user()?route('merchant.dashboard.overview'):route('login') }}')"
+                    class="px-4 py-2 relative font-medium @if (Route::is('login')) text-orange-500 border-b-2 border-orange-500 transition-all duration-500 @else text-gray-600 hover:text-orange-500 @endif">{{ Auth::guard('merchant')->user()?__('dashboard'):__('login') }}</a>
             </div><button id="burgerBtn" onclick="initBurgerMenu()" class="md:hidden p-2 text-gray-700"><svg xmlns="http://www.w3.org/2000/svg" width="24"
                     height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
@@ -40,7 +40,7 @@
             <div class="flex flex-col space-y-2 py-4" bis_skin_checked="1">
                 <a href="{{ route('home') }}" wire:click.prevent="checkAccess('{{ route('home') }}')"
                     class="block w-full text-right px-4 py-3 rounded-lg transition-colors @if (Route::is('home')) text-orange-500 bg-orange-500/10 transition-all duration-500 @else text-gray-600 hover:text-orange-500 hover:bg-orange-500/10 @endif font-semibold">الرئيسية</a>
-                <a href="{{ route('features') }}" wire:click.prevent="checkAccess('{{ route('features') }}')"
+                <!-- <a href="{{ route('features') }}" wire:click.prevent="checkAccess('{{ route('features') }}')"
                     class="block w-full text-right px-4 py-3 rounded-lg transition-colors @if (Route::is('features')) text-orange-500 bg-orange-500/10 transition-all duration-500 @else text-gray-600 hover:text-orange-500 hover:bg-orange-500/10 @endif">المميزات</a>
                 <a href="{{ route('merchant') }}" wire:click.prevent="checkAccess('{{ route('merchant') }}')"
                     class="block w-full text-right px-4 py-3 rounded-lg transition-colors @if (Route::is('merchant')) text-orange-500 bg-orange-500/10 transition-all duration-500 @else text-gray-600 hover:text-orange-500 hover:bg-orange-500/10 @endif">رحلة
@@ -53,12 +53,11 @@
                     والحماية</a>
                 <a href="{{ route('roles') }}" wire:click.prevent="checkAccess('{{ route('roles') }}')"
                     class="block w-full text-right px-4 py-3 rounded-lg transition-colors @if (Route::is('roles')) text-orange-500 bg-orange-500/10 transition-all duration-500 @else text-gray-600 hover:text-orange-500 hover:bg-orange-500/10 @endif">الأدوار
-                    والرحلات</a>
+                    والرحلات</a> -->
                 <a href="{{ route('pricing') }}" wire:click.prevent="checkAccess('{{ route('pricing') }}')"
                     class="block w-full text-right px-4 py-3 rounded-lg transition-colors @if (Route::is('pricing')) text-orange-500 bg-orange-500/10 transition-all duration-500 @else text-gray-600 hover:text-orange-500 hover:bg-orange-500/10 @endif">الأسعار</a>
-                <a href="{{ route('pricing') }}" wire:click.prevent="checkAccess('{{ route('pricing') }}')"
-                    class="block w-full text-right px-4 py-3 rounded-lg transition-colors @if (Route::is('pricing')) text-orange-500 bg-orange-500/10 transition-all duration-500 @else text-gray-600 hover:text-orange-500 hover:bg-orange-500/10 @endif">لوحات
-                    التحكم</a>
+                <a href="{{ Auth::guard('merchant')->user()?route('merchant.dashboard.overview'):route('login') }}" wire:click.prevent="checkAccess('{{ Auth::guard('merchant')->user()?route('merchant.dashboard.overview'):route('login') }}')"
+                    class="block w-full text-right px-4 py-3 rounded-lg transition-colors @if (Route::is('login')) text-orange-500 bg-orange-500/10 transition-all duration-500 @else text-gray-600 hover:text-orange-500 hover:bg-orange-500/10 @endif">{{ Auth::guard('merchant')->user()?__('dashboard'):__('login') }}</a>
             </div>
         </div>
     </div>

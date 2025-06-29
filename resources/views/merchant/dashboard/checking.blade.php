@@ -6,6 +6,7 @@
             <div class="flex justify-between items-center" bis_skin_checked="1">
                 <h2 class="text-3xl font-bold text-slate-800">التحقق من التذاكر</h2>
             </div>
+            @livewire('under-review')
             <div class="grid lg:grid-cols-2 gap-8" bis_skin_checked="1">
                 <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg" bis_skin_checked="1">
                     <div class="flex flex-col space-y-1.5 p-6" bis_skin_checked="1">

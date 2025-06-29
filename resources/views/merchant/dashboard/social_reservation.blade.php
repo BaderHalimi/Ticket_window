@@ -9,6 +9,7 @@
       <div class="flex justify-between items-center">
         <h2 class="text-3xl font-bold text-slate-800">نظام الحجز الجماعي</h2>
       </div>
+        @livewire('under-review')
 
       <div dir="rtl" data-orientation="horizontal">
         <!-- التبويبات -->
@@ -38,7 +39,7 @@
 
             <div class="p-6 pt-0 space-y-6">
               <!-- كل الفورمات داخل هنا بدون تغيير فقط عدلت ألوان الفوكس والزر -->
-              
+
               <!-- ... نفس الكود السابق ... -->
 
               <!-- زر الإرسال -->

@@ -7,10 +7,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Withdraw_checking;
-// Route::get('login', [LoginController::class, 'login'])->middleware('guest')->name('login');
-// Route::post('login', [LoginController::class, 'login_logic'])->middleware('guest')->name('login_logic');
-// Route::get('register', [LoginController::class, 'register'])->middleware('guest')->name('register');
-// Route::post('register', [LoginController::class, 'register_logic'])->middleware('guest')->name('register_logic');
 
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:admin'])->group(function () {
 
@@ -21,7 +17,6 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:admin'])->group(
         Route::get('/', [MerchantController::class, 'index'])->name('index');
     });
     Route::resource('withdraws', Withdraw_checking::class)
-        //->middleware('auth:admin')
         ->names('withdraws');
 });
 

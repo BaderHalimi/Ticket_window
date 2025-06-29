@@ -14,7 +14,7 @@
         التذاكر بكل سهولة وأمان عبر مواقعهم الخاصة، مع توفير تجربة فريدة للعملاء.</p>
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a href="{{ Auth::id()?route('dashboard'):route('register') }}"
-            class="flex justify-center items-center bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg shadow-lg shadow-orange-300 text-lg">
+            class="flex justify-center items-center bg-orange-500 hover:bg-orange-600 text-white px-12 py-3 rounded-lg shadow-lg shadow-orange-300 text-lg">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="ml-2 h-5 w-5">
@@ -24,14 +24,14 @@
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg> انضم كتاجر الآن
         </a>
-        <button
+        <!-- <button
             class="flex justify-center items-center border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white px-6 py-3 rounded-lg text-lg">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="ml-2 h-5 w-5">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
             </svg> استعراض لوحات التحكم
-        </button>
+        </button> -->
     </div>
 </section>
 <section class="py-24 bg-slate-50">

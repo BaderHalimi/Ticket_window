@@ -6,6 +6,7 @@
     <div class="flex justify-between items-center">
       <h2 class="text-3xl font-bold text-slate-800">العروض الترويجية والأكواد</h2>
     </div>
+    @livewire('under-review')
 
     <div dir="rtl">
       <div role="tablist" class="h-10 grid w-full grid-cols-2 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">

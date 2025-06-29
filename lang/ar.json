@@ -11,5 +11,10 @@
     "The provided password was incorrect.": "كلمة المرور التي قمت بإدخالها غير صحيحة.",
     "The provided two factor authentication code was invalid.": "كود المصادقة الثنائية الذي قمت بإدخاله غير صالح.",
     "The provided two factor recovery code was invalid.": "كود استرداد المصادقة الثنائية الذي قمت بإدخاله غير صالح.",
-    "The provided credentials do not match our records.": "بيانات الاعتماد المقدمة لا تتطابق مع سجلاتنا."
+    "The provided credentials do not match our records.": "بيانات الاعتماد المقدمة لا تتطابق مع سجلاتنا.",
+    "dashboard": "لوحة التحكم",
+    "login": "تسجيل الدخول",
+    "pricing": "الأسعار",
+    "merchant": "تاجر",
+    "This page is currently under development.": "هذه الصفحة قيد التطوير حاليًا."
 }

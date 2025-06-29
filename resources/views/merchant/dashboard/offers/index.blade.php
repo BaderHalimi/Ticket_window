@@ -18,7 +18,7 @@
     </div>
 
     {{-- التبويبات --}}
-    <div class="w-full">
+    <!-- <div class="w-full">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-2 p-2 bg-orange-500/10 rounded-xl mb-6">
             <button class="flex items-center justify-center gap-2 py-2.5 px-3 text-sm md:text-base font-medium rounded-sm text-white bg-orange-500 shadow-lg">
                 <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -126,7 +126,7 @@
                 </a>
             </div>
         </div>
-    </div>
+    </div> -->
 
     {{-- جدول الخدمات --}}
     <div class="bg-white shadow-lg rounded-xl overflow-hidden">
