@@ -24,6 +24,8 @@
           <p class="text-sm text-slate-500 mt-1">رصيدك المتاح حاليا للسحب.</p>
 
           {{-- زر طلب السحب --}}
+          @if ($netTotal > 0)
+
           <form action="{{route("merchant.dashboard.withdraws.store")}}" method="POST" class="mt-4">
             @csrf
             <input type="hidden" name="transaction_ids" value="{{ $pendingReservations }}">
@@ -36,6 +38,8 @@
               طلب سحب
             </button>
           </form>
+          @endif
+
         </div>
       </div>
 

@@ -3,6 +3,8 @@
 
 
 <div class="flex-1 p-8">
+    @livewire('under-review')
+
     <div style="opacity: 1; transform: none;">
         <div class="space-y-8">
             <h2 class="text-3xl font-bold text-slate-800">مراجعات العملاء</h2>

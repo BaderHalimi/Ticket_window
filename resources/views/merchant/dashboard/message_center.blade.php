@@ -2,6 +2,8 @@
 @section('content')
 
 <div style="opacity: 1; transform: none;">
+  @livewire('under-review')
+
   <div class="space-y-8">
     <h2 class="text-3xl font-bold text-slate-800">مركز الرسائل</h2>
     <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg h-[calc(100vh-12rem)] flex">

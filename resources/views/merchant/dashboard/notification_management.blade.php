@@ -1,6 +1,9 @@
 @extends('merchant.layouts.app')
 @section('content')
     <div class="flex-1 p-8">
+
+        @livewire('under-review')
+
         <div style="opacity: 1; transform: none;">
             <div class="space-y-8">
                 <div class="flex justify-between items-center">
