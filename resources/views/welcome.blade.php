@@ -309,7 +309,7 @@
         </div>
     </div>
 </section>
-<section class="py-24 bg-slate-50">
+<!-- <section class="py-24 bg-slate-50">
     <div class="mx-[5%]">
         <div class="container mx-auto px-4" bis_skin_checked="1">
             <div class="text-center mb-16" bis_skin_checked="1" style="opacity: 1; transform: none;">
@@ -372,7 +372,7 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 <section class="py-24 bg-orange-500 text-white">
     <div class="container mx-auto px-4 text-center" bis_skin_checked="1">
         <div bis_skin_checked="1" style="opacity: 1; transform: none;">
