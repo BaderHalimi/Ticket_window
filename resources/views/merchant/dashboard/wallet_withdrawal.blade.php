@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="flex-1 p-8">
+  
   <div class="space-y-8">
     <h2 class="text-3xl font-bold text-slate-800">المحفظة المالية والسحب</h2>
 
