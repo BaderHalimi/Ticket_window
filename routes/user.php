@@ -4,11 +4,52 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Customer\Tickets;
 use App\Http\Controllers\SupportController;
+use App\Models\PaidReservation;
+use Carbon\Carbon;
 
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->group(function () {
+
     Route::get('/', function () {
-        return view('customer.dashboard.index');
+
+        $now = Carbon::now();
+        $all = PaidReservation::where('user_id', auth()->id())->get();
+    
+        $nearestReservation = null;
+        $nearestDateTime = null;
+        $futureCount = 0;
+    
+        foreach ($all as $reservation) {
+            if (!$reservation->additional_data) {
+                continue;
+            }
+    
+            $data = json_decode($reservation->additional_data, true);
+    
+            if (empty($data['selected_date']) || empty($data['selected_time'])) {
+                continue;
+            }
+    
+            $dateTime = Carbon::parse($data['selected_date'].' '.$data['selected_time']);
+    
+            if ($dateTime->greaterThanOrEqualTo($now)) {
+                $futureCount++;
+    
+                if ($nearestDateTime === null || $dateTime->lessThan($nearestDateTime)) {
+                    $nearestDateTime = $dateTime;
+                    $nearestReservation = $reservation;
+                    $nearestReservation->selected_datetime = $dateTime;
+                }
+            }
+        }
+    
+        return view('customer.dashboard.index', [
+            'nearestReservation' => $nearestReservation,
+            'futureCount' => $futureCount,
+            'user' => auth()->user(),
+
+        ]);
     })->name('overview');
+
     Route::get('tickets/print', [Tickets::class, 'tickets_print'])->name('tickets.print');
     Route::get('tickets/{id}/cancel', [Tickets::class, 'tickets_cancel'])->name('tickets.cancel');
     Route::get('tickets/payHistory', [Tickets::class, 'payHistory'])->name('tickets.payHistory');
@@ -17,8 +58,17 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->gro
     Route::get('settings', function () {
         return view('customer.dashboard.user_settings');
     })->name('settings');
+    Route::get('rewards', function () {
+        return view('customer.dashboard.reward');
+    })->name('rewards');
+    Route::get('expirence', function () {
+        return view('customer.dashboard.expirence');
+    })->name('expirences');
+
+
     Route::resource('tickets', Tickets::class)->names('tickets');
     Route::resource('support', SupportController::class)->names('support');
+
 
 
 

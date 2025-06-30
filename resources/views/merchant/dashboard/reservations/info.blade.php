@@ -125,7 +125,7 @@
 
                 <p><span class="font-semibold text-orange-600">التاريخ المحجوز:</span> {{ $additional['selected_date'] ?? 'غير محدد' }}</p>
                 <p><span class="font-semibold text-orange-600">الوقت المحجوز:</span> {{ $additional['selected_time'] ?? 'غير محدد' }}</p>
-                <p><span class="font-semibold text-orange-600">كوبون الخصم:</span> {{ $additional['coupon_code'] ?: 'لا يوجد' }}</p>
+                <p><span class="font-semibold text-orange-600">كوبون الخصم:</span> {{ $additional['coupon_code'] ?? 'لا يوجد' }}</p>
             </div>
         </div>
     </div>

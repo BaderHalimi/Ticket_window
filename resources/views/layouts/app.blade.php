@@ -70,7 +70,7 @@
                             سريعة</span>
                         <ul class="space-y-3 text-sm text-gray-400">
                             <li><a href="#" class="hover:text-primary transition-colors">الرئيسية</a></li>
-                            <li><a href="{{ route('features') }}" class="hover:text-primary transition-colors">المميزات</a></li>
+                            <li><a href="" class="hover:text-primary transition-colors">المميزات</a></li>
                             <li><a href="#" class="hover:text-primary transition-colors">الأدوار والرحلات</a></li>
                             <li><a href="#" class="hover:text-primary transition-colors">الأسعار</a></li>
                             <li><a href="#" class="hover:text-primary transition-colors">انضم كتاجر</a></li>

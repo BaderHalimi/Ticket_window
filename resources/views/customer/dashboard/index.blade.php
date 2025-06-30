@@ -1,10 +1,14 @@
 @extends('customer.layouts.app')
 @section('content')
 
+@livewire('under-review') 
+<br>
+
 <div bis_skin_checked="1" style="opacity: 1; transform: none;">
+
     <div class="space-y-6" bis_skin_checked="1">
         <div bis_skin_checked="1">
-            <h1 class="text-3xl font-bold text-slate-800">مرحباً بكِ، نورة!</h1>
+            <h1 class="text-3xl font-bold text-slate-800">مرحباً بكِ، {{$user->f_name}}!</h1>
             <p class="text-slate-500 mt-1">نظرة سريعة على حسابك ونشاطك.</p>
         </div>
         <div class="rounded-2xl border border-slate-200 bg-white shadow-lg bg-gradient-to-tr from-orange-500 to-indigo-600 text-white" bis_skin_checked="1">
@@ -17,8 +21,8 @@
                     </svg></h3>
             </div>
             <div class="p-6 pt-0" bis_skin_checked="1">
-                <p class="text-2xl font-bold">فعالية الشتاء</p>
-                <p class="text-indigo-200">السبت، 16 ديسمبر 2025 - 8:00 مساءً</p><button class="inline-flex items-center justify-center rounded-md text-sm text-gray-900 font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gray-100 text-gray-100-foreground hover:bg-gray-100/80 h-10 px-4 py-2 mt-4">عرض التذكرة <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
+                <p class="text-2xl font-bold">--</p>
+                <p class="text-indigo-200">--- / ---</p><button class="inline-flex items-center justify-center rounded-md text-sm text-gray-900 font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gray-100 text-gray-100-foreground hover:bg-gray-100/80 h-10 px-4 py-2 mt-4">عرض التذكرة <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
                         <path d="m12 19-7-7 7-7"></path>
                         <path d="M19 12H5"></path>
                     </svg></button>
@@ -35,8 +39,8 @@
                         </svg> حجوزاتك النشطة</h3>
                 </div>
                 <div class="p-6 pt-0" bis_skin_checked="1">
-                    <p class="text-3xl font-bold">3</p>
-                    <p class="text-slate-500">لديك 3 حجوزات قادمة هذا الشهر.</p>
+                    <p class="text-3xl font-bold">-</p>
+                    <p class="text-slate-500">لديك - حجوزات قادمة هذا الشهر.</p>
                 </div>
             </div>
             <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg" bis_skin_checked="1">
@@ -46,7 +50,7 @@
                         </svg> نقاط المكافآت</h3>
                 </div>
                 <div class="p-6 pt-0" bis_skin_checked="1">
-                    <p class="text-3xl font-bold">1,250 نقطة</p>
+                    <p class="text-3xl font-bold">-,-- نقطة</p>
                     <p class="text-slate-500">يمكنك استبدالها بخصومات رائعة!</p>
                 </div>
             </div>
@@ -60,7 +64,7 @@
                     </svg> تنبيهات هامة</h3>
             </div>
             <div class="p-6 pt-0 text-amber-700" bis_skin_checked="1">
-                <p>تم تحديث توقيت حجز "مطعم الذواقة" ليبدأ في الساعة 9:30 مساءً بدلاً من 9:00 مساءً بناءً على طلبك.</p>
+                <p>تم تحديث توقيت حجز "-- --" ليبدأ في الساعة -:-- مساءً بدلاً من --:- مساءً بناءً على طلبك.</p>
             </div>
         </div>
     </div>

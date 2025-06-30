@@ -18,6 +18,12 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:admin'])->group(
     });
     Route::resource('withdraws', Withdraw_checking::class)
         ->names('withdraws');
+    Route::get('public_res', function () {
+            return view('admin.dashboard.public_res');
+        })->name('public_reservations');
+    Route::get('employees', function () {
+            return view('admin.dashboard.employee_managment');
+        })->name('employees');
 });
 
 Route::get('/login', function () {
