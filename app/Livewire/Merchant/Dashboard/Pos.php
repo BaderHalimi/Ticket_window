@@ -7,22 +7,30 @@ use App\Models\PaidReservation;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Carbon\Carbon;
 
 class Pos extends Component
 {
     public $offerings;
     public $selectedOfferingId;
-    public $selectedPackage;
     public $pricingPackages = [];
+    public $selectedPackage;
+    public $showPackage = false;
+
     public $tickets = 1;
     public $manualPrice = 0;
     public $paymentMethod;
 
+    public $customerEmail;
     public $customerName;
     public $customerPhone;
-    public $customerEmail;
-
     public $foundUser = null;
+
+    public $selectedDate;
+    public $selectedTime;
+
+    public $allowedDates = [];
+    public $allowedTimes = [];
 
     public function mount()
     {
@@ -32,18 +40,59 @@ class Pos extends Component
     public function updatedSelectedOfferingId($value)
     {
         $offering = $this->offerings->firstWhere('id', $value);
+
         if (!$offering) {
             $this->pricingPackages = [];
+            $this->allowedDates = [];
+            $this->allowedTimes = [];
             return;
         }
 
-        $features = $offering->features;
-        $packages = $features['pricing_packages'] ?? [];
-
-        $this->pricingPackages = collect($packages)
+        $features = $offering->features ?? [];
+        $this->pricingPackages = collect($features['pricing_packages'] ?? [])
             ->filter(fn($pkg) => !empty($pkg['label']) && $pkg['price'] > 0)
             ->values()
             ->toArray();
+
+        $this->buildAllowedDatesAndTimes($offering, $features);
+    }
+
+    public function buildAllowedDatesAndTimes($offering, $features)
+    {
+        $this->allowedDates = [];
+        $this->allowedTimes = [];
+
+        if ($offering->type === 'event') {
+            $start = Carbon::parse($offering->start_date);
+            $end = Carbon::parse($offering->end_date);
+
+            foreach ($start->daysUntil($end) as $date) {
+                $dateStr = $date->toDateString();
+                $this->allowedDates[] = $dateStr;
+                $this->allowedTimes[$dateStr] = [
+                    'start' => $start->format('H:i'),
+                    'end' => $end->format('H:i')
+                ];
+            }
+        } else {
+            $workSchedule = $features['work_schedule'] ?? [];
+            $closedDays = $features['closed_days'] ?? [];
+
+            for ($i = 0; $i < 30; $i++) {
+                $date = now()->addDays($i);
+                $dateStr = $date->toDateString();
+                $day = strtolower($date->englishDayOfWeek);
+
+                if (in_array($dateStr, $closedDays)) continue;
+                if (($workSchedule[$day]['enabled'] ?? false)) {
+                    $this->allowedDates[] = $dateStr;
+                    $this->allowedTimes[$dateStr] = [
+                        'start' => $workSchedule[$day]['start'],
+                        'end' => $workSchedule[$day]['end']
+                    ];
+                }
+            }
+        }
     }
 
     public function updatedCustomerEmail($value)
@@ -53,11 +102,11 @@ class Pos extends Component
             if ($user) {
                 $this->foundUser = [
                     'id' => $user->id,
-                    'name' => $user->name,
+                    'name' => $user->f_name,
                     'email' => $user->email,
                     'profile_image' => $user->additional_data['profile_image'] ?? '/default-avatar.png',
                 ];
-                $this->customerName = $user->name;
+                $this->customerName = $user->f_name;
                 $this->customerPhone = $user->phone ?? '';
             } else {
                 $this->foundUser = null;
@@ -71,17 +120,45 @@ class Pos extends Component
     {
         $this->validate([
             'selectedOfferingId' => 'required|exists:offerings,id',
-            'paymentMethod' => 'required|in:cash,vip,free',
+            'selectedDate' => 'required|date',
+            'selectedTime' => 'required|date_format:H:i',
+            'paymentMethod' => 'required|in:cash,free',
             'customerPhone' => 'required|string',
-            'customerEmail' => 'nullable|email',
         ]);
 
-        $price = 0;
-        if ($this->selectedPackage) {
-            $price = collect($this->pricingPackages)
-                ->firstWhere('label', $this->selectedPackage)['price'] ?? 0;
+        if (!in_array($this->selectedDate, $this->allowedDates)) {
+            session()->flash('error', 'التاريخ غير متاح للحجز');
+            return;
+        }
+
+        $offering = $this->offerings->firstWhere('id', $this->selectedOfferingId);
+        $selectedDateTime = Carbon::parse("{$this->selectedDate} {$this->selectedTime}");
+
+        if ($offering->type === 'event') {
+            $eventStart = Carbon::parse($offering->start_date);
+            $eventEnd = Carbon::parse($offering->end_date);
+            if ($selectedDateTime->lt($eventStart) || $selectedDateTime->gt($eventEnd)) {
+                session()->flash('error', 'الوقت خارج نطاق الفعالية');
+                return;
+            }
         } else {
-            $price = $this->manualPrice;
+            $features = $offering->features ?? [];
+            $workSchedule = $features['work_schedule'] ?? [];
+            $day = strtolower(Carbon::parse($this->selectedDate)->englishDayOfWeek);
+            if (!($workSchedule[$day]['enabled'] ?? false)) {
+                session()->flash('error', 'اليوم غير موجود في أيام العمل');
+                return;
+            }
+        }
+
+        $price = 0;
+        if ($this->paymentMethod === 'cash') {
+            if ($this->showPackage && $this->selectedPackage) {
+                $price = collect($this->pricingPackages)
+                    ->firstWhere('label', $this->selectedPackage)['price'] ?? 0;
+            } else {
+                $price = $this->manualPrice;
+            }
         }
 
         PaidReservation::create([
@@ -97,21 +174,29 @@ class Pos extends Component
                 'customerPhone' => $this->customerPhone,
                 'customerEmail' => $this->customerEmail,
                 'paymentMethod' => $this->paymentMethod,
+                'selling_type' => 'pos',
+                'selected_date' => $this->selectedDate,
+                'selected_time' => Carbon::createFromFormat('H:i', $this->selectedTime)->format('h:i A'),
             ]),
         ]);
 
         session()->flash('success', 'تم إنشاء الحجز بنجاح!');
         $this->reset([
             'selectedOfferingId',
+            'pricingPackages',
             'selectedPackage',
+            'showPackage',
             'tickets',
             'manualPrice',
             'paymentMethod',
+            'customerEmail',
             'customerName',
             'customerPhone',
-            'customerEmail',
             'foundUser',
-            'pricingPackages'
+            'selectedDate',
+            'selectedTime',
+            'allowedDates',
+            'allowedTimes',
         ]);
     }
 
