@@ -56,7 +56,10 @@ class AuthController extends Controller
         if (Route::is('customer.signup')) {
             Auth::guard('customer')->login($user);
         } elseif (Route::is('signup')) {
-            Auth::guard('merchant')->login($user);
+            return redirect()->route('status')->with([
+                'status' => $user->status,
+            ]);
+            // Auth::guard('merchant')->login($user);
         }
         return redirect()->intended(route('dashboard'))->with('success', 'Registration successful!');
 
