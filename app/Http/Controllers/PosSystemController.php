@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\PaidReservation;
 class PosSystemController extends Controller
 {
     /**
@@ -10,7 +12,13 @@ class PosSystemController extends Controller
      */
     public function index()
     {
-        //
+        $reservations = PaidReservation::where('user_id', Auth::id())
+        ->where('additional_data->selling_type', 'pos')
+        ->orderBy('created_at', 'desc')
+        ->get();
+    
+        return view('merchant.dashboard.pos.pos', compact('reservations'));
+    
     }
 
     /**
@@ -18,7 +26,7 @@ class PosSystemController extends Controller
      */
     public function create()
     {
-        //
+        return view('merchant.dashboard.pos.create');
     }
 
     /**
@@ -34,7 +42,11 @@ class PosSystemController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $reservation = PaidReservation::findOrFail($id);
+        //dd($reservation);
+  
+        
+        return view('merchant.dashboard.pos.preview', compact('reservation'));
     }
 
     /**

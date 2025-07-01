@@ -6,6 +6,8 @@ use App\Http\Controllers\Merchant\OffersController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Merchant\ResController;
 use App\Http\Controllers\Merchantwithdraw;
+use App\Http\Controllers\PosSystemController;
+
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->group(function(){
     Route::get('/',function(){
         return view('merchant.dashboard.index');
@@ -15,13 +17,12 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->gro
     // })->name('services');
     Route::resource('reservations',ResController::class)->names('reservations');
     Route::resource('withdraw',Merchantwithdraw::class)->names('withdraws');
+    Route::resource('pos',PosSystemController::class)->names('pos');
 
     Route::get('checking',function(){
         return view('merchant.dashboard.checking');
     })->name('checking');
-    Route::get('pos',function(){
-        return view('merchant.dashboard.pos');
-    })->name('pos');
+
     Route::get('social_reservation',function(){
         return view('merchant.dashboard.social_reservation');
     })->name('social_reservation');

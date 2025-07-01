@@ -37,13 +37,13 @@
             <path d="M12 21v-1"></path>
         </svg><span>التحقق</span>
     </a>
-    <a href="{{ route('merchant.dashboard.pos') }}" wire:click.prevent="intended('{{ route('merchant.dashboard.pos') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.pos')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <a href="{{ route('merchant.dashboard.pos.index') }}" wire:click.prevent="intended('{{ route('merchant.dashboard.pos.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.pos.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <polyline points="6 9 6 2 18 2 18 9"></polyline>
             <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
             <rect width="12" height="8" x="6" y="14"></rect>
         </svg><span>البيع الداخلي (POS)</span>
     </a>
-    <a href="{{ route('merchant.dashboard.social_reservation') }}" wire:click.prevent="intended('{{ route('merchant.dashboard.social_reservation') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.social_reservation')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    {{-- <a href="{{ route('merchant.dashboard.social_reservation') }}" wire:click.prevent="intended('{{ route('merchant.dashboard.social_reservation') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.social_reservation')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
             <path d="M9 22v-4h6v4"></path>
             <path d="M8 6h.01"></path>
@@ -56,12 +56,12 @@
             <path d="M8 10h.01"></path>
             <path d="M8 14h.01"></path>
         </svg><span>نظام الحجز الجماعي</span>
-    </a>
-    <a href="{{ route('merchant.dashboard.offers_codes') }}" wire:click.prevent="intended('{{ route('merchant.dashboard.offers_codes') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.offers_codes')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    </a> --}}
+    {{-- <a href="{{ route('merchant.dashboard.offers_codes') }}" wire:click.prevent="intended('{{ route('merchant.dashboard.offers_codes') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.offers_codes')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path>
             <path d="M7 7h.01"></path>
         </svg><span>العروض والأكواد</span>
-    </a>
+    </a> --}}
     <a href="{{route('merchant.dashboard.customer_reviews')}}" wire:click.prevent="intended('{{ route('merchant.dashboard.customer_reviews') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.customer_reviews')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
         </svg><span>مراجعات العملاء</span>
