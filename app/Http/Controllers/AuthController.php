@@ -85,10 +85,14 @@ class AuthController extends Controller
                     session()->regenerate();
                     return redirect()->intended(route('merchant.dashboard.overview'))->with('success', 'Login successful');
                 } else {
+                    $status = Auth::guard('merchant')->user()->status;
                     Auth::guard('merchant')->logout();
-                    return back()->withErrors([
-                        'email' => 'Your account is not accepted yet. Please wait for approval.',
+                    return redirect()->route('status')->with([
+                        'status' => $status,
                     ]);
+                    // return back()->withErrors([
+                    //     'email' => 'Your account is not accepted yet. Please wait for approval.',
+                    // ]);
                 }
             } else
                 return back()->withErrors([

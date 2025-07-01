@@ -38,6 +38,14 @@ Route::post('login', [AuthController::class, 'login'])->middleware('guest')->nam
 
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
+Route::get('status', function (Request $request) {
+    if (!$request->session()->get('status',false))
+        return redirect()->route('home');
+    return view('auth.status', [
+        'status' => $request->session()->get('status'),
+    ]);
+})->middleware('guest:merchant')->name('status');
+
 Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
 Route::get('/{id}', function ($id) {

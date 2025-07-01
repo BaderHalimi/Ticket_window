@@ -1,7 +1,6 @@
 @extends('merchant.layouts.app')
 @section('content')
     <div class="flex-1 p-8" bis_skin_checked="1">
-            @livewire('under-review')
 
         <div bis_skin_checked="1" style="opacity: 1; transform: none;">
             <div class="space-y-8" bis_skin_checked="1">
