@@ -57,7 +57,7 @@ class AuthController extends Controller
             Auth::guard('customer')->login($user);
         } elseif (Route::is('signup')) {
             return redirect()->route('status')->with([
-                'status' => $user->status,
+                'status' => 'pending',
             ]);
             // Auth::guard('merchant')->login($user);
         }
