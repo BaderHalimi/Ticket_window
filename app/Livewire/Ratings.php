@@ -31,10 +31,8 @@ class Ratings extends Component
         }
     }
 
-    // public function updated($property)
-    // {
-        
-    // }
+
+    
     public function hideComponent()
     {
         $this->saveRating();
