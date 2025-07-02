@@ -61,7 +61,7 @@ class AuthController extends Controller
             ]);
             // Auth::guard('merchant')->login($user);
         }
-        return redirect()->intended(route('dashboard'))->with('success', 'Registration successful!');
+        return redirect()->intended(route('login'))->with('success', 'Registration successful!');
 
         // return redirect()->route('dashboard')->with('success', 'Registration successful!');
     }
