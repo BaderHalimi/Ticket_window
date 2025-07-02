@@ -33,10 +33,10 @@ Route::get('/login', function () {
 Route::get('/register', function () {
     return view('auth.register');
 })->middleware('guest')->name('register');
-Route::post('register', [AuthController::class, 'store'])->middleware('guest')->name('signup');
-Route::post('login', [AuthController::class, 'login'])->middleware('guest')->name('singin');
+Route::post('register', [AuthController::class, 'store'])->middleware('guest:merchant')->name('signup');
+Route::post('login', [AuthController::class, 'login'])->middleware('guest:merchant')->name('singin');
 
-Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:merchant')->name('logout');
 
 Route::get('status', function (Request $request) {
     if (!$request->session()->get('status',false))

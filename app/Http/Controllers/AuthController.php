@@ -53,7 +53,7 @@ class AuthController extends Controller
         $user = User::create($validated);
 
         //Auth::login($user);
-        if ($validated['role']== 'user') {
+        if ($validated['role'] == 'user') {
             Auth::guard('customer')->login($user);
         } elseif ($validated['role'] == 'merchant') {
             return redirect()->route('status')->with([
