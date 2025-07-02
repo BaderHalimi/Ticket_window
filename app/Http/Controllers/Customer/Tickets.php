@@ -63,6 +63,17 @@ class Tickets extends Controller
 
         );
         
+        notifcate(
+            $reservation->offering->user_id,
+            Auth::user()->f_name . ' قام بالغاء الاشتراك في الخدمة بنجاح',
+
+            'تم الغاء الاشتراك في الخدمة ' . $reservation->offering->name . ' بنجاح',
+            [
+                'type' => 'refund',
+                'offering_id' => $reservation->offering->id,
+            ],
+
+        );
         $reservation->delete();
         return redirect()->back()->with('success', 'Ticket cancelled successfully.');
     }

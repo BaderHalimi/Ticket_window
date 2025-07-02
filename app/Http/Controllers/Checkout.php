@@ -72,9 +72,9 @@ class Checkout extends Controller
                 'additional_data' => $merged,
             ]);
             notifcate(
-                $item->user_id,
-                Auth::user()->name . ' قام بالدفع بنجاح',
-                'تم الدفع بنجاح للعرض: ' . $item->offering->title,
+                $item->offering->user_id,
+                Auth::user()->f_name . ' قام بالدفع بنجاح',
+                'تم الدفع بنجاح للعرض: ' . $item->offering->name,
                 [
                     'type' => 'payment',
                     'offering_id' => $item->offering->id,
@@ -85,13 +85,14 @@ class Checkout extends Controller
             notifcate(
                 Auth::id(),
                 'تم الدفع بنجاح',
-                'تم الدفع بنجاح للعرض: ' . $item->offering->title,
+                'تم الدفع بنجاح للعرض: ' . $item->offering->name,
                 [
                     'type' => 'payment',
                     'offering_id' => $item->offering->id,
                     
                 ],
             );
+
             $item->delete(); // Remove the item from the cart after creating the reservation
 
         }
