@@ -53,9 +53,9 @@ class AuthController extends Controller
         $user = User::create($validated);
 
         //Auth::login($user);
-        if (Route::is('customer.signup')) {
+        if ($validated['role']== 'user') {
             Auth::guard('customer')->login($user);
-        } elseif (Route::is('signup')) {
+        } elseif ($validated['role'] == 'merchant') {
             return redirect()->route('status')->with([
                 'status' => 'pending',
             ]);
