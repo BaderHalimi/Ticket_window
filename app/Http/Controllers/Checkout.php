@@ -82,7 +82,7 @@ class Checkout extends Controller
         $merchant = User::findOrFail($id);
         $user = Auth::guard('customer')->user();
         $reservations = PaidReservation::where('user_id', $user->id)->get();
-        return view('templates.tmplate1.success', compact('user', 'reservations','merchant'));
+        return view('templates.tmplate1.success', compact('user','id', 'reservations','merchant'));
     }
 
     /**
