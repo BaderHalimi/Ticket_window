@@ -10,6 +10,12 @@
         </a>
     </div>
 </nav>
+<!-- Modal Container -->
+<div id="ratings-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+        @livewire('ratings', ['id' => $id])
+    </div>
+</div>
 
 <!-- تعويض للمسافة بسبب الـ navbar الثابت -->
 <div class="h-20"></div>
@@ -37,7 +43,8 @@
             <a href="{{ route('template1.index',['id'=>$merchant->id]) }}" class="text-white bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded-lg">لوحة التحكم</a>
             <a href="{{ route('template1.index',['id'=>$merchant->id]) }}" class="text-white bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg">العودة إلى الصفحة الرئيسية</a>
         </div>
-        @livewire('ratings',['id' => $id])
+
+        
     </div>
 </div>
 
