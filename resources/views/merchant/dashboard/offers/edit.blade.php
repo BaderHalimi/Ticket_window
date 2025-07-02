@@ -1,6 +1,6 @@
 @extends('merchant.layouts.app')
 @section('content')
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<!-- <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script> -->
 
 
 
@@ -8,14 +8,14 @@
         {{-- <div class="grid grid-cols-12 gap-6"> --}}
             {{-- خطوات التسجيل - السلم --}}
                 @livewire('merchant.dashboard.offers.setup-steps', ['offering' => $offering])
-            
+
 
             {{-- نموذج تعبئة المعلومات --}}
-  
-            
+
+
             <div class="col-span-9">
 
-             {{-- 
+             {{--
 
                 {{--  --}}
 
@@ -24,7 +24,7 @@
                 @elseif ($currentStep == 4)
                     @livewire('merchant.dashboard.offers.create.gallery', ['offering' => $offering])
                 @elseif ($currentStep == 2)
-                    @livewire('merchant.dashboard.offers.create.prices', ['offering' => $offering]) 
+                    @livewire('merchant.dashboard.offers.create.prices', ['offering' => $offering])
                 @elseif ($currentStep == 3)
                     @livewire('merchant.dashboard.offers.create.res_settings', ['offering' => $offering])
                 @endif  --}}
