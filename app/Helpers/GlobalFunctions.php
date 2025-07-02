@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\PaysHistory;
+use App\Models\page_views;
 
 if (!function_exists('getCard')){
     function getCard()
@@ -55,4 +56,41 @@ function calculateNet($collection)
 
     return $totalPay - $totalRefund;
 }
+}
+if (!function_exists('set_viewed')) {
+    function set_viewed($merchant_id)
+    {
+        $user = Auth::guard('customer')->user();
+
+        //dd(($user));
+        if (!$user) {
+            //dd($user);
+            return;
+        }
+
+        $page_url = request()->url();
+        $ip = request()->ip();
+
+        $existing = page_views::where('user_id', $user->id)
+            ->where('page_url', $page_url)
+            ->where('ip_address', $ip)
+            ->first();
+
+        if ($existing) {
+            if ($existing->created_at->diffInMinutes(now()) <= 1440) {
+                $existing->created_at = now();
+                $existing->save();
+                return;
+            }
+        }
+            
+        //dd($existing, $user, $page_url, $ip, $merchant_id);
+        page_views::create([
+            'user_id'        => $user->id,
+            'ip_address'     => $ip,
+            'page_url'       => $page_url,
+            'merchant_id'    => $merchant_id,
+            'additional_data'=> json_encode(['timestamp' => now()]),
+        ]);
+    }
 }

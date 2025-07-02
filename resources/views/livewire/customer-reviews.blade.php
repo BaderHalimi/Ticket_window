@@ -60,7 +60,8 @@
                             <div class="rounded-xl border p-4">
                                 <div class="flex items-start gap-4">
 
-                                    <img class="h-10 w-10 rounded-full" src="{{Storage::url($review->user->additional_data["profile_image"]) ?? "https://ui-avatars.com/api/?name= urlencode($review->user->f_name)" }}" alt="Avatar">
+                                    <img class="h-10 w-10 rounded-full" src="{{Storage::url($review->user->additional_data['profile_image'] ?? '') ?: 'https://ui-avatars.com/api/?name=' . urlencode($review->user->f_name)}}" alt="Avatar">
+
                                     <div class="flex-1">
                                         <div class="flex justify-between items-start mb-1">
                                             <div>
@@ -89,16 +90,24 @@
                                             </div>
                                         @endif
 
-                                        @if(!empty($data['reply']))
+                                        @if(!empty($data['reply']) && empty($editingReply[$review->id]))
                                             <div class="mt-2 p-2 text-sm text-green-800 bg-green-50 rounded">
                                                 <strong>ردك:</strong> {{ $data['reply'] }}
                                             </div>
-                                        @else
+                                            <button wire:click="startEditing({{ $review->id }})" class="mt-1 text-blue-600 text-sm hover:underline">تعديل الرد</button>
+                                        @endif
+
+                                        @if(empty($data['reply']) || !empty($editingReply[$review->id]))
                                             <div class="flex gap-2 mt-2">
                                                 <textarea wire:model.defer="replyText.{{ $review->id }}" class="flex-1 rounded-md border p-2 text-sm" placeholder="اكتب ردك على {{ $review->customer_name }}..."></textarea>
                                                 <button wire:click="sendReply({{ $review->id }})" class="bg-blue-600 text-white px-3 rounded-md hover:bg-blue-700 text-sm">
-                                                    إرسال
+                                                    حفظ
                                                 </button>
+                                                @if(!empty($editingReply[$review->id]))
+                                                    <button wire:click="cancelEditing({{ $review->id }})" class="bg-gray-400 text-white px-3 rounded-md hover:bg-gray-500 text-sm">
+                                                        إلغاء
+                                                    </button>
+                                                @endif
                                             </div>
                                         @endif
 

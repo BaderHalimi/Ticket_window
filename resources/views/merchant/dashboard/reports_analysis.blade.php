@@ -3,7 +3,7 @@
 
 <div class="flex-1 p-8">
   <div class="space-y-8">
-    
+
     <!-- رأس الصفحة وزر التصدير -->
     <div class="flex justify-between items-center">
       <h2 class="text-3xl font-bold text-slate-800">التقارير والتحليلات</h2>
@@ -19,45 +19,57 @@
 
     <!-- كروت الإحصائيات -->
     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-      
+
       <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
         <div class="flex flex-col space-y-1.5 p-6">
           <h3 class="text-xl font-semibold flex items-center gap-2">
-            <svg class="lucide lucide-bar-chart2 w-5 h-5" ...></svg>
+            <svg class="lucide lucide-bar-chart2 w-5 h-5"></svg>
             إجمالي المبيعات
           </h3>
         </div>
-        <div class="p-6 pt-0 text-3xl font-bold">45,231 ريال</div>
+        <div class="p-6 pt-0 text-3xl font-bold">{{ number_format($checkedTotal, 0, '.', ',') }} ريال</div>
       </div>
 
       <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
         <div class="flex flex-col space-y-1.5 p-6">
           <h3 class="text-xl font-semibold flex items-center gap-2">
-            <svg class="lucide lucide-pie-chart w-5 h-5" ...></svg>
+            <svg class="lucide lucide-pie-chart w-5 h-5"></svg>
             نسبة الإلغاء
           </h3>
         </div>
-        <div class="p-6 pt-0 text-3xl font-bold">5.4%</div>
+        <div class="p-6 pt-0 text-3xl font-bold">
+          @php
+            $totalCount = $cleanReservations->count();
+            $cancelPercent = $totalCount > 0 ? round(($cancelledReservations->count() / $totalCount) * 100, 1) : 0;
+          @endphp
+          {{ $cancelPercent }}%
+        </div>
       </div>
 
       <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
         <div class="flex flex-col space-y-1.5 p-6">
           <h3 class="text-xl font-semibold flex items-center gap-2">
-            <svg class="lucide lucide-users w-5 h-5" ...></svg>
+            <svg class="lucide lucide-users w-5 h-5"></svg>
             الزوار الفعليون
           </h3>
         </div>
-        <div class="p-6 pt-0 text-3xl font-bold">1,890</div>
+        <div class="p-6 pt-0 text-3xl font-bold">{{ number_format($viewsCount, 0, '.', ',') }}</div>
       </div>
 
       <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
         <div class="flex flex-col space-y-1.5 p-6">
           <h3 class="text-xl font-semibold flex items-center gap-2">
-            <svg class="lucide lucide-calendar w-5 h-5" ...></svg>
+            <svg class="lucide lucide-calendar w-5 h-5"></svg>
             أوقات الذروة
           </h3>
         </div>
-        <div class="p-6 pt-0 text-xl font-bold">الخميس - 8 مساءً</div>
+        <div class="p-6 pt-0 text-xl font-bold">
+          @if($peakHour !== null)
+            {{ \Carbon\Carbon::createFromTime($peakHour)->format('h A') }} - {{ \Carbon\Carbon::createFromTime($peakHour)->locale('ar')->dayName }}
+          @else
+            لا يوجد بيانات
+          @endif
+        </div>
       </div>
 
     </div>
@@ -72,7 +84,6 @@
           <p class="text-sm text-slate-500">نظرة على أداء المبيعات خلال الأشهر الماضية.</p>
         </div>
         <div class="p-6 pt-0 h-72">
-          {{-- استبدل هذا بسكربت الرسم البياني الحقيقي --}}
           <div class="w-full h-full flex items-center justify-center text-slate-400">
             <span>📊 سيتم عرض الرسم البياني هنا</span>
           </div>
@@ -86,9 +97,8 @@
           <p class="text-sm text-slate-500">توزيع الحجوزات على الخدمات المختلفة.</p>
         </div>
         <div class="p-6 pt-0 h-72">
-          {{-- استبدل هذا بالرسم البياني الدائري الفعلي --}}
-          <div class="w-full h-full flex items-center justify-center text-slate-400">
-            <span>🥧 سيتم عرض الرسم البياني هنا</span>
+          <div class="w-full h-full relative">
+            <canvas id="servicePieChart" class="w-full h-full"></canvas>
           </div>
         </div>
       </div>
@@ -99,3 +109,54 @@
 </div>
 
 @endsection
+
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const ctx = document.getElementById('servicePieChart').getContext('2d');
+
+    const data = {
+        labels: @json($stats->pluck('service')),
+        datasets: [{
+            label: 'نسبة الحجوزات',
+            data: @json($stats->pluck('percent')),
+            backgroundColor: [
+                '#F97316', '#FACC15', '#34D399', '#60A5FA', '#A78BFA', '#F472B6', '#FB923C'
+            ],
+            borderColor: '#fff',
+            borderWidth: 2,
+        }]
+    };
+
+    const config = {
+        type: 'pie',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#334155',
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.parsed + '%';
+                        }
+                    }
+                }
+            }
+        },
+    };
+
+    new Chart(ctx, config);
+});
+</script>
+@endpush

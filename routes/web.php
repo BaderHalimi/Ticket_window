@@ -50,6 +50,7 @@ Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard')
 
 Route::get('/{id}', function ($id) {
     $merchant = User::findOrFail($id);
+    set_viewed($merchant->id);
     return view('templates.tmplate1.index', compact('merchant'));
 })->where(['id' => '[0-9]+'])->name('template1.index');
 Route::get('/{id}/{offering}', function ($id, Offering $offering) {
@@ -57,6 +58,7 @@ Route::get('/{id}/{offering}', function ($id, Offering $offering) {
     if ($offering->user_id != $merchant->id || $offering->status == 'inactive') {
         abort(404);
     }
+    set_viewed($merchant->id);
     return view('templates.tmplate1.item', compact('merchant', 'offering'));
 })->where(['id' => '[0-9]+', 'offering' => '[0-9]+'])->name('template1.item');
 

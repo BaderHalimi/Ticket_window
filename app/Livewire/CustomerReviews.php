@@ -7,12 +7,9 @@ use App\Models\Customer_Ratings;
 
 class CustomerReviews extends Component
 {
-    public $reviews;         // كل التقييمات
-    public $replyText = [];  // الردود المدخلة من الفورم
-
-    public $rating = 0;
-    public $review = '';
-    public $visible = true;
+    public $reviews;
+    public $replyText = [];
+    public $editingReply = [];
 
     public function mount()
     {
@@ -24,6 +21,25 @@ class CustomerReviews extends Component
         $this->reviews = Customer_Ratings::where('is_visible', true)
             ->orderByDesc('created_at')
             ->get();
+    }
+
+    public function startEditing($reviewId)
+    {
+        $this->editingReply[$reviewId] = true;
+
+        $review = Customer_Ratings::find($reviewId);
+        if ($review) {
+            $data = is_array($review->additional_data)
+                ? $review->additional_data
+                : (is_string($review->additional_data) ? json_decode($review->additional_data, true) : []);
+            $this->replyText[$reviewId] = $data['reply'] ?? '';
+        }
+    }
+
+    public function cancelEditing($reviewId)
+    {
+        $this->editingReply[$reviewId] = false;
+        $this->replyText[$reviewId] = '';
     }
 
     public function sendReply($reviewId)
@@ -39,14 +55,14 @@ class CustomerReviews extends Component
                     : (is_string($review->additional_data) ? json_decode($review->additional_data, true) : []);
 
                 $data['reply'] = $reply;
-
                 $review->additional_data = $data;
                 $review->save();
             }
-
-            $this->replyText[$reviewId] = ''; // امسح حقل الإدخال
-            $this->loadReviews();             // حدث القائمة
         }
+
+        $this->editingReply[$reviewId] = false;
+        $this->replyText[$reviewId] = '';
+        $this->loadReviews();
     }
 
     public function hideReview($reviewId)

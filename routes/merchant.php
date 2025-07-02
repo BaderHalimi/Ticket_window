@@ -6,6 +6,7 @@ use App\Http\Controllers\Merchant\OffersController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Merchant\ResController;
 use App\Http\Controllers\Merchantwithdraw;
+use App\Http\Controllers\Page_statistics;
 use App\Http\Controllers\PosSystemController;
 
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->group(function(){
@@ -18,6 +19,8 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->gro
     Route::resource('reservations',ResController::class)->names('reservations');
     Route::resource('withdraw',Merchantwithdraw::class)->names('withdraws');
     Route::resource('pos',PosSystemController::class)->names('pos');
+    Route::resource('statistics',Page_statistics::class)->names('statistics');
+
 
     Route::get('checking',function(){
         return view('merchant.dashboard.checking');
@@ -35,9 +38,9 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->gro
     Route::get('intelligence_analytics',function(){
         return view('merchant.dashboard.intelligence_analytics');
     })->name('intelligence_analytics');
-    Route::get('reports_analysis',function(){
-        return view('merchant.dashboard.reports_analysis');
-    })->name('reports_analysis');
+    // Route::get('reports_analysis',function(){
+    //     return view('merchant.dashboard.reports_analysis');
+    // })->name('reports_analysis');
 
     Route::get('notification_management',function(){
         return view('merchant.dashboard.notification_management');
