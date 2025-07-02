@@ -101,6 +101,9 @@ class OffersController extends Controller
     public function edit($id)
     {
         $offering = Offering::findOrFail($id);
+        if($offering->user_id !== Auth::id()) {
+            return redirect()->route('merchant.dashboard.offer.index')->with('error', 'Unauthorized action.');
+        }
         return view('merchant.dashboard.offers.edit', compact('offering'));
     }
 
