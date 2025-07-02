@@ -46,6 +46,7 @@ class Merchantwithdraw extends Controller
         $withdraws = withdraws_log::where('user_id', Auth::id())
             ->where('status', 'pending')
             ->get();
+        
         return view('merchant.dashboard.wallet_withdrawal', compact(
             'pendingReservations', 
             'cancelledReservations', 
@@ -101,6 +102,20 @@ class Merchantwithdraw extends Controller
             $pay->additional_data = $data;
             $pay->save();
         }
+        notifcate(
+            Auth::id(),
+            'تم طلب السحب بنجاح' . $amount,
+            'تستغرق العملية حوالي 24 ساعة او اكثر',
+            [
+                'type' => 'payment',
+                'withdrawal' => true,
+                'status' => 'pending',
+                'recipient_id' => Auth::id(),
+                'transaction_id' => $withdraw->withdraw_id,
+                'amount' => $withdraw->amount,
+
+            ],
+        );
         
         //dd($withdraw);
         return redirect()->route('merchant.dashboard.withdraws.index')->with('success', 'تم إرسال طلب السحب بنجاح ✅');

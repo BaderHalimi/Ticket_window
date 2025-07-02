@@ -71,7 +71,27 @@ class Checkout extends Controller
                 'amount' => $item->price,
                 'additional_data' => $merged,
             ]);
+            notifcate(
+                $item->user_id,
+                Auth::user()->name . ' قام بالدفع بنجاح',
+                'تم الدفع بنجاح للعرض: ' . $item->offering->title,
+                [
+                    'type' => 'payment',
+                    'offering_id' => $item->offering->id,
+                    
+                ],
+            );
             
+            notifcate(
+                Auth::id(),
+                'تم الدفع بنجاح',
+                'تم الدفع بنجاح للعرض: ' . $item->offering->title,
+                [
+                    'type' => 'payment',
+                    'offering_id' => $item->offering->id,
+                    
+                ],
+            );
             $item->delete(); // Remove the item from the cart after creating the reservation
 
         }

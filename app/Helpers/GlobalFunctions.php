@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Auth;
 use App\Models\PaysHistory;
 use App\Models\page_views;
+use App\Models\User;
+use App\Models\notifications;
 
 if (!function_exists('getCard')){
     function getCard()
@@ -92,5 +94,29 @@ if (!function_exists('set_viewed')) {
             'merchant_id'    => $merchant_id,
             'additional_data'=> json_encode(['timestamp' => now()]),
         ]);
+    }
+}
+
+if (!function_exists('notifcate')) {
+    function notifcate( $user_id,$title, $body, $data)
+    {
+
+
+        $notification = notifications::create([
+            
+            'subject' => $title,
+            'user_id' => $user_id,
+            'message'  => $body,
+            'data'  => json_encode($data),
+            'type' => 'alert',
+            'is_read' => false,
+            'additional_data' => json_encode($data),//link * image
+        ]);
+
+        // Optionally, you can trigger an event or perform additional actions here
+        // event(new NotificationCreated($notification));
+
+        return $notification;
+
     }
 }

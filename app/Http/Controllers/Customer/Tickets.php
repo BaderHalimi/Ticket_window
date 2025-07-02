@@ -51,6 +51,17 @@ class Tickets extends Controller
             'amount' => $reservation->price,
             'additional_data' => $merged,
         ]);
+        notifcate(
+            Auth::id(),
+            'تم استرداد المبلغ بنجاح',
+
+            'تم الغاء الاشتراك في الخدمة ' . $reservation->offering->name . ' بنجاح',
+            [
+                'type' => 'refund',
+                'offering_id' => $reservation->offering->id,
+            ],
+
+        );
         
         $reservation->delete();
         return redirect()->back()->with('success', 'Ticket cancelled successfully.');

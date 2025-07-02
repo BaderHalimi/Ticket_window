@@ -68,26 +68,18 @@
 
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto">
-      <header class="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-30 flex-row-reverse">
+      <header class="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-30 flex-row md:flex-row-reverse">
         <!-- Burger button -->
         <button id="burgerBtn" class="md:hidden text-slate-600 hover:text-orange-500">
           <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-
+      
         <!-- User Info + Notification -->
         <div class="flex items-center gap-4">
-          <!-- Notification Bell -->
-          <button class="relative text-slate-600 hover:text-orange-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
-              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
-            </svg>
-            <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
-          </button>
-
-          <!-- User Name and Image -->
+          @livewire('notif-bell')
+      
           <div class="flex items-center gap-2">
             <span class="text-slate-800 font-bold text-sm hidden md:inline">{{ auth()->user()->name }}</span>
             <img class="h-10 w-10 rounded-full border border-slate-300 object-cover"
@@ -96,6 +88,7 @@
           </div>
         </div>
       </header>
+      
 
       <div class="p-6 lg:p-8">
         @yield('content')

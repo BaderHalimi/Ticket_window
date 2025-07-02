@@ -83,6 +83,19 @@ class Withdraw_checking extends Controller
             $transaction->additional_data = json_encode($data);
             $transaction->save();
         }
+        notifcate(
+            $log->user_id,
+            'تم  السحب',
+            'تم قبول السحب' ,
+            [
+                'type' => 'withdraw',
+                'withdrawal' => true,
+                $log->withdraw_id => $log->withdraw_id,
+                'status' => 'completed',
+                'recipient_id' => $log->user_id,
+                                
+            ],
+        );
 
         return redirect()->route('admin.dashboard.withdraws.index')->with('success', 'Withdraw log updated successfully.');
     }

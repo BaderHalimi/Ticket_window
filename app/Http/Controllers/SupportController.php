@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Supports; 
+use App\Models\Supports;
+//use DragonCode\Contracts\Cashier\Auth\Auth;
+use Illuminate\Support\Facades\Auth;
+
+
 class SupportController extends Controller
 {
     /**
@@ -46,6 +50,15 @@ class SupportController extends Controller
         $data['status'] = 'open';
     
         Supports::create($data);
+        notifcate(
+            Auth::id(),
+            'تم فتح طلب دعم جديد',
+            'تم فتح طلب دعم جديد من قبل العميل: ' . auth()->user()->name,
+            [
+                'type' => 'support',
+            ],
+
+        );
     
         return redirect()->route('customer.dashboard.support.index')->with('success', 'تم إرسال الطلب بنجاح ✅');
         
