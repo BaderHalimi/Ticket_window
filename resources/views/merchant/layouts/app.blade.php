@@ -49,7 +49,7 @@
         <h1 class="text-xl font-bold text-slate-800">{{ config('app.name') }}</h1>
       </div>
 
-      @livewire('merchant.aside.nav')
+      @livewire('merchant.aside.nav',['merchant'=>$merchant??false])
 
       <div class="mt-auto p-4 border-t">
         <form action="{{ route('logout') }}" method="post">

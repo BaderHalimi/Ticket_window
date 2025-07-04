@@ -84,3 +84,78 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->gro
 
 
 });
+Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->group(function(){
+    Route::get('m/{merchant}/',function($merchant){
+        return view('merchant.dashboard.index',compact('merchant'));
+    })->name('overview');
+    // Route::get('services',function(){
+    //     return view('merchant.dashboard.services');
+    // })->name('services');
+    Route::resource('m/{merchant}/reservations',ResController::class)->names('reservations');
+    Route::resource('m/{merchant}/withdraw',Merchantwithdraw::class)->names('withdraws');
+    Route::resource('m/{merchant}/pos',PosSystemController::class)->names('pos');
+    Route::resource('m/{merchant}/statistics',Page_statistics::class)->names('statistics');
+
+
+    Route::get('m/{merchant}/checking',function(){
+        return view('merchant.dashboard.checking');
+    })->name('checking');
+
+    Route::get('m/{merchant}/social_reservation',function(){
+        return view('merchant.dashboard.social_reservation');
+    })->name('social_reservation');
+    Route::get('m/{merchant}/offers_codes',function(){
+        return view('merchant.dashboard.offers_codes');
+    })->name('offers_codes');
+    Route::get('m/{merchant}/customer_reviews',function(){
+        return view('merchant.dashboard.customer_reviews');
+    })->name('customer_reviews');
+    Route::get('m/{merchant}/intelligence_analytics',function(){
+        return view('merchant.dashboard.intelligence_analytics');
+    })->name('intelligence_analytics');
+    // Route::get('reports_analysis',function(){
+    //     return view('merchant.dashboard.reports_analysis');
+    // })->name('reports_analysis');
+
+    Route::get('m/{merchant}/notification_management',function(){
+        return view('merchant.dashboard.notification_management');
+    })->name('notification_management');
+    Route::get('m/{merchant}/message_center',function(){
+        return view('merchant.dashboard.message_center');
+    })->name('message_center');
+    Route::get('m/{merchant}/wallet_withdrawal',function(){
+        return view('merchant.dashboard.wallet_withdrawal');
+    })->name('wallet_withdrawal');
+    Route::resource('m/{merchant}/branch', BranchController::class);
+    Route::resource('m/{merchant}/offer', OffersController::class);
+
+    // Route::get('branch_management',function(){
+    //     return view('merchant.dashboard.index');
+    // })->name('branch_management');
+    Route::get('m/{merchant}/team_management',function(){
+        return view('merchant.dashboard.team_management');
+    })->name('team_management');
+    Route::get('m/{merchant}/page_setup',function(){
+        return view('merchant.dashboard.page_setup');
+    })->name('page_setup');
+    Route::get('m/{merchant}/policies_settings',function(){
+        return view('merchant.dashboard.policies_settings');
+    })->name('policies_settings');
+    Route::get('m/{merchant}/languages_translation',function(){
+        return view('merchant.dashboard.languages_translation');
+    })->name('languages_translation');
+
+    Route::get('m/{merchant}/api',function(){
+        return view('merchant.dashboard.api');
+    })->name('api');
+    Route::get('m/{merchant}/activity_log',function(){
+        return view('merchant.dashboard.activity_log');
+    })->name('activity_log');
+
+
+
+    Route::post('m/{merchant}/update/{id}', [AuthController::class,'update'])->name('update');
+
+
+
+});

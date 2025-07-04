@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Role;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,6 +38,10 @@ class AppServiceProvider extends ServiceProvider
         // date_default_timezone_set($timezone);
         // Carbon::setTimeZone($timezone);
         \Carbon\Carbon::setLocale(config('app.locale'));
+
+        Gate::define('overview_page', function ($user,$merchant) {
+            return Role::find($user->additional_data['role'] ?? 0)->permissions->contains('key', 'overview_page');
+        });
 
     }
 }
