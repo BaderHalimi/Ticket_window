@@ -1,7 +1,8 @@
 @extends('merchant.layouts.app')
 @section('content')
 
-<div style="opacity: 1; transform: none;">
+@livewire('chat_center')
+{{-- <div style="opacity: 1; transform: none;">
   @livewire('under-review')
 
   <div class="space-y-8">
@@ -120,6 +121,6 @@
       </div>
     </div>
   </div>
-</div>
+</div> --}}
 
 @endsection
