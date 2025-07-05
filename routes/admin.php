@@ -18,6 +18,8 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:admin'])->group(
     });
     Route::resource('withdraws', Withdraw_checking::class)
         ->names('withdraws');
+    Route::resource('support', \App\Http\Controllers\Admin_Support::class)
+        ->names('support');
     Route::get('public_res', function () {
             return view('admin.dashboard.public_res');
         })->name('public_reservations');

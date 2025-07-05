@@ -18,5 +18,16 @@ class Supports extends Model
         'staff_id',
         'additional_data'
     ];
+    protected $casts = [
+        'additional_data' => 'array',
+    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function staff()
+    {
+        return $this->belongsTo(User::class, 'staff_id');
+    }
 }
 

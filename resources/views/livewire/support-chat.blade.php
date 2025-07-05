@@ -1,12 +1,23 @@
-<div class="flex flex-col h-[80vh] max-w-4xl w-full mx-auto bg-white border border-gray-200 shadow rounded-xl overflow-hidden"
-     x-data="{ 
-         scrollToBottom() { 
-             let el = $refs.messagesContainer;
-             el.scrollTop = el.scrollHeight; 
-         }, 
-         init() { this.$nextTick(() => this.scrollToBottom()); }, 
-         updated() { this.scrollToBottom(); } 
-     }">
+
+<div
+    x-data="{
+        scrollToBottom() {
+            let el = $refs.messagesContainer;
+            el.scrollTop = el.scrollHeight;
+        },
+        init() {
+            this.scrollToBottom();
+
+            // Listen to Livewire update
+            Livewire.hook('message.processed', () => {
+                this.scrollToBottom();
+            });
+        }
+    }"
+    x-init="init()"
+    class="flex flex-col h-[80vh] max-w-4xl w-full mx-auto bg-white border border-gray-200 shadow rounded-xl overflow-hidden"
+>
+
 
     <!-- Header -->
     <div class="bg-gray-100 text-gray-800 p-4 text-center font-semibold text-base sm:text-lg">
@@ -14,7 +25,7 @@
     </div>
 
     <!-- Messages -->
-    <div x-ref="messagesContainer" class="flex-1 overflow-y-auto px-2 sm:px-4 py-4 space-y-4 bg-gray-50">
+    <div x-ref="messagesContainer" class="flex-1 overflow-y-auto px-2 sm:px-4 py-4 space-y-4 bg-gray-50" wire:poll.1000ms    >
         @foreach($messages as $message)
             @php
                 $isMine = $message->user_id === auth()->id();
