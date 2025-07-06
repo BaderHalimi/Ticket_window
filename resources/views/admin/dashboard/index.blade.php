@@ -1,8 +1,8 @@
 @extends('admin.layouts.app')
 @section('content')
 
-@livewire('under-review') 
-<br>
+ @livewire('overview')  
+{{-- <br>
 <div bis_skin_checked="1" style="opacity: 1; transform: none;">
     <div class="space-y-8" bis_skin_checked="1">
         <div bis_skin_checked="1">
@@ -230,5 +230,5 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 @endsection
