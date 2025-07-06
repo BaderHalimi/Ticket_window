@@ -38,8 +38,8 @@ class Overview extends Component
         $payCount = PaysHistory::where('additional_data->type', 'pay')->count();
         $refundCount = PaysHistory::where('additional_data->type', 'refund')->count();
 
-        $this->salesCount = max(0, $payCount - $refundCount);
-        $this->salesAmount = max(0, $totalPayAmount - $totalRefundAmount);
+        $this->salesCount =  $payCount + $refundCount - $refundCount;
+        $this->salesAmount = $totalPayAmount + $totalRefundAmount - $totalRefundAmount;
         
 
         $this->userCount = User::where('role', 'user')->count();
