@@ -13,6 +13,14 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:admin'])->group(
     Route::get('', function () {
         return view('admin.dashboard.index');
     })->name('overview');
+    Route::get('reports', function () {
+        return view('admin.dashboard.reports');
+    })->name('reports');
+
+    Route::get('setup', function () {
+        return view('admin.dashboard.generale-settings');
+    })->name('setup');
+
     Route::prefix('merchants')->as('merchants.')->group(function () {
         Route::get('/', [MerchantController::class, 'index'])->name('index');
     });

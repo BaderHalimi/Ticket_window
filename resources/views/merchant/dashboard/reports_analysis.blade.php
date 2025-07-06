@@ -114,49 +114,35 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('livewire:load', () => renderCharts());
+Livewire.hook('message.processed', () => renderCharts());
+
+function renderCharts() {
     const ctx = document.getElementById('servicePieChart').getContext('2d');
+    // دمر المخزن القديم
+    if(window.myPieChart) window.myPieChart.destroy();
 
-    const data = {
-        labels: @json($stats->pluck('service')),
-        datasets: [{
-            label: 'نسبة الحجوزات',
-            data: @json($stats->pluck('percent')),
-            backgroundColor: [
-                '#F97316', '#FACC15', '#34D399', '#60A5FA', '#A78BFA', '#F472B6', '#FB923C'
-            ],
-            borderColor: '#fff',
-            borderWidth: 2,
-        }]
-    };
-
-    const config = {
+    window.myPieChart = new Chart(ctx, {
         type: 'pie',
-        data: data,
+        data: {
+            labels: @json($stats->pluck('service')),
+            datasets: [{
+                label: 'نسبة الحجوزات',
+                data: @json($stats->pluck('percent')),
+                backgroundColor: [
+                    '#F97316', '#FACC15', '#34D399', '#60A5FA', '#A78BFA', '#F472B6', '#FB923C'
+                ],
+                borderColor: '#fff',
+                borderWidth: 2,
+            }]
+        },
         options: {
             responsive: true,
             plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#334155',
-                        font: {
-                            size: 14
-                        }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return context.label + ': ' + context.parsed + '%';
-                        }
-                    }
-                }
+                legend: { position: 'bottom' }
             }
-        },
-    };
-
-    new Chart(ctx, config);
-});
+        }
+    });
+}
 </script>
 @endpush
