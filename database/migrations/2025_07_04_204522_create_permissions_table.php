@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
             $table->string('key')->unique();
-            $table->foreignId('merchant_id')->constrained('users', 'id')->cascadeOnDelete();
-            $table->foreignId('created_by')->nullable()->constrained('users', 'id')->nullOnDelete();
             $table->json('additional_data')->default(json_encode([]));
             $table->timestamps();
         });

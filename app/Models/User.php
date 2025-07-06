@@ -6,10 +6,12 @@ namespace App\Models;
 
 use App\Models\Merchant\Branch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Role;
 
 
 class User extends Authenticatable
@@ -81,5 +83,16 @@ class User extends Authenticatable
     {
         return $this->hasRole('merchant');
     }
-
+    // public function getRolesAttribute()
+    // {
+    //     $data = json_decode($this->additional_data, true);
+    //     $roleIds = $data['roles'] ?? [];
+    
+    //     return Role::whereIn('id', $roleIds)->get();
+    // }
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+    
 }

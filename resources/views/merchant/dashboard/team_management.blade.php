@@ -1,7 +1,9 @@
 @extends('merchant.layouts.app')
 
 @section('content')
-@livewire('under-review')
+
+@livewire("team_manager")
+{{-- @livewire('under-review')
 
 <div class="flex-1 p-8">
   <div class="space-y-8">
@@ -120,5 +122,5 @@
       </div>
     </div>
   </div>
-</div>
+</div> --}}
 @endsection

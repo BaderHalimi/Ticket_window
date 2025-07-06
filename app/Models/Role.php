@@ -8,17 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     use HasFactory;
-    protected $fillable = ['key', 'merchant_id','created_by','additional_data'];
+    protected $fillable = ['key','created_by','additional_data'];
 
     protected $casts = ['additional_data' => 'array'];
 
     /**
      * The permissions that belong to the role.
      */
+    //  public function permissions()
+    //  {
+    //      return $this->belongsTo(Permission::class, 'role_permissions')
+    //          ->withTimestamps()
+    // ->withPivot('additional_data');
+    //  }
+
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class, 'role_permissions')
-            ->withTimestamps()
-            ->withPivot('additional_data');
+        return $this->belongsToMany(Permission::class);
     }
+
 }
