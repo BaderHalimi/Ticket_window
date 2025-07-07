@@ -21,7 +21,7 @@ class Information extends Component
     public function mount(Offering $offering)
     {
         $this->offering = $offering;
-        $this->services_type = $this->offering->features['services_type'];
+        $this->services_type = $this->offering->features['services_type']??'events';
         foreach (
             [
                 'name',
