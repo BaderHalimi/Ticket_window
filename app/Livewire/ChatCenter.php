@@ -1,69 +1,73 @@
 <?php
-
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use App\Models\MerchantChat;
+use App\Models\MerchantMessage as MerchantChatMessage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ChatCenter extends Component
 {
-    public $chats = [];
-    public $selectedChat = null;
-    public $messages = [];
+    use WithFileUploads;
+
+    public $chat_id;
     public $newMessage = '';
+    public $attachment;
 
-    public function mount()
+    protected $rules = [
+        'newMessage' => 'nullable|string|max:1000',
+        'attachment' => 'nullable|file|max:10240',
+    ];
+
+    public function send()
     {
-        $this->loadChats();
-    }
+        $this->validate();
 
-    public function loadChats()
-    {
-        $this->chats = MerchantChat::with(['messages' => function ($query) {
-            $query->latest()->take(1);
-        }])
-        ->where('merchant_id', Auth::id())
-        ->latest()
-        ->get();
-    }
-
-    public function loadChat($chatId)
-    {
-        $this->selectedChat = MerchantChat::with(['messages.user'])
-            ->where('merchant_id', Auth::id())
-            ->findOrFail($chatId);
-
-        $this->messages = $this->selectedChat->messages()
-            ->with('user')
-            ->orderBy('created_at')
-            ->get();
-    }
-
-    public function sendMessage()
-    {
-        $this->validate([
-            'newMessage' => 'required|string|max:1000',
-        ]);
-
-        if (!$this->selectedChat) {
-            session()->flash('error', 'No chat selected.');
-            return;
-        }
-
-        $message = $this->selectedChat->messages()->create([
+        $data = [
+            'merchant_chat_id' => $this->chat_id,
             'user_id' => Auth::id(),
             'message' => $this->newMessage,
-        ]);
+            'type' => 'text',
+        ];
 
-        $this->messages->push($message);
+        if ($this->attachment) {
+            $path = $this->attachment->store('chat_attachments', 'public');
+            $mime = $this->attachment->getMimeType();
+            $filename = $this->attachment->getClientOriginalName();
+
+            $data['type'] = str_starts_with($mime, 'image') ? 'image' : 'file';
+            $data['additional_data'] = [
+                'path' => $path,
+                'name' => $filename,
+            ];
+        }
+
+        MerchantChatMessage::create($data);
         $this->newMessage = '';
+        $this->attachment = null;
+    }
 
-        $this->loadChats(); // refresh latest messages
+    public function deleteMessage($id)
+    {
+        $msg = MerchantChatMessage::findOrFail($id);
+        if ($msg->user_id === Auth::id()) {
+            $msg->delete();
+        }
     }
 
     public function render()
     {
-        return view('livewire.chat-center');
+        $chats = MerchantChat::with(['messages' => fn($q) => $q->latest()->limit(1), 'user'])
+            ->where('merchant_id', Auth::id())
+            ->latest()
+            ->get();
+
+        $messages = $this->chat_id
+            ? MerchantChatMessage::where('merchant_chat_id', $this->chat_id)->with('user')->oldest()->get()
+            : [];
+
+        return view('livewire.chat-center', compact('chats', 'messages'));
     }
 }

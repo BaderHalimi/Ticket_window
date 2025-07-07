@@ -20,4 +20,8 @@ class MerchantChat extends Model
     {
         return $this->belongsTo(User::class, 'merchant_id');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
