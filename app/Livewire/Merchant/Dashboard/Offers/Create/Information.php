@@ -12,7 +12,7 @@ class Information extends Component
     public Offering $offering;
 
     public $name, $location, $description, $image;
-    public  $category,$type,$services_type;
+    public  $category, $type, $services_type;
     //public $has_chairs, $chairs_count; $start_time, $end_time, $status, $type,, $price
     public $tags = [];
     public array $successFields = [];
@@ -21,13 +21,21 @@ class Information extends Component
     public function mount(Offering $offering)
     {
         $this->offering = $offering;
-        foreach ([
-            'name', 'location', 'description', 'image', 'category'//,'type'
-            //'start_time', 'end_time', 'status', 'type', 'category', 'price',
-            //'has_chairs', 'chairs_count'
-        ] as $field) {
+        $this->services_type = $this->offering->features['services_type'];
+        foreach (
+            [
+                'name',
+                'location',
+                'description',
+                'image',
+                'category' //,'type'
+                //'start_time', 'end_time', 'status', 'type', 'category', 'price',
+                //'has_chairs', 'chairs_count'
+            ] as $field
+        ) {
             $this->{$field} = $offering->{$field};
         }
+        $this->dispatch('ServiceUpdated');
 
         //$this->start_time = $offering->start_time ? $offering->start_time->format('Y-m-d H:i') : null;
         //$this->end_time = $offering->end_time ? $offering->end_time->format('Y-m-d H:i') : null;
@@ -54,23 +62,26 @@ class Information extends Component
             //'has_chairs' => 'boolean',
             //'chairs_count' => 'required_if:has_chairs,true|integer|min:0',
         ];
-        $features = $this->offering->features ?? [];
-        $features['services_type'] = $this->services_type;
-        //$features['tags'] = $this->tags;
-        $this->offering->features = $features;
-    
+
+
 
         try {
             // validate only updated field
             $this->validateOnly($field, $rules);
 
             // Update value
-            $this->offering->{$field} = $this->{$field};
-            
+            if ($field == 'services_type') {
+                $features = $this->offering->features ?? [];
+                $features['services_type'] = $this->services_type;
+                //$features['tags'] = $this->tags;
+                $this->offering->features = $features;
+            } else
+                $this->offering->{$field} = $this->{$field};
 
-            
+
+            $this->offering->status = 'inactive';
             $this->offering->save();
-
+            $this->dispatch('ServiceUpdated');
             // Show success message
             $this->successFields[$field] = 'تم الحفظ بنجاح ✅';
         } catch (\Illuminate\Validation\ValidationException $e) {

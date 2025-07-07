@@ -25,8 +25,9 @@ class Gallery extends Component
     public function updatedImage()
     {
         $path = $this->image->store('offerings', 'public');
-        $this->offering->update(['image' => $path]);
+        $this->offering->update(['image' => $path, 'status' => 'inactive']);
         $this->dispatch('image-uploaded');
+        $this->dispatch('ServiceUpdated');
     }
     public function updatedGallery1($files)
     {
@@ -34,17 +35,19 @@ class Gallery extends Component
             $path = $file->store('offerings/gallery', 'public');
             $this->gallery[] = $path; // ✅ صح، هيك بنضيف فقط string
         }
-    
+
         $features = $this->offering->features ?? [];
         $features['gallery'] = $this->gallery;
-    
+
         $this->offering->update([
-            'features' => $features
+            'features' => $features,
+            'status' => 'inactive'
         ]);
-    
+
         $this->dispatch('gallery-updated');
+        $this->dispatch('ServiceUpdated');
     }
-    
+
     public function removeGalleryImage($index)
     {
         unset($this->gallery[$index]);
@@ -54,8 +57,10 @@ class Gallery extends Component
         $features['gallery'] = $this->gallery;
 
         $this->offering->update([
-            'features' => $features
+            'features' => $features,
+            'status' => 'inactive'
         ]);
+        $this->dispatch('ServiceUpdated');
     }
 
     public function render()

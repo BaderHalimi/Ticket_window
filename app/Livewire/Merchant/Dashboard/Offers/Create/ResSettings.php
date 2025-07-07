@@ -131,7 +131,9 @@ class ResSettings extends Component
 
         $this->offering->update([
             'features' => $features,
+            'status' => 'inactive'
         ]);
+        $this->dispatch('ServiceUpdated');
     }
 
     public function render()

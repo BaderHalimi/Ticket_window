@@ -4,9 +4,11 @@
 
 namespace App\Livewire\Merchant\Dashboard\Offers;
 
+use Livewire\Attributes\On;
 use Livewire\Component;
 use App\Models\Offering;
 use Illuminate\Support\Facades\Auth;
+
 class SetupSteps extends Component
 {
     public Offering $offering;
@@ -21,7 +23,8 @@ class SetupSteps extends Component
     {
         $this->currentStep = $step;
     }
-    public function publish(){
+    public function publish()
+    {
         //dd('Publishing the offer...');
         $isReady = hasEssentialFields($this->offering->id);
         //dd($isReady);
@@ -30,16 +33,17 @@ class SetupSteps extends Component
             $data = $offering->additional_data;
             // $data['is_published'] = true;
             $offering->additional_data = $data;
-            $offering->status = 'inactive';
+            $offering->status = 'active';
             $offering->save();
 
-            notifcate(Auth::id(), 'success','Offer published successfully!',[
+            notifcate(Auth::id(), 'success', 'Offer published successfully!', [
                 'title' => 'Offer Published',
                 'text' => 'Your offer has been published successfully.',
             ]);
         }
-
+        $this->render();
     }
+    #[On('ServiceUpdated')]
     public function render()
     {
 
@@ -48,12 +52,10 @@ class SetupSteps extends Component
         $isReady = true;
         if (!$isPublished) {
             $isReady = hasEssentialFields($this->offering->id)['status'];
-
         }
         //dd($isPublished, $isReady);
         //dd($isReady);
 
-        return view('livewire.merchant.dashboard.offers.setup-steps',compact('isReady', 'isPublished'));
-
+        return view('livewire.merchant.dashboard.offers.setup-steps', compact('isReady', 'isPublished'));
     }
 }

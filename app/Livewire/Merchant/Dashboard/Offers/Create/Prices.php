@@ -49,7 +49,7 @@ class Prices extends Component
             //'hourly_rate' => 0.0,
             'enable_coupons' => false,
             'enable_discounts' => false,
-            
+
             'discount_start' => '',
             'discount_end' => '',
             'discount_percent' => null,
@@ -93,9 +93,11 @@ class Prices extends Component
                 'discount_start' => $this->discount_start,
                 'discount_end' => $this->discount_end,
                 'discount_percent' => $this->discount_percent,
-                
-            ])
+
+            ]),
+            'status' => 'inactive'
         ]);
+        $this->dispatch('ServiceUpdated');
 
         session()->flash('success', 'تم حفظ إعدادات التسعير بنجاح');
     }
@@ -126,10 +128,10 @@ class Prices extends Component
     }
 
     public function updated($propertyName)
-{
-    // تحديث مباشر عند أي تغيير
-    $this->savePricingSettings();
-}
+    {
+        // تحديث مباشر عند أي تغيير
+        $this->savePricingSettings();
+    }
 
 
     public function render()

@@ -55,12 +55,13 @@ class Faqs extends Component
     {
         $data = $this->offering->additional_data ?? [];
         $data['questions'] = $this->questions;
-        $this->offering->update(['additional_data' => $data]);
+        $this->offering->update(['additional_data' => $data, 'status' => 'inactive']);
+        $this->dispatch('ServiceUpdated');
     }
     public function updated($field)
     {
         $this->save();
-    } 
+    }
 
     public function render()
     {
