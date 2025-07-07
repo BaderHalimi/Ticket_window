@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\PaysHistory;
 use App\Models\page_views;
 use App\Models\User;
+use App\Models\Offering;
 use App\Models\notifications;
+
 
 if (!function_exists('getCard')){
     function getCard()
@@ -118,5 +120,54 @@ if (!function_exists('notifcate')) {
 
         return $notification;
 
+    }
+}
+
+if (!function_exists('hasEssentialFields')) {
+
+    function isFilled($value): bool
+    {
+        if (is_null($value)) return false;
+        if (is_array($value)) return count($value) > 0;
+        return trim((string)$value) !== '';
+    }
+
+    function hasEssentialFields(int $offerId): array
+    {
+        $offer = \App\Models\Offering::find($offerId);
+
+        if (!$offer) {
+            return [
+                'status' => false,
+                'fields' => [],
+                'message' => "Offer not found for ID: $offerId"
+            ];
+        }
+
+        $features = $offer->features ?? [];
+
+        $checks = [
+            'name'                => isFilled($offer->name),
+            'description'         => isFilled($offer->description),
+            'location'            => isFilled($offer->location),
+
+            //'services_type'       => isFilled($features['services_type'] ?? null),
+            'base_price'          => isFilled($features['base_price'] ?? null),
+            'booking_duration'    => isFilled($features['booking_duration'] ?? null),
+            'booking_unit'        => isFilled($features['booking_unit'] ?? null),
+
+            'pricing_packages'    => !empty($features['pricing_packages']) &&
+                                      isFilled($features['pricing_packages'][0]['label'] ?? null),
+
+            'gallery'             => !empty($features['gallery']) &&
+                                      isFilled($features['gallery'][0] ?? null),
+        ];
+
+        $allOk = !in_array(false, $checks, true);
+
+        return [
+            'status' => $allOk,
+            'fields' => $checks
+        ];
     }
 }

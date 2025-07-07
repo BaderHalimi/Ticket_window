@@ -6,6 +6,8 @@ use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use App\Models\Offering;
+use App\Observers\OfferingObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Offering::observe(OfferingObserver::class);
+
         // $timezone = config('app.timezone');
 
         // // مثال: لو المستخدم مسجل دخوله

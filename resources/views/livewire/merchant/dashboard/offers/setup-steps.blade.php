@@ -34,6 +34,25 @@
                         </div>
                     </div>
                 @endforeach
+                <div class="pt-4">
+                    @if ($isPublished)
+                    <button class="w-full bg-gray-300 text-gray-500 font-semibold py-2 rounded-lg cursor-not-allowed shadow" disabled>
+                        تم النشر
+                    </button>
+                    @else
+                        @if ($isReady)
+                        <button wire:click="publish" class="w-full bg-orange-500 text-white font-semibold py-2 rounded-lg shadow hover:bg-orange-600 transition">
+                            نشر الخدمة
+                        </button>
+                        @else
+                            <button class="w-full bg-gray-300 text-gray-500 font-semibold py-2 rounded-lg cursor-not-allowed shadow" disabled>
+                                لا يمكن النشر - أكمل البيانات
+                            </button>
+                        @endif
+                    @endif
+                
+                </div>
+                
             </div>
 
             {{-- نموذج تعبئة المعلومات --}}

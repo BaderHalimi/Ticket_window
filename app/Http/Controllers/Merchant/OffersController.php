@@ -41,12 +41,16 @@ class OffersController extends Controller
             $offering =  \App\Models\Offering::create([
                 'user_id' => $merchant,
             ]);
-            return redirect()->route('merchant.dashboard.m.offer.edit', ['merchant' => $merchant, 'offer' => $offering->id])->with('success', 'Offer created successfully. Please fill in the details.');
+            return view('merchant.dashboard.offers.edit',compact('offering'));
+
+            //return redirect()->route('merchant.dashboard.m.offer.edit', ['merchant' => $merchant, 'offer' => $offering->id])->with('success', 'Offer created successfully. Please fill in the details.');
         } else {
             $offering =  \App\Models\Offering::create([
                 'user_id' => Auth::id()
             ]);
-            return redirect()->route('merchant.dashboard.offer.edit', $offering->id)->with('success', 'Offer created successfully. Please fill in the details.');
+            return view('merchant.dashboard.offers.edit',compact('offering'));
+
+            //return redirect()->route('merchant.dashboard.offer.edit', $offering->id)->with('success', 'Offer created successfully. Please fill in the details.');
         }
 
         // return view('merchant.dashboard.offers.create',compact('offering'));
@@ -127,11 +131,13 @@ class OffersController extends Controller
         // dd($id,$merchant);
         $offering = Offering::findOrFail($id);
         if ($offering->user_id != $merchant ?? Auth::id()) {
-            if ($merchant != null)
-                return redirect()->route('merchant.dashboard.m.offer.index',['merchant'=>$merchant])->with('error', 'Unauthorized action.');
-            return redirect()->route('merchant.dashboard.offer.index')->with('error', 'Unauthorized action.');
+            //if ($merchant != null)
+                // return redirect()->route('merchant.dashboard.m.offer.index',['merchant'=>$merchant])->with('error', 'Unauthorized action.');
+            return view('merchant.dashboard.offers.edit', compact('offering'));
+
+            // return redirect()->route('merchant.dashboard.offer.index')->with('error', 'Unauthorized action.');
         }
-        return view('merchant.dashboard.offers.edit', compact('offering'));
+        //return view('merchant.dashboard.offers.edit', compact('offering'));
     }
 
     /**
