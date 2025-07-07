@@ -28,10 +28,11 @@ class SetupSteps extends Component
         if ($isReady) {
             $offering = $this->offering;
             $data = $offering->additional_data;
-            $data['is_published'] = true;
+            // $data['is_published'] = true;
             $offering->additional_data = $data;
+            $offering->status = 'inactive';
             $offering->save();
-            
+
             notifcate(Auth::id(), 'success','Offer published successfully!',[
                 'title' => 'Offer Published',
                 'text' => 'Your offer has been published successfully.',
@@ -41,9 +42,9 @@ class SetupSteps extends Component
     }
     public function render()
     {
-        
+
         $off = $this->offering->fresh();
-        $isPublished = $off->additional_data['is_published'];
+        $isPublished = $off->status;
         $isReady = true;
         if (!$isPublished) {
             $isReady = hasEssentialFields($this->offering->id)['status'];
@@ -53,6 +54,6 @@ class SetupSteps extends Component
         //dd($isReady);
 
         return view('livewire.merchant.dashboard.offers.setup-steps',compact('isReady', 'isPublished'));
-    
+
     }
 }
