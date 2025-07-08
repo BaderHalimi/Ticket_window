@@ -8,6 +8,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use App\Models\Offering;
 use Illuminate\Support\Facades\Auth;
+use PHPUnit\Framework\Constraint\Count;
 
 class SetupSteps extends Component
 {
@@ -49,13 +50,20 @@ class SetupSteps extends Component
 
         $off = $this->offering->fresh();
         $isPublished = $off->status;
-        $isReady = true;
-        if (!$isPublished) {
+        $isReady = true;//($this->offering->id)['status'];
+        $percent_progress = 100.0;
+        if ($isPublished === "inactive") {
             $isReady = hasEssentialFields($this->offering->id)['status'];
+            $all_fileds = count(hasEssentialFields($this->offering->id)['fields']);
+            $true_fileds = count(array_filter(hasEssentialFields($this->offering->id)['fields']));
+            $percent_progress = ($true_fileds / $all_fileds) * 100;
         }
+        //dd(count(hasEssentialFields($this->offering->id)['fields']));
+
+        //dd($all_fileds, $true_fileds,$persent_progress);
         //dd($isPublished, $isReady);
         //dd($isReady);
 
-        return view('livewire.merchant.dashboard.offers.setup-steps', compact('isReady', 'isPublished'));
+        return view('livewire.merchant.dashboard.offers.setup-steps', compact('isReady', 'isPublished','percent_progress'));
     }
 }

@@ -60,24 +60,35 @@
             <div>
                 هل ترغب بنشر الخدمة؟
             </div>
-            <div>
-                @if ($isPublished=='active')
-                <button class="w-full bg-gray-300 text-gray-500 font-semibold py-2 px-6 rounded-lg cursor-not-allowed shadow" disabled>
-                    تم النشر
-                </button>
-                @else
-                @if ($isReady)
-                <button wire:click="publish" class="w-full bg-orange-500 text-white font-semibold py-2 px-6 rounded-lg shadow hover:bg-orange-600 transition">
-                    نشر الخدمة
-                </button>
-                @else
-                <button class="w-full bg-gray-300 text-gray-500 font-semibold py-2 px-6 rounded-lg cursor-not-allowed shadow" disabled>
-                    لا يمكن النشر - أكمل البيانات
-                </button>
-                @endif
-                @endif
+            <div class="space-y-2">
 
+                <!-- progress bar always visible -->
+                <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                    <div class="bg-lime-500 h-4 text-xs font-medium text-white text-center leading-4" style="width: {{ $percent_progress }}%;">
+                        {{ $percent_progress }}%
+                    </div>
+                </div>
+            
+                <!-- buttons -->
+                @if ($isPublished == 'active')
+                    <button class="w-full bg-gray-300 text-gray-500 font-semibold py-2 px-6 rounded-lg cursor-not-allowed shadow" disabled>
+                        تم النشر
+                    </button>
+                @else
+                    @if ($isReady)
+                        <button wire:click="publish" class="w-full bg-orange-500 text-white font-semibold py-2 px-6 rounded-lg shadow hover:bg-orange-600 transition">
+                            نشر الخدمة
+                        </button>
+                    @else
+                        <button class="w-full bg-gray-300 text-gray-500 font-semibold py-2 px-6 rounded-lg cursor-not-allowed shadow" disabled>
+                            لا يمكن النشر - أكمل البيانات
+                        </button>
+                    @endif
+                @endif
+            
             </div>
+            
+            
         </div>
     </div>
 

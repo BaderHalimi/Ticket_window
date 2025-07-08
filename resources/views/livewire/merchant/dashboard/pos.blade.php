@@ -97,7 +97,6 @@
             </div>
             @endif
 
-            {{-- البريد --}}
             <div class="mt-4">
                 <label class="block mb-2">البريد الإلكتروني</label>
                 <input type="email" wire:model.lazy="customerEmail"
@@ -105,7 +104,6 @@
                        placeholder="email@example.com">
             </div>
 
-            {{-- بيانات المستخدم --}}
             @if($foundUser)
             <div class="flex items-center gap-4 bg-slate-100 p-4 rounded-lg mt-2">
                 <img src="{{ Storage::url($foundUser['profile_image']) }}" class="w-12 h-12 rounded-full">
@@ -133,13 +131,11 @@
             </div>
             @endif
 
-            {{-- زر الحجز --}}
             <button wire:click="createBooking"
                     class="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-lg py-3 font-bold mt-4">
                 إنشاء الحجز
             </button>
 
-            {{-- رسائل --}}
             @if (session()->has('success'))
             <div class="bg-green-100 text-green-800 rounded-lg p-4 text-center mt-4">
                 {{ session('success') }}
