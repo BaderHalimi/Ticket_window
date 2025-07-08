@@ -1,3 +1,6 @@
+
+
+
 <div class="grid lg:grid-cols-2 gap-8">
 
     {{-- Manual Verification --}}
@@ -50,14 +53,14 @@
 
 @push('scripts')
 {{-- <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script> --}}
-
+    
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 
 <script>
     let qrScanner = null;
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('livewire:navigated', function() {
         const startBtn = document.getElementById('start-scanner');
         const stopBtn = document.getElementById('stop-scanner');
         const qrResult = document.getElementById('qr-result');
@@ -114,6 +117,10 @@
         document.addEventListener('livewire:update', function() {
             stopScanner();
         });
+        document.addEventListener('livewire:navigating', stopScanner);
+
     });
+
 </script>
 @endpush
+
