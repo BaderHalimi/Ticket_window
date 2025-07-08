@@ -25,7 +25,7 @@
 
             <div>
                 <label class="block text-sm font-medium mb-1">النوع</label>
-                <select wire:model.lazy="services_type" class="w-full border rounded-md p-2">
+                <select wire:model.lazy="type" class="w-full border rounded-md p-2">
                     {{-- <option value="restaurant">مطعم</option> --}}
                     <option value="events">فعالية</option>
                     <option value="services">خدمة</option>

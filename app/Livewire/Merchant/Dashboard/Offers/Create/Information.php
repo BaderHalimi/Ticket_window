@@ -21,14 +21,15 @@ class Information extends Component
     public function mount(Offering $offering)
     {
         $this->offering = $offering;
-        $this->services_type = $this->offering->features['services_type']??'events';
+        //$this->services_type = $this->offering->features['services_type']??'events';
         foreach (
             [
                 'name',
                 'location',
                 'description',
                 'image',
-                'category' //,'type'
+                'category',
+                'type' //,'type'
                 //'start_time', 'end_time', 'status', 'type', 'category', 'price',
                 //'has_chairs', 'chairs_count'
             ] as $field
@@ -57,7 +58,7 @@ class Information extends Component
             //'start_time' => 'nullable|date',
             //'end_time' => 'nullable|date|after_or_equal:start_time',
             //'status' => 'nullable|in:active,inactive',
-            //'type' => 'nullable|in:event,services',
+            'type' => 'nullable|in:events,services',
             'category' => 'nullable|in:vip,one_day,several_days,reapeted',
             //'has_chairs' => 'boolean',
             //'chairs_count' => 'required_if:has_chairs,true|integer|min:0',
@@ -70,13 +71,13 @@ class Information extends Component
             $this->validateOnly($field, $rules);
 
             // Update value
-            if ($field == 'services_type') {
-                $features = $this->offering->features ?? [];
-                $features['services_type'] = $this->services_type;
-                //$features['tags'] = $this->tags;
-                $this->offering->features = $features;
-            } else
-                $this->offering->{$field} = $this->{$field};
+            // if ($field == 'services_type') {
+            //     $features = $this->offering->features ?? [];
+            //     $features['services_type'] = $this->services_type;
+            //     //$features['tags'] = $this->tags;
+            //     $this->offering->features = $features;
+            // } else
+                 $this->offering->{$field} = $this->{$field};
 
 
             $this->offering->status = 'inactive';
