@@ -30,6 +30,7 @@ class Pos extends Component
     public $selectedTime;
     public $selectedDay;
 
+
     public $allowedDates = [];
     public $allowedTimes = [];
 
@@ -108,7 +109,7 @@ class Pos extends Component
                 $price = $this->manualPrice;
             }
         }
-        //dd($this->selectedTime, $this->selectedDay, $this->selectedOfferingId, $price);
+        //dd($this->selectedTime, $this->selectedDate, $this->selectedOfferingId, $price);
 
         PaidReservation::create([
             'item_id' => $this->selectedOfferingId,
@@ -124,8 +125,10 @@ class Pos extends Component
                 'customerEmail' => $this->customerEmail,
                 'paymentMethod' => $this->paymentMethod,
                 'selling_type' => 'pos',
-                'selected_day' => $this->selectedDay,
-                'selected_time' => $this->selectedTime,//Carbon::createFromFormat('H:i', $this->selectedTime)->format('h:i A'),
+                'selected_day' => $this->selectedDate,
+                'selected_time'  => $this->selectedTime
+                ? Carbon::createFromFormat('H:i', $this->selectedTime)->format('h:i A')
+                : null,
             ]),
         ]);
 

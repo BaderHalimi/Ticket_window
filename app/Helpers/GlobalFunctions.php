@@ -206,9 +206,11 @@ if (!function_exists('fetch_time')) {
 
             foreach ($features['calendar'] ?? [] as $event) {
                 $data[] = [
-                    'date' => $event['date'] ?? null,
+                    'start_date' => $event['start_date'] ?? null,
                     'start_time' => $event['start_time'] ?? null,
+                    'end_date' => $event['end_date'] ?? null,
                     'end_time' => $event['end_time'] ?? null,
+                
                 ];
             }
 

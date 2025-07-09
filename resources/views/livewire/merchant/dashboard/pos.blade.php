@@ -31,9 +31,37 @@
             {{-- الوقت --}}
             @php
                 $times = fetch_time($this->selectedOfferingId);
-                //dd($times);
+                //dd($times['data'][0]['end_date']);
 
             @endphp
+            @if ($times['type'] == 'events')
+            <div class="space-y-4">
+                <div>
+                    <label class="block mb-2 font-semibold">تاريخ الحجز</label>
+                    <input type="date"
+                           wire:model.lazy="selectedDate"
+                           min="{{ $times['data'][0]['start_date'] }}"
+                           max="{{ $times['data'][0]['end_date'] }}"
+                           class="w-full rounded-md border border-slate-300 px-4 py-2">
+                    <p class="text-xs text-slate-500 mt-1">
+                        متاح من {{ $times['data'][0]['start_date'] }} إلى {{ $times['data'][0]['end_date'] }}
+                    </p>
+                </div>
+        
+                <div>
+                    <label class="block mb-2 font-semibold">وقت الحجز</label>
+                    <input type="time"
+                           wire:model.lazy="selectedTime"
+                           min="{{ $times['data'][0]['start_time'] }}"
+                           max="{{ $times['data'][0]['end_time'] }}"
+                           class="w-full rounded-md border border-slate-300 px-4 py-2">
+                    <p class="text-xs text-slate-500 mt-1">
+                        متاح بين {{ $times['data'][0]['start_time'] }} و {{ $times['data'][0]['end_time'] }}
+                    </p>
+                </div>
+            </div>
+        @endif
+        
             @if ($times['type'] == 'service')
             <div class="space-y-4">
 
@@ -48,7 +76,6 @@
                         @endforeach
                     </select>
                 </div>
-                
                 @if ($selectedDay && isset($times['data'][$selectedDay]))
 
                     <div>
