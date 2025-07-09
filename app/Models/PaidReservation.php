@@ -18,6 +18,7 @@ class PaidReservation extends Model
         'code',
         'additional_data',
     ];
+
     public function offering()
     {
         return $this->belongsTo(Offering::class, 'item_id');

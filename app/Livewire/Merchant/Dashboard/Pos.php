@@ -28,13 +28,14 @@ class Pos extends Component
 
     public $selectedDate;
     public $selectedTime;
+    public $selectedDay;
 
     public $allowedDates = [];
     public $allowedTimes = [];
 
     public function mount()
     {
-        $this->offerings = Offering::where('user_id', Auth::id())->get();
+        $this->offerings = Offering::where('user_id', Auth::id())->where('status', 'active')->get();
     }
 
     public function updatedSelectedOfferingId($value)
@@ -43,56 +44,15 @@ class Pos extends Component
 
         if (!$offering) {
             $this->pricingPackages = [];
-            $this->allowedDates = [];
-            $this->allowedTimes = [];
             return;
         }
 
         $features = $offering->features ?? [];
+
         $this->pricingPackages = collect($features['pricing_packages'] ?? [])
-            ->filter(fn($pkg) => !empty($pkg['label']) && $pkg['price'] > 0)
+            ->filter(fn($pkg) => !empty($pkg['label']) && isset($pkg['price']) && $pkg['price'] > 0)
             ->values()
             ->toArray();
-
-        $this->buildAllowedDatesAndTimes($offering, $features);
-    }
-
-    public function buildAllowedDatesAndTimes($offering, $features)
-    {
-        $this->allowedDates = [];
-        $this->allowedTimes = [];
-
-        if ($offering->type === 'event') {
-            $start = Carbon::parse($offering->start_date);
-            $end = Carbon::parse($offering->end_date);
-
-            foreach ($start->daysUntil($end) as $date) {
-                $dateStr = $date->toDateString();
-                $this->allowedDates[] = $dateStr;
-                $this->allowedTimes[$dateStr] = [
-                    'start' => $start->format('H:i'),
-                    'end' => $end->format('H:i')
-                ];
-            }
-        } else {
-            $workSchedule = $features['work_schedule'] ?? [];
-            $closedDays = $features['closed_days'] ?? [];
-
-            for ($i = 0; $i < 30; $i++) {
-                $date = now()->addDays($i);
-                $dateStr = $date->toDateString();
-                $day = strtolower($date->englishDayOfWeek);
-
-                if (in_array($dateStr, $closedDays)) continue;
-                if (($workSchedule[$day]['enabled'] ?? false)) {
-                    $this->allowedDates[] = $dateStr;
-                    $this->allowedTimes[$dateStr] = [
-                        'start' => $workSchedule[$day]['start'],
-                        'end' => $workSchedule[$day]['end']
-                    ];
-                }
-            }
-        }
     }
 
     public function updatedCustomerEmail($value)
@@ -104,49 +64,37 @@ class Pos extends Component
                     'id' => $user->id,
                     'name' => $user->f_name,
                     'email' => $user->email,
-                    'profile_image' => $user->additional_data['profile_image'] ?? '/default-avatar.png',
+                    'profile_image' => $user->additional_data['profile_image'] ?? $user->additional_data['profile_picture'] ?? null,
                 ];
                 $this->customerName = $user->f_name;
                 $this->customerPhone = $user->phone ?? '';
-            } else {
-                $this->foundUser = null;
+                return;
             }
-        } else {
-            $this->foundUser = null;
         }
+        $this->foundUser = null;
     }
 
     public function createBooking()
     {
         $this->validate([
             'selectedOfferingId' => 'required|exists:offerings,id',
-            'selectedDate' => 'required|date',
             'selectedTime' => 'required|date_format:H:i',
             'paymentMethod' => 'required|in:cash,free',
             'customerPhone' => 'required|string',
         ]);
 
-        if (!in_array($this->selectedDate, $this->allowedDates)) {
-            session()->flash('error', 'التاريخ غير متاح للحجز');
+        $offering = $this->offerings->firstWhere('id', $this->selectedOfferingId);
+        if (!$offering) {
+            session()->flash('error', 'الخدمة غير موجودة');
             return;
         }
 
-        $offering = $this->offerings->firstWhere('id', $this->selectedOfferingId);
-        $selectedDateTime = Carbon::parse("{$this->selectedDate} {$this->selectedTime}");
+        $features = $offering->features ?? [];
+        $daySchedule = $features['work_schedule'][$this->selectedDay] ?? null;
 
-        if ($offering->type === 'event') {
-            $eventStart = Carbon::parse($offering->start_date);
-            $eventEnd = Carbon::parse($offering->end_date);
-            if ($selectedDateTime->lt($eventStart) || $selectedDateTime->gt($eventEnd)) {
-                session()->flash('error', 'الوقت خارج نطاق الفعالية');
-                return;
-            }
-        } else {
-            $features = $offering->features ?? [];
-            $workSchedule = $features['work_schedule'] ?? [];
-            $day = strtolower(Carbon::parse($this->selectedDate)->englishDayOfWeek);
-            if (!($workSchedule[$day]['enabled'] ?? false)) {
-                session()->flash('error', 'اليوم غير موجود في أيام العمل');
+        if ($offering->type === 'service') {
+            if (!$daySchedule || !$daySchedule['enabled']) {
+                session()->flash('error', 'اليوم غير مفعّل لهذه الخدمة');
                 return;
             }
         }
@@ -154,12 +102,13 @@ class Pos extends Component
         $price = 0;
         if ($this->paymentMethod === 'cash') {
             if ($this->showPackage && $this->selectedPackage) {
-                $price = collect($this->pricingPackages)
-                    ->firstWhere('label', $this->selectedPackage)['price'] ?? 0;
+                $package = collect($this->pricingPackages)->firstWhere('label', $this->selectedPackage);
+                $price = $package['price'] ?? 0;
             } else {
                 $price = $this->manualPrice;
             }
         }
+        //dd($this->selectedTime, $this->selectedDay, $this->selectedOfferingId, $price);
 
         PaidReservation::create([
             'item_id' => $this->selectedOfferingId,
@@ -175,8 +124,8 @@ class Pos extends Component
                 'customerEmail' => $this->customerEmail,
                 'paymentMethod' => $this->paymentMethod,
                 'selling_type' => 'pos',
-                'selected_date' => $this->selectedDate,
-                'selected_time' => Carbon::createFromFormat('H:i', $this->selectedTime)->format('h:i A'),
+                'selected_day' => $this->selectedDay,
+                'selected_time' => $this->selectedTime,//Carbon::createFromFormat('H:i', $this->selectedTime)->format('h:i A'),
             ]),
         ]);
 
@@ -193,10 +142,8 @@ class Pos extends Component
             'customerName',
             'customerPhone',
             'foundUser',
-            'selectedDate',
+            'selectedDay',
             'selectedTime',
-            'allowedDates',
-            'allowedTimes',
         ]);
     }
 

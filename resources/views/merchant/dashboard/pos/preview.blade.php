@@ -110,7 +110,7 @@
                     $add = json_decode($reservation->additional_data, true);
                 @endphp
 
-                <p><span class="font-semibold text-orange-600">التاريخ المحجوز:</span> {{ $add['selected_date'] }}</p>
+                <p><span class="font-semibold text-orange-600">التاريخ المحجوز:</span> {{ $add['selected_day'] }}</p>
                 <p><span class="font-semibold text-orange-600">الوقت المحجوز:</span> {{ $add['selected_time']  }}</p>
             </div>
         </div>

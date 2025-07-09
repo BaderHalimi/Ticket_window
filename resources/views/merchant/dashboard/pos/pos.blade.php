@@ -40,7 +40,10 @@
                             {{ $data['paymentMethod'] ?? '-' }}
                         </span>
                     </td>
-                    <td class="px-4 py-3 text-sm text-slate-500">{{ $reservation->created_at->format('Y-m-d H:i') }}</td>
+                    @if ($reservation->status == 'pending')
+                        
+                    @endif
+                    <td class="px-4 py-3 text-sm text-slate-500">{{ $data['selected_time'] ?? NULL }} / {{ $data['selected_day'] ?? NULL }}</td>
                     <td class="px-4 py-3 text-sm">
                         <a href="{{ route('merchant.dashboard.pos.show', $reservation->id) }}"
                            class="text-orange-500 hover:text-orange-600 font-bold transition duration-200">

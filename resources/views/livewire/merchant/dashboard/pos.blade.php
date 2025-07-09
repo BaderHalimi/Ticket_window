@@ -29,17 +29,47 @@
             @endif
 
             {{-- الوقت --}}
-            @if($selectedDate && isset($allowedTimes[$selectedDate]))
-            <div>
-                <label class="block mb-2">وقت الحجز</label>
-                <input type="time" wire:model.lazy="selectedTime"
-                       min="{{ $allowedTimes[$selectedDate]['start'] }}"
-                       max="{{ $allowedTimes[$selectedDate]['end'] }}"
-                       class="w-full rounded-lg border border-slate-300 px-4 py-3">
-                <p class="text-sm text-slate-500 mt-1">
-                    الوقت المسموح: {{ $allowedTimes[$selectedDate]['start'] }} - {{ $allowedTimes[$selectedDate]['end'] }}
-                </p>
+            @php
+                $times = fetch_time($this->selectedOfferingId);
+                //dd($times);
+
+            @endphp
+            @if ($times['type'] == 'service')
+            <div class="space-y-4">
+
+                <div>
+                    <label class="block mb-2 font-semibold">اختر اليوم</label>
+                    <select wire:model.lazy="selectedDay" class="w-full rounded-md border border-slate-300 px-4 py-2">
+                        <option value="">-- اختر يوم --</option>
+                        @foreach($times['data'] as $day => $data)
+                            @if($data['enabled'])
+                                <option value="{{ $day }}">{{ ucfirst($day) }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+                
+                @if ($selectedDay && isset($times['data'][$selectedDay]))
+
+                    <div>
+                        <label class="block mb-2 font-semibold">وقت الحجز لـ {{ ucfirst($selectedDay) }}</label>
+                        <input
+                            type="time"
+                            wire:model.lazy="selectedTime"
+                            min="{{ $times["data"][$selectedDay]['from'] }}"
+                            max="{{ $times['data'][$selectedDay]['to'] }}"
+                            class="w-full rounded-md border border-slate-300 px-4 py-2"
+                        >
+            
+                        <p class="text-sm text-slate-500 mt-1">
+                            الوقت المسموح: {{ $times['data'][$selectedDay]['from'] }} - {{ $times['data'][$selectedDay]['to'] }}
+                        </p>
+                    </div>
+                    @endif
+
+            
             </div>
+            
             @endif
 
             {{-- toggle slide للباقة --}}

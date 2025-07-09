@@ -64,7 +64,7 @@ class SetupSteps extends Component
         //dd($isPublished, $isReady);
         //dd($isReady);
         $d = fetch_time($this->offering->id);
-        dd($d);
+        //dd($d);
         return view('livewire.merchant.dashboard.offers.setup-steps', compact('isReady', 'isPublished','percent_progress'));
     }
 }
