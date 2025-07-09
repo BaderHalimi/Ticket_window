@@ -171,3 +171,53 @@ if (!function_exists('hasEssentialFields')) {
         ];
     }
 }
+
+
+if (!function_exists('fetch_time')) {
+    function fetch_time($offer_id)
+    {
+        $offer = Offering::find($offer_id);
+
+        if (!$offer || !$offer->features) {
+            return null;
+        }
+
+        $features = $offer->features;
+        //dd($features);
+        if (($offer->type ?? null) === 'services') {
+            $data = [];
+
+            foreach ($features['days'] ?? [] as $day => $info) {
+                $data[$day] = [
+                    'enabled' => true,
+                    'from' => $info['from'] ?? null,
+                    'to' => $info['to'] ?? null,
+                ];
+            }
+
+            return [
+                'type' => 'service',
+                'data' => $data,
+            ];
+        }
+
+        if (($offer->type ?? null) === 'events') {
+            $data = [];
+
+            foreach ($features['calendar'] ?? [] as $event) {
+                $data[] = [
+                    'date' => $event['date'] ?? null,
+                    'start_time' => $event['start_time'] ?? null,
+                    'end_time' => $event['end_time'] ?? null,
+                ];
+            }
+
+            return [
+                'type' => 'events',
+                'data' => $data,
+            ];
+        }
+
+        return null;
+    }
+}

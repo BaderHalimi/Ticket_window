@@ -63,7 +63,8 @@ class SetupSteps extends Component
         //dd($all_fileds, $true_fileds,$persent_progress);
         //dd($isPublished, $isReady);
         //dd($isReady);
-
+        $d = fetch_time($this->offering->id);
+        dd($d);
         return view('livewire.merchant.dashboard.offers.setup-steps', compact('isReady', 'isPublished','percent_progress'));
     }
 }
