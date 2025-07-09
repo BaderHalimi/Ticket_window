@@ -25,7 +25,7 @@
                 <i class="ri-filter-line"></i>
                 <span class="ml-2 text-sm">فلترة</span>
             </button>
-            <div id="filterMenu" class="origin-top-right absolute right-0 mt-2 w-44 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-50">
+            <div id="filterMenu" class="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-50">
                 <div class="py-1">
                     <button onclick="filterTable('all')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">👁️ الكل</button>
                     <button onclick="filterTable('services')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">🛠️ الخدمات</button>
@@ -35,6 +35,17 @@
         </div>
     </div>
 
+    <div class="my-4">
+        <label for="searchInput" class="block mb-1 text-sm font-medium text-slate-700">بحث عن الخدمة:</label>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="اكتب اسم الخدمة..."
+          class="border border-gray-300 rounded-md px-4 py-2 w-full max-w-sm focus:ring-orange-500 focus:border-orange-500"
+          onkeyup="searchTable()"
+        >
+      </div>
+      
     {{-- جدول الخدمات --}}
     <div class="bg-white shadow-lg rounded-xl overflow-hidden">
         <div class="overflow-x-auto">
@@ -117,7 +128,24 @@
         });
         filterMenu.classList.add('hidden');
     }
+
 </script>
+<script>
+  function searchTable() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toLowerCase();
+    const rows = document.querySelectorAll('table tbody tr');
+
+    rows.forEach(row => {
+      const nameCell = row.querySelector('td:nth-child(2)');
+      if (!nameCell) return;
+
+      const nameText = nameCell.textContent.toLowerCase();
+      row.style.display = nameText.includes(filter) ? '' : 'none';
+    });
+  }
+</script>
+
 @endsection
 
 
