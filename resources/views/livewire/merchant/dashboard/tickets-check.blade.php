@@ -60,67 +60,64 @@
 <script>
     let qrScanner = null;
 
-    document.addEventListener('livewire:navigated', function() {
+    function setupScanner() {
         const startBtn = document.getElementById('start-scanner');
         const stopBtn = document.getElementById('stop-scanner');
         const qrResult = document.getElementById('qr-result');
 
-        startBtn.addEventListener('click', startScanner);
-        stopBtn.addEventListener('click', stopScanner);
+        startBtn?.removeEventListener('click', startScanner);
+        stopBtn?.removeEventListener('click', stopScanner);
+
+        startBtn?.addEventListener('click', startScanner);
+        stopBtn?.addEventListener('click', stopScanner);
 
         function startScanner() {
-            if (qrScanner) return; // بالفعل يعمل
+            if (qrScanner) return;
 
             qrScanner = new Html5Qrcode("qr-reader");
 
             qrScanner.start(
                 { facingMode: "environment" },
                 {
-                    fps: 10,
+                    fps: 60,
                     qrbox: 250
                 },
-                (decodedText, decodedResult) => {
-                    qrResult.classList.remove('hidden');
+                (decodedText) => {
+                    qrResult?.classList.remove('hidden');
                     stopScanner();
-
-                    // إرسال الكود إلى Livewire
-                    @this.set('code', decodedText);
-                    @this.check();
+                    Livewire.dispatch('qr-scanned', { code: decodedText });
                 },
                 (errorMessage) => {
-                    // تجاهل الأخطاء اللحظية (اختياري)
                     console.log(errorMessage);
                 })
                 .then(() => {
-                    startBtn.classList.add('hidden');
-                    stopBtn.classList.remove('hidden');
+                    startBtn?.classList.add('hidden');
+                    stopBtn?.classList.remove('hidden');
                 })
                 .catch((err) => {
                     console.error(err);
-                    alert('حدث خطأ أثناء تشغيل الماسح');
                 });
         }
 
         function stopScanner() {
             if (qrScanner) {
                 qrScanner.stop().then(() => {
-                    qrScanner.clear();
                     qrScanner = null;
-                    startBtn.classList.remove('hidden');
-                    stopBtn.classList.add('hidden');
-                }).catch((err) => {
-                    console.error('حدث خطأ عند إيقاف الماسح', err);
-                });
+                    startBtn?.classList.remove('hidden');
+                    stopBtn?.classList.add('hidden');
+                }).catch(console.error);
             }
         }
+    }
 
-        document.addEventListener('livewire:update', function() {
-            stopScanner();
-        });
-        document.addEventListener('livewire:navigating', stopScanner);
-
+    document.addEventListener('livewire:init', setupScanner);
+    document.addEventListener('livewire:navigated', setupScanner);
+    document.addEventListener('livewire:navigating', () => {
+        if (qrScanner) {
+            qrScanner.stop().catch(console.error);
+            qrScanner = null;
+        }
     });
-
 </script>
 @endpush
 

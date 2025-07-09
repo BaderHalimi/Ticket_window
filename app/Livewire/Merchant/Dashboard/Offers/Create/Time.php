@@ -104,12 +104,12 @@ class Time extends Component
             }
         }
     
-        if ($this->offering->type == 'events') {
-            $features['type'] = 'event';
-            $features['calendar'] = array_filter($this->calendar, function($event) {
-                return !empty($event['date']) && !empty($event['start_time']) && !empty($event['end_time']);
-            });
-        }
+        $features['calendar'] = array_values(array_filter($this->calendar, function($event) {
+            return !empty($event['start_date']) && !empty($event['end_date']) && !empty($event['start_time']) && !empty($event['end_time']);
+        }));
+        
+            //dd($features['calendar']);
+        
     
         $this->offering->features = $features;
         $this->offering->save();

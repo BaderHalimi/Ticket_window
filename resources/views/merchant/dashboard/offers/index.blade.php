@@ -1,14 +1,13 @@
 @extends('merchant.layouts.app')
 @section('content')
-
 <div class="flex-1 p-8 space-y-12">
 
     {{-- العنوان وزر الإضافة --}}
     <div class="flex justify-between items-center flex-wrap gap-4">
         <h2 class="text-3xl font-bold text-slate-800">إدارة الخدمات</h2>
         <a href="{{ route('merchant.dashboard.offer.create') }}">
-            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-orange-500 hover:bg-orange-500/90 h-10 px-4 py-2 text-white">
-                <svg class="w-5 h-5 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 transition">
+                <svg class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <circle cx="12" cy="12" r="10"></circle>
                     <path d="M8 12h8M12 8v8"></path>
                 </svg>
@@ -17,6 +16,112 @@
         </a>
     </div>
 
+    {{-- شريط الفلترة --}}
+    <div class="flex justify-between items-center mt-6 mb-2">
+        <h2 class="text-xl font-bold text-slate-800">قائمة الخدمات</h2>
+        <div class="relative inline-block text-left">
+            <button id="filterButton" type="button"
+                class="inline-flex items-center justify-center rounded-full border border-orange-500 text-orange-500 bg-white hover:bg-orange-50 shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 transition">
+                <i class="ri-filter-line"></i>
+                <span class="ml-2 text-sm">فلترة</span>
+            </button>
+            <div id="filterMenu" class="origin-top-right absolute right-0 mt-2 w-44 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-50">
+                <div class="py-1">
+                    <button onclick="filterTable('all')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">👁️ الكل</button>
+                    <button onclick="filterTable('services')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">🛠️ الخدمات</button>
+                    <button onclick="filterTable('events')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">🎫 الفعاليات</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- جدول الخدمات --}}
+    <div class="bg-white shadow-lg rounded-xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200 text-sm text-slate-700 rtl:text-right">
+                <thead class="bg-orange-500/10 text-orange-800 font-semibold">
+                    <tr>
+                        <th class="px-4 py-3 text-start">#</th>
+                        <th class="px-4 py-3 text-start">الاسم</th>
+                        <th class="px-4 py-3 text-start">النوع</th>
+                        <th class="px-4 py-3 text-start">السعر</th>
+                        <th class="px-4 py-3 text-start">الحالة</th>
+                        <th class="px-4 py-3 text-start">البداية</th>
+                        <th class="px-4 py-3 text-start">النهاية</th>
+                        <th class="px-4 py-3 text-start">التحكم</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 bg-white">
+                    @forelse($offers as $service)
+                        @php
+                            $times = fetch_time($service->id);
+                        @endphp
+                        <tr data-type="{{ $service->type }}">
+                            <td class="px-4 py-2">{{ $loop->iteration }}</td>
+                            <td class="px-4 py-2 font-medium">{{ $service->name }}</td>
+                            <td class="px-4 py-2">{{ ucfirst($service->type) }}</td>
+                            <td class="px-4 py-2">{{ $service->price ?? '—' }}</td>
+                            <td class="px-4 py-2">
+                                <span class="inline-block px-2 py-1 text-xs rounded {{ $service->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                    {{ $service->status === 'active' ? 'فعال' : 'غير فعال' }}
+                                </span>
+                            </td>
+                            @if ($service->type === "services")
+                                <td class="px-4 py-2">{{ $times['data'][0]['start_date'] ?? "مستمر" }}</td>
+                                <td class="px-4 py-2">{{ $times['data'][0]['end_date'] ?? "_" }}</td>         
+                            @elseif ($service->type === "events")
+                                <td class="px-4 py-2">{{ $times['data'][0]['start_date'] ?? "غير محدد" }}</td>
+                                <td class="px-4 py-2">{{ $times['data'][0]['end_date'] ?? "غير محدد" }}</td>                            
+                            @endif
+                            <td class="px-4 py-2 space-x-1 rtl:space-x-reverse">
+                                <a href="{{ route('merchant.dashboard.offer.edit', $service->id) }}" class="text-blue-600 hover:underline text-xs">تعديل</a>
+                                <form method="POST" action="{{ route('merchant.dashboard.offer.destroy', $service->id) }}" class="inline-block" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:underline text-xs">حذف</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="text-center px-4 py-6 text-slate-500">لا توجد خدمات حالياً.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    const filterButton = document.getElementById('filterButton');
+    const filterMenu = document.getElementById('filterMenu');
+
+    filterButton.addEventListener('click', () => {
+        filterMenu.classList.toggle('hidden');
+    });
+
+    window.addEventListener('click', (e) => {
+        if (!filterButton.contains(e.target) && !filterMenu.contains(e.target)) {
+            filterMenu.classList.add('hidden');
+        }
+    });
+
+    function filterTable(type) {
+        const rows = document.querySelectorAll('table tbody tr');
+        rows.forEach(row => {
+            if (type === 'all') {
+                row.style.display = '';
+            } else {
+                row.style.display = row.getAttribute('data-type') === type ? '' : 'none';
+            }
+        });
+        filterMenu.classList.add('hidden');
+    }
+</script>
+@endsection
+
+
+  
     {{-- التبويبات --}}
     <!-- <div class="w-full">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-2 p-2 bg-orange-500/10 rounded-xl mb-6">
@@ -127,68 +232,3 @@
             </div>
         </div>
     </div> -->
-
-    {{-- جدول الخدمات --}}
-    <div class="bg-white shadow-lg rounded-xl overflow-hidden">
-        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
-            <h2 class="text-xl font-bold text-slate-800">قائمة الخدمات</h2>
-        </div>
-
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-slate-200 text-sm text-slate-700 rtl:text-right">
-                <thead class="bg-orange-500/10 text-orange-800 font-semibold">
-                    <tr>
-                        <th class="px-4 py-3 text-start">#</th>
-                        <th class="px-4 py-3 text-start">الاسم</th>
-                        <th class="px-4 py-3 text-start">النوع</th>
-                        <th class="px-4 py-3 text-start">السعر</th>
-                        <th class="px-4 py-3 text-start">الحالة</th>
-                        <th class="px-4 py-3 text-start">البداية</th>
-                        <th class="px-4 py-3 text-start">النهاية</th>
-                        <th class="px-4 py-3 text-start">التحكم</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 bg-white">
-                    @forelse($offers as $service)
-                        @if ($service->type === 'events')
-                        @php
-                        $times = fetch_time($service->id);
-                        //dd($times);
-                        @endphp
-                            <tr>
-                                <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                                <td class="px-4 py-2 font-medium">{{ $service->name }}</td>
-                                <td class="px-4 py-2">{{ ucfirst($service->type) }}</td>
-                                <td class="px-4 py-2">{{ $service->price ?? '—' }}</td>
-                                <td class="px-4 py-2">
-                                    <span class="inline-block px-2 py-1 text-xs rounded
-                                            {{ $service->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                        {{ $service->status === 'active' ? 'فعال' : 'غير فعال' }}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-2">{{ $times['data'][0]['start_date'] ?? NULL}}</td>
-                                <td class="px-4 py-2">{{ $times['data'][0]['end_date'] ?? NULL}}</td>
-                                <td class="px-4 py-2 space-x-1 rtl:space-x-reverse">
-                                    <a href="{{ route('merchant.dashboard.offer.edit', $service->id) }}" class="text-blue-600 hover:underline text-xs">تعديل</a>
-                                    <form method="POST" action="{{ route('merchant.dashboard.offer.destroy', $service->id) }}" class="inline-block" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:underline text-xs">حذف</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endif
-
-                    @empty
-                    <tr>
-                        <td colspan="8" class="text-center px-4 py-6 text-slate-500">لا توجد خدمات حالياً.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-@endsection
-
-
