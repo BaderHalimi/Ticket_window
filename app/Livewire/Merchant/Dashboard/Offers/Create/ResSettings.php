@@ -13,16 +13,16 @@ class ResSettings extends Component
     public $booking_duration = 1;
     public $booking_unit = 'hour';
 
-    public bool $enable_work_schedule = false;
-    public array $work_schedule = [
-        'saturday' => ['enabled' => false, 'start' => '', 'end' => ''],
-        'sunday' => ['enabled' => false, 'start' => '', 'end' => ''],
-        'monday' => ['enabled' => false, 'start' => '', 'end' => ''],
-        'tuesday' => ['enabled' => false, 'start' => '', 'end' => ''],
-        'wednesday' => ['enabled' => false, 'start' => '', 'end' => ''],
-        'thursday' => ['enabled' => false, 'start' => '', 'end' => ''],
-        'friday' => ['enabled' => false, 'start' => '', 'end' => ''],
-    ];
+    //public bool $enable_work_schedule = false;
+    // public array $work_schedule = [
+    //     'saturday' => ['enabled' => false, 'start' => '', 'end' => ''],
+    //     'sunday' => ['enabled' => false, 'start' => '', 'end' => ''],
+    //     'monday' => ['enabled' => false, 'start' => '', 'end' => ''],
+    //     'tuesday' => ['enabled' => false, 'start' => '', 'end' => ''],
+    //     'wednesday' => ['enabled' => false, 'start' => '', 'end' => ''],
+    //     'thursday' => ['enabled' => false, 'start' => '', 'end' => ''],
+    //     'friday' => ['enabled' => false, 'start' => '', 'end' => ''],
+    // ];
 
     public bool $enable_closed_days = false;
     public array $closed_days = [];
@@ -59,8 +59,8 @@ class ResSettings extends Component
             'booking_duration' => 1,
             'booking_unit' => 'hour',
 
-            'enable_work_schedule' => false,
-            'work_schedule' => $this->work_schedule,
+            // 'enable_work_schedule' => false,
+            // 'work_schedule' => $this->work_schedule,
 
             'enable_closed_days' => false,
             'closed_days' => [],
@@ -110,8 +110,8 @@ class ResSettings extends Component
         $features['booking_duration'] = (int) $this->booking_duration;
         $features['booking_unit'] = $this->booking_unit;
 
-        $features['enable_work_schedule'] = $this->enable_work_schedule;
-        $features['work_schedule'] = $this->work_schedule;
+        // $features['enable_work_schedule'] = $this->enable_work_schedule;
+        // $features['work_schedule'] = $this->work_schedule;
 
         $features['enable_closed_days'] = $this->enable_closed_days;
         $features['closed_days'] = $this->closed_days;

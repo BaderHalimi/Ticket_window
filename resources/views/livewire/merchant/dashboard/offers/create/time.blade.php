@@ -7,8 +7,10 @@
                 <span>تفعيل الوقت</span>
             </label>
         </div> --}}
+        {{-- @dd($offering->type) --}}
 
-        @if ($offering->type == 'services' && $enable_time)
+        
+        @if ($offering->type == 'services')
             <div class="border rounded-md p-4 space-y-4">
                 <h3 class="text-md font-bold mb-2">اليوم الافتراضي</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">

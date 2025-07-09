@@ -49,8 +49,9 @@
                 </select>
             </div>
 @endif
-
-            <div>
+@if ($type == 'events')
+    
+            <div >
                 <label class="block text-sm font-medium mb-1">الفئة</label>
                 <select wire:model.lazy="category" class="w-full border rounded-md p-2">
                     <option value="vip">VIP</option>
@@ -59,6 +60,7 @@
                     <option value="reapeted">متكررة</option>
                 </select>
             </div>
+@endif
 
             <div>
                 <label class="block text-sm font-medium mb-1">الوصف</label>

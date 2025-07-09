@@ -52,7 +52,7 @@
                     @livewire('merchant.dashboard.offers.create.gallery', ['offering' => $offering], key('gallery-'.$offering->id))
                     @elseif ($currentStep === 5)
                     @livewire('merchant.dashboard.offers.create.prices', ['offering' => $offering], key('prices-'.$offering->id))
-                    @elseif ($currentStep === 5)
+                    @elseif ($currentStep === 6)
                     @livewire('merchant.dashboard.offers.create.faqs', ['offering' => $offering], key('faqs-'.$offering->id))
 
                     @endif

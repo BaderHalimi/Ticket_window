@@ -150,27 +150,34 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white">
                     @forelse($offers as $service)
-                    <tr>
-                        <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                        <td class="px-4 py-2 font-medium">{{ $service->name }}</td>
-                        <td class="px-4 py-2">{{ ucfirst($service->type) }}</td>
-                        <td class="px-4 py-2">{{ $service->price ?? '—' }}</td>
-                        <td class="px-4 py-2">
-                            <span class="inline-block px-2 py-1 text-xs rounded
-                                    {{ $service->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                {{ $service->status === 'active' ? 'فعال' : 'غير فعال' }}
-                            </span>
-                        </td>
-                        <td class="px-4 py-2">{{ $service->start_time }}</td>
-                        <td class="px-4 py-2">{{ $service->end_time }}</td>
-                        <td class="px-4 py-2 space-x-1 rtl:space-x-reverse">
-                            <a href="{{ route('merchant.dashboard.offer.edit', $service->id) }}" class="text-blue-600 hover:underline text-xs">تعديل</a>
-                            <form method="POST" action="{{ route('merchant.dashboard.offer.destroy', $service->id) }}" class="inline-block" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:underline text-xs">حذف</button>
-                            </form>
-                        </td>
-                    </tr>
+                        @if ($service->type === 'events')
+                        @php
+                        $times = fetch_time($service->id);
+                        //dd($times);
+                        @endphp
+                            <tr>
+                                <td class="px-4 py-2">{{ $loop->iteration }}</td>
+                                <td class="px-4 py-2 font-medium">{{ $service->name }}</td>
+                                <td class="px-4 py-2">{{ ucfirst($service->type) }}</td>
+                                <td class="px-4 py-2">{{ $service->price ?? '—' }}</td>
+                                <td class="px-4 py-2">
+                                    <span class="inline-block px-2 py-1 text-xs rounded
+                                            {{ $service->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                        {{ $service->status === 'active' ? 'فعال' : 'غير فعال' }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-2">{{ $times['data'][0]['start_date'] ?? NULL}}</td>
+                                <td class="px-4 py-2">{{ $times['data'][0]['end_date'] ?? NULL}}</td>
+                                <td class="px-4 py-2 space-x-1 rtl:space-x-reverse">
+                                    <a href="{{ route('merchant.dashboard.offer.edit', $service->id) }}" class="text-blue-600 hover:underline text-xs">تعديل</a>
+                                    <form method="POST" action="{{ route('merchant.dashboard.offer.destroy', $service->id) }}" class="inline-block" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:underline text-xs">حذف</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endif
+
                     @empty
                     <tr>
                         <td colspan="8" class="text-center px-4 py-6 text-slate-500">لا توجد خدمات حالياً.</td>
@@ -183,3 +190,5 @@
 </div>
 
 @endsection
+
+

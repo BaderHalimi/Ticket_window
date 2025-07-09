@@ -150,9 +150,10 @@ if (!function_exists('hasEssentialFields')) {
             'name'                => isFilled($offer->name),
             'description'         => isFilled($offer->description),
             'location'            => isFilled($offer->location),
+            'price' => ($offer->price && $offer->price > 0),
 
             //'services_type'       => isFilled($features['services_type'] ?? null),
-            'base_price'          => isFilled($features['base_price'] ?? null),
+            //'base_price'          => isFilled($features['base_price'] ?? null),
             'booking_duration'    => isFilled($features['booking_duration'] ?? null),
             'booking_unit'        => isFilled($features['booking_unit'] ?? null),
 

@@ -23,28 +23,41 @@ class Time extends Component
     {
         if ($this->offering->features) {
             $features = $this->offering->features;
-
-            $this->enable_time = $features['enabled'] ?? false;
-
+    
+            $this->enable_time = $features['enabled'] ?? true;
+    
             if ($this->offering->type == 'services') {
-                $this->day = collect($features['days'] ?? [])
-                    ->mapWithKeys(fn ($data, $day) => [$day => true])
-                    ->toArray();
-
-                $this->from_time = collect($features['days'] ?? [])
-                    ->mapWithKeys(fn ($data, $day) => [$day => $data['from'] ?? null])
-                    ->toArray();
-
-                $this->to_time = collect($features['days'] ?? [])
-                    ->mapWithKeys(fn ($data, $day) => [$day => $data['to'] ?? null])
-                    ->toArray();
+                // تهيئة المصفوفات
+                $this->day = [
+                    'saturday' => false,
+                    'sunday' => false,
+                    'monday' => false,
+                    'tuesday' => false,
+                    'wednesday' => false,
+                    'thursday' => false,
+                    'friday' => false,
+                ];
+    
+                $this->from_time = [];
+                $this->to_time = [];
+    
+                // تحميل البيانات المحفوظة
+                if (isset($features['days'])) {
+                    foreach ($features['days'] as $dayName => $dayData) {
+                        if (array_key_exists($dayName, $this->day)) {
+                            $this->day[$dayName] = true;
+                            $this->from_time[$dayName] = $dayData['from'] ?? '';
+                            $this->to_time[$dayName] = $dayData['to'] ?? '';
+                        }
+                    }
+                }
             }
-
+    
             if ($this->offering->type == 'events') {
                 $this->calendar = $features['calendar'] ?? [];
             }
         } else {
-            // قيم مبدئية
+            // القيم الافتراضية
             $this->day = [
                 'saturday' => false,
                 'sunday' => false,
@@ -76,32 +89,32 @@ class Time extends Component
     public function save()
     {
         $features = ['enabled' => $this->enable_time];
-
+    
         if ($this->offering->type == 'services') {
             $features['type'] = 'service';
             $features['days'] = [];
-
-            if ($this->enable_time) {
-                foreach ($this->day as $dayName => $enabled) {
-                    if ($enabled) {
-                        $features['days'][$dayName] = [
-                            'from' => $this->from_time[$dayName] ?? null,
-                            'to' => $this->to_time[$dayName] ?? null,
-                        ];
-                    }
+    
+            foreach ($this->day as $dayName => $enabled) {
+                if ($enabled && isset($this->from_time[$dayName]) && isset($this->to_time[$dayName])) {
+                    $features['days'][$dayName] = [
+                        'from' => $this->from_time[$dayName],
+                        'to' => $this->to_time[$dayName],
+                    ];
                 }
             }
         }
-
+    
         if ($this->offering->type == 'events') {
             $features['type'] = 'event';
-            $features['calendar'] = $this->calendar;
+            $features['calendar'] = array_filter($this->calendar, function($event) {
+                return !empty($event['date']) && !empty($event['start_time']) && !empty($event['end_time']);
+            });
         }
-
+    
         $this->offering->features = $features;
         $this->offering->save();
-
-        session()->flash('success', 'تم حفظ الأوقات بنجاح!');
+    
+        $this->dispatch('saved');
     }
     public function applyDefaultToAll()
     {
@@ -112,12 +125,14 @@ class Time extends Component
                 $this->to_time[$d] = $this->default_day['to'];
             }
         }
+
         $this->save();
+
 
     }
     public function updated() {
         $this->save();
-    }
+     }
 
     public function render()
     {

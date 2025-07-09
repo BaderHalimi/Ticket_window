@@ -41,10 +41,10 @@ class Prices extends Component
         $this->offering = $offering;
 
         $features = $offering->features ?? [];
-
+        //dd($this->base_price);
         $this->fill(array_merge([
             //'base_price' => false,
-            'base_price' => 0.0,
+            //'base_price' => 0.0,
             'enable_hourly_pricing' => false,
             //'hourly_rate' => 0.0,
             'enable_coupons' => false,
@@ -69,6 +69,8 @@ class Prices extends Component
             //'enable_discounts' => false,
 
         ], $features));
+        $this->base_price = $this->offering->price ?? 0.0;
+
     }
 
 
@@ -76,8 +78,9 @@ class Prices extends Component
     public function savePricingSettings()
     {
         $this->offering->update([
+
             'features' => array_merge($this->offering->features ?? [], [
-                'base_price' => (float) $this->base_price,
+                //'base_price' => (float) $this->base_price,
                 //'enable_hourly_pricing' => $this->enable_hourly_pricing,
                 //'hourly_rate' => (float) $this->hourly_rate,
                 'enable_coupons' => $this->enable_coupons,
@@ -97,6 +100,9 @@ class Prices extends Component
             ]),
             'status' => 'inactive'
         ]);
+        $this->offering->price = (float) $this->base_price;
+        $this->offering->save();
+
         $this->dispatch('ServiceUpdated');
 
         session()->flash('success', 'تم حفظ إعدادات التسعير بنجاح');
@@ -129,13 +135,13 @@ class Prices extends Component
 
     public function updated($propertyName)
     {
-        // تحديث مباشر عند أي تغيير
         $this->savePricingSettings();
     }
 
 
     public function render()
     {
+        //dd($this->base_price);
         return view('livewire.merchant.dashboard.offers.create.prices');
     }
 }
