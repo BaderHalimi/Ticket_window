@@ -6,7 +6,7 @@ use App\Models\page_views;
 use App\Models\User;
 use App\Models\Offering;
 use App\Models\notifications;
-
+use App\Models\Presence;
 
 if (!function_exists('getCard')){
     function getCard()
@@ -222,5 +222,30 @@ if (!function_exists('fetch_time')) {
         }
 
         return null;
+    }
+}
+
+if (!function_exists("set_presence")){
+    function set_presence($reservation)
+    {
+        //$user = User::find($user_id);
+        //$reservation = $reservation;//PaysHistory::find($transaction_id);
+        if ( !$reservation) {
+            return false;
+        }
+        $set_presenting = Presence::create([
+            'user_id' => $reservation->user_id,
+            'reservation_id' => $reservation->id,//PaidRes
+            'item_id'=> $reservation->item_id ?? null,
+            'additional_data' => json_encode([
+                'payment_method' => $reservation->payment_method,
+                'amount' => $reservation->price,
+                'ip_address' => request()->ip(),
+                'code' => $reservation->code ?? null,
+
+            ]),
+        ]);
+        dd($set_presenting);
+        return true;
     }
 }

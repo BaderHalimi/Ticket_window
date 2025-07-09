@@ -28,6 +28,7 @@ class TicketsCheck extends Component
         } else {
             $this->error = 'لم يتم العثور على تذكرة بهذا الرقم.';
         }
+        set_presence($this->reservation);
     }
 
 
