@@ -65,51 +65,7 @@
                                         </tr>
                                         @endforeach
 
-                                        <!-- <tr class="border-b transition-colors hover:bg-orange-500/10/50 data-[state=selected]:bg-orange-500/10">
-                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-semibold">مطعم جدة</td>
-                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">جدة، حي الشاطئ</td>
-                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">نشط</span></td>
-                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 space-x-1 space-x-reverse"><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-slate-500">
-                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                                        <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
-                                                    </svg></button><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-red-500">
-                                                        <path d="M3 6h18"></path>
-                                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                                                        <line x1="10" x2="10" y1="11" y2="17"></line>
-                                                        <line x1="14" x2="14" y1="11" y2="17"></line>
-                                                    </svg></button></td>
-                                        </tr>
-                                        <tr class="border-b transition-colors hover:bg-orange-500/10/50 data-[state=selected]:bg-orange-500/10">
-                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-semibold">معرض الدمام</td>
-                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">الدمام، مركز المعارض</td>
-                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">مؤقت</span></td>
-                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 space-x-1 space-x-reverse"><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-slate-500">
-                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                                        <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
-                                                    </svg></button><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-red-500">
-                                                        <path d="M3 6h18"></path>
-                                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                                                        <line x1="10" x2="10" y1="11" y2="17"></line>
-                                                        <line x1="14" x2="14" y1="11" y2="17"></line>
-                                                    </svg></button></td>
-                                        </tr>
-                                        <tr class="border-b transition-colors hover:bg-orange-500/10/50 data-[state=selected]:bg-orange-500/10">
-                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-semibold">كافيه الخبر</td>
-                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">الخبر، الكورنيش</td>
-                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600">قريباً</span></td>
-                                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 space-x-1 space-x-reverse"><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-slate-500">
-                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                                        <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
-                                                    </svg></button><button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-red-500">
-                                                        <path d="M3 6h18"></path>
-                                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                                                        <line x1="10" x2="10" y1="11" y2="17"></line>
-                                                        <line x1="14" x2="14" y1="11" y2="17"></line>
-                                                    </svg></button></td>
-                                        </tr> -->
+   
                                     </tbody>
                                 </table>
                             </div>
@@ -214,9 +170,8 @@
     </div>
 </div>
 @endsection
-@push('scripts')
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("livewire:navigated", function() {
         const listTab = document.getElementById("tab-list");
         const createTab = document.getElementById("tab-create");
         const edit_Btn = document.getElementById("edit");
@@ -292,4 +247,3 @@
     });
 </script>
 
-@endpush
