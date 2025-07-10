@@ -24,6 +24,7 @@
         >
             👥 إدارة العمال
         </button>
+
     </div>
 
     {{-- Section 1: Roles --}}
@@ -170,12 +171,27 @@
     
         {{-- اختر العامل من اللي موجودين عند التاجر --}}
         <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">اضافة عامل</label>
+
+            <input wire:model="UserEmail" type="email" placeholder="اميل العامل" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
+            <div class="flex gap-3 mt-3">
+                <input wire:model="UserFname" type="text" placeholder="الاسم الاول للعامل" class="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
+                <input wire:model="UserLname" type="text" placeholder="الاسم الثاني للعامل" class="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
+            </div>
+            <input wire:model="UserPassword" type="password" placeholder="كلمة سر العامل" class="w-full mt-3 border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
+            <button wire:click="adduser" class="bg-blue-500 text-white px-4 py-2 mt-3 rounded hover:bg-blue-600 transition">
+                ➕ إضافة العامل
+            </button>
+        
+        </div>
+        <div class="mb-4">
             <label class="block text-sm font-medium mb-1">اختر العامل</label>
             <select wire:model="selectedUserId" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
                 <option value="">-- اختر العامل --</option>
                 @foreach($users as $user)
                     <option value="{{ $user->id }}">
                         👤 {{ $user->f_name }}
+
                     </option>
                 @endforeach
             </select>
@@ -203,7 +219,10 @@
                 @foreach($usersWithRoles as $user)
                     <div class="border rounded p-4">
                         <h4 class="font-bold">👤 {{ $user['employee']->f_name }}</h4>
-            
+                        <button wire:click="editUser({{ $user['employee']->id }})"
+                            class="text-red-500 text-sm hover:underline">
+                        تعديل ✏️
+                    </button>
                         @if($user['roles']->count())
                             <ul class="list-disc list-inside text-sm text-gray-700 mt-2">
                                 @foreach($user['roles'] as $role)
@@ -213,6 +232,7 @@
                                             class="text-red-500 text-sm hover:underline">
                                         حذف ❌
                                     </button>
+                                    
                                 </li>
                             @endforeach
                             

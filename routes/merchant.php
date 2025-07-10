@@ -8,6 +8,7 @@ use App\Http\Controllers\Merchant\ResController;
 use App\Http\Controllers\Merchantwithdraw;
 use App\Http\Controllers\Page_statistics;
 use App\Http\Controllers\PosSystemController;
+use App\Models\Role;
 
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->group(function(){
     Route::get('/',function(){
@@ -73,11 +74,12 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->gro
     Route::get('api',function(){
         return view('merchant.dashboard.api');
     })->name('api');
-    Route::get('activity_log',function(){
-        return view('merchant.dashboard.activity_log');
-    })->name('activity_log');
 
 
+    // Route::get('activity_log',function(){
+    //     return view('merchant.dashboard.activity_log');
+    // })->name('activity_log');
+    Route::resource('activity_log', \App\Http\Controllers\ActivityLog::class)->only(['index'])->names('activity_log');
 
     Route::post('update/{id}', [AuthController::class,'update'])->name('update');
 
@@ -148,10 +150,11 @@ Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->g
     Route::get('m/{merchant}/api',function(){
         return view('merchant.dashboard.api');
     })->name('api');
-    Route::get('m/{merchant}/activity_log',function(){
-        return view('merchant.dashboard.activity_log');
-    })->name('activity_log');
+    // Route::get('m/{merchant}/activity_log',function(){
+    //     return view('merchant.dashboard.activity_log');
+    // })->name('activity_log');
 
+    Route::resource('m/{merchant}/activity_log', \App\Http\Controllers\ActivityLog::class)->only(['index'])->names('activity_log');
 
 
     Route::post('m/{merchant}/update/{id}', [AuthController::class,'update'])->name('update');

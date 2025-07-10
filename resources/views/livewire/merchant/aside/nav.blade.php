@@ -147,7 +147,7 @@
             <polyline points="8 6 2 12 8 18"></polyline>
         </svg><span>API والتكاملات</span>
     </a>
-    <a href="{{route('merchant.dashboard.activity_log')}}" wire:click.prevent="intended('{{ route('merchant.dashboard.activity_log') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.activity_log')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <a href="{{route('merchant.dashboard.activity_log.index')}}" wire:click.prevent="intended('{{ route('merchant.dashboard.activity_log.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.activity_log.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
             <path d="M3 3v5h5"></path>
             <path d="M12 7v5l4 2"></path>

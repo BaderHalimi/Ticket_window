@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
 use App\Models\role_permission as RoleUserAssignment;
+use Illuminate\Support\Facades\Auth;
 class TeamManager extends Component
 {
     public $users;
@@ -30,6 +31,12 @@ class TeamManager extends Component
     public $editRoleName;
     public $editRolePermissionIds = [];
 
+    public $UserEmail;
+    public $UserPassword;
+    public $UserFname, $UserLname;
+    public $UserId = null;
+
+
     public function mount()
     {
         $this->merchantId = auth()->id();
@@ -52,7 +59,16 @@ class TeamManager extends Component
         })->values();
             //dd($this->usersWithRoles);
 
-        $this->users = User::all();
+            $this->users = User::whereNotNull('additional_data')
+            ->whereJsonContains('additional_data->workIn', Auth::id())->get();
+                    //dd($this->users);
+            // $this->users = User::whereNotNull('additional_data')->get()
+            // ->filter(function ($user) {
+            //     return !empty($user->additional_data['workIn'])
+            //         && in_array(Auth::id(), $user->additional_data['workIn']);
+            // });
+        
+            //dd($this->users);        
         $this->roles = Role::all();
         $this->permissions = Permission::all();
     }
@@ -107,7 +123,43 @@ class TeamManager extends Component
         $this->resetAccordion();
         $this->loadData();
     }
+    public function editUser($userId){
+        $user = User::find($userId);
+        $this->UserId = $user->id;
 
+        $this->UserEmail = $user->email;
+        $this->UserPassword = '';
+        $this->UserFname = $user->f_name;
+        $this->UserLname = $user->l_name;
+        //$this->adduser($userId);
+    }
+    Public function adduser()
+    {
+        if ($this->UserId) {
+            $user = User::find($this->UserId);
+
+        } else {
+            $user = new User();
+            //$user->password = bcrypt($this->UserPassword);
+        }
+        $user->email = $this->UserEmail;
+        $user->password = bcrypt($this->UserPassword);
+        $user->f_name = $this->UserFname;
+        $user->l_name = $this->UserLname;
+
+        $user->additional_data = [
+            'workIn' => [Auth::id()],
+        ];
+        $user->save();
+        $this->UserId = null;
+
+        $this->UserEmail = '';
+        $this->UserPassword = '';
+        $this->UserFname = '';
+        $this->UserLname = '';
+        session()->flash('success', '✅ تم إضافة المستخدم بنجاح!');
+        $this->loadData();
+    }
     public function createRole()
     {
         $role = new Role();
