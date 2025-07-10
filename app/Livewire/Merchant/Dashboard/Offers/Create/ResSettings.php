@@ -4,7 +4,8 @@ namespace App\Livewire\Merchant\Dashboard\Offers\Create;
 
 use Livewire\Component;
 use App\Models\Offering;
-
+use App\Models\Merchant\Branch;
+use Illuminate\Support\Facades\Auth;
 class ResSettings extends Component
 {
     public Offering $offering;
@@ -42,6 +43,10 @@ class ResSettings extends Component
     public $max_user_unit = 'hour';
 
     public $type;
+    
+    public $enable_selected_branches = false;
+    public $branches;
+    public array $selected_branches = [];
 
     public function mount(Offering $offering)
     {
@@ -53,7 +58,11 @@ class ResSettings extends Component
         if (isset($features['closed_days']) && is_string($features['closed_days'])) {
             $features['closed_days'] = array_filter(array_map('trim', explode(',', $features['closed_days'])));
         }
-
+        if (!isset($features['selected_branches']) || !is_array($features['selected_branches'])) {
+            $features['selected_branches'] = [];
+        }
+        
+        $this->branches = Branch::where('user_id', Auth::id())->get();
         $this->fill(array_merge([
             'enable_duration' => false,
             'booking_duration' => 1,
@@ -78,6 +87,9 @@ class ResSettings extends Component
 
             'enable_weekly_recurrence' => false,
             'weekly_recurrence_days' => '',
+            'enable_selected_branches' => false,
+            'selected_branches' => [],
+
         ], $features));
     }
 
@@ -128,7 +140,13 @@ class ResSettings extends Component
 
         $features['enable_weekly_recurrence'] = $this->enable_weekly_recurrence;
         $features['weekly_recurrence_days'] = $this->weekly_recurrence_days;
-
+        $features['enable_selected_branches'] = $this->enable_selected_branches;
+        $features['selected_branches'] = collect($this->branches)
+        ->whereIn('id', $this->selected_branches)
+        ->pluck('id')
+        ->values()
+        ->toArray();
+    
         $this->offering->update([
             'features' => $features,
             'status' => 'inactive'
