@@ -133,6 +133,45 @@ class TeamManager extends Component
         $this->UserLname = $user->l_name;
         //$this->adduser($userId);
     }
+    public function canceledit(){
+        $this->UserId = null;
+        $this->UserEmail = '';
+        $this->UserPassword = '';
+        $this->UserFname = '';
+        $this->UserLname = '';
+    }
+    public function deleteUser()
+    {
+        if ($this->UserId) {
+            $user = User::find($this->UserId);
+            if ($user) {
+                $data = $user->additional_data ?? [];
+    
+                $workIn = $data['workIn'] ?? [];
+                $role = RoleUserAssignment::where('merchant_id', $this->merchantId)
+                    ->where('employee_id', $user->id)
+                    ->delete();
+    
+                $workIn = array_filter($workIn, function ($id) {
+                    return $id != Auth::id();
+                });
+    
+                $data['workIn'] = array_values($workIn); 
+                $user->additional_data = $data;
+                $user->save();
+                //dd($user->additional_data);
+    
+                session()->flash('success', '🗑️ تم إزالة العامل من فريقك بنجاح!');
+                $this->loadData();
+            } else {
+                session()->flash('error', '❗ المستخدم غير موجود!');
+            }
+        } else {
+            session()->flash('error', '❗ لا يوجد مستخدم لتعديله!');
+        }
+        $this->canceledit();
+    }
+    
     Public function adduser()
     {
         if ($this->UserId) {
@@ -151,12 +190,8 @@ class TeamManager extends Component
             'workIn' => [Auth::id()],
         ];
         $user->save();
-        $this->UserId = null;
+        $this->canceledit();
 
-        $this->UserEmail = '';
-        $this->UserPassword = '';
-        $this->UserFname = '';
-        $this->UserLname = '';
         session()->flash('success', '✅ تم إضافة المستخدم بنجاح!');
         $this->loadData();
     }
