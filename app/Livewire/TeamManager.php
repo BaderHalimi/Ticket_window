@@ -131,6 +131,8 @@ class TeamManager extends Component
         $this->UserPassword = '';
         $this->UserFname = $user->f_name;
         $this->UserLname = $user->l_name;
+        //fetch_Permetions($userId);
+        //dd(has_Permetion($userId, 'overview_page'));
         //$this->adduser($userId);
     }
     public function canceledit(){

@@ -6,8 +6,10 @@ use App\Models\page_views;
 use App\Models\User;
 use App\Models\Offering;
 use App\Models\notifications;
+use App\Models\Permission;
 use App\Models\Presence;
-
+use App\Models\role_permission;
+use App\Models\Role;
 if (!function_exists('getCard')){
     function getCard()
     {
@@ -247,5 +249,49 @@ if (!function_exists("set_presence")){
         ]);
         dd($set_presenting);
         return true;
+    }
+}
+
+if (!function_exists('fetch_Permetions')){
+    function fetch_Permetions($user_id)
+    {
+        $Roles_user = role_permission::with('role')->where('employee_id', $user_id)->get();
+    
+        $result = [];
+    
+        foreach ($Roles_user as $roleUser) {
+    
+            if (!$roleUser->role) {
+                continue;
+            }
+    
+            $roleName = $roleUser->role->name;
+    
+            $add = json_decode($roleUser->role->additional_data, true);
+            $permIds = $add['permissions'] ?? [];
+    
+            $permissions = Permission::whereIn('id', $permIds)->pluck('key')->toArray();
+    
+            $result[] = [
+                'role_name' => $roleName,
+                'permissions' => $permissions
+            ];
+
+        }
+        //dd($result);
+    
+        return $result;
+    }  
+}
+if(!function_exists("has_Permetion")){
+    function has_Permetion($user_id, $perm_key)
+    {
+        $roles = fetch_Permetions($user_id);
+        foreach ($roles as $role) {
+            if (in_array($perm_key, $role['permissions'])) {
+                return true;
+            }
+        }
+        return false;
     }
 }
