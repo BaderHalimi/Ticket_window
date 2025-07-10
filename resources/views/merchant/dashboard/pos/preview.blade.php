@@ -15,7 +15,7 @@
     </div>
 
     <!-- كارت العرض الرئيسي -->
-    <div class="max-w-4xl mx-auto bg-white border-4 border-orange-400 rounded-3xl shadow-2xl p-8 space-y-10">
+    <div id="reservation-details" class="max-w-4xl mx-auto bg-white border-4 border-orange-400 rounded-3xl shadow-2xl p-8 space-y-10">
 
         <!-- العنوان -->
         <div class="text-center space-y-2">
@@ -99,22 +99,70 @@
 
         <!-- بيانات الحجز -->
         <div class="space-y-4">
-            <h4 class="text-2xl font-bold text-orange-700">معلومات الحجز</h4>
-            <div class="text-slate-700 space-y-2">
-                <p><span class="font-semibold text-orange-600">رقم الحجز:</span> {{ $reservation->id }}</p>
-                <p><span class="font-semibold text-orange-600">المبلغ:</span> {{ $reservation->amount ?? '0.00' }} ريال</p>
-                <p><span class="font-semibold text-orange-600">تاريخ الإنشاء:</span> {{ $reservation->created_at->format('Y-m-d H:i') }}</p>
-
-
-                @php
-                    $add = json_decode($reservation->additional_data, true);
-                @endphp
-
-                <p><span class="font-semibold text-orange-600">التاريخ المحجوز:</span> {{ $add['selected_day'] }}</p>
-                <p><span class="font-semibold text-orange-600">الوقت المحجوز:</span> {{ $add['selected_time']  }}</p>
+            <h4 class="text-2xl font-bold text-orange-700 mb-4">معلومات الحجز</h4>
+            
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-6">
+                <!-- QR CODE -->
+                <div id="qrcode" class="flex-shrink-0"></div>
+                
+                <!-- بيانات الحجز -->
+                <div class="flex-1 text-slate-700 space-y-2">
+                    <p><span class="font-semibold text-orange-600">رقم الحجز:</span> {{ $reservation->id }}</p>
+                    <p><span class="font-semibold text-orange-600">المبلغ:</span> {{ $reservation->amount ?? '0.00' }} ريال</p>
+                    <p><span class="font-semibold text-orange-600">رمز القسيمة :</span> {{ $reservation->code }}</p>
+                    <p><span class="font-semibold text-orange-600">تاريخ الإنشاء:</span> {{ $reservation->created_at->format('Y-m-d H:i') }}</p>
+        
+                    @php
+                        $add = json_decode($reservation->additional_data, true);
+                    @endphp
+        
+                    <p><span class="font-semibold text-orange-600">التاريخ المحجوز:</span> {{ $add['selected_day'] }}</p>
+                    <p><span class="font-semibold text-orange-600">الوقت المحجوز:</span> {{ $add['selected_time']  }}</p>
+                </div>
             </div>
         </div>
+        
+    <!-- زر تحميل PDF -->
+    <div class="mb-4 text-right">
+        <button
+            onclick="downloadPDF()"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white text-sm font-semibold shadow-md transition duration-300">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+            </svg>
+            تحميل كـ PDF
+        </button>
+    </div>
 
     </div>
 </div>
+<script>
+    function downloadPDF() {
+        const element = document.getElementById('reservation-details');
+
+
+        html2pdf()
+    .set({
+        margin: 0.5,
+        filename: "{{ $reservation->code }}.pdf",
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    })
+    .from(document.getElementById('reservation-details'))
+    .save();
+
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new QRCode(document.getElementById("qrcode"), {
+            text: "{{ $reservation->code }}",
+            width: 200,
+            height: 200
+        });
+    });
+</script>
+
+
 @endsection

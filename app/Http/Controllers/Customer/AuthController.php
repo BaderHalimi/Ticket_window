@@ -32,7 +32,7 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'business_name' => 'nullable|string|max:255',
             'business_type' => 'nullable|in:restaurant,events,show,other',
-            'phone' => 'nullable|string|max:15',
+            'phone' => 'nullable|string|max:15|unique:users',
             'other_business_type' => 'nullable|required_if:business_type,other|string|max:255',
         ]);
 

@@ -56,10 +56,9 @@ class Pos extends Component
             ->toArray();
     }
 
-    public function updatedCustomerEmail($value)
+    public function updatedCustomerPhone($value)
     {
-        if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            $user = User::where('email', $value)->first();
+            $user = User::where('phone', $value)->first();
             if ($user) {
                 $this->foundUser = [
                     'id' => $user->id,
@@ -68,10 +67,10 @@ class Pos extends Component
                     'profile_image' => $user->additional_data['profile_image'] ?? $user->additional_data['profile_picture'] ?? null,
                 ];
                 $this->customerName = $user->f_name;
-                $this->customerPhone = $user->phone ?? '';
+                $this->customerEmail = $user->email ?? '';
                 return;
             }
-        }
+    
         $this->foundUser = null;
     }
 

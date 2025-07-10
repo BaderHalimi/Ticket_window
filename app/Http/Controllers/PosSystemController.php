@@ -70,6 +70,13 @@ class PosSystemController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $reservation = PaidReservation::findOrFail($id);
+        if ($reservation->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+        
+        $reservation->delete();
+        
+        return redirect()->back()->with('success', 'Reservation deleted successfully.');
     }
 }

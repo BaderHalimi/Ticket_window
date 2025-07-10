@@ -45,11 +45,22 @@
                     @endif
                     <td class="px-4 py-3 text-sm text-slate-500">{{ $data['selected_time'] ?? NULL }} / {{ $data['selected_day'] ?? NULL }}</td>
                     <td class="px-4 py-3 text-sm">
-                        <a href="{{ route('merchant.dashboard.pos.show', $reservation->id) }}"
-                           class="text-orange-500 hover:text-orange-600 font-bold transition duration-200">
-                           عرض
-                        </a>
+                        <div class="flex items-center space-x-2 space-x-reverse">
+                            <a href="{{ route('merchant.dashboard.pos.show', $reservation->id) }}"
+                               class="text-orange-500 hover:text-orange-600 font-bold transition duration-200">
+                                عرض
+                            </a>
+                            <span class="text-slate-400">/</span>
+                            <form action="{{ route('merchant.dashboard.pos.destroy', $reservation->id) }}" method="POST" class="inline">
+                                @method('DELETE')
+                                @csrf
+                                <button type="submit" class="text-red-500 hover:text-red-600 font-bold focus:outline-none">
+                                    حذف
+                                </button>
+                            </form>
+                        </div>
                     </td>
+                    
                 </tr>
                 @empty
                 <tr>

@@ -33,7 +33,7 @@ class AuthController extends Controller
             'l_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'phone' => 'nullable|string|max:15',
+            'phone' => 'nullable|string|max:15|unique:users',
         ];
         if (Route::is('signup')) {
             $rules['business_name'] = 'nullable|string|max:255';

@@ -155,10 +155,10 @@
             @endif
 
             <div class="mt-4">
-                <label class="block mb-2">البريد الإلكتروني</label>
-                <input type="email" wire:model.lazy="customerEmail"
+                <label class="block mb-2">رقم الجوال</label>
+                <input type="email" wire:model.lazy="customerPhone"
                        class="w-full rounded-lg border border-slate-300 px-4 py-3"
-                       placeholder="email@example.com">
+                       placeholder="05xxxxxxxx">
             </div>
 
             @if($foundUser)
@@ -172,7 +172,7 @@
             @endif
 
             {{-- الاسم والجوال --}}
-            @if($customerEmail)
+            @if($customerPhone)
             <div class="grid grid-cols-2 gap-4 mt-4">
                 <div>
                     <label class="block mb-2">اسم الزبون</label>
@@ -181,9 +181,9 @@
                 </div>
                 <div>
                     <label class="block mb-2">رقم الجوال</label>
-                    <input type="text" wire:model.lazy="customerPhone"
+                    <input type="text" wire:model.lazy="customerEmail"
                            class="w-full rounded-lg border border-slate-300 px-4 py-3"
-                           placeholder="05xxxxxxxx">
+                           placeholder="email@example.com">
                 </div>
             </div>
             @endif
