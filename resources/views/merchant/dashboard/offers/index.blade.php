@@ -17,23 +17,35 @@
     </div>
 
     {{-- شريط الفلترة --}}
-    <div class="flex justify-between items-center mt-6 mb-2">
-        <h2 class="text-xl font-bold text-slate-800">قائمة الخدمات</h2>
-        <div class="relative inline-block text-left">
-            <button id="filterButton" type="button"
-                class="inline-flex items-center justify-center rounded-full border border-orange-500 text-orange-500 bg-white hover:bg-orange-50 shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 transition">
-                <i class="ri-filter-line"></i>
-                <span class="ml-2 text-sm">فلترة</span>
-            </button>
-            <div id="filterMenu" class="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-50">
-                <div class="py-1">
-                    <button onclick="filterTable('all')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">👁️ الكل</button>
-                    <button onclick="filterTable('services')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">🛠️ الخدمات</button>
-                    <button onclick="filterTable('events')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">🎫 الفعاليات</button>
-                </div>
+    <div class="relative inline-block text-left">
+        <button id="filterButton" type="button"
+          class="inline-flex items-center justify-center rounded-full border border-orange-500 text-orange-500 bg-white hover:bg-orange-50 shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 transition">
+          <i class="ri-filter-line"></i>
+          <span class="ml-2 text-sm">فلترة</span>
+        </button>
+      
+        <div id="filterMenu" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-50">
+            <div class="py-1">
+      
+            <button onclick="filterTable('all')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">👁️ الكل</button>
+            <button onclick="filterTable('services')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">🛠️ الخدمات</button>
+            <button onclick="filterTable('events')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">🎫 الفعاليات</button>
+      
+            <div class="border-t border-orange-100 my-2"></div>
+            <div class="px-4 py-2">
+              <p class="text-sm font-semibold text-orange-600 mb-2">تصفية حسب الفرع</p>
+              @foreach ($branches as $branch)
+                <label class="flex items-center space-x-2 rtl:space-x-reverse text-sm text-gray-700 mb-1">
+                  <input type="checkbox" class="branch-filter" value="{{ $branch->id }}">
+                  <span>{{ $branch->name }}</span>
+                </label>
+              @endforeach
             </div>
+      
+          </div>
         </div>
-    </div>
+      </div>
+      
 
     <div class="my-4">
         <label for="searchInput" class="block mb-1 text-sm font-medium text-slate-700">بحث عن الخدمة:</label>
@@ -66,8 +78,18 @@
                     @forelse($offers as $service)
                         @php
                             $times = fetch_time($service->id);
+                            $data = $service->features ?? [];
+                            $branches = '';
+
+
+                            if (!empty($data['selected_branches']) && is_array($data['selected_branches'])) {
+                                $branches = implode(',', $data['selected_branches']);
+                            }
+                            //dd($branches,$data['selected_branches'] ?? NULL,$data);
                         @endphp
-                        <tr data-type="{{ $service->type }}">
+                        {{-- <tr data-type="{{ $service->type }}" data-branch="{{ $branches }}"> --}}
+
+                        <tr data-type="{{ $service->type }}" data-branch="{{ $branches }}">
                             <td class="px-4 py-2">{{ $loop->iteration }}</td>
                             <td class="px-4 py-2 font-medium">{{ $service->name }}</td>
                             <td class="px-4 py-2">{{ ucfirst($service->type) }}</td>
@@ -92,6 +114,7 @@
                                 </form>
                             </td>
                         </tr>
+
                     @empty
                         <tr>
                             <td colspan="8" class="text-center px-4 py-6 text-slate-500">لا توجد خدمات حالياً.</td>
@@ -117,19 +140,56 @@
         }
     });
 
+    window.currentTypeFilter = 'all';
+
+    document.querySelectorAll('.branch-filter').forEach(cb => {
+        cb.addEventListener('change', applyAllFilters);
+    });
+
+    document.getElementById('searchInput').addEventListener('keyup', applyAllFilters);
+
     function filterTable(type) {
-        const rows = document.querySelectorAll('table tbody tr');
-        rows.forEach(row => {
-            if (type === 'all') {
-                row.style.display = '';
-            } else {
-                row.style.display = row.getAttribute('data-type') === type ? '' : 'none';
-            }
-        });
-        filterMenu.classList.add('hidden');
+        window.currentTypeFilter = type;
+        applyAllFilters();
     }
 
+    function applyAllFilters() {
+        const selectedType = window.currentTypeFilter || 'all';
+        const selectedBranches = Array.from(document.querySelectorAll('.branch-filter:checked')).map(cb => cb.value);
+        const searchValue = document.getElementById('searchInput').value.toLowerCase();
+
+        const rows = document.querySelectorAll('table tbody tr');
+
+        rows.forEach(row => {
+            const rowType = row.getAttribute('data-type');
+            const rowBranch = row.getAttribute('data-branch');
+            const nameCell = row.querySelector('td:nth-child(2)');
+            const nameText = nameCell ? nameCell.textContent.toLowerCase() : '';
+
+            // Check type
+            const typeMatch = (selectedType === 'all') || (selectedType === rowType);
+
+            // Check branch
+            let branchMatch = selectedBranches.length === 0;
+            if (!branchMatch && rowBranch) {
+                const rowBranches = rowBranch.split(',');
+                branchMatch = selectedBranches.some(b => rowBranches.includes(b));
+            }
+
+            // Check search
+            const searchMatch = nameText.includes(searchValue);
+
+            // Combine all
+            if (typeMatch && branchMatch && searchMatch) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
 </script>
+
+
 <script>
   function searchTable() {
     const input = document.getElementById('searchInput');

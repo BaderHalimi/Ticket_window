@@ -9,6 +9,7 @@ use App\Models\Merchant\Offer;
 use App\Models\Offering;
 use App\Models\Role;
 use Illuminate\Support\Facades\Gate;
+use App\Models\Merchant\Branch;
 use Illuminate\Support\Facades\Storage;
 
 class OffersController extends Controller
@@ -25,7 +26,9 @@ class OffersController extends Controller
             }
         }
         $offers = Offering::where('user_id', $merchant??Auth::id())->get();
-        return view('merchant.dashboard.offers.index', compact('offers'));
+        $branches = Branch::all(); 
+
+        return view('merchant.dashboard.offers.index', compact('offers','branches'));
     }
 
     /**
