@@ -22,6 +22,10 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->gro
     Route::resource('pos',PosSystemController::class)->names('pos');
     Route::resource('statistics',Page_statistics::class)->names('statistics');
 
+    Route::get('work_in',function(){
+        return view('merchant.dashboard.work_In');
+    })->name('work_in');
+
 
     Route::get('checking',function(){
         return view('merchant.dashboard.checking');

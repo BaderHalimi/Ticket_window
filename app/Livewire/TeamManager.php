@@ -131,6 +131,7 @@ class TeamManager extends Component
         $this->UserPassword = '';
         $this->UserFname = $user->f_name;
         $this->UserLname = $user->l_name;
+
         //fetch_Permetions($userId);
         //dd(has_Permetion($userId, 'overview_page'));
         //$this->adduser($userId);
@@ -186,6 +187,8 @@ class TeamManager extends Component
         $user->email = $this->UserEmail;
         $user->password = bcrypt($this->UserPassword);
         $user->f_name = $this->UserFname;
+        $user->role = 'merchant';
+        $user->status = 'active';
         $user->l_name = $this->UserLname;
 
         $user->additional_data = [

@@ -295,3 +295,41 @@ if(!function_exists("has_Permetion")){
         return false;
     }
 }
+
+
+if(!function_exists("is_work")){
+    function is_work($user_id){
+        $user = User::find($user_id);
+        if (!$user){
+            return;
+        }
+
+        $data = $user->additional_data['workIn'] ?? [];
+        if (empty($data)) {
+            return false;
+        }
+
+        return true;
+        
+    }
+}
+if(!function_exists("work_in")){
+    function work_in($user_id){
+        $user = User::find($user_id);
+        if (!$user){
+            return;
+        }
+
+        $data = $user->additional_data['workIn'] ?? [];
+        if (empty($data)) {
+            //dd("not");
+            return ;
+        }
+        //dd($data, Auth::id(), $user_id);
+        // if (isset($data['workIn']) && is_array($data['workIn'])) {
+        //     return in_array(Auth::id(), $data['workIn']);
+        // }
+        return $data;
+        
+    }
+}
