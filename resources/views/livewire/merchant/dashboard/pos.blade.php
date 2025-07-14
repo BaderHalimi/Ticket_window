@@ -40,10 +40,10 @@
                 <label class="block mb-2 font-semibold">تاريخ الحجز</label>
                 <input type="date"
                     wire:model.lazy="selectedDate"
-                    @if($times['data'][0]['start_date']??false) min="{{ $times['data'][0]['start_date'] }}" @endif
-                    @if($times['data'][0]['start_date']??false) max="{{ $times['data'][0]['end_date'] }}" @endif
+                    @if( isset($times['data'][0]) && $times['data'][0]['start_date']??false) min="{{ $times['data'][0]['start_date'] }}" @endif
+                    @if(isset($times['data'][0]) && $times['data'][0]['start_date']??false) max="{{ $times['data'][0]['end_date'] }}" @endif
                     class="w-full rounded-md border border-slate-300 px-4 py-2">
-                @if($times['data'][0]['start_date']??false && $times['data'][0]['end_date']??false)
+                @if(isset($times['data'][0]) && $times['data'][0]['start_date']??false && $times['data'][0]['end_date']??false)
                 <p class="text-xs text-slate-500 mt-1">
                     متاح من {{ $times['data'][0]['start_date'] }} إلى {{ $times['data'][0]['end_date'] }}
                 </p>
