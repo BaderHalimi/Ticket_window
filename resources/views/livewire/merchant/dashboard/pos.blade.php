@@ -54,11 +54,10 @@
                 <label class="block mb-2 font-semibold">وقت الحجز</label>
                 <input type="time"
                     wire:model.lazy="selectedTime"
-                    @if( isset($times['data'][0]) && $times['data'][0]['start_date']??false) min="{{ $times['data'][0]['start_time'] }}" @endif
-                    @if(isset($times['data'][0]) && $times['data'][0]['end_date']??false) max="{{ $times['data'][0]['end_time'] }}" @endif
+                    @if( isset($times['data'][0]) && $times['data'][0]['start_time']??false) min="{{ $times['data'][0]['start_time'] }}" @endif
+                    @if(isset($times['data'][0]) && $times['data'][0]['end_time']??false) max="{{ $times['data'][0]['end_time'] }}" @endif
                     class="w-full rounded-md border border-slate-300 px-4 py-2">
-                @if(isset($times['data'][0]) && $times['data'][0]['start_date']??false && $times['data'][0]['end_date']??false)
-
+                @if(isset($times['data'][0]) && $times['data'][0]['start_time']??false && $times['data'][0]['end_time']??false)
                 <p class="text-xs text-slate-500 mt-1">
                     متاح بين {{ $times['data'][0]['start_time'] }} و {{ $times['data'][0]['end_time'] }}
                 </p>
