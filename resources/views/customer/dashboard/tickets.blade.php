@@ -37,7 +37,7 @@
                                     <td class="px-4 py-2">{{ $offering->name ?? '—' }}</td>
                                     <td class="px-4 py-2">{{ $offering->location ?? '—' }}</td>
                                     <td class="px-4 py-2">{{ $offering->start_time ? $offering->start_time->format('Y-m-d H:i') : '—' }}</td>
-                                    <td class="px-4 py-2">{{ $reservation->price }} $</td>
+                                    <td class="px-4 py-2">{{ $reservation->price }} SAR</td>
                                     <td class="px-4 py-2 text-center flex justify-center gap-2">
                                         <!-- QR Icon -->
                                         <button onclick="showQR(`{{ $reservation->code }}`)" class="text-gray-600 hover:text-black text-xl">
