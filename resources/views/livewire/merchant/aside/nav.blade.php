@@ -8,7 +8,7 @@
         </svg>
         <span>نظرة عامة</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.offer.index',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.offer.index') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.offer.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.offer.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path>
@@ -18,7 +18,7 @@
         </svg>
         <span>إدارة الخدمات</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.reservations.index',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.reservations.index') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.reservations.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.reservations.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
@@ -30,7 +30,7 @@
         </svg>
         <span>إدارة الحجوزات</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.checking',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.checking') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.checking') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.checking')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <rect width="5" height="5" x="3" y="3" rx="1"></rect>
@@ -48,7 +48,7 @@
         </svg>
         <span>التحقق</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.pos.index',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.pos.index') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.pos.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.pos.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <polyline points="6 9 6 2 18 2 18 9"></polyline>
@@ -57,14 +57,14 @@
         </svg>
         <span>البيع الداخلي (POS)</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.customer_reviews',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.customer_reviews') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.customer_reviews') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.customer_reviews')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
         </svg>
         <span>مراجعات العملاء</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.statistics.index',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.statistics.index') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.statistics.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.statistics.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <path d="M3 3v18h18"></path>
@@ -74,7 +74,7 @@
         </svg>
         <span>التقارير والتحليلات</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.intelligence_analytics',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.intelligence_analytics') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.intelligence_analytics') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.intelligence_analytics')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <path d="M12 4.5a2.5 2.5 0 0 0-4.96-.46 2.5 2.5 0 0 0-1.98 3 2.5 2.5 0 0 0-1.32 4.24 3 3 0 0 0 .34 5.58 2.5 2.5 0 0 0 2.96 3.08 2.5 2.5 0 0 0 4.91.05L12 20V4.5Z"></path>
@@ -89,7 +89,7 @@
         </svg>
         <span>الذكاء والتحليلات</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.notification_management',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.notification_management') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.notification_management') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.notification_management')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
@@ -97,14 +97,14 @@
         </svg>
         <span>إدارة الإشعارات</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.message_center',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.message_center') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.message_center') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.message_center')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
         <span>مركز الرسائل</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.withdraws.index',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.withdraws.index') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.withdraws.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.withdraws.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
@@ -113,7 +113,7 @@
         </svg>
         <span>المحفظة والسحب</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.branch.index',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.branch.index') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.branch.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.branch.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <line x1="6" x2="6" y1="3" y2="15"></line>
@@ -123,8 +123,8 @@
         </svg>
         <span>إدارة الفروع</span>
     </a>
-    
-    <a @if($merchant??false) href="{{ route('merchant.dashboard.m.team_management',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.team_management') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.team_management') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.team_management')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
+
+    <!-- <a @if($merchant??false) href="{{ route('merchant.dashboard.m.team_management',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.team_management') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.team_management') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.team_management')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
             <circle cx="9" cy="7" r="4"></circle>
@@ -132,8 +132,8 @@
             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
         </svg>
         <span>إدارة الفريق</span>
-    </a>
-    
+    </a> -->
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.page_setup',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.page_setup') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.page_setup') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.page_setup')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <circle cx="13.5" cy="6.5" r=".5"></circle>
@@ -144,7 +144,7 @@
         </svg>
         <span>إعداد الصفحة</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.policies_settings',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.policies_settings') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.policies_settings') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.policies_settings')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <circle cx="6" cy="13" r="3"></circle>
@@ -161,7 +161,7 @@
         </svg>
         <span>السياسات والإعدادات</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.languages_translation',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.languages_translation') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.languages_translation') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.languages_translation')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <circle cx="12" cy="12" r="10"></circle>
@@ -170,7 +170,7 @@
         </svg>
         <span>اللغات والترجمة</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.api',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.api') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.api') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.api')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <polyline points="16 18 22 12 16 6"></polyline>
@@ -178,7 +178,7 @@
         </svg>
         <span>API والتكاملات</span>
     </a>
-    
+
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.activity_log.index',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.activity_log.index') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.activity_log.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.activity_log.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>

@@ -81,10 +81,9 @@
   </form>
 
   <!-- القوالب والألوان -->
-<div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg p-6 space-y-6">
+<!-- <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg p-6 space-y-6">
   <h2 class="text-2xl font-bold">الألوان والقوالب</h2>
 
-  <!-- اللون الرئيسي -->
   <div>
     <label class="block text-sm font-medium text-gray-700 mb-2">اختر اللون الرئيسي</label>
     <div class="flex items-center gap-3">
@@ -96,7 +95,6 @@
     </div>
   </div>
 
-  <!-- نماذج القوالب -->
   <div>
     <label class="block text-sm font-medium text-gray-700 mb-2">نماذج القوالب</label>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -126,7 +124,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 </div>
 
