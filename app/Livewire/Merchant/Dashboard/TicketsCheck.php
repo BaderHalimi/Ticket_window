@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Merchant\Dashboard;
 
+use Livewire\Attributes\On;
 use Livewire\Component;
 use App\Models\PaidReservation;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,10 @@ class TicketsCheck extends Component
             $this->error = 'لم يتم العثور على تذكرة بهذا الرقم.';
         }
         set_presence($this->reservation);
+    }
+    #[On('qr-scanned')]
+    public function scanned($decodedText){
+        $this->code = $decodedText;
     }
 
 
