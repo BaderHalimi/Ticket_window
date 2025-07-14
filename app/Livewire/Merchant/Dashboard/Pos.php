@@ -70,7 +70,7 @@ class Pos extends Component
                 $this->customerEmail = $user->email ?? '';
                 return;
             }
-    
+
         $this->foundUser = null;
     }
 
@@ -86,16 +86,16 @@ class Pos extends Component
         $offering = $this->offerings->firstWhere('id', $this->selectedOfferingId);
         if (!$offering) {
             session()->flash('error', 'الخدمة غير موجودة');
-            return;
+            // return;
         }
 
         $features = $offering->features ?? [];
         $daySchedule = $features['work_schedule'][$this->selectedDay] ?? null;
 
-        if ($offering->type === 'service') {
+        if ($offering->type == 'service') {
             if (!$daySchedule || !$daySchedule['enabled']) {
                 session()->flash('error', 'اليوم غير مفعّل لهذه الخدمة');
-                return;
+                // return;
             }
         }
 
@@ -147,6 +147,7 @@ class Pos extends Component
             'selectedDay',
             'selectedTime',
         ]);
+        $this->redirectIntended(route('merchant.dashboard.pos.index'),true);
     }
 
     public function render()
