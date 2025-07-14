@@ -26,8 +26,8 @@
                         </thead>
                         <tbody>
                             @forelse ($Reservations as $reservation)
-                                @php 
-                                    $offering = $reservation->offering; 
+                                @php
+                                    $offering = $reservation->offering;
                                     $features = is_string($offering->features ?? '') ? json_decode($offering->features) : (object) ($offering->features ?? []);
                                 @endphp
                                 <tr class="bg-white shadow-sm rounded-md">
@@ -81,7 +81,7 @@
 <!-- QR Popup -->
 <div id="qrPopup" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg text-center w-96">
-        <div id="qrContainer" class="mb-4"></div>
+        <div id="qrContainer" class="mb-4 w-100 flex justify-center"></div>
         <a id="downloadQRBtn" href="#" download="qr-code.png"
            class="w-full block bg-green-600 text-white py-2 rounded hover:bg-green-700 text-sm">Download QR</a>
         <button onclick="hideQR()" class="w-full mt-2 text-red-600 hover:underline text-sm">Close</button>
