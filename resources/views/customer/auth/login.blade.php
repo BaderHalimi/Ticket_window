@@ -30,7 +30,7 @@
                             <div bis_skin_checked="1"><label class="block text-sm font-medium text-gray-700 mb-2" for="password">كلمة المرور</label><input name="password" type="password" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" required="" id="password" placeholder="كلمة المرور"></div>
                             <button class="inline-flex items-center justify-center ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-orange-500 hover:bg-orange-500/90 h-11 rounded-md px-8 w-full bg-orange-500 text-white py-6 text-lg font-semibold transform hover:scale-105 transition-transform" type="submit">تسجيل الدخول</button>
                         </form>
-                        <div class="text-center mt-4">ليس لديك حساب؟ <a href="{{ route('customer.register') }}" class="text-orange-500 font-bold">طلب الانضمام</a></div>
+                        <div class="text-center mt-4">ليس لديك حساب؟ <a href="{{ route('customer.register',['redirect'=>request()->get('redirect')??'']) }}" class="text-orange-500 font-bold">طلب الانضمام</a></div>
                     </div>
                 </div>
             </div>

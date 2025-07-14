@@ -12,7 +12,7 @@
 <!-- البيانات الأساسية -->
 <div class="mt-20 text-center px-4">
     <h1 class="text-2xl font-bold text-gray-800">{{ $merchant->business_name??'' }}</h1>
-    <p class="text-gray-600 mt-2 max-w-xl mx-auto">نقدم أفضل خدمات التجميل والعناية في بيئة مريحة واحترافية.</p>
+    <p class="text-gray-600 mt-2 max-w-xl mx-auto">{{ $merchant->additional_data?$merchant->additional_data['discription']??'':'' }}</p>
 
     <!-- العنوان وأوقات العمل -->
     <div class="mt-4 flex justify-center items-center flex-wrap gap-4 text-sm text-gray-500">

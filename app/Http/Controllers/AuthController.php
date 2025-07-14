@@ -55,13 +55,14 @@ class AuthController extends Controller
         //Auth::login($user);
         if ($validated['role'] == 'user') {
             Auth::guard('customer')->login($user);
+            return redirect()->intended($request->redirect ??route('customer.dashboard.overview'));
         } elseif ($validated['role'] == 'merchant') {
             return redirect()->route('status')->with([
                 'status' => 'pending',
             ]);
             // Auth::guard('merchant')->login($user);
         }
-        return redirect()->intended(route('login'))->with('success', 'Registration successful!');
+        return redirect()->intended(route('login',['redirect'=>$request->redirect ??'']))->with('success', 'Registration successful!');
 
         // return redirect()->route('dashboard')->with('success', 'Registration successful!');
     }

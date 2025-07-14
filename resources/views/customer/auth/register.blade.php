@@ -19,6 +19,9 @@
                         </div>
                         <form action="{{route('customer.signup')}}" method="POST" class="space-y-6">
                             @csrf
+                            @if(request()->has('redirect'))
+                            <input type="hidden" name="redirect" value="{{ request()->get('redirect') }}">
+                            @endif
                             <div class="grid md:grid-cols-2 gap-6" bis_skin_checked="1">
                                 <div bis_skin_checked="1"><label class="block text-sm font-medium text-gray-700 mb-2" for="firstName">الاسم الأول</label><input name="f_name" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" required="" id="firstName" placeholder="أدخل اسمك الأول"></div>
                                 <div bis_skin_checked="1"><label class="block text-sm font-medium text-gray-700 mb-2" for="lastName">اسم العائلة</label><input name="l_name" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" required="" id="lastName" placeholder="أدخل اسم العائلة"></div>
