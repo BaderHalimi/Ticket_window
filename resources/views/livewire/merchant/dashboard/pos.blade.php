@@ -4,8 +4,8 @@
 
         {{-- اختيار الخدمة --}}
         <div>
-            <label class="block mb-2">نوع الخدمة</label>
-            <select wire:model.lazy="selectedOfferingId" class="w-full rounded-lg border border-slate-300 px-4 py-3">
+            <label class="block mb-2">الخدمة <span class="text-red-600"><b>*</b></span></label>
+            <select wire:model.lazy="selectedOfferingId" class="w-full rounded-lg border border-slate-300 px-4 py-3" required>
                 <option value="">اختر الخدمة...</option>
                 @foreach($offerings as $offering)
                 <option value="{{ $offering->id }}">{{ $offering->name }}</option>
@@ -18,8 +18,8 @@
         {{-- التاريخ --}}
         @if(count($allowedDates))
         <div>
-            <label class="block mb-2">تاريخ الحجز</label>
-            <select wire:model.lazy="selectedDate" class="w-full rounded-lg border border-slate-300 px-4 py-3">
+            <label class="block mb-2">تاريخ الحجز <span class="text-red-600"><b>*</b></span></label>
+            <select wire:model.lazy="selectedDate" class="w-full rounded-lg border border-slate-300 px-4 py-3" required>
                 <option value="">اختر تاريخ</option>
                 @foreach($allowedDates as $date)
                 <option value="{{ $date }}">{{ $date }}</option>
@@ -37,12 +37,12 @@
         @if ($times['type'] == 'events')
         <div class="space-y-4">
             <div>
-                <label class="block mb-2 font-semibold">تاريخ الحجز</label>
+                <label class="block mb-2 font-semibold">تاريخ الحجز <span class="text-red-600"><b>*</b></span></label>
                 <input type="date"
                     wire:model.lazy="selectedDate"
                     @if( isset($times['data'][0]) && $times['data'][0]['start_date']??false) min="{{ $times['data'][0]['start_date'] }}" @endif
                     @if(isset($times['data'][0]) && $times['data'][0]['end_date']??false) max="{{ $times['data'][0]['end_date'] }}" @endif
-                    class="w-full rounded-md border border-slate-300 px-4 py-2">
+                    class="w-full rounded-md border border-slate-300 px-4 py-2" required>
                 @if(isset($times['data'][0]) && $times['data'][0]['start_date']??false && $times['data'][0]['end_date']??false)
                 <p class="text-xs text-slate-500 mt-1">
                     متاح من {{ $times['data'][0]['start_date'] }} إلى {{ $times['data'][0]['end_date'] }}
@@ -51,12 +51,12 @@
             </div>
 
             <div>
-                <label class="block mb-2 font-semibold">وقت الحجز</label>
+                <label class="block mb-2 font-semibold">وقت الحجز <span class="text-red-600"><b>*</b></span></label>
                 <input type="time"
                     wire:model.lazy="selectedTime"
                     @if( isset($times['data'][0]) && $times['data'][0]['start_time']??false) min="{{ $times['data'][0]['start_time'] }}" @endif
                     @if(isset($times['data'][0]) && $times['data'][0]['end_time']??false) max="{{ $times['data'][0]['end_time'] }}" @endif
-                    class="w-full rounded-md border border-slate-300 px-4 py-2">
+                    class="w-full rounded-md border border-slate-300 px-4 py-2" required>
                 @if(isset($times['data'][0]) && $times['data'][0]['start_time']??false && $times['data'][0]['end_time']??false)
                 <p class="text-xs text-slate-500 mt-1">
                     متاح بين {{ $times['data'][0]['start_time'] }} و {{ $times['data'][0]['end_time'] }}
@@ -70,8 +70,8 @@
         <div class="space-y-4">
 
             <div>
-                <label class="block mb-2 font-semibold">اختر اليوم</label>
-                <select wire:model.lazy="selectedDay" class="w-full rounded-md border border-slate-300 px-4 py-2">
+                <label class="block mb-2 font-semibold">اختر اليوم <span class="text-red-600"><b>*</b></span></label>
+                <select wire:model.lazy="selectedDay" class="w-full rounded-md border border-slate-300 px-4 py-2" required>
                     <option value="">-- اختر يوم --</option>
                     @foreach($times['data'] as $day => $data)
                     @if($data['enabled'])
@@ -81,7 +81,6 @@
                 </select>
             </div>
             @if ($selectedDay && isset($times['data'][$selectedDay]))
-
             <div>
                 <label class="block mb-2 font-semibold">وقت الحجز لـ {{ ucfirst($selectedDay) }}</label>
                 <input
@@ -89,15 +88,13 @@
                     wire:model.lazy="selectedTime"
                     min="{{ $times["data"][$selectedDay]['from'] }}"
                     max="{{ $times['data'][$selectedDay]['to'] }}"
-                    class="w-full rounded-md border border-slate-300 px-4 py-2">
+                    class="w-full rounded-md border border-slate-300 px-4 py-2" required>
 
                 <p class="text-sm text-slate-500 mt-1">
                     الوقت المسموح: {{ $times['data'][$selectedDay]['from'] }} - {{ $times['data'][$selectedDay]['to'] }}
                 </p>
             </div>
             @endif
-
-
         </div>
 
         @endif
@@ -117,8 +114,8 @@
         {{-- الباقات (تظهر فقط لو مفعّل toggle) --}}
         @if($showPackage)
         <div class="mt-4">
-            <label class="block mb-2">اختر الباقة</label>
-            <select wire:model.lazy="selectedPackage" class="w-full rounded-lg border border-slate-300 px-4 py-3">
+            <label class="block mb-2">اختر الباقة <span class="text-red-600"><b>*</b></span></label>
+            <select wire:model.lazy="selectedPackage" class="w-full rounded-lg border border-slate-300 px-4 py-3" required>
                 <option value="">اختر باقة</option>
                 @foreach($pricingPackages as $package)
                 <option value="{{ $package['label'] }}">
@@ -132,16 +129,16 @@
         {{-- عدد الأشخاص (يختفي لو الباقة مفعّلة) --}}
         @if(!$showPackage)
         <div class="mt-4">
-            <label class="block mb-2">عدد التذاكر / الأشخاص</label>
+            <label class="block mb-2">عدد التذاكر / الأشخاص <span class="text-red-600"><b>*</b></span></label>
             <input type="number" wire:model.lazy="tickets" min="1"
-                class="w-full rounded-lg border border-slate-300 px-4 py-3">
+                class="w-full rounded-lg border border-slate-300 px-4 py-3" required>
         </div>
         @endif
 
         {{-- طريقة الدفع --}}
         <div class="mt-4">
-            <label class="block mb-2">طريقة الدفع</label>
-            <select wire:model.lazy="paymentMethod" class="w-full rounded-lg border border-slate-300 px-4 py-3">
+            <label class="block mb-2">طريقة الدفع <span class="text-red-600"><b>*</b></span></label>
+            <select wire:model.lazy="paymentMethod" class="w-full rounded-lg border border-slate-300 px-4 py-3" required>
                 <option value="">اختر طريقة الدفع</option>
                 <option value="cash">نقدًا عند الحضور</option>
                 <option value="free">مجاني</option>
@@ -151,17 +148,17 @@
         {{-- السعر (يظهر فقط لو الدفع نقداً + ما في باقة) --}}
         @if($paymentMethod === 'cash' && !$showPackage)
         <div class="mt-4">
-            <label class="block mb-2">السعر</label>
+            <label class="block mb-2">السعر <span class="text-red-600"><b>*</b></span></label>
             <input type="number" wire:model.lazy="manualPrice" min="0"
-                class="w-full rounded-lg border border-slate-300 px-4 py-3">
+                class="w-full rounded-lg border border-slate-300 px-4 py-3" required>
         </div>
         @endif
 
         <div class="mt-4">
-            <label class="block mb-2">رقم الجوال</label>
+            <label class="block mb-2">رقم الجوال <span class="text-red-600"><b>*</b></span></label>
             <input type="email" wire:model.lazy="customerPhone"
                 class="w-full rounded-lg border border-slate-300 px-4 py-3"
-                placeholder="05xxxxxxxx">
+                placeholder="05xxxxxxxx" required>
         </div>
 
         @if($foundUser)
@@ -178,12 +175,12 @@
         @if($customerPhone)
         <div class="grid grid-cols-2 gap-4 mt-4">
             <div>
-                <label class="block mb-2">اسم الزبون</label>
+                <label class="block mb-2">اسم الزبون <span class="text-red-600"><b>*</b></span></label>
                 <input type="text" wire:model.lazy="customerName"
                     class="w-full rounded-lg border border-slate-300 px-4 py-3">
             </div>
             <div>
-                <label class="block mb-2">رقم الجوال</label>
+                <label class="block mb-2">الايميل</label>
                 <input type="text" wire:model.lazy="customerEmail"
                     class="w-full rounded-lg border border-slate-300 px-4 py-3"
                     placeholder="email@example.com">

@@ -58,18 +58,19 @@ class Pos extends Component
 
     public function updatedCustomerPhone($value)
     {
-            $user = User::where('phone', $value)->first();
-            if ($user) {
-                $this->foundUser = [
-                    'id' => $user->id,
-                    'name' => $user->f_name,
-                    'email' => $user->email,
-                    'profile_image' => $user->additional_data['profile_image'] ?? $user->additional_data['profile_picture'] ?? null,
-                ];
-                $this->customerName = $user->f_name;
-                $this->customerEmail = $user->email ?? '';
-                return;
-            }
+        $phone = (substr($value, 0, 1) === '0') ? substr($value, 1) : $value;
+        $user = User::where('phone', $value)->orWhere('phone', '+966' . $phone)->first();
+        if ($user) {
+            $this->foundUser = [
+                'id' => $user->id,
+                'name' => $user->f_name,
+                'email' => $user->email,
+                'profile_image' => $user->additional_data['profile_image'] ?? $user->additional_data['profile_picture'] ?? null,
+            ];
+            $this->customerName = $user->f_name;
+            $this->customerEmail = $user->email ?? '';
+            return;
+        }
 
         $this->foundUser = null;
     }
@@ -121,13 +122,13 @@ class Pos extends Component
             'additional_data' => json_encode([
                 'customerName' => $this->customerName,
                 'customerPhone' => $this->customerPhone,
-                'customerEmail' => $this->customerEmail,
+                'customerEmail' => $this->customerEmail ?? '',
                 'paymentMethod' => $this->paymentMethod,
                 'selling_type' => 'pos',
                 'selected_day' => $this->selectedDate,
                 'selected_time'  => $this->selectedTime
-                ? Carbon::createFromFormat('H:i', $this->selectedTime)->format('h:i A')
-                : null,
+                    ? Carbon::createFromFormat('H:i', $this->selectedTime)->format('h:i A')
+                    : null,
             ]),
         ]);
 
@@ -147,7 +148,22 @@ class Pos extends Component
             'selectedDay',
             'selectedTime',
         ]);
-        $this->redirectIntended(route('merchant.dashboard.pos.index'),true);
+        $this->redirectIntended(route('merchant.dashboard.pos.index'), true);
+    }
+
+    public function updatedTickets($value)
+    {
+        if ($this->paymentMethod == 'cash') {
+            $offer = Offering::find($this->selectedOfferingId);
+            $this->manualPrice = $offer->features['base_price'] * $value;
+        }
+    }
+    public function updatedPaymentMethod($value)
+    {
+        if ($value == 'cash') {
+            $offer = Offering::find($this->selectedOfferingId);
+            $this->manualPrice = $offer->features['base_price'] * $this->tickets;
+        }
     }
 
     public function render()
