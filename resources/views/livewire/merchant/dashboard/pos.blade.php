@@ -41,7 +41,7 @@
                 <input type="date"
                     wire:model.lazy="selectedDate"
                     @if( isset($times['data'][0]) && $times['data'][0]['start_date']??false) min="{{ $times['data'][0]['start_date'] }}" @endif
-                    @if(isset($times['data'][0]) && $times['data'][0]['start_date']??false) max="{{ $times['data'][0]['end_date'] }}" @endif
+                    @if(isset($times['data'][0]) && $times['data'][0]['end_date']??false) max="{{ $times['data'][0]['end_date'] }}" @endif
                     class="w-full rounded-md border border-slate-300 px-4 py-2">
                 @if(isset($times['data'][0]) && $times['data'][0]['start_date']??false && $times['data'][0]['end_date']??false)
                 <p class="text-xs text-slate-500 mt-1">
@@ -54,12 +54,15 @@
                 <label class="block mb-2 font-semibold">وقت الحجز</label>
                 <input type="time"
                     wire:model.lazy="selectedTime"
-                    min="{{ $times['data'][0]['start_time'] }}"
-                    max="{{ $times['data'][0]['end_time'] }}"
+                    @if( isset($times['data'][0]) && $times['data'][0]['start_date']??false) min="{{ $times['data'][0]['start_time'] }}" @endif
+                    @if(isset($times['data'][0]) && $times['data'][0]['end_date']??false) max="{{ $times['data'][0]['end_time'] }}" @endif
                     class="w-full rounded-md border border-slate-300 px-4 py-2">
+                @if(isset($times['data'][0]) && $times['data'][0]['start_date']??false && $times['data'][0]['end_date']??false)
+
                 <p class="text-xs text-slate-500 mt-1">
                     متاح بين {{ $times['data'][0]['start_time'] }} و {{ $times['data'][0]['end_time'] }}
                 </p>
+                @endif
             </div>
         </div>
         @endif
