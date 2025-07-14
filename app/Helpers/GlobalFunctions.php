@@ -25,13 +25,13 @@ if (!function_exists('getCard')){
                 return $paymentMethod;
 
             }
-            
+
         }
 
 
         return null;
     }
-} 
+}
 
 if (!function_exists('logPayment')) {
     function logPayment(array $data)
@@ -44,7 +44,7 @@ if (!function_exists('logPayment')) {
             'payment_method'  => getCard(),
             'amount'          => $data['amount'],
             'additional_data' => $data['additional_data'] ?? [],
-            
+
         ]);
     }
 }
@@ -89,7 +89,7 @@ if (!function_exists('set_viewed')) {
                 return;
             }
         }
-            
+
         //dd($existing, $user, $page_url, $ip, $merchant_id);
         page_views::create([
             'user_id'        => $user->id,
@@ -107,7 +107,7 @@ if (!function_exists('notifcate')) {
 
 
         $notification = notifications::create([
-            
+
             'subject' => $title,
             'user_id' => $user_id,
             'message'  => $body,
@@ -213,7 +213,7 @@ if (!function_exists('fetch_time')) {
                     'start_time' => $event['start_time'] ?? null,
                     'end_date' => $event['end_date'] ?? null,
                     'end_time' => $event['end_time'] ?? null,
-                
+
                 ];
             }
 
@@ -247,7 +247,7 @@ if (!function_exists("set_presence")){
 
             ]),
         ]);
-        dd($set_presenting);
+        // dd($set_presenting);
         return true;
     }
 }
@@ -256,22 +256,22 @@ if (!function_exists('fetch_Permetions')){
     function fetch_Permetions($user_id)
     {
         $Roles_user = role_permission::with('role')->where('employee_id', $user_id)->get();
-    
+
         $result = [];
-    
+
         foreach ($Roles_user as $roleUser) {
-    
+
             if (!$roleUser->role) {
                 continue;
             }
-    
+
             $roleName = $roleUser->role->name;
-    
+
             $add = json_decode($roleUser->role->additional_data, true);
             $permIds = $add['permissions'] ?? [];
-    
+
             $permissions = Permission::whereIn('id', $permIds)->pluck('key')->toArray();
-    
+
             $result[] = [
                 'role_name' => $roleName,
                 'permissions' => $permissions
@@ -279,9 +279,9 @@ if (!function_exists('fetch_Permetions')){
 
         }
         //dd($result);
-    
+
         return $result;
-    }  
+    }
 }
 if(!function_exists("has_Permetion")){
     function has_Permetion($user_id, $perm_key)
@@ -310,7 +310,7 @@ if(!function_exists("is_work")){
         }
 
         return true;
-        
+
     }
 }
 if(!function_exists("work_in")){
@@ -330,6 +330,6 @@ if(!function_exists("work_in")){
         //     return in_array(Auth::id(), $data['workIn']);
         // }
         return $data;
-        
+
     }
 }

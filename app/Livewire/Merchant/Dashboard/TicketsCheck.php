@@ -32,8 +32,9 @@ class TicketsCheck extends Component
         set_presence($this->reservation);
     }
     #[On('qr-scanned')]
-    public function scanned($decodedText){
-        $this->code = $decodedText;
+    public function scanned($code){
+        $this->code = $code;
+        $this->check();
     }
 
 
