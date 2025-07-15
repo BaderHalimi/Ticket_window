@@ -125,6 +125,56 @@ if (!function_exists('notifcate')) {
     }
 }
 
+// if (!function_exists('hasEssentialFields')) {
+
+//     function isFilled($value): bool
+//     {
+//         if (is_null($value)) return false;
+//         if (is_array($value)) return count($value) > 0;
+//         return trim((string)$value) !== '';
+//     }
+
+//     function hasEssentialFields(int $offerId): array
+//     {
+//         $offer = \App\Models\Offering::find($offerId);
+
+//         if (!$offer) {
+//             return [
+//                 'status' => false,
+//                 'fields' => [],
+//                 'message' => "Offer not found for ID: $offerId"
+//             ];
+//         }
+
+//         $features = $offer->features ?? [];
+
+//         $checks = [
+//             'name'                => isFilled($offer->name),
+//             'description'         => isFilled($offer->description),
+//             'location'            => isFilled($offer->location),
+//             'price' => ($offer->price && $offer->price > 0),
+
+//             //'services_type'       => isFilled($features['services_type'] ?? null),
+//             //'base_price'          => isFilled($features['base_price'] ?? null),
+//             'booking_duration'    => isFilled($features['booking_duration'] ?? null),
+//             'booking_unit'        => isFilled($features['booking_unit'] ?? null),
+
+//             'pricing_packages'    => !empty($features['pricing_packages']) &&
+//                                       isFilled($features['pricing_packages'][0]['label'] ?? null),
+
+//             'gallery'             => !empty($features['gallery']) &&
+//                                       isFilled($features['gallery'][0] ?? null),
+//         ];
+
+//         $allOk = !in_array(false, $checks, true);
+
+//         return [
+//             'status' => $allOk,
+//             'fields' => $checks
+//         ];
+//     }
+// }
+
 if (!function_exists('hasEssentialFields')) {
 
     function isFilled($value): bool
@@ -132,6 +182,37 @@ if (!function_exists('hasEssentialFields')) {
         if (is_null($value)) return false;
         if (is_array($value)) return count($value) > 0;
         return trim((string)$value) !== '';
+    }
+
+    function checkTimeValidity($offerId): bool
+    {
+        $time = fetch_time($offerId);
+        if (!$time) return false;
+
+        $type = $time['type'] ?? null;
+        $data = $time['data'] ?? [];
+
+        if ($type === 'service') {
+            return count($data) > 0;
+        }
+
+        if ($type === 'events') {
+            if (count($data) === 0) return false;
+
+            foreach ($data as $event) {
+                if (
+                    empty($event['start_date']) ||
+                    empty($event['start_time']) ||
+                    empty($event['end_date']) ||
+                    empty($event['end_time'])
+                ) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return false;
     }
 
     function hasEssentialFields(int $offerId): array
@@ -152,18 +233,18 @@ if (!function_exists('hasEssentialFields')) {
             'name'                => isFilled($offer->name),
             'description'         => isFilled($offer->description),
             'location'            => isFilled($offer->location),
-            'price' => ($offer->price && $offer->price > 0),
+            'price'               => ($offer->price && $offer->price > 0),
 
-            //'services_type'       => isFilled($features['services_type'] ?? null),
-            //'base_price'          => isFilled($features['base_price'] ?? null),
             'booking_duration'    => isFilled($features['booking_duration'] ?? null),
             'booking_unit'        => isFilled($features['booking_unit'] ?? null),
 
-            'pricing_packages'    => !empty($features['pricing_packages']) &&
-                                      isFilled($features['pricing_packages'][0]['label'] ?? null),
+            // 'pricing_packages'    => !empty($features['pricing_packages']) &&
+            //                           isFilled($features['pricing_packages'][0]['label'] ?? null),
 
             'gallery'             => !empty($features['gallery']) &&
                                       isFilled($features['gallery'][0] ?? null),
+
+            'time'                => checkTimeValidity($offerId),
         ];
 
         $allOk = !in_array(false, $checks, true);

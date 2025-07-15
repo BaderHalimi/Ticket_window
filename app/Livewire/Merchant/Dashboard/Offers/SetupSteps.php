@@ -58,6 +58,7 @@ class SetupSteps extends Component
             $true_fileds = count(array_filter(hasEssentialFields($this->offering->id)['fields']));
             $percent_progress = ($true_fileds / $all_fileds) * 100;
         }
+        //dd($isReady = hasEssentialFields($this->offering->id));
         //dd(count(hasEssentialFields($this->offering->id)['fields']));
 
         //dd($all_fileds, $true_fileds,$persent_progress);

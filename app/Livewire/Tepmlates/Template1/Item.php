@@ -18,7 +18,7 @@ class Item extends Component
 
     function calcPrice($offer)
     {
-        $price = $offer->features['base_price'] ?? 0;
+        $price = $offer->price ?? 0;
 
         // Check for discount
         if (!empty($offer->features['enable_discounts']) && $offer->features['enable_discounts'] && isset($offer->features['discount_start']) && isset($offer->features['discount_end']) && isset($offer->features['discount_percent'])) {

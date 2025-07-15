@@ -11,8 +11,8 @@
                 @php
                 $final = $this->calcPrice($offer);
                 @endphp
-                @if ($offer->features['base_price']??0 != $final)
-                <apsn class="text-sm text-gray-500 line-through">{{ $offer->features['base_price'] }} ريال</apsn>
+                @if ($offer->price??0 != $final)
+                <apsn class="text-sm text-gray-500 line-through">{{ $offer->price }} ريال</apsn>
                 @endif
                 {{ $final }} ريال
             </p>

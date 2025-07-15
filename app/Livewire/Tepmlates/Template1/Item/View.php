@@ -35,13 +35,27 @@ class View extends Component
 
     public function generateAvailableDays()
     {
-        $this->availableDays = [];
-        $start = now()->startOfDay();
-
-        for ($i = 0; $i < $this->daysLimit; $i++) {
-            $this->availableDays[] = $start->copy()->addDays($i)->toDateString();
+        $raw = fetch_time($this->offer->id);
+        
+        $dates = [];
+    
+        if ($raw && $raw['type'] === 'events') {
+            foreach ($raw['data'] as $event) {
+                if (empty($event['start_date']) || empty($event['end_date'])) continue;
+    
+                $start = \Carbon\Carbon::parse($event['start_date']);
+                $end = \Carbon\Carbon::parse($event['end_date']);
+    
+                while ($start->lte($end)) {
+                    $dates[] = $start->toDateString();
+                    $start->addDay();
+                }
+            }
         }
+    
+        $this->availableDays = $dates;
     }
+    
 
     public function nextMonth()
     {
@@ -115,7 +129,7 @@ class View extends Component
 
     public function calcPrice()
     {
-        $base = $this->offer->features['base_price'] ?? 0;
+        $base = $this->offer->price ?? 0;
         $price = $base * $this->count;
 
         // Check for discount
@@ -146,34 +160,51 @@ class View extends Component
     {
         $this->selectedTime = null;
         $this->timeSlots = [];
-
-        $duration = $this->offer->features['booking_duration'] ?? 1;
-        $unit = $this->offer->features['booking_unit'] ?? 'hour';
-
+    
         if (!$this->selectedDate) return;
-
-        $interval = match ($unit) {
-            'hour' => $duration * 60,
-            'minute' => $duration,
-            'quarter' => $duration * 15,
-            'day' => $duration * 24 * 60,
-            default => 60,
-        };
-
-        $start = Carbon::parse($this->selectedDate . ' 08:00');
-        $end = Carbon::parse($this->selectedDate . ' 20:00');
-
-        while ($start->lt($end)) {
-            $this->timeSlots[] = $start->format('h:i A');
-            $start->addMinutes($interval);
+    
+        $raw = fetch_time($this->offer->id);
+        if (!$raw || empty($raw['data'])) return;
+    
+        foreach ($raw['data'] as $time) {
+            if (empty($time['start_date']) || empty($time['end_date'])) continue;
+    
+            $selectedDate = Carbon::parse($this->selectedDate);
+            $startDate = Carbon::parse($time['start_date']);
+            $endDate = Carbon::parse($time['end_date']);
+    
+            if (!$selectedDate->betweenIncluded($startDate, $endDate)) {
+                continue;
+            }
+    
+            if ($time['start_date'] == $time['end_date']) {
+                $start = Carbon::parse($this->selectedDate . ' ' . $time['start_time']);
+                $end = Carbon::parse($this->selectedDate . ' ' . $time['end_time']);
+            } elseif ($this->selectedDate == $time['start_date']) {
+                $start = Carbon::parse($this->selectedDate . ' ' . $time['start_time']);
+                $end = Carbon::parse($this->selectedDate . ' 23:59');
+            } elseif ($this->selectedDate == $time['end_date']) {
+                $start = Carbon::parse($this->selectedDate . ' 00:00');
+                $end = Carbon::parse($this->selectedDate . ' ' . $time['end_time']);
+            } else {
+                $start = Carbon::parse($this->selectedDate . ' 00:00');
+                $end = Carbon::parse($this->selectedDate . ' 23:59');
+            }
+    
+            while ($start->lte($end)) {
+                $this->timeSlots[] = $start->format('H:i');
+                $start->addMinutes(30);
+            }
         }
     }
+    
 
     public function addToCart()
     {
         $user = Auth::guard('customer')->user();
         if (!$user || !$this->selectedDate || !$this->selectedTime) {
             session()->flash('error', 'يرجى اختيار التاريخ والوقت أولاً.');
+            //dd("zbi");
             return;
         }
 

@@ -34,7 +34,9 @@
         //dd($times['data'][0]['end_date']);
 
         @endphp
+        @dd($times)
         @if ($times['type'] == 'events')
+        
         <div class="space-y-4">
             <div>
                 <label class="block mb-2 font-semibold">تاريخ الحجز <span class="text-red-600"><b>*</b></span></label>
