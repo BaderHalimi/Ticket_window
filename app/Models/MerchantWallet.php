@@ -27,6 +27,6 @@ class MerchantWallet extends Model
     }
     public function transactions()
     {
-        //return $this->hasMany(::class, 'wallet_id');
+        return $this->hasMany(PaysHistory::class, 'wallet_id');
     }
 }

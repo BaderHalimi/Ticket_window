@@ -12,7 +12,7 @@
       <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-xl hover:shadow-2xl transition">
         <div class="flex flex-col space-y-2 p-6">
           <h3 class="text-xl font-semibold tracking-tight text-orange-600">المسحوبات المعالجة</h3>
-          <div class="text-4xl font-bold text-slate-900 mt-2">{{ number_format($checkedTotal, 2) }} ريال</div>
+          <div class="text-4xl font-bold text-slate-900 mt-2">{{ number_format($wallet->withdrawn_total, 2) }} ريال</div>
           <p class="text-sm text-slate-500 mt-1">المبالغ التي تم صرفها بعد الموافقة.</p>
         </div>
       </div>
@@ -21,11 +21,11 @@
       <div class="rounded-2xl border-2 border-orange-400 bg-white text-slate-900 shadow-2xl hover:shadow-3xl transition transform hover:scale-105">
         <div class="flex flex-col space-y-2 p-6">
           <h3 class="text-xl font-bold tracking-tight text-orange-700">الرصيد القابل للسحب</h3>
-          <div class="text-5xl font-extrabold text-slate-900 mt-2">{{ number_format($netTotal, 2) }} ريال</div>
+          <div class="text-5xl font-extrabold text-slate-900 mt-2">{{ number_format($wallet->balance, 2) }} ريال</div>
           <p class="text-sm text-slate-500 mt-1">رصيدك المتاح حاليا للسحب.</p>
 
           {{-- زر طلب السحب --}}
-          @if ($netTotal > 0)
+          @if ($wallet->balance > 0)
 
           <div x-data="{ open: false }">
             {{-- الزر الرئيسي --}}
@@ -58,9 +58,7 @@
           
                 <form action="{{ route('merchant.dashboard.withdraws.store') }}" method="POST" class="space-y-6">
                   @csrf
-                  <input type="hidden" name="transaction_ids" value="{{ $pendingReservations }}">
-                  <input type="hidden" name="amount" value="{{ $netTotal }}">
-          
+
                   {{-- الشبكة --}}
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -115,7 +113,7 @@
       <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-xl hover:shadow-2xl transition">
         <div class="flex flex-col space-y-2 p-6">
           <h3 class="text-xl font-semibold tracking-tight text-orange-600">الرصيد الملغي / المحجوز</h3>
-          <div class="text-4xl font-bold text-slate-900 mt-2">{{ number_format($cancelledTotal, 2) }} ريال</div>
+          <div class="text-4xl font-bold text-slate-900 mt-2">{{ number_format($wallet->locked_balance, 2) }} ريال</div>
           <p class="text-sm text-slate-500 mt-1">رصيد غير متاح حاليا للسحب.</p>
         </div>
       </div>

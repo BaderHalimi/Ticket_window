@@ -169,27 +169,35 @@ class View extends Component
         foreach ($raw['data'] as $time) {
             if (empty($time['start_date']) || empty($time['end_date'])) continue;
     
-            $selectedDate = Carbon::parse($this->selectedDate);
-            $startDate = Carbon::parse($time['start_date']);
-            $endDate = Carbon::parse($time['end_date']);
+            $selectedDate = Carbon::parse($this->selectedDate)->startOfDay();
+            $startDate = Carbon::parse($time['start_date'])->startOfDay();
+            $endDate = Carbon::parse($time['end_date'])->endOfDay();
     
-            if (!$selectedDate->betweenIncluded($startDate, $endDate)) {
+            // Skip if out of range
+            if ($selectedDate->lt($startDate) || $selectedDate->gt($endDate)) {
                 continue;
             }
     
+            // Safe defaults
+            $startTime = !empty($time['start_time']) ? $time['start_time'] : '00:00';
+            $endTime = !empty($time['end_time']) ? $time['end_time'] : '23:59';
+    
             if ($time['start_date'] == $time['end_date']) {
-                $start = Carbon::parse($this->selectedDate . ' ' . $time['start_time']);
-                $end = Carbon::parse($this->selectedDate . ' ' . $time['end_time']);
+                $start = Carbon::parse("{$this->selectedDate} {$startTime}");
+                $end = Carbon::parse("{$this->selectedDate} {$endTime}");
             } elseif ($this->selectedDate == $time['start_date']) {
-                $start = Carbon::parse($this->selectedDate . ' ' . $time['start_time']);
-                $end = Carbon::parse($this->selectedDate . ' 23:59');
+                $start = Carbon::parse("{$this->selectedDate} {$startTime}");
+                $end = Carbon::parse("{$this->selectedDate} 23:59");
             } elseif ($this->selectedDate == $time['end_date']) {
-                $start = Carbon::parse($this->selectedDate . ' 00:00');
-                $end = Carbon::parse($this->selectedDate . ' ' . $time['end_time']);
+                $start = Carbon::parse("{$this->selectedDate} 00:00");
+                $end = Carbon::parse("{$this->selectedDate} {$endTime}");
             } else {
-                $start = Carbon::parse($this->selectedDate . ' 00:00');
-                $end = Carbon::parse($this->selectedDate . ' 23:59');
+                $start = Carbon::parse("{$this->selectedDate} 00:00");
+                $end = Carbon::parse("{$this->selectedDate} 23:59");
             }
+    
+            // Make sure start is before end
+            if ($start->gt($end)) continue;
     
             while ($start->lte($end)) {
                 $this->timeSlots[] = $start->format('H:i');

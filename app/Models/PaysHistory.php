@@ -29,5 +29,9 @@ class PaysHistory extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function wallet()
+    {
+        return $this->belongsTo(MerchantWallet::class);
+    }
 
 }

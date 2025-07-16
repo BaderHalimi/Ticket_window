@@ -38,16 +38,28 @@ if (!function_exists('getCard')){
 if (!function_exists('logPayment')) {
     function logPayment(array $data)
     {
-
-        return PaysHistory::create([
+        $wallet = Offering::where('id', $data['item_id'])->first()->user->wallet;
+        //dd($wallet);
+        $balance = (float) $wallet->balance;
+        $amount = (float) $data['amount'];
+        if ($data['additional_data']['type'] === 'pay') {
+            $wallet->balance = $balance + $amount;
+        } elseif ($data['additional_data']['type'] === 'refund') {
+            $wallet->balance = $balance - $amount;
+        }
+        $wallet->save();
+        $txn =  PaysHistory::create([
             'user_id'         => $data['user_id'] ?? Auth::user()->id,
             'item_id'         => $data['item_id'] ?? null,
+            'wallet_id'      => $wallet->id,
             'transaction_id'  => $data['transaction_id'],
             'payment_method'  => getCard(),
             'amount'          => $data['amount'],
             'additional_data' => $data['additional_data'] ?? [],
 
         ]);
+
+
     }
 }
 if (!function_exists('calculateNet')) {

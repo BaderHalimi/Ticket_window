@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PaysHistory;
 use App\Http\Controllers\Controller;
+use App\Models\MerchantWallet;
 use App\Models\withdraws_log;
-
+use App\Models\User;
 class Merchantwithdraw extends Controller
 {
     /**
@@ -15,18 +16,14 @@ class Merchantwithdraw extends Controller
      */
     public function index()
     {
-        //Create_Wallet(Auth::id());
-        
-        // return view('merchant.dashboard.wallet_withdrawal', compact(
-
-        // ));
+        $wallet = MerchantWallet::where('merchant_id', Auth::id())->first();
+        $withdraws = withdraws_log::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('merchant.dashboard.wallet_withdrawal', compact('wallet','withdraws'));
     }
     
-    /**
-     * Helper لحساب صافي المبلغ من مجموعة
-     * sum(pay) - sum(refund)
-     */
-    
+
     /**
      * Show the form for creating a new resource.
      */

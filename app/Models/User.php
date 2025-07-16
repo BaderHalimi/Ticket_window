@@ -96,7 +96,7 @@ class User extends Authenticatable
     }
     public function wallet()
     {
-        return $this->hasOne(MerchantWallet::class);
+        return $this->hasOne(MerchantWallet::class, 'merchant_id', 'id');
     }
 
 }
