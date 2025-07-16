@@ -59,20 +59,46 @@
                 </div>
             </div>
         </div>
-        <div class="mt-4 max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6 flex justify-between">
-            <div>
+        <div class="mt-4 max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6 space-y-6">
+    
+            <!-- Title -->
+            <div class="text-lg font-bold text-gray-800">
                 هل ترغب بنشر الخدمة؟
             </div>
-            <div class="space-y-2">
-
-                <!-- progress bar always visible -->
+            
+            <!-- Progress Bar -->
+            <div>
                 <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
                     <div class="bg-lime-500 h-4 text-xs font-medium text-white text-center leading-4" style="width: {{ $percent_progress }}%;">
                         {{ $percent_progress }}%
                     </div>
                 </div>
-            
-                <!-- buttons -->
+            </div>
+        
+            <!-- Missing Fields Alert -->
+            @php
+                $missingFields = collect($fileds_exists)->filter(fn($v) => !$v);
+            @endphp
+        
+            @if ($missingFields->isNotEmpty())
+                <div class="border border-red-300 bg-red-50 rounded-lg p-4 space-y-2">
+                    <div class="font-semibold text-red-700 flex items-center gap-2">
+                        <i class="ri-error-warning-line text-xl"></i>
+                        هناك حقول ناقصة يجب إكمالها:
+                    </div>
+                    <ul class="list-disc list-inside text-red-600 space-y-1">
+                        @foreach ($missingFields as $field => $exists)
+                            <li class="flex items-center gap-2">
+                                <i class="ri-close-circle-line text-red-500"></i>
+                                <span>حقل "{{ $field }}" ناقص</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        
+            <!-- Publish Button -->
+            <div>
                 @if ($isPublished == 'active')
                     <button class="w-full bg-gray-300 text-gray-500 font-semibold py-2 px-6 rounded-lg cursor-not-allowed shadow" disabled>
                         تم النشر
@@ -88,12 +114,11 @@
                         </button>
                     @endif
                 @endif
-            
             </div>
-            
-            
         </div>
+        
     </div>
 
 
 </div>
+

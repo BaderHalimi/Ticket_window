@@ -85,10 +85,11 @@ class Time extends Component
         $this->calendar = array_values($this->calendar);
         $this->save();
     }
-
     public function save()
     {
-        $features = ['enabled' => $this->enable_time];
+        $features = $this->offering->features ?? [];
+    
+        $features['enabled'] = $this->enable_time;
     
         if ($this->offering->type == 'services') {
             $features['type'] = 'service';
@@ -104,18 +105,18 @@ class Time extends Component
             }
         }
     
-        $features['calendar'] = array_values(array_filter($this->calendar, function($event) {
+        // لاحظ هنا استخدمنا أسماء الحقول الصحيحة
+        $features['calendar'] = array_values(array_filter($this->calendar, function ($event) {
             return !empty($event['start_date']) && !empty($event['end_date']) && !empty($event['start_time']) && !empty($event['end_time']);
         }));
-        
-            //dd($features['calendar']);
-        
     
+        // حفظ الخصائص
         $this->offering->features = $features;
         $this->offering->save();
     
         $this->dispatch('saved');
     }
+    
     public function applyDefaultToAll()
     {
         if ($this->default_day['enabled']) {

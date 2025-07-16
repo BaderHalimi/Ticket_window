@@ -3,29 +3,38 @@
 
         {{-- Toggle: تفعيل تحديد مدة الحجز --}}
         <div>
-            <div class="flex items-center justify-between">
+            {{-- <div class="flex items-center justify-between">
                 <label class="text-sm font-medium">تحديد مدة الحجز؟</label>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" wire:model.lazy="enable_duration" class="sr-only peer">
                     <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
                     <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-full transition-all"></div>
                 </label>
-            </div>
-            @if ($enable_duration)
-                <div class="grid grid-cols-2 gap-2 mt-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">مدة الحجز</label>
-                        <input type="number" wire:model.lazy="booking_duration" class="w-full border rounded-md p-2">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">الوحدة</label>
-                        <select wire:model.lazy="booking_unit" class="w-full border rounded-md p-2">
-                            <option value="hour">ساعة</option>
-                            <option value="minute">دقيقة</option>
-                        </select>
-                    </div>
+            </div> --}}
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <!-- مدة الحجز -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">
+                        مدة الحجز <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" wire:model.lazy="booking_duration" class="w-full border rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300">
+                    <p class="text-xs text-gray-500 mt-1">
+                        مدة بقاء تذكرة واحدة في العرض 
+                    </p>
                 </div>
-            @endif
+            
+                <!-- الوحدة -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">
+                        الوحدة
+                    </label>
+                    <select wire:model.lazy="booking_unit" class="w-full border rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300">
+                        <option value="hour">ساعة</option>
+                        <option value="minute">دقيقة</option>
+                    </select>
+                </div>
+            </div>
+            
         </div>
 
         {{-- Toggle: الوقت بين كل حجز وآخر للمستخدم

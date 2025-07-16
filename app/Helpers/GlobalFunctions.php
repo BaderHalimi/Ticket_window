@@ -233,7 +233,9 @@ if (!function_exists('hasEssentialFields')) {
             'name'                => isFilled($offer->name),
             'description'         => isFilled($offer->description),
             'location'            => isFilled($offer->location),
+            'image'                 => isFilled($offer->image),
             'price'               => ($offer->price && $offer->price > 0),
+
 
             'booking_duration'    => isFilled($features['booking_duration'] ?? null),
             'booking_unit'        => isFilled($features['booking_unit'] ?? null),
@@ -241,8 +243,8 @@ if (!function_exists('hasEssentialFields')) {
             // 'pricing_packages'    => !empty($features['pricing_packages']) &&
             //                           isFilled($features['pricing_packages'][0]['label'] ?? null),
 
-            'gallery'             => !empty($features['gallery']) &&
-                                      isFilled($features['gallery'][0] ?? null),
+            // 'gallery'             => !empty($features['gallery']) &&
+            //                           isFilled($features['gallery'][0] ?? null),
 
             'time'                => checkTimeValidity($offerId),
         ];
@@ -412,5 +414,17 @@ if(!function_exists("work_in")){
         // }
         return $data;
 
+    }
+}
+
+if (!function_exists('clear_offers')) {
+    function clear_offers($collection)
+    {
+        foreach ($collection as $offer) {
+            if (!in_array("true",hasEssentialFields($offer->id)['fields'])) {
+                $offer->delete();
+            }
+            
+        }
     }
 }

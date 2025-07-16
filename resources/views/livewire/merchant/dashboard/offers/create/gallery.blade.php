@@ -2,7 +2,7 @@
 
     {{-- صورة أساسية --}}
     <div>
-        <label class="block text-sm font-medium mb-1">الصورة الأساسية</label>
+        <label class="block text-sm font-medium mb-1">الصورة الأساسية *</label>
         <input type="file" wire:model="image" class="mb-2">
 
         @if ($offering->image)

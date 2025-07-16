@@ -21,7 +21,6 @@ class Faqs extends Component
     {
         $this->questions[] = [
             'question' => '',
-            'answer' => '',
             'translations' => [],
         ];
         $this->save();
@@ -39,7 +38,7 @@ class Faqs extends Component
         $this->questions[$qIndex]['translations'][] = [
             'lang' => '',
             'question' => '',
-            'answer' => '',
+
         ];
         $this->save();
     }

@@ -2,7 +2,7 @@
 
     {{-- السعر الأساسي --}}
     <div>
-        <label class="block text-sm font-medium mb-1">السعر الأساسي</label>
+        <label class="block text-sm font-medium mb-1">السعر الأساسي *</label>
         <input type="number" step="0.01" wire:model.lazy="base_price" class="w-full border rounded-md p-2">
     </div>
 

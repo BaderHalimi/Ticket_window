@@ -14,10 +14,7 @@
                 </div>
 
                 {{-- الجواب الأصلي --}}
-                <div>
-                    <label class="text-sm font-medium">الجواب</label>
-                    <textarea wire:model.lazy="questions.{{ $qIndex }}.answer" rows="2" class="w-full border rounded-md p-2"></textarea>
-                </div>
+
             </div>
 
             {{-- الترجمات --}}
@@ -39,10 +36,6 @@
                             <input type="text" wire:model.lazy="questions.{{ $qIndex }}.translations.{{ $tIndex }}.question" class="w-full border rounded-md p-2">
                         </div>
 
-                        <div>
-                            <label class="text-sm font-medium">الجواب المترجم</label>
-                            <input type="text" wire:model.lazy="questions.{{ $qIndex }}.translations.{{ $tIndex }}.answer" class="w-full border rounded-md p-2">
-                        </div>
 
                         <div class="col-span-3 text-right">
                             <button type="button" wire:click="removeTranslation({{ $qIndex }}, {{ $tIndex }})" class="text-red-500 text-xs hover:underline">حذف الترجمة</button>

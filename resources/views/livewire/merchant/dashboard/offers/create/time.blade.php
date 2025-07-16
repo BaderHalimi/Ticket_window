@@ -23,7 +23,7 @@
                     <button type="button" wire:click="applyDefaultToAll" class="bg-blue-600 text-white px-3 py-2 rounded col-span-full">تطبيق على الكل</button>
                 </div>
 
-                <h3 class="text-md font-bold mb-2">الأيام والأوقات</h3>
+                <h3 class="text-md font-bold mb-2">الأيام والأوقات *</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach(['saturday','sunday','monday','tuesday','wednesday','thursday','friday'] as $dayName)
                         <div class="border rounded-md p-3">
@@ -53,7 +53,7 @@
         {{-- EVENTS --}}
         @if ($offering->type == 'events')
             <div class="border rounded-md p-4 space-y-4">
-                <h3 class="text-md font-bold mb-2">مواعيد الفعالية (من → إلى)</h3>
+                <h3 class="text-md font-bold mb-2">مواعيد الفعالية (من → إلى) *</h3>
                 @foreach ($calendar as $index => $item)
                     <div class="border rounded p-3 space-y-2">
                         <div class="grid grid-cols-2 gap-2">

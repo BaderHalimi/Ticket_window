@@ -12,6 +12,7 @@ use PHPUnit\Framework\Constraint\Count;
 
 class SetupSteps extends Component
 {
+
     public Offering $offering;
     public int $currentStep = 1;
 
@@ -19,6 +20,7 @@ class SetupSteps extends Component
     {
         $this->offering = $offering;
     }
+
 
     public function setStep($step)
     {
@@ -52,20 +54,23 @@ class SetupSteps extends Component
         $isPublished = $off->status;
         $isReady = true;//($this->offering->id)['status'];
         $percent_progress = 100.0;
+        $fileds_exists = [];
         if ($isPublished === "inactive") {
             $isReady = hasEssentialFields($this->offering->id)['status'];
             $all_fileds = count(hasEssentialFields($this->offering->id)['fields']);
+            $fileds_exists = hasEssentialFields($this->offering->id)['fields'];
+
             $true_fileds = count(array_filter(hasEssentialFields($this->offering->id)['fields']));
             $percent_progress = ($true_fileds / $all_fileds) * 100;
         }
+
         //dd($isReady = hasEssentialFields($this->offering->id));
-        //dd(count(hasEssentialFields($this->offering->id)['fields']));
 
         //dd($all_fileds, $true_fileds,$persent_progress);
         //dd($isPublished, $isReady);
         //dd(hasEssentialFields($this->offering->id)['fields']);
         //$d = fetch_time($this->offering->id);
         //dd($d);
-        return view('livewire.merchant.dashboard.offers.setup-steps', compact('isReady', 'isPublished','percent_progress'));
+        return view('livewire.merchant.dashboard.offers.setup-steps', compact('isReady', 'isPublished','percent_progress','fileds_exists'));
     }
 }
