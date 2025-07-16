@@ -66,7 +66,7 @@
                         <ul class="list-disc list-inside space-y-1 text-slate-600 mt-2">
                             <li>المدة المحجوزة: {{ $features['booking_duration'] ?? 'غير محددة' }} دقيقة</li>
                             <li>الحد الأقصى للمستخدمين: {{ $features['user_limit'] ?? 'غير متوفر' }}</li>
-                            <li>السعر الأساسي: {{ $features['base_price'] ?? 'غير متوفر' }} ريال</li>
+                            <li>السعر الأساسي: {{ $reservation->offering->price?? 'غير متوفر' }} ريال</li>
                         </ul>
 
                         @if(!empty($features['pricing_packages']))
@@ -108,7 +108,7 @@
                 <!-- بيانات الحجز -->
                 <div class="flex-1 text-slate-700 space-y-2">
                     <p><span class="font-semibold text-orange-600">رقم الحجز:</span> {{ $reservation->id }}</p>
-                    <p><span class="font-semibold text-orange-600">المبلغ:</span> {{ $reservation->amount ?? '0.00' }} ريال</p>
+                    <p><span class="font-semibold text-orange-600">المبلغ:</span> {{ $reservation->price ?? '0.00' }} ريال</p>
                     <p><span class="font-semibold text-orange-600">رمز القسيمة :</span> {{ $reservation->code }}</p>
                     <p><span class="font-semibold text-orange-600">تاريخ الإنشاء:</span> {{ $reservation->created_at->format('Y-m-d H:i') }}</p>
         

@@ -156,14 +156,14 @@ class Pos extends Component
     {
         if ($this->paymentMethod == 'cash') {
             $offer = Offering::find($this->selectedOfferingId);
-            $this->manualPrice = $offer->features['base_price'] * $value;
+            $this->manualPrice = $offer->price * $value;
         }
     }
     public function updatedPaymentMethod($value)
     {
         if ($value == 'cash') {
             $offer = Offering::find($this->selectedOfferingId);
-            $this->manualPrice = $offer->features['base_price'] * $this->tickets;
+            $this->manualPrice = $offer->price * $this->tickets;
         }
     }
 
