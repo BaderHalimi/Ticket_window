@@ -15,47 +15,11 @@ class Merchantwithdraw extends Controller
      */
     public function index()
     {
-        $reservations = PaysHistory::whereHas('item', function($query) {
-            $query->where('user_id', Auth::id());
-        })->get();
-    
-        $cleanReservations = $reservations->map(function ($reservation) {
-            $reservation->additional_data = is_array($reservation->additional_data)
-                ? $reservation->additional_data
-                : json_decode($reservation->additional_data, true) ?? [];
-            return $reservation;
-        });
-    
-        $pendingReservations = $cleanReservations->filter(function ($r) {
-            return ($r->additional_data['status'] ?? null) === 'pending';
-        });
-    
-        $cancelledReservations = $cleanReservations->filter(function ($r) {
-            return ($r->additional_data['status'] ?? null) === 'cancelled';
-        });
-    
-        $checkedReservations = $cleanReservations->filter(function ($r) {
-            return ($r->additional_data['status'] ?? null) === 'paid';
-        });
-    
-        $netTotal = calculateNet($pendingReservations);
-        $cancelledTotal = calculateNet($cancelledReservations);
-        $checkedTotal = calculateNet($checkedReservations);
-        //dd($pendingReservations);
-        //dd($checkedReservations, $netTotal, $cancelledTotal, $checkedTotal, $pendingReservations, $cancelledReservations);
-        $withdraws = withdraws_log::where('user_id', Auth::id())
-            ->where('status', 'pending')
-            ->get();
+        //Create_Wallet(Auth::id());
         
-        return view('merchant.dashboard.wallet_withdrawal', compact(
-            'pendingReservations', 
-            'cancelledReservations', 
-            'checkedReservations', 
-            'netTotal',
-            'cancelledTotal',
-            'checkedTotal',
-            'withdraws'
-        ));
+        // return view('merchant.dashboard.wallet_withdrawal', compact(
+
+        // ));
     }
     
     /**
@@ -77,6 +41,36 @@ class Merchantwithdraw extends Controller
     public function store(Request $request)
     
     {
+        $request->validate([
+            'transaction_ids' => 'required|array',
+            'amount' => 'required|numeric|min:1',
+            'account_name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/^[\pL\s\.\-\'،]+$/u',
+                ],
+            'bank_name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/^[\pL\s\.\-\'،]+$/u',
+                ],
+            'iban' => [
+                    'required',
+                    'string',
+                    'max:34',
+                    'regex:/^[A-Z0-9]+$/',
+                ],
+            'swift' => [
+                    'nullable',
+                    'string',
+                    'max:11',
+                    'regex:/^[A-Z0-9]{8,11}$/',
+                ],
+            
+        ]);
+
         $transactionIds = (array) $request->input('transaction_ids', []);
         $jsonString = $transactionIds[0] ?? '[]';
         $decoded_transactions = json_decode($jsonString, true);

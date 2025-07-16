@@ -6,10 +6,12 @@ use App\Models\page_views;
 use App\Models\User;
 use App\Models\Offering;
 use App\Models\notifications;
+use App\Models\PaidReservation;
 use App\Models\Permission;
 use App\Models\Presence;
 use App\Models\role_permission;
 use App\Models\Role;
+use App\Models\MerchantWallet;
 if (!function_exists('getCard')){
     function getCard()
     {
@@ -310,30 +312,30 @@ if (!function_exists('fetch_time')) {
     }
 }
 
-if (!function_exists("set_presence")){
-    function set_presence($reservation)
-    {
-        //$user = User::find($user_id);
-        //$reservation = $reservation;//PaysHistory::find($transaction_id);
-        if ( !$reservation) {
-            return false;
-        }
-        $set_presenting = Presence::create([
-            'user_id' => $reservation->user_id,
-            'reservation_id' => $reservation->id,//PaidRes
-            'item_id'=> $reservation->item_id ?? null,
-            'additional_data' => json_encode([
-                'payment_method' => $reservation->payment_method,
-                'amount' => $reservation->price,
-                'ip_address' => request()->ip(),
-                'code' => $reservation->code ?? null,
+// if (!function_exists("set_presence")){
+//     function set_presence($reservation)
+//     {
+//         //$user = User::find($user_id);
+//         //$reservation = $reservation;//PaysHistory::find($transaction_id);
+//         if ( !$reservation) {
+//             return false;
+//         }
+//         $set_presenting = Presence::create([
+//             'user_id' => $reservation->user_id,
+//             'reservation_id' => $reservation->id,//PaidRes
+//             'item_id'=> $reservation->item_id ?? null,
+//             'additional_data' => json_encode([
+//                 'payment_method' => $reservation->payment_method,
+//                 'amount' => $reservation->price,
+//                 'ip_address' => request()->ip(),
+//                 'code' => $reservation->code ?? null,
 
-            ]),
-        ]);
-        // dd($set_presenting);
-        return true;
-    }
-}
+//             ]),
+//         ]);
+//         // dd($set_presenting);
+//         return true;
+//     }
+// }
 
 if (!function_exists('fetch_Permetions')){
     function fetch_Permetions($user_id)
@@ -426,5 +428,49 @@ if (!function_exists('clear_offers')) {
             }
             
         }
+    }
+}
+
+if(!function_exists('set_presence')){
+    function set_presence($id){
+        $Res = PaidReservation::Find($id);
+        if (!$Res) {
+            return "this res is'nt exist";
+        }
+        $quantity = (int)$Res->quantity ?? 1;
+        if ($quantity <= 0) {
+            return "this res is'nt exist";
+        }
+        $quantity -= 1;
+        $Res->quantity = $quantity;
+        $Res->save();
+
+        $presence = Presence::create([
+            'user_id' => $Res->user_id,
+            'reservation_id' => $Res->id,
+            'item_id' => $Res->item_id ?? null,
+            'additional_data' => [],
+        ]);
+        notifcate($Res->user_id, 'success', 'تم تسجيل الحضور بنجاح', [
+            'title' => 'حضور',
+            'text' => 'تم تسجيل حضورك بنجاح.',
+        ]);
+        if (!$presence) {
+            return "presence not created";
+        }
+        return true;
+    }
+}
+
+
+if (!function_exists('Create_Wallet')){
+    function Create_Wallet($user_id){
+        MerchantWallet::create([
+            'merchant_id' => $user_id,
+            'balance' => 0,
+            'locked_balance' => 0,
+            'withdrawn_total' => 0,
+            'additional_data' => [],
+        ]);
     }
 }

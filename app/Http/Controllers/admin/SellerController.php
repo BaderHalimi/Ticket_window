@@ -73,7 +73,7 @@ class SellerController extends Controller
 
         $data['accepted'] = 'yes';
         $data['accepted_at'] = now();
-        
+        Create_Wallet($id);
         $user->additional_data = json_encode($data);
         
         $user->save();

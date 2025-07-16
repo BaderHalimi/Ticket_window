@@ -12,16 +12,18 @@
             تحقق الآن
         </button>
         @if($reservation)
+        @php
+            $arr = json_decode($reservation->additional_data, true) ?? [];
+        @endphp
         <div class="lg:col-span-2 mt-8 bg-white border rounded-lg shadow p-6">
             <h4 class="text-lg font-bold text-orange-600 mb-4">بيانات التذكرة</h4>
             <p><span class="font-semibold">الكود:</span> {{ $reservation->code }}</p>
             <p><span class="font-semibold">الخدمة:</span> {{ $reservation->offering->name ?? 'غير متوفر' }}</p>
             <p><span class="font-semibold">السعر:</span> {{ $reservation->price }} ريال</p>
             <p><span class="font-semibold">الكمية:</span> {{ $reservation->quantity }}</p>
-            <p><span class="font-semibold">الحالة:</span> {{ $reservation->additional_data['type'] ?? 'غير محدد' }}</p>
+            <p><span class="font-semibold">الحالة:</span> {{ $arr['paymentMethod'] ?? 'غير محدد' }}</p>
         </div>
         @endif
-
         @if ($error)
         <div class="mt-4 text-red-600">{{ $error }}</div>
         @endif

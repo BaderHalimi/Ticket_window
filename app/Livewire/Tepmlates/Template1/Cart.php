@@ -26,7 +26,7 @@ class Cart extends Component
             $data = json_decode($cart->additional_data, true);
             $offer = $cart->item;
             $features = $offer?->features ?? [];
-            $base = $offer->features['base_price'] ?? 0;
+            $base = $offer->price ?? 0;
             $price = $base * $cart->quantity;
             $discount = 0;
 

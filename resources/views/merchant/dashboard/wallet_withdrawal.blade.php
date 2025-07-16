@@ -27,18 +27,85 @@
           {{-- زر طلب السحب --}}
           @if ($netTotal > 0)
 
-          <form action="{{route("merchant.dashboard.withdraws.store")}}" method="POST" class="mt-4">
-            @csrf
-            <input type="hidden" name="transaction_ids" value="{{ $pendingReservations }}">
-            <input type="hidden" name="amount" value="{{ $netTotal }}">
-
-            <button type="submit" class="w-full inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-orange-400 to-orange-600 text-white text-base font-bold py-3 shadow-lg hover:from-orange-500 hover:to-orange-700 focus:ring-4 focus:ring-orange-300 transition">
-              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"></path>
-              </svg>
-              طلب سحب
+          <div x-data="{ open: false }">
+            {{-- الزر الرئيسي --}}
+            <button
+                @click="open = true"
+                type="button"
+                class="w-full inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-orange-400 to-orange-600 text-white text-base font-bold py-3 shadow-lg hover:from-orange-500 hover:to-orange-700 focus:ring-4 focus:ring-orange-300 transition">
+                طلب سحب
             </button>
-          </form>
+          
+            {{-- الخلفية + المودال --}}
+            <div
+                x-show="open"
+                x-transition
+                class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg bg-black/50 px-4"
+                style="display: none;"
+            >
+              <div
+                  @click.away="open = false"
+                  class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-8 space-y-6"
+              >
+                <div class="flex justify-between items-center border-b pb-4">
+                  <h2 class="text-xl font-bold text-gray-800">معلومات التحويل البنكي</h2>
+                  <button
+                      @click="open = false"
+                      class="text-gray-500 hover:text-orange-500 transition text-sm">
+                    إغلاق
+                  </button>
+                </div>
+          
+                <form action="{{ route('merchant.dashboard.withdraws.store') }}" method="POST" class="space-y-6">
+                  @csrf
+                  <input type="hidden" name="transaction_ids" value="{{ $pendingReservations }}">
+                  <input type="hidden" name="amount" value="{{ $netTotal }}">
+          
+                  {{-- الشبكة --}}
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-1">اسم الحساب</label>
+                      <input type="text" name="account_name" required
+                             class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
+                    </div>
+          
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-1">اسم البنك</label>
+                      <input type="text" name="bank_name" required
+                             class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
+                    </div>
+          
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-1">رقم IBAN</label>
+                      <input type="text" name="iban" required
+                             class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
+                    </div>
+          
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-1">رمز SWIFT</label>
+                      <input type="text" name="swift" required
+                             class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
+                    </div>
+                  </div>
+          
+                  <div class="flex justify-between items-center pt-4 border-t">
+                    <button
+                        type="button"
+                        @click="open = false"
+                        class="inline-flex items-center justify-center rounded-lg bg-gray-200 text-gray-700 font-bold py-2 px-4 hover:bg-gray-300 transition">
+                        إلغاء
+                    </button>
+                    <button
+                        type="submit"
+                        class="inline-flex items-center justify-center rounded-lg bg-orange-500 text-white font-bold py-2 px-4 hover:bg-orange-600 transition">
+                        إرسال الطلب
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          
           @endif
 
         </div>

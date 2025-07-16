@@ -25,7 +25,14 @@ class TicketsCheck extends Component
         $res = PaidReservation::where('code', $this->code)->first();
         //dd($res->offering);
         if ($res) {
+            if (set_presence($res->id) !== true) {
+                $this->error = 'تذكرة بالفعل مسجلة كحاضرة.';
+
+                return;
+            }
             $this->reservation = $res;
+
+
         } else {
             $this->error = 'لم يتم العثور على تذكرة بهذا الرقم.';
         }
