@@ -34,8 +34,8 @@
         //dd($times['data'][0]['end_date']);
 
         @endphp
-        @dd($times)
-        @if ($times['type'] == 'events')
+        
+        @if ($selectedOffering->type == 'events')
         
         <div class="space-y-4">
             <div>
@@ -68,7 +68,7 @@
         </div>
         @endif
 
-        @if ($times['type'] == 'service')
+        @if ($selectedOffering->type == 'services')
         <div class="space-y-4">
 
             <div>

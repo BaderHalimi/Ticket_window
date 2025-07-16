@@ -13,6 +13,7 @@ class Pos extends Component
 {
     public $offerings;
     public $selectedOfferingId;
+    public $selectedOffering;
     public $pricingPackages = [];
     public $selectedPackage;
     public $showPackage = false;
@@ -42,7 +43,7 @@ class Pos extends Component
     public function updatedSelectedOfferingId($value)
     {
         $offering = $this->offerings->firstWhere('id', $value);
-
+        $this->selectedOffering = $offering;
         if (!$offering) {
             $this->pricingPackages = [];
             return;
@@ -114,7 +115,7 @@ class Pos extends Component
         PaidReservation::create([
             'item_id' => $this->selectedOfferingId,
             'item_type' => Offering::class,
-            'user_id' => $this->foundUser['id'] ?? Auth::id(),
+            'user_id' => Auth::id(),
             'quantity' => $this->tickets,
             'price' => $price,
             'discount' => 0,
