@@ -23,13 +23,14 @@ class TicketsCheck extends Component
         ]);
 
         $res = PaidReservation::where('code', $this->code)->first();
-
+        //dd($res->offering);
         if ($res) {
             $this->reservation = $res;
         } else {
             $this->error = 'لم يتم العثور على تذكرة بهذا الرقم.';
         }
-        set_presence($this->reservation);
+        //dd($this->reservation);
+        //set_presence($this->reservation);
     }
     #[On('qr-scanned')]
     public function scanned($code){
