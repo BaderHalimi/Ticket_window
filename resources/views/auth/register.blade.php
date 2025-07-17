@@ -149,7 +149,7 @@
                                 </div>
 
                                 <div id="otherInputContainer"
-                                    @if (old('business_type', '') == 'other') style="display: none;" @else style="display: block;" @endif
+                                    @if (old('business_type', '') == 'other') style="display: block;" @else style="display: none;" @endif
                                     class="mt-4">
                                     <label class="block text-sm font-medium text-gray-700 mb-2" for="otherInput">يرجى
                                         تحديد نوع النشاط</label>
