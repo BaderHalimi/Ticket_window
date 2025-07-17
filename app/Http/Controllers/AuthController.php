@@ -60,12 +60,6 @@ class AuthController extends Controller
                 'string',
                 'regex:/^\+\d{1,4}$/', // مثل +966 أو +1
             ],
-            'phone' => [
-                'required',
-                'string',
-                'regex:/^\d{6,15}$/', // الرقم فقط بدون مفتاح الدولة
-                'unique:users,phone',
-            ],
         ];
 
         if (Route::is('signup')) {
@@ -75,6 +69,10 @@ class AuthController extends Controller
         }
 
         $validated = $request->validate($rules);
+        $validated['phone'] = '+'.preg_replace('/\D/', '', $validated['country_code'] . $request->phone);
+        if (User::where('phone', $validated['phone'])->exists()) {
+            return back()->withErrors(['phone' => 'رقم الهاتف مستخدم بالفعل.'])->withInput();
+        }
 
         // دمج country_code مع phone لتخزينه في خانة واحدة
         $validated['phone'] = $validated['country_code'] . $validated['phone'];
