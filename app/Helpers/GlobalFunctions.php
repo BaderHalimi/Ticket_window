@@ -12,6 +12,9 @@ use App\Models\Presence;
 use App\Models\role_permission;
 use App\Models\Role;
 use App\Models\MerchantWallet;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
 if (!function_exists('getCard')){
     function getCard()
     {
@@ -499,19 +502,53 @@ if(!function_exists('get_statistics')){
             return [
                 'offer' => $offer,
                 'total_amount' => $totalAmount,
-                'percentage' => $totalAmount / $txns->sum('amount') * 100,
+                'percentage' => round($totalAmount / $txns->sum('amount') * 100, 2),
             ];
         });
-
+        $refunds = $txns->filter(function ($txn) {return $txn->additional_data['type'] === 'refund';});
+        $payments = $txns->filter(function ($txn) {return $txn->additional_data['type'] === 'pay';});
         return [
             'wallet' => $wallet,
             'txns' => $txns,
             'offers' => $offers,
             'offersPercent' => $offersPercent,
-            'all_selles' => $txns->sum('amount'),
-            'all_refunds' => $txns->filter(function ($txn) {return $txn->additional_data['type'] === 'pay';})->sum('amount'),
-            'all_payments' => $txns->filter(function ($txn) {return $txn->additional_data['type'] === 'refund';})->sum('amount'),
+            'refunds' => $refunds,
+            'payments' => $payments,
 
         ];
     }
+}
+
+if (!function_exists('Peak_Time')) {
+    function Peak_Time($user_id)
+    {
+        $from = Carbon::now()->subDays(30);
+    
+        $purchases = DB::table('paid_reservations')
+            ->join('offerings', 'paid_reservations.item_id', '=', 'offerings.id')
+            ->where('offerings.user_id', $user_id)
+            ->where('paid_reservations.created_at', '>=', $from)
+            ->selectRaw('DAYOFWEEK(paid_reservations.created_at) as day, HOUR(paid_reservations.created_at) as hour, COUNT(*) as total')
+            ->groupBy('day', 'hour')
+            ->orderBy('day')
+            ->orderBy('hour')
+            ->get();
+    
+        $days = [1 => 'الأحد', 2 => 'الاثنين', 3 => 'الثلاثاء', 4 => 'الأربعاء', 5 => 'الخميس', 6 => 'الجمعة', 7 => 'السبت'];
+        $hours = range(0, 23);
+    
+        $result = [];
+    
+        foreach ($days as $dayNum => $dayName) {
+            $row = [];
+            foreach ($hours as $hour) {
+                $value = $purchases->firstWhere(fn($p) => $p->day == $dayNum && $p->hour == $hour)->total ?? 0;
+                $row[] = $value;
+            }
+            $result[$dayName] = $row;
+        }
+    
+        return $result; 
+    }
+    
 }

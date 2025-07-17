@@ -9,6 +9,8 @@ use App\Models\PaidReservation;
 use App\Models\withdraws_log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MerchantWallet;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class Page_statistics extends Controller
 {
@@ -22,14 +24,53 @@ class Page_statistics extends Controller
         $wallet = $statistics['wallet'];
         $offers = $statistics['offers'];
         $offersPercent = $statistics['offersPercent'];
-        $all_selles = $statistics['all_selles'];
-        $all_refunds = $statistics['all_refunds'];
-        $all_payments = $statistics['all_payments'];
+        $all_selles = $txns->count();
+        $all_refunds = $statistics['refunds']->count();
+        $all_payments = $statistics['payments']->count();
+
+        $amount = $txns->sum('amount');
+        $amount_refunds = $statistics['refunds']->sum('amount');
+        $amount_payments = $statistics['payments']->sum('amount');
+
+        $refundPercent = $all_refunds > 0 ? round(($all_refunds / $all_selles) * 100, 2) : 0;
+        $PayPercent = $all_payments > 0 ? round(($all_payments / $all_selles) * 100, 2) : 0;
+        $views = page_views::where('merchant_id', Auth::id())->count();
         $couponLoss = 0;
-        dd($all_selles, $all_refunds, $all_payments, $couponLoss);
         unset($statistics);
-        //dd($wallet, $txns, $offers, $offersPercent);
-        return view('merchant.dashboard.reports_analysis', compact('txns', 'wallet', 'offers', 'offersPercent'));
+        $Peak_Time = Peak_Time(Auth::id());
+        $dailyPeaks = [];
+        //dd($Peak_Time);
+        foreach ($Peak_Time as $day => $hoursArray) {
+            $maxHour = array_keys($hoursArray, max($hoursArray))[0];
+            $dailyPeaks[$day] = $maxHour;
+        }
+        $maxDay = null;
+        $maxHour = null;
+        $maxValue = 0;
+
+        foreach ($Peak_Time as $day => $hoursArray) {
+            foreach ($hoursArray as $hour => $count) {
+                if ($count > $maxValue) {
+                    $maxValue = $count;
+                    $maxDay = $day;
+                    $maxHour = $hour;
+                }
+            }
+        }
+        $sells_day = [];
+        foreach ($Peak_Time as $day => $hoursArray) {
+            $sell = 0;
+            foreach ($hoursArray as $hour){
+                $sell+=$hour;
+            }
+            $sells_day[$day] = $sell;
+        }
+        dd($offersPercent);
+        //dd($sells_day);
+        //dd($Peak_Time);
+        //dd($PayPercent,$refundPercent);
+        return view('merchant.dashboard.reports_analysis', compact('txns', 'wallet', 'offers', 'offersPercent',
+            'all_selles', 'all_refunds', 'all_payments','PayPercent', 'refundPercent', 'views', 'couponLoss','Peak_Time', 'dailyPeaks', 'maxHour', 'maxDay', 'maxValue','sells_day'));
         
     }
 

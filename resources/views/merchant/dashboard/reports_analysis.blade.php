@@ -38,10 +38,8 @@
           </h3>
         </div>
         <div class="p-6 pt-0 text-3xl font-bold">
-          @php
-            $cancelPercent = $totalCount > 0 ? round(($cancelledReservations->count() / $totalCount) * 100, 1) : 0;
-          @endphp
-          {{ $cancelPercent }}%
+
+          {{ $refundPercent }}%
         </div>
       </div>
 
@@ -52,7 +50,7 @@
             الزوار الفعليون
           </h3>
         </div>
-        <div class="p-6 pt-0 text-3xl font-bold">{{ number_format($viewsCount, 0, '.', ',') }}</div>
+        <div class="p-6 pt-0 text-3xl font-bold">{{ number_format($views, 0, '.', ',') }}</div>
       </div>
 
       <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
@@ -63,9 +61,9 @@
           </h3>
         </div>
         <div class="p-6 pt-0 text-xl font-bold">
-          @if($peakHour !== null)
-            {{ \Carbon\Carbon::createFromTime($peakHour)->format('h A') }} - {{ \Carbon\Carbon::createFromTime($peakHour)->locale('ar')->dayName }}
-          @else
+           @if($maxHour !== null)
+           {{ \Carbon\Carbon::createFromTime($maxHour)->format('h A') }} - {{ $maxDay }}
+           @else
             لا يوجد بيانات
           @endif
         </div>
@@ -79,15 +77,13 @@
       <!-- تقرير المبيعات الشهري -->
       <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
         <div class="flex flex-col space-y-1.5 p-6">
-          <h3 class="text-xl font-semibold leading-none">تقرير المبيعات الشهري</h3>
-          <p class="text-sm text-slate-500">نظرة على أداء المبيعات خلال الأشهر الماضية.</p>
+            <h3 class="text-xl font-semibold leading-none">تقرير المبيعات الأسبوعي</h3>
+            <p class="text-sm text-slate-500">نظرة على أداء المبيعات خلال الأيام الماضية.</p>
         </div>
         <div class="p-6 pt-0 h-72">
-          <div class="w-full h-full flex items-center justify-center text-slate-400">
-            <span>📊 سيتم عرض الرسم البياني هنا</span>
-          </div>
+            <div id="weekly-sales-chart" class="w-full h-full"></div>
         </div>
-      </div>
+    </div>
 
       <!-- أداء الفعاليات -->
       <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
@@ -97,51 +93,246 @@
         </div>
         <div class="p-6 pt-0 h-72">
           <div class="w-full h-full relative">
-            <canvas id="servicePieChart" class="w-full h-full"></canvas>
+            <div id="servicePieChart" class="w-full h-full"></div>
           </div>
         </div>
       </div>
 
-    </div>
+      <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
+        <div class="flex flex-col space-y-1.5 p-6">
+          <h3 class="text-xl font-semibold leading-none">أداء الفعاليات</h3>
+          <p class="text-sm text-slate-500">توزيع الحجوزات على الخدمات المختلفة.</p>
+        </div>
+        <div class="p-6 pt-0 h-72">
+          <div class="w-full h-full relative">
+              <div id="donutChart"  class="w-full h-full"></div>
+          </div>
+        </div>
+      </div>
+
+
 
   </div>
+
+  <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
+    <div class="flex flex-col space-y-1.5 p-6">
+      <h3 class="text-xl font-semibold leading-none">أداء الفعاليات</h3>
+      <p class="text-sm text-slate-500">توزيع الحجوزات على الخدمات المختلفة.</p>
+    </div>
+    <div class="p-6 pt-0 h-72">
+      <div class="w-full h-full relative">
+        <div id="sales_chart"  class="w-full h-full"></div>
+      </div>
+    </div>
+  </div>
 </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+<script>
+  const offersPercent = @json($offersPercent);
+  //const peak_time  = @json($Peak_Time);
+</script>
+<script>
+    const chart = echarts.init(document.getElementById('servicePieChart'));
+
+    const offersData = offersPercent.map(item => {
+        return {
+            name: item.offer?.name ?? 'بدون اسم',
+            value: item.percentage
+
+        };
+    });
+
+    const option1 = {
+        title: {
+            text: 'توزيع الحجوزات',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            bottom: 10,
+            left: 'center'
+        },
+        series: [
+            {
+                name: 'الخدمة',
+                type: 'pie',
+                radius: '60%',
+                data: offersData,
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                },
+                label: {
+                    formatter: '{b}: {d}%' // {b} = الاسم، {d} = النسبة
+                }
+            }
+        ]
+    };
+
+    chart.setOption(option1);
+</script>
+
+<script>
+  const salesData = @json(array_values($sells_day));
+  const dayLabels = @json(array_keys($sells_day));
+
+  const chartDom = document.getElementById('weekly-sales-chart');
+  const myChart = echarts.init(chartDom);
+
+  const option2 = {
+      tooltip: {
+          trigger: 'axis'
+      },
+      xAxis: {
+          type: 'category',
+          data: dayLabels
+      },
+      yAxis: {
+          type: 'value'
+      },
+      series: [{
+          data: salesData,
+          type: 'bar',
+          itemStyle: {
+              color: '#3b82f6',
+              borderRadius: [4, 4, 0, 0]
+          }
+      }]
+  };
+
+  myChart.setOption(option2);
+</script>
+
+<script>
+const donutChartDom = document.getElementById('donutChart');
+const donutChart = echarts.init(donutChartDom);
+
+  const Pay = @json($PayPercent);
+  const refund = @json($refundPercent);
+  const allPayments = @json($all_payments);
+  const allRefunds = @json($all_refunds);
+  const option3 = {
+      title: {
+          text: 'الإحصائيات',
+          left: 'center'
+      },
+      tooltip: {
+          trigger: 'item'
+      },
+      legend: {
+          orient: 'vertical',
+          left: 'left'
+      },
+      series: [
+          {
+              name: 'البيانات',
+              type: 'pie',
+              radius: ['40%', '70%'], // Donut
+              avoidLabelOverlap: false,
+              label: {
+                  show: true,
+                  formatter: '{b}: {d}%',
+                  fontSize: 10
+              },
+              labelLine: {
+                  show: true
+              },
+              data: [
+                {
+                    value: refund,
+                    name: `الإلغاءات ${allRefunds}`
+                },
+                {
+                    value: Pay,
+                    name: `المدفوعات التامة ${allPayments}`
+                }
+            ]
+
+          }
+      ]
+  };
+
+  donutChart.setOption(option3);
+</script>
+
+<script>
+  const peak_time = {!! json_encode($Peak_Time) !!}; // تم تمريره من PHP
+  const data = [];
+
+  for (const day in peak_time) {
+      for (let hour = 0; hour < 24; hour++) {
+          const sales = peak_time[day][hour];
+          if (sales > 0) {
+              data.push({
+                  name: `${day} - ${hour}`,
+                  value: [ `${day} ${hour}:00`, sales ]
+              });
+          }
+      }
+  }
+
+  const chartDom4 = document.getElementById('sales_chart');
+  const myChart4 = echarts.init(chartDom4);
+  const option = {
+      title: {
+          text: 'مبيعات حسب الساعة خلال الأسبوع'
+      },
+      tooltip: {
+          trigger: 'axis'
+      },
+      toolbox: {
+          feature: {
+              dataZoom: {
+                  yAxisIndex: 'none'
+              },
+              restore: {},
+              saveAsImage: {}
+          }
+      },
+      dataZoom: [
+          {
+              type: 'slider',
+              start: 0,
+              end: 100
+          },
+          {
+              type: 'inside'
+          }
+      ],
+      xAxis: {
+          type: 'category',
+          data: data.map(d => d.value[0]),
+          name: 'اليوم - الساعة',
+          axisLabel: {
+              rotate: 45
+          }
+      },
+      yAxis: {
+          type: 'value',
+          name: 'عدد المبيعات'
+      },
+      series: [{
+          data: data.map(d => d.value[1]),
+          type: 'line',
+          smooth: true,
+          symbolSize: 8,
+          lineStyle: {
+              width: 3
+          }
+      }]
+  };
+
+  myChart4.setOption(option);
+</script>
 
 @endsection
 
 
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-document.addEventListener('livewire:load', () => renderCharts());
-Livewire.hook('message.processed', () => renderCharts());
 
-function renderCharts() {
-    const ctx = document.getElementById('servicePieChart').getContext('2d');
-    // دمر المخزن القديم
-    if(window.myPieChart) window.myPieChart.destroy();
-
-    window.myPieChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: @json($stats->pluck('service')),
-            datasets: [{
-                label: 'نسبة الحجوزات',
-                data: @json($stats->pluck('percent')),
-                backgroundColor: [
-                    '#F97316', '#FACC15', '#34D399', '#60A5FA', '#A78BFA', '#F472B6', '#FB923C'
-                ],
-                borderColor: '#fff',
-                borderWidth: 2,
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'bottom' }
-            }
-        }
-    });
-}
-</script>
-@endpush
