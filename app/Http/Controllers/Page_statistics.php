@@ -65,7 +65,6 @@ class Page_statistics extends Controller
             }
             $sells_day[$day] = $sell;
         }
-        dd($offersPercent);
         //dd($sells_day);
         //dd($Peak_Time);
         //dd($PayPercent,$refundPercent);

@@ -6,8 +6,8 @@
 
     <!-- رأس الصفحة وزر التصدير -->
     <div class="flex justify-between items-center">
-      <h2 class="text-3xl font-bold text-slate-800">التقارير والتحليلات</h2>
-      <button class="inline-flex items-center justify-center rounded-md text-sm font-medium border border-slate-300 bg-white hover:bg-orange-100 hover:text-orange-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 h-10 px-4 py-2">
+      <h2  class="text-3xl font-bold text-slate-800">التقارير والتحليلات</h2>
+      <button id="export-all" class="inline-flex items-center justify-center rounded-md text-sm font-medium border border-slate-300 bg-white hover:bg-orange-100 hover:text-orange-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 h-10 px-4 py-2">
         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
           <polyline points="7 10 12 15 17 10"></polyline>
@@ -331,7 +331,57 @@ const donutChart = echarts.init(donutChartDom);
 
   myChart4.setOption(option);
 </script>
+<script>
+document.getElementById("export-all").addEventListener("click", function () {
+    try {
+        let csv = "الرسم,العنصر,القيمة\n";
 
+        // ✅ Donut Chart
+        const donutData = donutChart?.getOption()?.series?.[0]?.data ?? [];
+        donutData.forEach(item => {
+            csv += "الإحصائيات," + item.name + "," + item.value + "\n";
+        });
+
+        // ✅ Pie Chart
+        const serviceData = chart?.getOption()?.series?.[0]?.data ?? [];
+        serviceData.forEach(item => {
+            csv += "الخدمات," + item.name + "," + item.value + "\n";
+        });
+
+        // ✅ Bar Chart (Weekly Sales)
+        const salesOption = myChart?.getOption();
+        const days = salesOption?.xAxis?.[0]?.data ?? [];
+        const sales = salesOption?.series?.[0]?.data ?? [];
+        days.forEach((day, i) => {
+            csv += "المبيعات الأسبوعية," + day + "," + sales[i] + "\n";
+        });
+
+        // ✅ Line Chart (Peak)
+        const peakOption = myChart4?.getOption();
+        const peakLabels = peakOption?.xAxis?.data ?? [];
+        const peakSales = peakOption?.series?.[0]?.data ?? [];
+        peakLabels.forEach((label, i) => {
+            csv += "الذروة," + label + "," + peakSales[i] + "\n";
+        });
+
+        // ✅ تصدير CSV
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "analytics-export.csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+    } catch (err) {
+        alert("حدث خطأ أثناء التصدير: " + err.message);
+        console.error(err);
+    }
+});
+</script>
+
+  
 @endsection
 
 
