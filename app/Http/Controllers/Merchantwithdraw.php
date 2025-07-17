@@ -38,8 +38,7 @@ class Merchantwithdraw extends Controller
     public function store(Request $request)
     
     {
-        $request->validate([
-            'transaction_ids' => 'required|array',
+        $validated = $request->validate([
             'amount' => 'required|numeric|min:1',
             'account_name' => [
                     'required',
@@ -67,35 +66,29 @@ class Merchantwithdraw extends Controller
                 ],
             
         ]);
+        $wallet = MerchantWallet::where('merchant_id', Auth::id())->first();
 
-        $transactionIds = (array) $request->input('transaction_ids', []);
-        $jsonString = $transactionIds[0] ?? '[]';
-        $decoded_transactions = json_decode($jsonString, true);
-        $transaction_id =  collect($decoded_transactions)->pluck('transaction_id')->all();
-        $transactions = PaysHistory::whereIn('transaction_id', $transaction_id)->get();
-        $amount = (float) $request->input('amount');
-        //dd($transactions);
+        if ((float)$validated['amount'] > $wallet->balance){
+            return redirect()->back()->with("fail","لاتحتوي على هذا الرقم في محفضتك");
+        }
+        //dd($validated);
+
+        $newBalance = (float)$wallet->balance - (float)$validated['amount'];
+        //dd($newBalance);
+        $wallet->balance = $newBalance;
+        $wallet->save();
+        
         $withdraw = withdraws_log::create([
             'user_id' => Auth::id(),
             'withdraw_id' => uniqid('withdraw_'),
-            'amount' => $amount,
+            'amount' => $validated['amount'],
             'status' => 'pending',
-            'additional_data' => json_encode($transaction_id),
+            'additional_data' => [],
         ]);
-        foreach ($transactions as $pay) {
-            $data = $pay->additional_data ?? [];
-            if (!is_array($data)) {
-                $data = json_decode($data, true) ?? [];
-            }
-        
-            $data['status'] = 'wait';  
-        
-            $pay->additional_data = $data;
-            $pay->save();
-        }
+
         notifcate(
             Auth::id(),
-            'تم طلب السحب بنجاح' . $amount,
+            'تم طلب السحب بنجاح' . $validated['amount'],
             'تستغرق العملية حوالي 24 ساعة او اكثر',
             [
                 'type' => 'payment',

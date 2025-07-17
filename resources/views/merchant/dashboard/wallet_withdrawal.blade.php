@@ -1,14 +1,79 @@
 @extends('merchant.layouts.app')
 
 @section('content')
-<div class="flex-1 p-8">
-  
+<div class="flex-1 p-8" x-data="{ open: false }">
+  <div
+  x-show="open"
+  x-transition
+  class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg bg-black/50 px-4"
+  style="display: none;">
+<div
+    @click.away="open = false"
+    class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-8 space-y-6"
+>
+  <div class="flex justify-between items-center border-b pb-4">
+    <h2 class="text-xl font-bold text-gray-800">معلومات التحويل البنكي</h2>
+    <button
+        @click="open = false"
+        class="text-gray-500 hover:text-orange-500 transition text-sm">
+      إغلاق
+    </button>
+  </div>
+
+<form action="{{ route('merchant.dashboard.withdraws.store') }}" method="POST" class="space-y-6">
+  @csrf
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">اسم الحساب البنكي</label>
+      <input type="text" name="account_name" required
+              class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">اسم البنك</label>
+      <input type="text" name="bank_name" required
+              class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">رقم IBAN</label>
+      <input type="text" name="iban" required
+              class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">رمز SWIFT</label>
+      <input type="text" name="swift" required
+              class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
+    </div>
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">الكمية AMOUNT</label>
+    <input type="text" name="amount" required max="{{$wallet->balance}}" min="1"
+            class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
+  </div>
+  <div class="flex justify-between items-center pt-4 border-t">
+    <button
+        type="button"
+        @click="open = false"
+        class="inline-flex items-center justify-center rounded-lg bg-gray-200 text-gray-700 font-bold py-2 px-4 hover:bg-gray-300 transition">
+        إلغاء
+    </button>
+    <button
+        type="submit"
+        class="inline-flex items-center justify-center rounded-lg bg-orange-500 text-white font-bold py-2 px-4 hover:bg-orange-600 transition">
+        إرسال الطلب
+    </button>
+  </div>
+</form>
+</div>
+</div>
   <div class="space-y-8">
     <h2 class="text-3xl font-bold text-slate-800">المحفظة المالية والسحب</h2>
 
     <div class="grid md:grid-cols-3 gap-6">
 
-      {{-- المسحوبات المعالجة --}}
       <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-xl hover:shadow-2xl transition">
         <div class="flex flex-col space-y-2 p-6">
           <h3 class="text-xl font-semibold tracking-tight text-orange-600">المسحوبات المعالجة</h3>
@@ -17,7 +82,6 @@
         </div>
       </div>
 
-      {{-- الرصيد القابل للسحب (أهم بطاقة في الوسط) --}}
       <div class="rounded-2xl border-2 border-orange-400 bg-white text-slate-900 shadow-2xl hover:shadow-3xl transition transform hover:scale-105">
         <div class="flex flex-col space-y-2 p-6">
           <h3 class="text-xl font-bold tracking-tight text-orange-700">الرصيد القابل للسحب</h3>
@@ -27,7 +91,7 @@
           {{-- زر طلب السحب --}}
           @if ($wallet->balance > 0)
 
-          <div x-data="{ open: false }">
+          <div >
             {{-- الزر الرئيسي --}}
             <button
                 @click="open = true"
@@ -37,71 +101,7 @@
             </button>
           
             {{-- الخلفية + المودال --}}
-            <div
-                x-show="open"
-                x-transition
-                class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg bg-black/50 px-4"
-                style="display: none;"
-            >
-              <div
-                  @click.away="open = false"
-                  class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-8 space-y-6"
-              >
-                <div class="flex justify-between items-center border-b pb-4">
-                  <h2 class="text-xl font-bold text-gray-800">معلومات التحويل البنكي</h2>
-                  <button
-                      @click="open = false"
-                      class="text-gray-500 hover:text-orange-500 transition text-sm">
-                    إغلاق
-                  </button>
-                </div>
-          
-                <form action="{{ route('merchant.dashboard.withdraws.store') }}" method="POST" class="space-y-6">
-                  @csrf
 
-                  {{-- الشبكة --}}
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-1">اسم الحساب</label>
-                      <input type="text" name="account_name" required
-                             class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
-                    </div>
-          
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-1">اسم البنك</label>
-                      <input type="text" name="bank_name" required
-                             class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
-                    </div>
-          
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-1">رقم IBAN</label>
-                      <input type="text" name="iban" required
-                             class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
-                    </div>
-          
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-1">رمز SWIFT</label>
-                      <input type="text" name="swift" required
-                             class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
-                    </div>
-                  </div>
-          
-                  <div class="flex justify-between items-center pt-4 border-t">
-                    <button
-                        type="button"
-                        @click="open = false"
-                        class="inline-flex items-center justify-center rounded-lg bg-gray-200 text-gray-700 font-bold py-2 px-4 hover:bg-gray-300 transition">
-                        إلغاء
-                    </button>
-                    <button
-                        type="submit"
-                        class="inline-flex items-center justify-center rounded-lg bg-orange-500 text-white font-bold py-2 px-4 hover:bg-orange-600 transition">
-                        إرسال الطلب
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
           </div>
           
           @endif
