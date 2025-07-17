@@ -33,7 +33,7 @@ class AuthController extends Controller
                 'required',
                 'string',
                 'max:255',
-                'regex:/^[\pL\s\-]+$/u', // يسمح فقط بالأحرف والمسافات والشرط
+                'regex:/^[\pL\s\-]+$/u',
             ],
             'l_name' => [
                 'required',
@@ -55,11 +55,15 @@ class AuthController extends Controller
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
                 'confirmed',
             ],
-            'phone' => [
-                'required', // إذا بدك يكون إلزامي
+            'country_code' => [
+                'required',
                 'string',
-                'regex:/^\+d{3}\s5\d\s\d{3}\s\d{4}$/',
-                'max:17',
+                'regex:/^\+\d{1,4}$/', // مثل +966 أو +1
+            ],
+            'phone' => [
+                'required',
+                'string',
+                'regex:/^\d{6,15}$/', // الرقم فقط بدون مفتاح الدولة
                 'unique:users,phone',
             ],
         ];
@@ -67,10 +71,20 @@ class AuthController extends Controller
         if (Route::is('signup')) {
             $rules['business_name'] = 'required|string|max:255';
             $rules['business_type'] = 'required|in:restaurant,events,show,other';
-            $rules['other_business_type'] = 'required_if:business_type,other|in:restaurant,events,show,other|max:255|nullable';
+            $rules['other_business_type'] = 'nullable|required_if:business_type,other|string|max:255';
         }
+
         $validated = $request->validate($rules);
+
+        // دمج country_code مع phone لتخزينه في خانة واحدة
+        $validated['phone'] = $validated['country_code'] . $validated['phone'];
+
+        unset($validated['country_code']);
+
+        // تشفير كلمة المرور
         $validated['password'] = Hash::make($validated['password']);
+
+        // دور المستخدم
         if (Route::is('signup')) {
             $validated['additional_data'] = [
                 'other_business_type' => $request->business_type === 'other' ? $request->other_business_type : null,
@@ -79,22 +93,21 @@ class AuthController extends Controller
         } elseif (Route::is('customer.signup')) {
             $validated['role'] = 'user';
         }
+
         $user = User::create($validated);
 
-        //Auth::login($user);
-        if ($validated['role'] == 'user') {
+        // تسجيل الدخول وتوجيه
+        if ($validated['role'] === 'user') {
             Auth::guard('customer')->login($user);
             return redirect()->intended($request->redirect ?? route('customer.dashboard.overview'));
-        } elseif ($validated['role'] == 'merchant') {
-            return redirect()->route('status')->with([
-                'status' => 'pending',
-            ]);
-            // Auth::guard('merchant')->login($user);
+        } elseif ($validated['role'] === 'merchant') {
+            return redirect()->route('status')->with(['status' => 'pending']);
         }
-        return redirect()->intended(route('login', ['redirect' => $request->redirect ?? '']))->with('success', 'Registration successful!');
 
-        // return redirect()->route('dashboard')->with('success', 'Registration successful!');
+        return redirect()->intended(route('login', ['redirect' => $request->redirect ?? '']))
+            ->with('success', 'تم التسجيل بنجاح!');
     }
+
 
     public function login(Request $request)
     {
