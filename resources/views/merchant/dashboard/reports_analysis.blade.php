@@ -27,7 +27,7 @@
             إجمالي المبيعات
           </h3>
         </div>
-        <div class="p-6 pt-0 text-3xl font-bold">{{ number_format($checkedTotal, 0, '.', ',') }} ريال</div>
+        <div class="p-6 pt-0 text-3xl font-bold">{{ number_format($wallet->balance, 0, '.', ',') }} ريال</div>
       </div>
 
       <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
@@ -39,7 +39,6 @@
         </div>
         <div class="p-6 pt-0 text-3xl font-bold">
           @php
-            $totalCount = $cleanReservations->count();
             $cancelPercent = $totalCount > 0 ? round(($cancelledReservations->count() / $totalCount) * 100, 1) : 0;
           @endphp
           {{ $cancelPercent }}%

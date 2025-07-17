@@ -486,3 +486,32 @@ if (!function_exists('Create_Wallet')){
         ]);
     }
 }
+
+if(!function_exists('get_statistics')){
+    function get_statistics($user_id)
+    {
+        $wallet = MerchantWallet::where('merchant_id', $user_id)->first();
+        $txns = $wallet->transactions()->get();
+        $offers = $txns->map(function ($txn) {return $txn->item;})->unique('id');
+        $offersPercent = $offers->map(function ($offer) use ($txns) {
+            $offerTxns = $txns->where('item_id', $offer->id);
+            $totalAmount = $offerTxns->sum('amount');
+            return [
+                'offer' => $offer,
+                'total_amount' => $totalAmount,
+                'percentage' => $totalAmount / $txns->sum('amount') * 100,
+            ];
+        });
+
+        return [
+            'wallet' => $wallet,
+            'txns' => $txns,
+            'offers' => $offers,
+            'offersPercent' => $offersPercent,
+            'all_selles' => $txns->sum('amount'),
+            'all_refunds' => $txns->filter(function ($txn) {return $txn->additional_data['type'] === 'pay';})->sum('amount'),
+            'all_payments' => $txns->filter(function ($txn) {return $txn->additional_data['type'] === 'refund';})->sum('amount'),
+
+        ];
+    }
+}

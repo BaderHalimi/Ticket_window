@@ -15,6 +15,7 @@ class PaysHistory extends Model
         'transaction_id',
         'status',
         'payment_method',
+        'wallet_id',
         'additional_data',
     ];
     protected $casts = [
