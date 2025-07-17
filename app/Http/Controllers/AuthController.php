@@ -29,16 +29,45 @@ class AuthController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'f_name' => 'required|string|max:255',
-            'l_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'phone' => 'nullable|string|max:15|unique:users',
+            'f_name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s\-]+$/u', // يسمح فقط بالأحرف والمسافات والشرط
+            ],
+            'l_name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s\-]+$/u',
+            ],
+            'email' => [
+                'required',
+                'email:rfc,dns',
+                'max:255',
+                'unique:users,email',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'max:20',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+                'confirmed',
+            ],
+            'phone' => [
+                'required', // إذا بدك يكون إلزامي
+                'string',
+                'regex:/^\+d{3}\s5\d\s\d{3}\s\d{4}$/',
+                'max:17',
+                'unique:users,phone',
+            ],
         ];
+
         if (Route::is('signup')) {
-            $rules['business_name'] = 'nullable|string|max:255';
-            $rules['business_type'] = 'nullable|in:restaurant,events,show,other';
-            $rules['other_business_type'] = 'nullable|required_if:business_type,other|string|max:255';
+            $rules['business_name'] = 'required|string|max:255';
+            $rules['business_type'] = 'required|in:restaurant,events,show,other';
+            $rules['other_business_type'] = 'required_if:business_type,other|in:restaurant,events,show,other|max:255|nullable';
         }
         $validated = $request->validate($rules);
         $validated['password'] = Hash::make($validated['password']);
@@ -55,14 +84,14 @@ class AuthController extends Controller
         //Auth::login($user);
         if ($validated['role'] == 'user') {
             Auth::guard('customer')->login($user);
-            return redirect()->intended($request->redirect ??route('customer.dashboard.overview'));
+            return redirect()->intended($request->redirect ?? route('customer.dashboard.overview'));
         } elseif ($validated['role'] == 'merchant') {
             return redirect()->route('status')->with([
                 'status' => 'pending',
             ]);
             // Auth::guard('merchant')->login($user);
         }
-        return redirect()->intended(route('login',['redirect'=>$request->redirect ??'']))->with('success', 'Registration successful!');
+        return redirect()->intended(route('login', ['redirect' => $request->redirect ?? '']))->with('success', 'Registration successful!');
 
         // return redirect()->route('dashboard')->with('success', 'Registration successful!');
     }
