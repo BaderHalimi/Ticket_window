@@ -47,10 +47,6 @@ $socialLinks = $data['social_links'] ?? [];
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- روابط التواصل -->
-        <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg p-6 space-y-4">
             <h2 class="text-2xl font-bold">روابط التواصل الاجتماعي</h2>
             <div id="social-links-container" class="space-y-3">
                 @foreach ($socialLinks as $link)
