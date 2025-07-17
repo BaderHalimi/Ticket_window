@@ -50,7 +50,7 @@
   </div>
   <div>
     <label class="block text-sm font-medium text-gray-700 mb-1">الكمية AMOUNT</label>
-    <input type="text" name="amount" required max="{{$wallet->balance}}" min="1"
+    <input type="text" name="amount" required max="{{$wallet->balance??1}}" min="1"
             class="w-full rounded-lg border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:ring-orange-500 transition">
   </div>
   <div class="flex justify-between items-center pt-4 border-t">
@@ -77,7 +77,7 @@
       <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-xl hover:shadow-2xl transition">
         <div class="flex flex-col space-y-2 p-6">
           <h3 class="text-xl font-semibold tracking-tight text-orange-600">المسحوبات المعالجة</h3>
-          <div class="text-4xl font-bold text-slate-900 mt-2">{{ number_format($wallet->withdrawn_total, 2) }} ريال</div>
+          <div class="text-4xl font-bold text-slate-900 mt-2">{{ number_format($wallet->withdrawn_total??0, 2) }} ريال</div>
           <p class="text-sm text-slate-500 mt-1">المبالغ التي تم صرفها بعد الموافقة.</p>
         </div>
       </div>
@@ -85,11 +85,11 @@
       <div class="rounded-2xl border-2 border-orange-400 bg-white text-slate-900 shadow-2xl hover:shadow-3xl transition transform hover:scale-105">
         <div class="flex flex-col space-y-2 p-6">
           <h3 class="text-xl font-bold tracking-tight text-orange-700">الرصيد القابل للسحب</h3>
-          <div class="text-5xl font-extrabold text-slate-900 mt-2">{{ number_format($wallet->balance, 2) }} ريال</div>
+          <div class="text-5xl font-extrabold text-slate-900 mt-2">{{ number_format($wallet?$wallet->balance:0, 2) }} ريال</div>
           <p class="text-sm text-slate-500 mt-1">رصيدك المتاح حاليا للسحب.</p>
 
           {{-- زر طلب السحب --}}
-          @if ($wallet->balance > 0)
+          @if (($wallet?$wallet->balance:0) > 0)
 
           <div >
             {{-- الزر الرئيسي --}}
@@ -99,11 +99,11 @@
                 class="w-full inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-orange-400 to-orange-600 text-white text-base font-bold py-3 shadow-lg hover:from-orange-500 hover:to-orange-700 focus:ring-4 focus:ring-orange-300 transition">
                 طلب سحب
             </button>
-          
+
             {{-- الخلفية + المودال --}}
 
           </div>
-          
+
           @endif
 
         </div>
@@ -113,7 +113,7 @@
       <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-xl hover:shadow-2xl transition">
         <div class="flex flex-col space-y-2 p-6">
           <h3 class="text-xl font-semibold tracking-tight text-orange-600">الرصيد الملغي / المحجوز</h3>
-          <div class="text-4xl font-bold text-slate-900 mt-2">{{ number_format($wallet->locked_balance, 2) }} ريال</div>
+          <div class="text-4xl font-bold text-slate-900 mt-2">{{ number_format($wallet?$wallet->locked_balance:0, 2) }} ريال</div>
           <p class="text-sm text-slate-500 mt-1">رصيد غير متاح حاليا للسحب.</p>
         </div>
       </div>
@@ -126,7 +126,7 @@
     <div class="flex justify-between items-center p-6 border-b border-slate-200 bg-gradient-to-r from-orange-50 to-white">
       <h3 class="text-xl font-semibold tracking-tight text-orange-600">سجل عمليات السحب</h3>
     </div>
-  
+
     @if($withdraws->isEmpty())
       <div class="p-6 text-slate-500 text-center">
         لا توجد عمليات سحب سابقة حتى الآن.
@@ -168,7 +168,7 @@
       </table>
     @endif
   </div>
-  
+
 
   </div>
 </div>
