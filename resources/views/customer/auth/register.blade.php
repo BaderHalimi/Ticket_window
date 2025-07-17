@@ -17,7 +17,7 @@
                             <h1 class="text-3xl md:text-4xl font-bold text-orange-500 mb-2">انشاء حساب</h1>
                             <p class="text-gray-600">ابدأ رحلتك في إدارة حجوزاتك بكفاءة واحترافية.</p>
                         </div>
-                        <form action="{{route('customer.signup')}}" method="POST" class="space-y-6">
+                        <form action="{{route('customer.signup',request()->all())}}" method="POST" class="space-y-6">
                             @csrf
                             @if(request()->has('redirect'))
                             <input type="hidden" name="redirect" value="{{ request()->get('redirect') }}">
@@ -35,7 +35,7 @@
 
                             <button class="inline-flex items-center justify-center ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-orange-500 hover:bg-orange-500/90 h-11 rounded-md px-8 w-full bg-orange-500 text-white py-6 text-lg font-semibold transform hover:scale-105 transition-transform" type="submit">إرسال طلب التسجيل</button>
                         </form>
-                        <div class="text-center mt-4">هل لديك حساب؟ <a href="{{ route('customer.login') }}" class="text-orange-500 font-bold">تسجيل الدخول</a></div>
+                        <div class="text-center mt-4">هل لديك حساب؟ <a href="{{ route('customer.login',request()->all()) }}" class="text-orange-500 font-bold">تسجيل الدخول</a></div>
                     </div>
                 </div>
             </div>

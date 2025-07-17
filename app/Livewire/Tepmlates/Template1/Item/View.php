@@ -24,10 +24,36 @@ class View extends Component
 
     public function mount($offer, $daysLimit = 0)
     {
+        // 'reservation' => [
+        //         'offer' => $this->offer->id,
+        //         'quantity' => $this->count,
+        //         'price' => $this->price,
+        //         'selected_date' => $this->selectedDate,
+        //         'selected_time' => $this->selectedTime,
+        //         'coupon_code' => $this->couponCode,
+        //     ]
         $this->offer = $offer;
+        if (isset($_GET['reservation']['quantity'])) {
+            $this->count = $_GET['reservation']['quantity'];
+        }
+        if (isset($_GET['reservation']['price'])) {
+            $this->price = $_GET['reservation']['price'];
+        }
+        if (isset($_GET['reservation']['selected_date'])) {
+            $this->selectDate(Carbon::parse($_GET['reservation']['selected_date'])->format('d'));
+            $this->currentMonth = Carbon::parse($_GET['reservation']['selected_date'])->format('m');
+            $this->currentYear = Carbon::parse($_GET['reservation']['selected_date'])->format('Y');
+        } else {
+            $this->currentMonth = request()->get('month', now()->month);
+            $this->currentYear = request()->get('year', now()->year);
+        }
+        if (isset($_GET['reservation']['selected_time'])) {
+            $this->selectedTime = $_GET['reservation']['selected_time'];
+        }
+        if (isset($_GET['reservation']['coupon_code'])) {
+            $this->couponCode = $_GET['reservation']['coupon_code'];
+        }
         $this->daysLimit = $daysLimit;
-        $this->currentMonth = request()->get('month', now()->month);
-        $this->currentYear = request()->get('year', now()->year);
 
         $this->generateAvailableDays();
         $this->calcPrice();
@@ -36,26 +62,26 @@ class View extends Component
     public function generateAvailableDays()
     {
         $raw = fetch_time($this->offer->id);
-        
+
         $dates = [];
-    
+
         if ($raw && $raw['type'] === 'events') {
             foreach ($raw['data'] as $event) {
                 if (empty($event['start_date']) || empty($event['end_date'])) continue;
-    
+
                 $start = \Carbon\Carbon::parse($event['start_date']);
                 $end = \Carbon\Carbon::parse($event['end_date']);
-    
+
                 while ($start->lte($end)) {
                     $dates[] = $start->toDateString();
                     $start->addDay();
                 }
             }
         }
-    
+
         $this->availableDays = $dates;
     }
-    
+
 
     public function nextMonth()
     {
@@ -160,28 +186,28 @@ class View extends Component
     {
         $this->selectedTime = null;
         $this->timeSlots = [];
-    
+
         if (!$this->selectedDate) return;
-    
+
         $raw = fetch_time($this->offer->id);
         if (!$raw || empty($raw['data'])) return;
-    
+
         foreach ($raw['data'] as $time) {
             if (empty($time['start_date']) || empty($time['end_date'])) continue;
-    
+
             $selectedDate = Carbon::parse($this->selectedDate)->startOfDay();
             $startDate = Carbon::parse($time['start_date'])->startOfDay();
             $endDate = Carbon::parse($time['end_date'])->endOfDay();
-    
+
             // Skip if out of range
             if ($selectedDate->lt($startDate) || $selectedDate->gt($endDate)) {
                 continue;
             }
-    
+
             // Safe defaults
             $startTime = !empty($time['start_time']) ? $time['start_time'] : '00:00';
             $endTime = !empty($time['end_time']) ? $time['end_time'] : '23:59';
-    
+
             if ($time['start_date'] == $time['end_date']) {
                 $start = Carbon::parse("{$this->selectedDate} {$startTime}");
                 $end = Carbon::parse("{$this->selectedDate} {$endTime}");
@@ -195,44 +221,68 @@ class View extends Component
                 $start = Carbon::parse("{$this->selectedDate} 00:00");
                 $end = Carbon::parse("{$this->selectedDate} 23:59");
             }
-    
+
             // Make sure start is before end
             if ($start->gt($end)) continue;
-    
+
             while ($start->lte($end)) {
                 $this->timeSlots[] = $start->format('H:i');
                 $start->addMinutes(30);
             }
         }
     }
-    
+
 
     public function addToCart()
     {
         $user = Auth::guard('customer')->user();
-        if (!$user || !$this->selectedDate || !$this->selectedTime) {
-            session()->flash('error', 'يرجى اختيار التاريخ والوقت أولاً.');
-            //dd("zbi");
-            return;
-        }
+        if (!Auth::guard('customer')->check()) {
 
-        Cart::create([
-            'user_id' => $user->id,
-            'item_id' => $this->offer->id,
-            'item_type' => get_class($this->offer),
-            'quantity' => $this->count,
-            'price' => $this->price,
-            'discount' => 0, // الخصم مُطبق مسبقًا ضمن السعر
-            'additional_data' => json_encode([
+            return redirect(route('customer.login', ['reservation' => [
+                'offer' => $this->offer->id,
+                'quantity' => $this->count,
+                'price' => $this->price,
                 'selected_date' => $this->selectedDate,
                 'selected_time' => $this->selectedTime,
                 'coupon_code' => $this->couponCode,
-            ]),
-        ]);
+            ], 'redirect' => url()->previous()]), true);
+        } else {
+            // dd(route('customer.login', ['reservation-Cart' => [
+            //         'item_id' => $this->offer->id,
+            //         'item_type' => get_class($this->offer),
+            //         'quantity' => $this->count,
+            //         'price' => $this->price,
+            //         'discount' => 0, // الخصم مُطبق مسبقًا ضمن السعر
+            //         'additional_data' => json_encode([
+            //             'selected_date' => $this->selectedDate,
+            //             'selected_time' => $this->selectedTime,
+            //             'coupon_code' => $this->couponCode,
+            //         ]),
+            //     ],'redirect'=>url()->previous()]));
+            if (!$user || !$this->selectedDate || !$this->selectedTime) {
+                session()->flash('error', 'يرجى اختيار التاريخ والوقت أولاً.');
+                //dd("zbi");
+                return;
+            }
 
-        session()->flash('success', 'تمت إضافة الحجز إلى السلة بنجاح.');
-        // return redirect()->route('cart.index');
-        $this->redirectIntended(route('template1.cart', ['id' => $this->offer->user_id]), true);
+            Cart::create([
+                'user_id' => $user->id,
+                'item_id' => $this->offer->id,
+                'item_type' => get_class($this->offer),
+                'quantity' => $this->count,
+                'price' => $this->price,
+                'discount' => 0, // الخصم مُطبق مسبقًا ضمن السعر
+                'additional_data' => json_encode([
+                    'selected_date' => $this->selectedDate,
+                    'selected_time' => $this->selectedTime,
+                    'coupon_code' => $this->couponCode,
+                ]),
+            ]);
+
+            session()->flash('success', 'تمت إضافة الحجز إلى السلة بنجاح.');
+            // return redirect()->route('cart.index');
+            $this->redirectIntended(route('template1.cart', ['id' => $this->offer->user_id]), true);
+        }
     }
 
     public function render()

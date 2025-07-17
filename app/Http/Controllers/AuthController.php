@@ -69,7 +69,7 @@ class AuthController extends Controller
         }
 
         $validated = $request->validate($rules);
-        $validated['phone'] = '+'.preg_replace('/\D/', '', $validated['country_code'] . $request->phone);
+        $validated['phone'] = '+' . preg_replace('/\D/', '', $validated['country_code'] . $request->phone);
         if (User::where('phone', $validated['phone'])->exists()) {
             return back()->withErrors(['phone' => 'رقم الهاتف مستخدم بالفعل.'])->withInput();
         }
@@ -97,7 +97,7 @@ class AuthController extends Controller
         // تسجيل الدخول وتوجيه
         if ($validated['role'] === 'user') {
             Auth::guard('customer')->login($user);
-            return redirect()->intended($request->redirect ?? route('customer.dashboard.overview'));
+            return redirect()->intended($request->redirect ?? route('customer.dashboard.overview'))->with(request()->all());
         } elseif ($validated['role'] === 'merchant') {
             return redirect()->route('status')->with(['status' => 'pending']);
         }
@@ -144,8 +144,15 @@ class AuthController extends Controller
                 ]);
         } elseif ($request->guard == 'customer') {
             if (Auth::guard('customer')->attempt(array_merge($credentials, ['role' => 'user']))) {
-                session()->regenerate();
-                return redirect()->intended($request->redirect ?? route('customer.dashboard.overview'))->with('success', 'Login successful');
+                // session()->regenerate();
+                unset($request['_token']);
+                unset($request['email']);
+                unset($request['password']);
+                $params = http_build_query($request->all());
+                $baseUrl = $request->redirect ?? route('customer.dashboard.overview');
+                $redirectUrl = $baseUrl . (str_contains($baseUrl, '?') ? '&' : '?') . $params;
+
+                return redirect($redirectUrl)->with('success', 'Login successful');
             } else {
                 return back()->withErrors([
                     'email' => 'The provided credentials do not match our records.',
