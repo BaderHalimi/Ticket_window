@@ -2,7 +2,7 @@
 
     {{-- السعر الأساسي --}}
     <div>
-        <label class="block text-sm font-medium mb-1">السعر الأساسي *</label>
+        <label class="block text-sm font-medium mb-1">السعر الأساسي <span class="text-red-500" style="font-weight: bold;">*</span></label>
         <input type="number" step="0.01" wire:model.lazy="base_price" class="w-full border rounded-md p-2">
     </div>
 
@@ -59,7 +59,7 @@
                 <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transform peer-checked:translate-x-full transition-all"></div>
             </label>
         </div>
-    
+
         {{-- إذا كان الخصم مفعل --}}
         @if ($enable_discounts)
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -67,12 +67,12 @@
                     <label class="block text-sm font-medium mb-1">بداية الخصم</label>
                     <input type="datetime-local" wire:model.lazy="discount_start" class="w-full border rounded-md p-2">
                 </div>
-    
+
                 <div>
                     <label class="block text-sm font-medium mb-1">نهاية الخصم</label>
                     <input type="datetime-local" wire:model.lazy="discount_end" class="w-full border rounded-md p-2">
                 </div>
-    
+
                 <div>
                     <label class="block text-sm font-medium mb-1">نسبة الخصم (%)</label>
                     <input type="number" wire:model.lazy="discount_percent" class="w-full border rounded-md p-2" min="1" max="100">
@@ -80,7 +80,7 @@
             </div>
         @endif
     </div>
-    
+
 
     {{-- توجل: السماح بالإلغاء --}}
     {{-- <div>
@@ -116,7 +116,7 @@
                 <input type="number" wire:model.lazy="cancellation_deadline_minutes" placeholder="عدد الدقائق قبل البدء" class="w-full border rounded-md p-2">
             </div>
         @endif
-        
+
     </div>
 
     {{-- توجل: الأجل الأخير للإلغاء --}}

@@ -2,14 +2,14 @@
     <div class="space-y-4">
         <div class="grid grid-cols-1 gap-4">
             <div>
-                <label class="block text-sm font-medium mb-1">الوصف المختصر *</label>
+                <label class="block text-sm font-medium mb-1">الوصف المختصر <span class="text-red-500" style="font-weight: bold;">*</span></label>
                 <input type="text" wire:model.lazy="name" class="w-full border rounded-md p-2">
             </div>
 
             @if ($type != 'restaurant')
-                
+
             <div>
-                <label class="block text-sm font-medium mb-1">الموقع *</label>
+                <label class="block text-sm font-medium mb-1">الموقع <span class="text-red-500" style="font-weight: bold;">*</span></label>
                 <input type="text" wire:model.lazy="location" class="w-full border rounded-md p-2">
             </div>
             @endif
@@ -20,11 +20,11 @@
                 <input type="number" wire:model.lazy="price" step="0.01" class="w-full border rounded-md p-2">
             </div> --}}
 @if ($type != 'restaurant')
-            
-    
+
+
 
             <div>
-                <label class="block text-sm font-medium mb-1">النوع *</label>
+                <label class="block text-sm font-medium mb-1">النوع <span class="text-red-500" style="font-weight: bold;">*</span></label>
                 <select wire:model.lazy="type" class="w-full border rounded-md p-2">
                     {{-- <option value="restaurant">مطعم</option> --}}
                     <option value="events">فعالية</option>
@@ -36,8 +36,8 @@
 @endif
 
 @if ($type == 'restaurant')
-            
-    
+
+
 
             <div>
                 <label class="block text-sm font-medium mb-1">النوع</label>
@@ -50,7 +50,7 @@
             </div>
 @endif
 @if ($type == 'events')
-    
+
             <div >
                 <label class="block text-sm font-medium mb-1">الفئة</label>
                 <select wire:model.lazy="category" class="w-full border rounded-md p-2">
@@ -63,11 +63,11 @@
 @endif
 
             <div>
-                <label class="block text-sm font-medium mb-1">الوصف *</label>
+                <label class="block text-sm font-medium mb-1">الوصف <span class="text-red-500" style="font-weight: bold;">*</span></label>
                 <textarea wire:model.lazy="description" rows="3" class="w-full border rounded-md p-2"></textarea>
             </div>
 
-{{-- 
+{{--
             <div>
                 <label class="flex items-center gap-2">
                     <input type="checkbox" wire:model.lazy="has_chairs" class="form-checkbox">

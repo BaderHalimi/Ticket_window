@@ -1,6 +1,71 @@
 <div>
     <div class="flex-1 p-8">
-        <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6 space-y-6">
+        <div class="max-w-7xl mx-auto bg-white rounded-xl shadow-lg p-6 space-y-6">
+
+            <div class="flex justify-between align-center">
+                <!-- Title -->
+                <div>
+                    <div class="text-lg font-bold text-gray-800">
+                    هل ترغب بنشر الخدمة؟
+                </div>
+                <p class="text-slate-500 text-xs">عند تعديل اي حقل يتم ازالة الخدمة من المتجر حتى تقوم بنشرها مجدداً</p>
+                </div>
+                <div>
+                    <div class="mb-3">
+                        <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                            <div class="bg-lime-500 h-4 text-xs font-medium text-white text-center leading-4" style="width: {{ $percent_progress }}%;">
+                                {{ $percent_progress }}%
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Publish Button -->
+                    <div>
+                        @if ($isPublished == 'active')
+                        <button class="w-full bg-gray-300 text-gray-500 font-semibold py-2 px-6 rounded-lg cursor-not-allowed shadow" disabled>
+                            تم النشر
+                        </button>
+                        @else
+                        @if ($isReady)
+                        <button wire:click="publish" class="w-full bg-orange-500 text-white font-semibold py-2 px-6 rounded-lg shadow hover:bg-orange-600 transition">
+                            نشر الخدمة
+                        </button>
+                        @else
+                        <button class="w-full bg-gray-300 text-gray-500 font-semibold py-2 px-6 rounded-lg cursor-not-allowed shadow" disabled>
+                            لا يمكن النشر - أكمل البيانات
+                        </button>
+                        @endif
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Missing Fields Alert -->
+            @php
+            $missingFields = collect($fileds_exists)->filter(fn($v) => !$v);
+            @endphp
+
+            @if ($missingFields->isNotEmpty())
+            <div class="font-semibold text-red-700 flex items-center gap-2">
+                <i class="ri-error-warning-line text-xl"></i>
+                هناك حقول ناقصة يجب إكمالها:
+            </div>
+            <div class="border border-red-300 bg-red-50 rounded-lg p-4 space-y-2">
+                <ul class="list-disc list-inside text-red-600 space-y-1">
+                    @foreach ($missingFields as $field => $exists)
+                    <li class="flex items-center gap-2">
+                        <i class="ri-close-circle-line text-red-500"></i>
+                        <span>حقل "{{ $field }}" ناقص</span>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+            <!-- Progress Bar -->
+
+        </div>
+        <div class="mt-4 max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6 space-y-6">
             <h2 class="text-2xl font-bold text-slate-800">تعديل الخدمة</h2>
 
             <div class="grid grid-cols-12 gap-6">
@@ -59,66 +124,9 @@
                 </div>
             </div>
         </div>
-        <div class="mt-4 max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6 space-y-6">
-    
-            <!-- Title -->
-            <div class="text-lg font-bold text-gray-800">
-                هل ترغب بنشر الخدمة؟
-            </div>
-            
-            <!-- Progress Bar -->
-            <div>
-                <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-                    <div class="bg-lime-500 h-4 text-xs font-medium text-white text-center leading-4" style="width: {{ $percent_progress }}%;">
-                        {{ $percent_progress }}%
-                    </div>
-                </div>
-            </div>
-        
-            <!-- Missing Fields Alert -->
-            @php
-                $missingFields = collect($fileds_exists)->filter(fn($v) => !$v);
-            @endphp
-        
-            @if ($missingFields->isNotEmpty())
-                <div class="border border-red-300 bg-red-50 rounded-lg p-4 space-y-2">
-                    <div class="font-semibold text-red-700 flex items-center gap-2">
-                        <i class="ri-error-warning-line text-xl"></i>
-                        هناك حقول ناقصة يجب إكمالها:
-                    </div>
-                    <ul class="list-disc list-inside text-red-600 space-y-1">
-                        @foreach ($missingFields as $field => $exists)
-                            <li class="flex items-center gap-2">
-                                <i class="ri-close-circle-line text-red-500"></i>
-                                <span>حقل "{{ $field }}" ناقص</span>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-        
-            <!-- Publish Button -->
-            <div>
-                @if ($isPublished == 'active')
-                    <button class="w-full bg-gray-300 text-gray-500 font-semibold py-2 px-6 rounded-lg cursor-not-allowed shadow" disabled>
-                        تم النشر
-                    </button>
-                @else
-                    @if ($isReady)
-                        <button wire:click="publish" class="w-full bg-orange-500 text-white font-semibold py-2 px-6 rounded-lg shadow hover:bg-orange-600 transition">
-                            نشر الخدمة
-                        </button>
-                    @else
-                        <button class="w-full bg-gray-300 text-gray-500 font-semibold py-2 px-6 rounded-lg cursor-not-allowed shadow" disabled>
-                            لا يمكن النشر - أكمل البيانات
-                        </button>
-                    @endif
-                @endif
-            </div>
-        </div>
-        
+
+
     </div>
 
 
 </div>
-

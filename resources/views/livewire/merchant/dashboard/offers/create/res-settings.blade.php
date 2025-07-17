@@ -15,14 +15,14 @@
                 <!-- مدة الحجز -->
                 <div>
                     <label class="block text-sm font-medium mb-1">
-                        مدة الحجز <span class="text-red-500">*</span>
+                        مدة الحجز <span class="text-red-500" style="font-weight: bold;">*</span>
                     </label>
                     <input type="number" wire:model.lazy="booking_duration" class="w-full border rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300">
                     <p class="text-xs text-gray-500 mt-1">
-                        مدة بقاء تذكرة واحدة في العرض 
+                        مدة بقاء تذكرة واحدة في العرض
                     </p>
                 </div>
-            
+
                 <!-- الوحدة -->
                 <div>
                     <label class="block text-sm font-medium mb-1">
@@ -34,7 +34,7 @@
                     </select>
                 </div>
             </div>
-            
+
         </div>
 
         {{-- Toggle: الوقت بين كل حجز وآخر للمستخدم
@@ -55,7 +55,7 @@
             @endif
         </div>
 
-        {{-- Toggle: الوقت بين كل حجز وآخر للخدمة كاملة 
+        {{-- Toggle: الوقت بين كل حجز وآخر للخدمة كاملة
         <div>
             <div class="flex items-center justify-between">
                 <label class="text-sm font-medium">الوقت بين كل حجز وآخر للخدمة؟</label>
@@ -75,8 +75,8 @@
 
         {{-- Toggle: تحديد أيام وأوقات العمل --}}
         @if ($type == 'restaurant')
-            
-        
+
+
         <div>
             <div class="flex items-center justify-between">
                 <label class="text-sm font-medium">تحديد أوقات وأيام العمل؟</label>
@@ -99,7 +99,7 @@
                         'friday' => 'الجمعة',
                     ];
                 @endphp
-        
+
                 @foreach ($days as $key => $label)
                     <div class="border rounded-md p-4 space-y-2">
                         <div class="flex items-center justify-between">
@@ -110,7 +110,7 @@
                                 <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-full transition-all"></div>
                             </label>
                         </div>
-        
+
                         @if ($work_schedule[$key]['enabled'])
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
@@ -127,8 +127,8 @@
                 @endforeach
             </div>
         @endif
-        
-        
+
+
         </div>
         @endif
 
@@ -205,7 +205,7 @@
                     <label class="block text-sm font-medium mb-1">العدد المسموح</label>
                     <input type="number" wire:model.lazy="max_user_time" class="w-full border rounded-md p-2">
                 </div>
-        
+
                 <div>
                     <label class="block text-sm font-medium mb-1">الوحدة</label>
                     <select wire:model.lazy="max_user_unit" class="w-full border rounded-md p-2">
@@ -217,10 +217,10 @@
                 </div>
             </div>
         @endif
-        
-        
+
+
         </div>
-        
+
         {{-- Toggle: أقصى وقت للحجز قبل البداية --}}
         <div>
             <div class="flex items-center justify-between">
