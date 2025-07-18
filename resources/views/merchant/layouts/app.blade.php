@@ -24,7 +24,7 @@
 </head>
 
 <body class="bg-slate-100 font-sans">
-  <div class="relative h-screen flex overflow-hidden" dir="rtl" x-data="{ openSidebar: false }">
+  <div class="relative h-screen flex overflow-hidden" dir="rtl" x-data="{ openSidebar: true }">
 
 
 
@@ -79,7 +79,7 @@
       <header class="bg-white shadow p-4 sticky top-0 z-30 flex justify-between items-center">
         <!-- نضع العناصر في يسار الشاشة دائمًا مهما كان حجم الجهاز -->
         <div class="flex items-center gap-4 ltr:ml-auto rtl:mr-auto">
-          <a href="{{ route('template1.index', Auth::id()) }}" target="_blank" class="text-slate-600 hover:text-orange-500" aria-label="عرض المتجر">
+          <a href="{{ route('template', Auth::id()) }}" target="_blank" class="text-slate-600 hover:text-orange-500" aria-label="عرض المتجر">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="M1.5 12s4-7.5 10.5-7.5S22.5 12 22.5 12s-4 7.5-10.5 7.5S1.5 12 1.5 12z" />
               <circle cx="12" cy="12" r="3" />
