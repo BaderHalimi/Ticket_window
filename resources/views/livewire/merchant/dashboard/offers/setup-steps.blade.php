@@ -70,7 +70,7 @@
 
             <div class="grid grid-cols-12 gap-6">
                 {{-- خطوات التسجيل - السلم --}}
-                <div class="col-span-4 space-y-2 text-sm text-slate-700">
+                <div class="sm:col-span-4 col-span-12 sm:block flex overflow-x-scroll grid-cols-6 space-y-2 text-sm text-slate-700">
                     @php
                     $steps = [
                     1 => ['title' => 'معلومات الحجز', 'desc' => 'تفاصيل الحجز الأساسية', 'icon' => 'ri-file-info-line'],
@@ -106,7 +106,7 @@
                 </div>
 
                 {{-- نموذج تعبئة المعلومات --}}
-                <div class="col-span-8">
+                <div class="col-span-12 sm:col-span-8">
                     @if ($currentStep === 1)
                     @livewire('merchant.dashboard.offers.create.information', ['offering' => $offering], key('info-'.$offering->id))
                     @elseif ($currentStep === 2)

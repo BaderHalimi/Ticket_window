@@ -6,7 +6,7 @@
         <h2 class="text-3xl font-bold text-slate-800">إدارة الحجوزات</h2>
 
         <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
-            <div class="px-4 py-2">
+            <div class="px-4 py-2 overflow-x-scroll">
                 <table class="w-full caption-bottom text-sm">
                     <thead>
                         <tr class="border-b">
@@ -46,11 +46,11 @@
                                         <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">الغاء</span>
                                     {{-- @else
                                          <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">معلق</span> ---}}
-                                    @endif 
+                                    @endif
                                 </td>
                                 <td class="p-4">
                                     <!-- عرض المبلغ المدفوع -->
-                                    {{ $reservation->amount }} 
+                                    {{ $reservation->amount }}
                                 </td>
                                 <td class="p-4">{{ $reservation->created_at->format('Y-m-d') }}</td>
                                 <td class="p-4 text-center">
