@@ -4,6 +4,7 @@
     <div bis_skin_checked="1" style="opacity: 1; transform: none;">
         <div class="bg-gradient-to-b from-gray-50 to-blue-50 py-12 px-4 font-cairo" dir="rtl" bis_skin_checked="1">
             <div class="mx-[5%]">
+                
                 <div class="container mx-auto" bis_skin_checked="1">
                     <header class="text-center mb-16" style="opacity: 1; transform: none;">
                         <div class="inline-block p-4 bg-orange-500/10 rounded-2xl mb-4" bis_skin_checked="1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-orange-500">
