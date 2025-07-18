@@ -24,16 +24,12 @@
 </head>
 
 <body class="bg-slate-100 font-sans">
-  <div class="relative h-screen flex overflow-hidden" dir="rtl" x-data="{ openSidebar: true }">
-    
-    <!-- ✅ زر البرغر الثابت دائمًا -->
-    <button @click="openSidebar = !openSidebar"
-      class="fixed top-4 right-4 z-50 p-2 rounded-full bg-white shadow-md hover:bg-orange-100 transition">
-      <i class="ri-menu-3-line text-2xl text-slate-800"></i>
-    </button>
+  <div class="relative h-screen flex overflow-hidden" dir="rtl" x-data="{ openSidebar: false }">
+
+
 
     <!-- ✅ السايدبار -->
-    <div 
+    <div
     x-show="openSidebar"
     x-transition:enter="transition-all transform ease-out duration-300"
     x-transition:enter-start="opacity-0 translate-x-full"
@@ -74,7 +70,12 @@
       </aside>
     </div>
 
-    <main class="flex-1 overflow-y-auto">
+    <main class="relative flex-1 overflow-y-auto">
+         <!-- ✅ زر البرغر الثابت دائمًا -->
+    <button @click="openSidebar = !openSidebar"
+      class="absolute top-4 right-4 bg-white z-50 py-2 px-4 rounded-md transition">
+      <i class="ri-menu-3-line text-2xl text-slate-800 hover:text-orange-600"></i>
+    </button>
       <header class="bg-white shadow p-4 sticky top-0 z-30 flex justify-between items-center">
         <!-- نضع العناصر في يسار الشاشة دائمًا مهما كان حجم الجهاز -->
         <div class="flex items-center gap-4 ltr:ml-auto rtl:mr-auto">
@@ -97,7 +98,7 @@
           </div>
         </div>
       </header>
-      <div class="p-6 lg:p-8">
+      <div class="sm:p-6 lg:p-8">
         @yield('content')
       </div>
     </main>
