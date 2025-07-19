@@ -1,5 +1,6 @@
 <?php
 
+//use App\Models\Branch;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PaysHistory;
 use App\Models\page_views;
@@ -12,6 +13,7 @@ use App\Models\Presence;
 use App\Models\role_permission;
 use App\Models\Role;
 use App\Models\MerchantWallet;
+use App\Models\Merchant\Branch;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -555,23 +557,149 @@ if (!function_exists('Peak_Time')) {
     }
     
 }
+if (!function_exists('pending_reservations')) {
+    function pending_reservations($item)
+    {
+        $item = Offering::find($item);
+        if (!$item) {
+            return [];
+        }
+        $reservations = $item->Reservations;
+        return $reservations;
+    
+    }
+}
+if (!function_exists('pending_reservations_at')) {
+    function pending_reservations_at($item, $unit = 'day', $branch = null)
+    {
+        $item = Offering::find($item);
+        if (!$item) {
+            return [];
+        }
+
+        $now = Carbon::now();
+
+        $reservations = $item->Reservations->filter(function ($reservation) use ($now, $unit, $branch) {
+            $createdAt = Carbon::parse($reservation->created_at);
+            $data = json_decode($reservation->additional_data, true);
+
+            if ($branch !== null && (!isset($data['branch']) || $data['branch'] != $branch)) {
+                return false;
+            }
+
+            switch ($unit) {
+                case 'minute':
+                    return $createdAt->diffInMinutes($now) === 0;
+                case 'hour':
+                    return $createdAt->diffInHours($now) === 0;
+                case 'week':
+                    return $createdAt->isSameWeek($now);
+                case 'day':
+                default:
+                    return $createdAt->isSameDay($now);
+            }
+        })->values();
+
+        return $reservations;
+    }
+}
+
+
+
+
 if (!function_exists('can_booking_now')){
-    function can_booking_now($offer_id)
+    function can_booking_now($offer_id,$branch = null)
     {
         $offer = Offering::find($offer_id);
-        
+        if (!$offer->features["max_user_unit"]){
+            return false;
+        }
+        $unit = $offer->features["max_user_unit"];
+        $max_limit = $offer->features["max_user_time"] ?? 0;
+        $res = pending_reservations_at($offer_id, $unit, $branch);
+        //dd($res);
+        if ($res->isEmpty()) {
+            return true;
+        }
+        //$res->count("quantity");
+        $total_quantity = $res->sum("quantity");
+        if ($total_quantity >= $max_limit) {
+            return false;
+        }
+        return true;
+
     }
 }
 if (!function_exists("get_quantity")) {
-    function get_quantity($offer_id)
+    function get_quantity($offer_id,$branch = null)
     {
         $offer = Offering::find($offer_id);
-        if (!$offer) {
+        if (!$offer->features["max_user_unit"]){
+            return false;
+        }
+        $unit = $offer->features["max_user_unit"];
+        $max_limit = $offer->features["max_user_time"] ?? 0;
+        $res = pending_reservations_at($offer_id, $unit, $branch);
+        //dd($res);
+        if ($res->isEmpty()) {
+            return true;
+        }
+        //$res->count("quantity");
+        $total_quantity = $res->sum("quantity");
+        if ($total_quantity >= $max_limit) {
             return 0;
         }
-        $quantity = $offer->features['max_user_time'] ?? 0;
-        $unit = $offer->features['max_user_time_unit'] ?? 'day';
-        dd($quantity, $unit);
-        return (int)$quantity;
+        return $max_limit - $total_quantity;
+
+
+    }
+}
+
+if (!function_exists('get_branches')) {
+    function get_branches($offer_id=null)
+    {
+        if (!$offer_id) {
+            return [];
+        }
+
+        $offer = Offering::find($offer_id);
+        if (!$offer) {
+            return [];
+        }
+        $branches = $offer->features['selected_branches'] ?? [];
+        $branchObjects = Branch::whereIn('id', $branches)->get();
+        
+        if (empty($branches)) {
+            return [];
+        }
+        return $branchObjects;
+    }
+}
+
+if (!function_exists("get_coupons")){
+    function get_coupons($id) {
+        $offer = Offering::find($id);
+        if (!$offer) {
+            return [];
+        }
+        $coupons = $offer->features['coupons'] ?? [];
+        if (empty($coupons)) {
+            return [];
+        }
+        $validCoupons = [];
+        foreach ($coupons as $coupon) {
+            if (isset($coupon['code']) && isset($coupon['discount']) && isset($coupon['expires_at'])) {
+                $validUntil = Carbon::parse($coupon['expires_at']);
+                if ($validUntil->isFuture()) {
+                    $validCoupons[] = [
+                        'code' => $coupon['code'],
+                        'discount' => $coupon['discount'],
+                        'expires_at' => $validUntil->toDateString(),
+                    ];
+                }
+            }
+        }
+
+        return $validCoupons;
     }
 }

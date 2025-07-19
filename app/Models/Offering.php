@@ -38,5 +38,9 @@ class Offering extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function Reservations()
+    {
+        return $this->hasMany(PaidReservation::class, 'item_id');
+    }
     use HasFactory;
 }

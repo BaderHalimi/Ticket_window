@@ -152,8 +152,34 @@
         </div>
     @endif
 
-
     @if ($step == 1)
+    <div class="mb-6">
+        <label for="branch" class="block text-sm font-medium text-gray-700 mb-2">اختر الفرع</label>
+
+        @if ($branch->isNotEmpty())
+            <select wire:model.lazy="selectedBranch" id="branch" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                <option value="">-- اختر فرعاً --</option>
+                @foreach ($branch as $branche)
+                    <option value="{{ $branche->id }}">{{ $branche->name }}</option>
+                @endforeach
+            </select>
+        @else
+            <div class="text-red-500 font-semibold">لا يوجد فروع متاحة حالياً.</div>
+        @endif
+    </div>
+
+    @if ($branchDetails)
+        <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+            <h3 class="text-lg font-bold mb-2">بيانات الفرع</h3>
+            <p><strong>الاسم:</strong> {{ $branchDetails->name }}</p>
+            <p><strong>الموقع:</strong> {{ $branchDetails->location }}</p>
+        </div>
+    @endif
+@endif
+
+
+
+    @if ($step == 2)
             @if ($selectedOffer->type == 'events')
                 @php
                     $currentDate = isset($calendarDate) ? \Carbon\Carbon::parse($calendarDate) : now();
@@ -312,7 +338,7 @@
             
     @endif
 
-@if ($step == 2)
+@if ($step == 3)
     @php
 
         $dayName = Carbon\Carbon::parse($selectedDate)->locale('en')->dayName; // e.g. "Saturday"
@@ -344,7 +370,7 @@
 @endif
 
 
-@if ($step == 3)
+@if ($step == 4)
     <div class="space-y-6">
 
         {{-- السعر الأساسي والستوك --}}
@@ -363,7 +389,7 @@
                     class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
                 -
             </button>
-            <input type="number" wire:model="quantity"
+            <input type="number" wire:model.lazy="quantity"
                    class="w-16 text-center border rounded p-1" min="1" max="{{ $stock }}">
             <button wire:click="increaseQuantity"
                     class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">
@@ -373,7 +399,7 @@
 
         {{-- الكوبون --}}
         <div class="flex items-center space-x-2 rtl:space-x-reverse">
-            <input type="text" wire:model="coupon"
+            <input type="text" wire:model.lazy="couponCode"
                    placeholder="أدخل كود الخصم"
                    class="flex-1 p-2 border rounded">
             <button wire:click="applyCoupon"
@@ -402,7 +428,7 @@
             </button>
             @endif
     
-            @if($step != 4)
+            @if($step != 5)
             <button wire:click="stepNext"
                     class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-xl transition">
                     <i class="ri-arrow-left-line"></i> التالي 

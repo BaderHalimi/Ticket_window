@@ -5,6 +5,7 @@ namespace App\Livewire\Templates;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Offering;
+use App\Models\Merchant\Branch;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -27,7 +28,14 @@ class TemplateRouter extends Component
     public $finalPrice;
     public $discount = 0;
     public $stock = 10;
+    public $branch;
+    public $selectedBranch = null;
+    public $branchDetails;
 
+    public function updatedSelectedBranch($branchId)
+    {
+        $this->branchDetails = Branch::find($branchId);
+    }
     public function previousMonth()
     {
         $this->calendarDate = Carbon::parse($this->calendarDate)->subMonth()->toDateString();
@@ -83,8 +91,9 @@ class TemplateRouter extends Component
     {
         //dd(fetch_time(33));
         //get_quantity(33);
+        //dd(can_booking_now(33,1));
+        //dd(get_coupons(33));
         $this->calendarDate = now()->toDateString();
-
         $this->offers_collection = Offering::where('user_id', $this->merchant->id)->where('status', 'active')->get();
         
         //dd($this->offers_collection, $this->merchant);
@@ -96,6 +105,9 @@ class TemplateRouter extends Component
     public function stepNext(){
         $this->step++;
         $this->Get_time();
+        $this->pricing();
+        $this->Get_Branches();
+
         //logger('Current step: ' . $this->step);
     }
     public function resetForm()
@@ -108,20 +120,102 @@ class TemplateRouter extends Component
         if ($this->step > 0) {
             $this->step--;
             $this->Get_time();
+            $this->pricing();
+
+            $this->Get_Branches();
+
+        }
+    }
+    public function increaseQuantity() {
+        if ($this->quantity >= $this->stock) {
+            return; 
+        }
+        $this->quantity++;
+        $this->updatePricing();
+
+
+    }
+
+    public function decreaseQuantity() {
+        if ($this->quantity > 1 && $this->quantity <= $this->stock) {
+            $this->quantity--;
+            $this->updatePricing();
+
+
+        }
+    }
+    public function selectTime($time)
+    {
+        $this->selectedTime = $time;
+    }
+    public function applyCoupon() {
+        $coupons = collect(get_coupons($this->selectedOffer->id));
+
+        if ($coupons->isEmpty()) {
+            $this->dispatch('alert', [
+                'type' => 'error',
+                'message' => 'لا توجد كوبونات متاحة لهذا العرض.',
+            ]);
+            return;
+        }
+        $coupon = $coupons->first(fn($item) => $item['code'] === $this->couponCode);
+
+        //dd($coupon, $this->couponCode);
+        if (!$coupon) {
+            $this->dispatch('alert', [
+                'type' => 'error',
+                'message' => 'الكوبون غير صالح.',
+            ]);
+            return;
+        }
+
+        if (\Carbon\Carbon::parse($coupon['expires_at'])->isPast()) {
+            $this->dispatch('alert', [
+                'type' => 'error',
+                'message' => 'الكوبون منتهي الصلاحية.',
+            ]);
+            return;
+        }
+
+        $this->couponCode = $coupon['code'];
+        $this->discount = (float) $coupon['discount'];
+        $this->updatePricing();
+    }
+
+    public function updatePricing(){
+        $this->finalPrice = ($this->price * $this->quantity) * (1 - $this->discount / 100);
+    }
+
+    public function pricing(){
+        if ($this->selectedOffer && $this->step === 4) {
+            $this->price = $this->selectedOffer->price;
+            $this->stock = get_quantity($this->selectedOffer->id,$this->selectedBranch);
+            $this->finalPrice = $this->price * $this->quantity;
+
         }
     }
 
     public function Get_time(){
-        if ($this->step === 1){
+        if ($this->step === 2){
             $this->times = fetch_time($this->selectedOffer->id);
         }
         //dd($offer_time);
     }
-
+    
+    public function Get_Branches(){
+        if ($this->step === 1){
+            $this->branch = get_branches($this->selectedOffer->id);
+            //dd($this->branch);
+        }
+        //dd($offer_time);
+    }
+    
     public function render()
     {
         //dd($this->merchant);
-
+        if ($this->step == 4){
+            $this->updatePricing();
+        }
 
         return view('livewire.templates.template1.index');
     }
