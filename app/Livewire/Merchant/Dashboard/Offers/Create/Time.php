@@ -18,6 +18,7 @@ class Time extends Component
         'from' => null,
         'to' => null,
     ];
+    public $max_reservation_date;
     
     public function mount()
     {
@@ -28,6 +29,7 @@ class Time extends Component
     
             if ($this->offering->type == 'services') {
                 // تهيئة المصفوفات
+                $this->max_reservation_date = $features['max_reservation_date'] ?? null;
                 $this->day = [
                     'saturday' => false,
                     'sunday' => false,
@@ -90,7 +92,7 @@ class Time extends Component
         $features = $this->offering->features ?? [];
     
         $features['enabled'] = $this->enable_time;
-    
+        $features['max_reservation_date'] = $this->max_reservation_date ?? null;
         if ($this->offering->type == 'services') {
             $features['type'] = 'service';
             $features['days'] = [];

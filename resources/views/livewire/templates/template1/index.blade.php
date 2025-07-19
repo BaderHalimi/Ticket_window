@@ -154,76 +154,198 @@
 
 
     @if ($step == 1)
-    @php
-        $currentDate = isset($calendarDate) ? \Carbon\Carbon::parse($calendarDate) : now();
-        $startOfMonth = $currentDate->copy()->startOfMonth();
-        $endOfMonth = $currentDate->copy()->endOfMonth();
-        $firstDayOfWeek = $startOfMonth->dayOfWeek;
-        $daysInMonth = $currentDate->daysInMonth;
-        $rangeStart = \Carbon\Carbon::parse($times['data'][0]['start_date']);
-        $rangeEnd = \Carbon\Carbon::parse($times['data'][0]['end_date']);
-        $today = now()->toDateString();
-    @endphp
-
-    <div class="space-y-4">
-        {{-- عنوان وشهر --}}
-        <div class="flex justify-between items-center">
-            <button wire:click="previousMonth" class="text-slate-500 hover:text-orange-500 text-xl">
-                <i class="ri-arrow-left-s-line"></i>
-            </button>
-            <h3 class="text-lg font-semibold text-slate-800">
-                <i class="ri-calendar-line text-orange-500 text-xl"></i>
-                {{ $currentDate->format('F Y') }}
-            </h3>
-            <button wire:click="nextMonth" class="text-slate-500 hover:text-orange-500 text-xl">
-                <i class="ri-arrow-right-s-line"></i>
-            </button>
-        </div>
-
-        {{-- أسماء الأيام --}}
-        <div class="grid grid-cols-7 gap-2 text-center text-slate-500 font-medium text-sm">
-            <div>أحد</div>
-            <div>اثنين</div>
-            <div>ثلاثاء</div>
-            <div>أربعاء</div>
-            <div>خميس</div>
-            <div>جمعة</div>
-            <div>سبت</div>
-        </div>
-
-        {{-- تقويم الشهر --}}
-        <div class="grid grid-cols-7 gap-2 text-center text-sm">
-            @for ($i = 0; $i < $firstDayOfWeek; $i++)
-                <div></div> {{-- فراغات قبل أول يوم --}}
-            @endfor
-
-            @for ($day = 1; $day <= $daysInMonth; $day++)
+            @if ($selectedOffer->type == 'events')
                 @php
-                    $date = $currentDate->copy()->day($day);
-                    $dateString = $date->toDateString();
-                    $inRange = $date->between($rangeStart, $rangeEnd);
-                    $isToday = $dateString === $today;
-                    $isSelected = isset($selectedDate) && $dateString === $selectedDate;
+                    $currentDate = isset($calendarDate) ? \Carbon\Carbon::parse($calendarDate) : now();
+                    $startOfMonth = $currentDate->copy()->startOfMonth();
+                    $endOfMonth = $currentDate->copy()->endOfMonth();
+                    $firstDayOfWeek = $startOfMonth->dayOfWeek;
+                    $daysInMonth = $currentDate->daysInMonth;
+                    $rangeStart = \Carbon\Carbon::parse($times['data'][0]['start_date']);
+                    $rangeEnd = \Carbon\Carbon::parse($times['data'][0]['end_date']);
+                    $today = now()->toDateString();
                 @endphp
 
-                @if ($inRange)
-                    <button wire:click="selectDate('{{ $dateString }}')"
-                            class="py-2 rounded-xl border font-medium transition
-                            {{ $isSelected ? 'bg-orange-500 text-white border-orange-600' : ($isToday ? 'bg-orange-100 border-orange-300 text-slate-700' : 'bg-slate-100 hover:bg-orange-100 border-slate-200 text-slate-700') }}">
-                        {{ $day }}
-                    </button>
-                @else
-                    <div class="py-2 rounded-xl border border-slate-100 text-slate-300 line-through bg-gray-100 cursor-not-allowed">
-                        {{ $day }}
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <button wire:click="previousMonth" class="text-slate-500 hover:text-orange-500 text-xl">
+                            <i class="ri-arrow-left-s-line"></i>
+                        </button>
+                        <h3 class="text-lg font-semibold text-slate-800">
+                            <i class="ri-calendar-line text-orange-500 text-xl"></i>
+                            {{ $currentDate->format('F Y') }}
+                        </h3>
+                        <button wire:click="nextMonth" class="text-slate-500 hover:text-orange-500 text-xl">
+                            <i class="ri-arrow-right-s-line"></i>
+                        </button>
                     </div>
-                @endif
-            @endfor
-        </div>
+
+                    {{-- أسماء الأيام --}}
+                    <div class="grid grid-cols-7 gap-2 text-center text-slate-500 font-medium text-sm">
+                        <div>أحد</div>
+                        <div>اثنين</div>
+                        <div>ثلاثاء</div>
+                        <div>أربعاء</div>
+                        <div>خميس</div>
+                        <div>جمعة</div>
+                        <div>سبت</div>
+                    </div>
+
+                    {{-- تقويم الشهر --}}
+                    <div class="grid grid-cols-7 gap-2 text-center text-sm">
+                        @for ($i = 0; $i < $firstDayOfWeek; $i++)
+                            <div></div> {{-- فراغات قبل أول يوم --}}
+                        @endfor
+
+                        @for ($day = 1; $day <= $daysInMonth; $day++)
+                            @php
+                                $date = $currentDate->copy()->day($day);
+                                $dateString = $date->toDateString();
+                                $inRange = $date->between($rangeStart, $rangeEnd);
+                                $isToday = $dateString === $today;
+                                $isSelected = isset($selectedDate) && $dateString === $selectedDate;
+                            @endphp
+
+                            @if ($inRange)
+                                <button wire:click="selectDate('{{ $dateString }}')"
+                                        class="py-2 rounded-xl border font-medium transition
+                                        {{ $isSelected ? 'bg-orange-500 text-white border-orange-600' : ($isToday ? 'bg-orange-100 border-orange-300 text-slate-700' : 'bg-slate-100 hover:bg-orange-100 border-slate-200 text-slate-700') }}">
+                                    {{ $day }}
+                                </button>
+                            @else
+                                <div class="py-2 rounded-xl border border-slate-100 text-slate-300 line-through bg-gray-100 cursor-not-allowed">
+                                    {{ $day }}
+                                </div>
+                            @endif
+                        @endfor
+                    </div>
+                </div>
+            @elseif ($selectedOffer->type == 'services')
+                @php
+                    $currentDate = isset($calendarDate) ? \Carbon\Carbon::parse($calendarDate) : now();
+                    $startOfMonth = $currentDate->copy()->startOfMonth();
+                    $endOfMonth = $currentDate->copy()->endOfMonth();
+                    $firstDayOfWeek = $startOfMonth->dayOfWeek;
+                    $daysInMonth = $currentDate->daysInMonth;
+                    $today = now()->toDateString();
+                    $maxDate = isset($times['max_reservation_date']) ? \Carbon\Carbon::parse($times['max_reservation_date']) : null;
+            
+                    $availableDays = array_filter($times['data'] ?? [], function ($day) {
+                        return !empty($day['enabled']) && !empty($day['from']) && !empty($day['to']);
+                    });
+                    //dd($availableDays);
+            
+                    // تحويل أسماء الأيام من الإنجليزية إلى أرقام Carbon
+                    $dayToCarbon = [
+                        'sunday' => 0,
+                        'monday' => 1,
+                        'tuesday' => 2,
+                        'wednesday' => 3,
+                        'thursday' => 4,
+                        'friday' => 5,
+                        'saturday' => 6,
+                    ];
+                @endphp
+            
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <button wire:click="previousMonth" class="text-slate-500 hover:text-orange-500 text-xl">
+                            <i class="ri-arrow-left-s-line"></i>
+                        </button>
+                        <h3 class="text-lg font-semibold text-slate-800">
+                            <i class="ri-calendar-line text-orange-500 text-xl"></i>
+                            {{ $currentDate->format('F Y') }}
+                        </h3>
+                        <button wire:click="nextMonth" class="text-slate-500 hover:text-orange-500 text-xl">
+                            <i class="ri-arrow-right-s-line"></i>
+                        </button>
+                    </div>
+            
+                    {{-- أسماء الأيام --}}
+                    <div class="grid grid-cols-7 gap-2 text-center text-slate-500 font-medium text-sm">
+                        <div>أحد</div>
+                        <div>اثنين</div>
+                        <div>ثلاثاء</div>
+                        <div>أربعاء</div>
+                        <div>خميس</div>
+                        <div>جمعة</div>
+                        <div>سبت</div>
+                    </div>
+            
+                    {{-- تقويم الشهر --}}
+                    <div class="grid grid-cols-7 gap-2 text-center text-sm">
+                        @for ($i = 0; $i < $firstDayOfWeek; $i++)
+                            <div></div> {{-- فراغات قبل أول يوم --}}
+                        @endfor
+            
+                        @for ($day = 1; $day <= $daysInMonth; $day++)
+                            @php
+                                $date = $currentDate->copy()->day($day);
+                                $dateString = $date->toDateString();
+                                $isToday = $dateString === $today;
+                                $isSelected = isset($selectedDate) && $dateString === $selectedDate;
+                                $dayOfWeek = $date->dayOfWeek; // 0 (الأحد) إلى 6 (السبت)
+            
+                                $dayName = array_search($dayOfWeek, $dayToCarbon); // نحصل على اسم اليوم بالنص
+                                $isDayAvailable = isset($availableDays[$dayName]);
+            
+                                $withinMaxDate = !$maxDate || $date->lte($maxDate);
+                                $inFuture = $date->isSameDay(now()) || $date->isAfter(now());
+                                $canReserve = $isDayAvailable && $inFuture && $withinMaxDate;
+                            @endphp
+            
+                            @if ($canReserve)
+                                <button wire:click="selectDate('{{ $dateString }}')"
+                                        class="py-2 rounded-xl border font-medium transition
+                                        {{ $isSelected ? 'bg-orange-500 text-white border-orange-600' : ($isToday ? 'bg-orange-100 border-orange-300 text-slate-700' : 'bg-slate-100 hover:bg-orange-100 border-slate-200 text-slate-700') }}">
+                                    {{ $day }}
+                                </button>
+                            @else
+                                <div class="py-2 rounded-xl border border-slate-100 text-slate-300 line-through bg-gray-100 cursor-not-allowed">
+                                    {{ $day }}
+                                </div>
+                            @endif
+                        @endfor
+                    </div>
+                </div>
+            @endif
+            
+    @endif
+
+@if ($step == 2)
+    @php
+
+        $dayName = Carbon\Carbon::parse($selectedDate)->locale('en')->dayName; // e.g. "Saturday"
+        $dayName = strtolower($dayName); // Ensure match with array keys
+        $minTime = '00:00';
+        $maxTime = '23:59';
+
+        if ($selectedOffer->type == 'events') {
+            $minTime = $times['data'][0]['start_time'] ?? '00:00';
+            $maxTime = $times['data'][0]['end_time'] ?? '23:59';
+        } elseif ($selectedOffer->type == 'services' && isset($times['data'][$dayName])) {
+            $minTime = $times['data'][$dayName]['from'] ?? '00:00';
+            $maxTime = $times['data'][$dayName]['to'] ?? '23:59';
+        }
+    @endphp
+
+    <div class="mt-4">
+        <label for="selected_time" class="block text-sm font-medium text-gray-700">اختر الوقت:</label>
+        <input
+            type="time"
+            id="selected_time"
+            wire:model.defer="selectedTime"
+            min="{{ $minTime }}"
+            max="{{ $maxTime }}"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+        >
+        <p class="text-xs text-gray-500 mt-1">من {{ $minTime }} إلى {{ $maxTime }}</p>
     </div>
 @endif
 
 
-    
+
+
        
 
     <div class="mt-6">
@@ -236,7 +358,6 @@
             </button>
             @endif
     
-            {{-- زر التالي أو الحجز --}}
             @if($step != 3)
             <button wire:click="stepNext"
                     class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-xl transition">
@@ -256,6 +377,5 @@
 </div> 
 @endif
 
-    {{-- مساحة للفصل --}}
-    <div class="h-24"></div>
+    
 </div>

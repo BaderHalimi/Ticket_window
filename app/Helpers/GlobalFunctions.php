@@ -296,11 +296,14 @@ if (!function_exists('fetch_time')) {
                     'from' => $info['from'] ?? null,
                     'to' => $info['to'] ?? null,
                 ];
+
             }
+            
 
             return [
                 'type' => 'service',
                 'data' => $data,
+                'max_reservation_date' => $features['max_reservation_date'] ?? null,
             ];
         }
 

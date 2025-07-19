@@ -46,7 +46,16 @@
                             @endif
                         </div>
                     @endforeach
-                </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2">آخر تاريخ متاح للحجز <span class="text-red-500">*</span></label>
+                        <input
+                            type="date"
+                            wire:model.lazy="max_reservation_date"
+                            min="{{ now()->toDateString() }}"
+                            class="w-full border rounded-md p-2"
+                        >
+                        <p class="text-sm text-gray-500 mt-1">لن يتمكن العملاء من الحجز بعد هذا التاريخ. حتى يتم تجديده</p>
+                    </div>                </div>
             </div>
         @endif
 
