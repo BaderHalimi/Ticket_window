@@ -344,7 +344,51 @@
 @endif
 
 
+@if ($step == 3)
+    <div class="space-y-6">
 
+        {{-- السعر الأساسي والستوك --}}
+        <div class="flex justify-between items-center">
+            <div class="text-lg font-semibold">
+                السعر: {{ $price }} د.ج
+            </div>
+            <div class="text-sm text-gray-600">
+                الكمية المتوفرة: {{ $stock }}
+            </div>
+        </div>
+
+        {{-- التحكم في الكمية --}}
+        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+            <button wire:click="decreaseQuantity"
+                    class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                -
+            </button>
+            <input type="number" wire:model="quantity"
+                   class="w-16 text-center border rounded p-1" min="1" max="{{ $stock }}">
+            <button wire:click="increaseQuantity"
+                    class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">
+                +
+            </button>
+        </div>
+
+        {{-- الكوبون --}}
+        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+            <input type="text" wire:model="coupon"
+                   placeholder="أدخل كود الخصم"
+                   class="flex-1 p-2 border rounded">
+            <button wire:click="applyCoupon"
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                تحقق
+            </button>
+        </div>
+
+        {{-- السعر النهائي --}}
+        <div class="text-xl font-bold text-right">
+            السعر النهائي: {{ $finalPrice }} د.ج
+        </div>
+
+    </div>
+@endif
 
        
 
@@ -358,7 +402,7 @@
             </button>
             @endif
     
-            @if($step != 3)
+            @if($step != 4)
             <button wire:click="stepNext"
                     class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-xl transition">
                     <i class="ri-arrow-left-line"></i> التالي 

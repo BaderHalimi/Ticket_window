@@ -555,3 +555,23 @@ if (!function_exists('Peak_Time')) {
     }
     
 }
+if (!function_exists('can_booking_now')){
+    function can_booking_now($offer_id)
+    {
+        $offer = Offering::find($offer_id);
+        
+    }
+}
+if (!function_exists("get_quantity")) {
+    function get_quantity($offer_id)
+    {
+        $offer = Offering::find($offer_id);
+        if (!$offer) {
+            return 0;
+        }
+        $quantity = $offer->features['max_user_time'] ?? 0;
+        $unit = $offer->features['max_user_time_unit'] ?? 'day';
+        dd($quantity, $unit);
+        return (int)$quantity;
+    }
+}

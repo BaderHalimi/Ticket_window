@@ -20,7 +20,13 @@ class TemplateRouter extends Component
 
     public $calendarDate;
     public $selectedDate;
-    public $selectedTime;
+
+    public $price = 1000;
+    public $quantity = 1;
+    public $couponCode = '';
+    public $finalPrice;
+    public $discount = 0;
+    public $stock = 10;
 
     public function previousMonth()
     {
@@ -76,6 +82,7 @@ class TemplateRouter extends Component
     public function mount($merchant, $offers_collection = null)
     {
         //dd(fetch_time(33));
+        //get_quantity(33);
         $this->calendarDate = now()->toDateString();
 
         $this->offers_collection = Offering::where('user_id', $this->merchant->id)->where('status', 'active')->get();
