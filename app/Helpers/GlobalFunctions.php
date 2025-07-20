@@ -300,7 +300,7 @@ if (!function_exists('fetch_time')) {
                 ];
 
             }
-            
+
 
             return [
                 'type' => 'service',
@@ -446,7 +446,7 @@ if (!function_exists('clear_offers')) {
             if (!in_array("true",hasEssentialFields($offer->id)['fields'])) {
                 $offer->delete();
             }
-            
+
         }
     }
 }
@@ -499,6 +499,15 @@ if(!function_exists('get_statistics')){
     function get_statistics($user_id)
     {
         $wallet = MerchantWallet::where('merchant_id', $user_id)->first();
+        if (!$wallet) {
+            $wallet = MerchantWallet::create([
+                'merchant_id' => $user_id,
+                'balance' => 0,
+                'locked_balance' => 0,
+                'withdrawn_total' => 0,
+                'additional_data' => [],
+            ]);
+        }
         $txns = $wallet->transactions()->get();
         $offers = $txns->map(function ($txn) {return $txn->item;})->unique('id');
         $offersPercent = $offers->map(function ($offer) use ($txns) {
@@ -528,7 +537,7 @@ if (!function_exists('Peak_Time')) {
     function Peak_Time($user_id)
     {
         $from = Carbon::now()->subDays(30);
-    
+
         $purchases = DB::table('paid_reservations')
             ->join('offerings', 'paid_reservations.item_id', '=', 'offerings.id')
             ->where('offerings.user_id', $user_id)
@@ -538,12 +547,12 @@ if (!function_exists('Peak_Time')) {
             ->orderBy('day')
             ->orderBy('hour')
             ->get();
-    
+
         $days = [1 => 'الأحد', 2 => 'الاثنين', 3 => 'الثلاثاء', 4 => 'الأربعاء', 5 => 'الخميس', 6 => 'الجمعة', 7 => 'السبت'];
         $hours = range(0, 23);
-    
+
         $result = [];
-    
+
         foreach ($days as $dayNum => $dayName) {
             $row = [];
             foreach ($hours as $hour) {
@@ -552,10 +561,10 @@ if (!function_exists('Peak_Time')) {
             }
             $result[$dayName] = $row;
         }
-    
-        return $result; 
+
+        return $result;
     }
-    
+
 }
 if (!function_exists('pending_reservations')) {
     function pending_reservations($item)
@@ -566,7 +575,7 @@ if (!function_exists('pending_reservations')) {
         }
         $reservations = $item->Reservations;
         return $reservations;
-    
+
     }
 }
 if (!function_exists('pending_reservations_at')) {
@@ -668,7 +677,7 @@ if (!function_exists('get_branches')) {
         }
         $branches = $offer->features['selected_branches'] ?? [];
         $branchObjects = Branch::whereIn('id', $branches)->get();
-        
+
         if (empty($branches)) {
             return [];
         }
