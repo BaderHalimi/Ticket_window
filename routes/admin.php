@@ -7,7 +7,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Withdraw_checking;
-
+Route::get('/', function () {
+    return redirect()->route('dashboard.overview');
+})->middleware('auth:admin');
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:admin'])->group(function () {
 
     Route::get('', function () {
