@@ -47,7 +47,7 @@
 
 <body class="font-sans">
     @yield('content')
-    <footer class="bg-slate-900 text-white py-12">
+    {{-- <footer class="bg-slate-900 text-white py-12">
         <div class="mx-[5%]">
             <div class="container mx-auto px-4" bis_skin_checked="1">
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8" bis_skin_checked="1">
@@ -93,7 +93,7 @@
                 </div>
             </div>
         </div>
-    </footer>
+    </footer> --}}
     @livewireScripts
     @stack('scripts')
     <script>
