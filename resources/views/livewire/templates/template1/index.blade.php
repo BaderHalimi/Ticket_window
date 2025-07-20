@@ -417,6 +417,59 @@
 @endif
 
        
+@if ($step == 5)
+    @if ($this->is_ready())
+        <div class="space-y-6 bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">مراجعة الحجز</h2>
+
+            {{-- بيانات الفرع --}}
+            <div>
+                <h3 class="font-semibold text-gray-700">الفرع:</h3>
+                <p>{{ $selectedBranchData['name'] ?? 'غير محدد' }}</p>
+                <p class="text-sm text-gray-500">{{ $selectedBranchData['location'] ?? '' }}</p>
+            </div>
+
+            {{-- التاريخ والوقت --}}
+            <div>
+                <h3 class="font-semibold text-gray-700">التاريخ والوقت:</h3>
+                <p>{{ $selectedDate }}</p>
+                <p>{{ $selectedTime }}</p>
+            </div>
+
+            {{-- السعر والكمية --}}
+            <div>
+                <h3 class="font-semibold text-gray-700">السعر:</h3>
+                <p>{{ $price }} دج x {{ $quantity }} = <strong>{{ $price * $quantity }} دج</strong></p>
+            </div>
+
+            {{-- الكوبون --}}
+            @if ($appliedCoupon)
+                <div>
+                    <h3 class="font-semibold text-gray-700">الكوبون:</h3>
+                    <p>تم تطبيق الكوبون <strong>{{ $couponCode }}</strong>، الخصم: {{ $discount }} دج</p>
+                </div>
+            @endif
+
+            {{-- السعر النهائي --}}
+            <div class="text-lg font-bold text-green-600">
+                السعر النهائي: {{ $finalPrice }} دج
+            </div>
+
+            {{-- زر التأكيد --}}
+            <div class="pt-4">
+                <button wire:click="confirmBooking" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition">
+                    تأكيد الحجز
+                </button>
+            </div>
+        </div>
+    @else
+        <div class="text-center text-red-600 font-semibold py-10">
+            لا يمكن عرض المعاينة حالياً، يرجى التأكد من إدخال جميع البيانات بشكل صحيح.
+        </div>
+    @endif
+@endif
+
+
 
     <div class="mt-6">
         <div class="flex justify-between gap-4">

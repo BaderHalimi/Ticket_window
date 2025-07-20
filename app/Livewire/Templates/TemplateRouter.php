@@ -106,6 +106,7 @@ class TemplateRouter extends Component
         $this->step++;
         $this->Get_time();
         $this->pricing();
+        $this->is_ready();
         $this->Get_Branches();
 
         //logger('Current step: ' . $this->step);
@@ -121,7 +122,7 @@ class TemplateRouter extends Component
             $this->step--;
             $this->Get_time();
             $this->pricing();
-
+            $this->is_ready();
             $this->Get_Branches();
 
         }
@@ -162,6 +163,9 @@ class TemplateRouter extends Component
 
         //dd($coupon, $this->couponCode);
         if (!$coupon) {
+            $this->discount = 0;
+            $this->couponCode = '';
+
             $this->dispatch('alert', [
                 'type' => 'error',
                 'message' => 'الكوبون غير صالح.',
@@ -170,6 +174,8 @@ class TemplateRouter extends Component
         }
 
         if (\Carbon\Carbon::parse($coupon['expires_at'])->isPast()) {
+            $this->discount = 0;
+            $this->couponCode = '';
             $this->dispatch('alert', [
                 'type' => 'error',
                 'message' => 'الكوبون منتهي الصلاحية.',
@@ -179,10 +185,15 @@ class TemplateRouter extends Component
 
         $this->couponCode = $coupon['code'];
         $this->discount = (float) $coupon['discount'];
+    }
+    public function UpdateCopoun(){
+        $this->applyCoupon();
         $this->updatePricing();
+
     }
 
     public function updatePricing(){
+        $this->applyCoupon();
         $this->finalPrice = ($this->price * $this->quantity) * (1 - $this->discount / 100);
     }
 
@@ -209,7 +220,69 @@ class TemplateRouter extends Component
         }
         //dd($offer_time);
     }
-    
+    public function ready() {
+    if (
+        $this->selectedOffer &&
+        $this->selectedTime &&
+        $this->selectedDate &&
+        $this->quantity &&
+        $this->finalPrice
+    ) {
+        if ($this->selectedOffer->type == 'services') {
+            if (get_branches($this->selectedOffer->id)->isNotEmpty()){
+                if (!$this->selectedBranch) {
+                    $this->dispatch('alert', [
+                        'type' => 'error',
+                        'message' => 'يرجى اختيار فرع قبل المتابعة.',
+                    ]);
+                    return false;
+                }
+
+                if (!can_booking_now($this->selectedOffer->id, $this->selectedBranch)) {
+                    $this->dispatch('alert', [
+                        'type' => 'error',
+                        'message' => 'لا يمكن الحجز الآن لهذا العرض.',
+                    ]);
+                    return false;
+                }
+
+            
+            }else {
+                if (!can_booking_now($this->selectedOffer->id)) {
+                    $this->dispatch('alert', [
+                        'type' => 'error',
+                        'message' => 'لا يمكن الحجز الآن لهذا العرض.',
+                    ]);
+                    return false;
+                }
+            }
+
+        }
+
+        if ($this->selectedOffer->type == 'events') {
+            if (!can_booking_now($this->selectedOffer->id)) {
+                $this->dispatch('alert', [
+                    'type' => 'error',
+                    'message' => 'لا يمكن الحجز الآن لهذا العرض.',
+                ]);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    return false; // مهم جداً
+}
+
+    public function is_ready(){
+        if ($this->step == 5){
+            return $this->ready();
+        } else {
+            return false;
+        }
+    }
+
     public function render()
     {
         //dd($this->merchant);
