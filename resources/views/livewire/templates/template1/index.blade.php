@@ -156,7 +156,7 @@
     <div class="mb-6">
         <label for="branch" class="block text-sm font-medium text-gray-700 mb-2">اختر الفرع</label>
 
-        @if ($branch->isNotEmpty())
+        @if ($selectedOffer->type === "services" && $branch->isNotEmpty())
             <select wire:model.lazy="selectedBranch" id="branch" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500">
                 <option value="">-- اختر فرعاً --</option>
                 @foreach ($branch as $branche)
