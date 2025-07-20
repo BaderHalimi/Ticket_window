@@ -25,6 +25,7 @@ class TemplateRouter extends Component
     public $price = 1000;
     public $quantity = 1;
     public $couponCode = '';
+    public $coupon;
     public $finalPrice;
     public $discount = 0;
     public $stock = 10;
@@ -182,7 +183,7 @@ class TemplateRouter extends Component
             ]);
             return;
         }
-
+        $this->coupon = $coupon;
         $this->couponCode = $coupon['code'];
         $this->discount = (float) $coupon['discount'];
     }

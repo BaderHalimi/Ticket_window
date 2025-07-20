@@ -443,7 +443,7 @@
             </div>
 
             {{-- الكوبون --}}
-            @if ($appliedCoupon)
+            @if ($coupon)
                 <div>
                     <h3 class="font-semibold text-gray-700">الكوبون:</h3>
                     <p>تم تطبيق الكوبون <strong>{{ $couponCode }}</strong>، الخصم: {{ $discount }} دج</p>
@@ -456,11 +456,8 @@
             </div>
 
             {{-- زر التأكيد --}}
-            <div class="pt-4">
-                <button wire:click="confirmBooking" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition">
-                    تأكيد الحجز
-                </button>
-            </div>
+
+        
         </div>
     @else
         <div class="text-center text-red-600 font-semibold py-10">
