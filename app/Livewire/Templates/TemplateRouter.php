@@ -8,7 +8,7 @@ use App\Models\Offering;
 use App\Models\Merchant\Branch;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-
+use App\Models\Cart;
 class TemplateRouter extends Component
 {
     public $merchant;
@@ -101,7 +101,11 @@ class TemplateRouter extends Component
     }
     public function selectOffer($value)
     {
+        if ($value == $this->selectedOffer){return ;}
+        $this->resetForm();
+        $this->step = 0;
         $this->selectedOffer = Offering::find($value);
+
     }
     public function stepNext(){
         $this->step++;
@@ -109,6 +113,9 @@ class TemplateRouter extends Component
         $this->pricing();
         $this->is_ready();
         $this->Get_Branches();
+        if ($this->step == 6) {
+            $this->save();
+        }
 
         //logger('Current step: ' . $this->step);
     }
@@ -116,6 +123,22 @@ class TemplateRouter extends Component
     {
         $this->selectedOffer = null;
         $this->step = 0;
+        $this->selectedTime = null;
+        $this->selectedDate = null;
+        $this->price = null;
+        $this->quantity = 1;
+        $this->couponCode = '';
+        $this->coupon = null;
+        $this->finalPrice = null;
+        $this->discount = 0;
+        $this->stock = null;
+        $this->branch = null;
+        $this->selectedBranch = null;
+        $this->branchDetails = null;
+
+        $this->times = null;
+        $this->calendarDate = now()->toDateString();
+    
     }
     public function stepBack()
     {
@@ -137,6 +160,7 @@ class TemplateRouter extends Component
 
 
     }
+
 
     public function decreaseQuantity() {
         if ($this->quantity > 1 && $this->quantity <= $this->stock) {
@@ -281,6 +305,48 @@ class TemplateRouter extends Component
             return $this->ready();
         } else {
             return false;
+        }
+    }
+    public function save(){
+        if($this->is_ready()){
+            $user = Auth::user();
+            $branchId = $this->selectedBranch ? $this->selectedBranch : null;
+
+            // $reservation = $user->reservations()->create([
+            //     'offering_id' => $this->selectedOffer->id,
+            //     'branch_id' => $branchId,
+            //     'quantity' => $this->quantity,
+            //     'price' => $this->finalPrice,
+            //     'discount' => $this->discount,
+            //     'additional_data' => json_encode([
+            //         'selected_date' => $this->selectedDate,
+            //         'selected_time' => $this->selectedTime,
+            //         'coupon_code' => $this->couponCode,
+            //         'branch' => $this->selectedBranch,
+            //     ])
+        
+            // ]);
+            $cart = Cart::create([
+                'item_id' => $this->selectedOffer->id,
+                'item_type' => 'offering',
+                'user_id' => $user->id,
+                'quantity' => $this->quantity,
+                'price' => $this->finalPrice,
+                'discount' => $this->discount,
+                'additional_data' => json_encode([
+                    'selected_date' => $this->selectedDate,
+                    'selected_time' => $this->selectedTime,
+                    'coupon_code' => $this->couponCode,
+                    'branch' => $branchId,
+                ]),
+            ]);
+
+
+            $this->resetForm();
+
+            session()->flash('message', 'تم الحجز بنجاح!');
+        } else {
+            session()->flash('error', 'يرجى التأكد من ملء جميع الحقول المطلوبة.');
         }
     }
 
