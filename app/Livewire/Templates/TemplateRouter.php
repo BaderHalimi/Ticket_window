@@ -101,7 +101,10 @@ class TemplateRouter extends Component
     }
     public function selectOffer($value)
     {
-        if ($value == $this->selectedOffer){return ;}
+        if (isset($this->selectedOffer) && isset($this->selectedOffer->id) && $value == $this->selectedOffer->id) {
+            return;
+        }   
+
         $this->resetForm();
         $this->step = 0;
         $this->selectedOffer = Offering::find($value);
@@ -121,6 +124,7 @@ class TemplateRouter extends Component
     }
     public function resetForm()
     {
+
         $this->selectedOffer = null;
         $this->step = 0;
         $this->selectedTime = null;
@@ -146,7 +150,6 @@ class TemplateRouter extends Component
             $this->step--;
             $this->Get_time();
             $this->pricing();
-            $this->is_ready();
             $this->Get_Branches();
 
         }
@@ -308,7 +311,7 @@ class TemplateRouter extends Component
         }
     }
     public function save(){
-        if($this->is_ready()){
+        if($this->ready() && $this->step == 6) {
             $user = Auth::user();
             $branchId = $this->selectedBranch ? $this->selectedBranch : null;
 
@@ -326,23 +329,24 @@ class TemplateRouter extends Component
             //     ])
         
             // ]);
+            //dd(Auth::guard('merchant')->id());
             $cart = Cart::create([
                 'item_id' => $this->selectedOffer->id,
-                'item_type' => 'offering',
-                'user_id' => $user->id,
+                'item_type' => $this->selectedOffer->type,
+                'user_id' => Auth::guard('merchant')->id(),
                 'quantity' => $this->quantity,
                 'price' => $this->finalPrice,
                 'discount' => $this->discount,
-                'additional_data' => json_encode([
+                'additional_data' => [
                     'selected_date' => $this->selectedDate,
                     'selected_time' => $this->selectedTime,
                     'coupon_code' => $this->couponCode,
                     'branch' => $branchId,
-                ]),
+                ],
             ]);
 
 
-            $this->resetForm();
+            //$this->resetForm();
 
             session()->flash('message', 'تم الحجز بنجاح!');
         } else {

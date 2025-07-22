@@ -467,10 +467,33 @@
 @endif
 
 
+@if ($step == 6)
+    <div class="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-10 space-y-6 text-center">
+        {{-- الأيقونة --}}
+        <div class="w-24 h-24 rounded-full bg-green-100 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
 
+        {{-- الرسالة --}}
+        <h2 class="text-2xl font-bold text-green-700">تمت الإضافة بنجاح</h2>
+        <p class="text-gray-600">تمت إضافة العرض إلى السلة بنجاح. يمكنك متابعة التسوق أو الانتقال إلى السلة لإتمام الحجز.</p>
+
+        {{-- زر الانتقال --}}
+        <div class="space-x-4">
+            <a href="" class="inline-block bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">
+                عروض أخرى
+            </a>
+            <a href="" class="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+                الذهاب إلى السلة
+            </a>
+        </div>
+    </div>
+@endif
+@if($step < 6)
     <div class="mt-6">
         <div class="flex justify-between gap-4">
-            {{-- زر الرجوع للخلف (يظهر فقط إذا كانت الخطوة أكبر من 1) --}}
             @if($step > 0)
             <button wire:click="stepBack"
                     class="w-full bg-gray-200 hover:bg-gray-300 text-slate-700 font-semibold py-2 rounded-xl transition">
@@ -491,7 +514,7 @@
             @endif
         </div>
     </div>
-    
+@endif    
    </div>
 
 </div> 

@@ -194,12 +194,11 @@
             <div class="flex items-center justify-between">
                 <label class="text-sm font-medium">اقصى عدد للاشخاص الذين يمكنهم الحجز في نفس الوقت ؟</label>
                 <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" wire:model.lazy="enable_max_users" class="sr-only peer">
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
-                    <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-full transition-all"></div>
+                    {{-- <input type="checkbox" wire:model.lazy="enable_max_users" class="sr-only peer"> --}}
+                    {{-- <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
+                    <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-full transition-all"></div> --}}
                 </label>
             </div>
-            @if ($enable_max_users)
             <div class="mt-2 space-y-2">
                 <div>
                     <label class="block text-sm font-medium mb-1">العدد المسموح</label>
@@ -216,7 +215,6 @@
                     </select>
                 </div>
             </div>
-        @endif
 
 
         </div>

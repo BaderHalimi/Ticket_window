@@ -258,10 +258,14 @@ if (!function_exists('hasEssentialFields')) {
 
             'booking_duration'    => isFilled($features['booking_duration'] ?? null),
             'booking_unit'        => isFilled($features['booking_unit'] ?? null),
+            
+            'max_users_unit'        => isFilled($features['max_user_unit'] ?? null),
+            'max_users_per_time'        => isFilled($features['max_user_time'] ?? null),
 
             // 'pricing_packages'    => !empty($features['pricing_packages']) &&
             //                           isFilled($features['pricing_packages'][0]['label'] ?? null),
-
+            
+            
             // 'gallery'             => !empty($features['gallery']) &&
             //                           isFilled($features['gallery'][0] ?? null),
 

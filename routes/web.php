@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Cart_controller;
 use App\Http\Controllers\Checkout;
 use App\Models\Offering;
 use App\Models\User;
@@ -63,11 +64,10 @@ Route::get('/{id}/{offering}', function ($id, Offering $offering) {
     return view('templates.tmplate1.item', compact('merchant', 'offering'));
 })->where(['id' => '[0-9]+', 'offering' => '[0-9]+'])->name('template1.item');
 
-Route::get('/{id}/cart', function ($id) {
-    $merchant = User::findOrFail($id);
-    $carts = Auth::guard('customer')->user()->carts;
-    return view('templates.tmplate1.cart', compact('merchant', 'carts'));
-})->middleware('auth:customer')->where(['id' => '[0-9]+'])->name('template1.cart');
+Route::get('/cart-{template}', [Cart_controller::class, 'index'])
+    ->middleware('auth:merchant')
+    ->where('template', '[0-9]+')
+    ->name('cart');
 
 
 Route::get('/{id}/checkout', [Checkout::class, 'paid'])
