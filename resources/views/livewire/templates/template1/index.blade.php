@@ -1,4 +1,4 @@
-<div class="w-full max-w-6xl mx-auto" x-data="{ showForm: false }">
+<div class="w-full max-w-6xl mx-auto mb-12" x-data="{ showForm: false }">
 
     {{-- البانر --}}
     <div class="relative w-full h-52 md:h-64 bg-cover bg-center rounded-b-3xl shadow-2xl ring-1 ring-orange-200"
@@ -75,7 +75,7 @@
                                 <i class="ri-map-pin-line text-orange-500"></i> {{ $offer['location'] }}
                             </p>
                             <p class="flex items-center gap-1">
-                                <i class="ri-cash-line text-orange-500"></i> {{ $offer['price'] }} د.ج
+                                <i class="ri-cash-line text-orange-500"></i> {{ $offer['price'] }} ريال
                             </p>
                         </div>
 
@@ -106,13 +106,13 @@
     </div>
 
 
-    
+
 @if ($selectedOffer)
 <div x-show="showForm" x-transition
     class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
     @click.self="showForm = false">
    <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg relative">
-       <button wire:click="resetForm" @click="showForm = false" 
+       <button wire:click="resetForm" @click="showForm = false"
                class="absolute top-3 right-3 text-slate-400 hover:text-orange-500 text-xl">
            <i class="ri-close-line"></i>
        </button>
@@ -127,7 +127,7 @@
                     alt="{{ $selectedOffer->title }}"
                     class="w-full h-full object-cover" />
             </div>
-        
+
             {{-- العنوان والسعر --}}
             <div class="flex justify-between items-center">
                 <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
@@ -135,16 +135,16 @@
                     {{ $selectedOffer->name }}
                 </h2>
                 <span class="text-sm bg-orange-100 text-orange-600 font-semibold px-3 py-1 rounded-full shadow-sm">
-                    <i class="ri-money-dollar-circle-line"></i> {{ number_format($selectedOffer->price, 2) }} د.ج
+                    <i class="ri-money-dollar-circle-line"></i> {{ number_format($selectedOffer->price, 2) }} ريال
                 </span>
             </div>
-        
+
             {{-- الموقع --}}
             <div class="text-sm text-slate-500 flex items-center gap-2">
                 <i class="ri-map-pin-line text-orange-400 text-lg"></i>
                 {{ $selectedOffer->location }}
             </div>
-        
+
             {{-- الوصف --}}
             <div class="text-sm text-slate-600 leading-relaxed border-t pt-3">
                 {!! nl2br(e($selectedOffer->description)) !!}
@@ -255,12 +255,12 @@
                     $daysInMonth = $currentDate->daysInMonth;
                     $today = now()->toDateString();
                     $maxDate = isset($times['max_reservation_date']) ? \Carbon\Carbon::parse($times['max_reservation_date']) : null;
-            
+
                     $availableDays = array_filter($times['data'] ?? [], function ($day) {
                         return !empty($day['enabled']) && !empty($day['from']) && !empty($day['to']);
                     });
                     //dd($availableDays);
-            
+
                     // تحويل أسماء الأيام من الإنجليزية إلى أرقام Carbon
                     $dayToCarbon = [
                         'sunday' => 0,
@@ -272,7 +272,7 @@
                         'saturday' => 6,
                     ];
                 @endphp
-            
+
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
                         <button wire:click="previousMonth" class="text-slate-500 hover:text-orange-500 text-xl">
@@ -286,7 +286,7 @@
                             <i class="ri-arrow-right-s-line"></i>
                         </button>
                     </div>
-            
+
                     {{-- أسماء الأيام --}}
                     <div class="grid grid-cols-7 gap-2 text-center text-slate-500 font-medium text-sm">
                         <div>أحد</div>
@@ -297,13 +297,13 @@
                         <div>جمعة</div>
                         <div>سبت</div>
                     </div>
-            
+
                     {{-- تقويم الشهر --}}
                     <div class="grid grid-cols-7 gap-2 text-center text-sm">
                         @for ($i = 0; $i < $firstDayOfWeek; $i++)
                             <div></div> {{-- فراغات قبل أول يوم --}}
                         @endfor
-            
+
                         @for ($day = 1; $day <= $daysInMonth; $day++)
                             @php
                                 $date = $currentDate->copy()->day($day);
@@ -311,15 +311,15 @@
                                 $isToday = $dateString === $today;
                                 $isSelected = isset($selectedDate) && $dateString === $selectedDate;
                                 $dayOfWeek = $date->dayOfWeek; // 0 (الأحد) إلى 6 (السبت)
-            
+
                                 $dayName = array_search($dayOfWeek, $dayToCarbon); // نحصل على اسم اليوم بالنص
                                 $isDayAvailable = isset($availableDays[$dayName]);
-            
+
                                 $withinMaxDate = !$maxDate || $date->lte($maxDate);
                                 $inFuture = $date->isSameDay(now()) || $date->isAfter(now());
                                 $canReserve = $isDayAvailable && $inFuture && $withinMaxDate;
                             @endphp
-            
+
                             @if ($canReserve)
                                 <button wire:click="selectDate('{{ $dateString }}')"
                                         class="py-2 rounded-xl border font-medium transition
@@ -335,7 +335,7 @@
                     </div>
                 </div>
             @endif
-            
+
     @endif
 
 @if ($step == 3)
@@ -376,7 +376,7 @@
         {{-- السعر الأساسي والستوك --}}
         <div class="flex justify-between items-center">
             <div class="text-lg font-semibold">
-                السعر: {{ $price }} د.ج
+                السعر: {{ $price }} ريال
             </div>
             <div class="text-sm text-gray-600">
                 الكمية المتوفرة: {{ $stock }}
@@ -410,7 +410,7 @@
 
         {{-- السعر النهائي --}}
         <div class="text-xl font-bold text-right">
-            السعر النهائي: {{ $finalPrice }} د.ج
+            السعر النهائي: {{ $finalPrice }} ريال
         </div>
 
     </div>
@@ -469,7 +469,7 @@
 
             {{-- زر التأكيد --}}
 
-        
+
         </div>
     @else
         <div class="text-center text-red-600 font-semibold py-10">
@@ -512,11 +512,11 @@
                  رجوع <i class="ri-arrow-right-line"></i>
             </button>
             @endif
-    
+
             @if($step != 6)
             <button wire:click="stepNext"
                     class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-xl transition">
-                    <i class="ri-arrow-left-line"></i> التالي 
+                    <i class="ri-arrow-left-line"></i> التالي
             </button>
             @else
             <button wire:click="stepNext"
@@ -526,11 +526,11 @@
             @endif
         </div>
     </div>
-@endif    
+@endif
    </div>
 
-</div> 
+</div>
 @endif
 
-    
+
 </div>

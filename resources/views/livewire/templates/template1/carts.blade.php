@@ -34,7 +34,7 @@
 
                     @endphp
                     <p class="text-sm text-gray-600">الكمية: {{ $cart->quantity }}</p>
-                    <p class="text-sm text-gray-600">السعر: {{ $cart->price }} د.ج</p>
+                    <p class="text-sm text-gray-600">السعر: {{ $cart->price }} ريال</p>
                     <p class="text-sm text-gray-600">الفرع: {{  $branch->name ?? 'غير محدد' }}</p>
                     <p class="text-sm text-gray-600">التاريخ: {{ ($cart->additional_data['selected_date']) ?? '-' }}</p>
                     <p class="text-sm text-gray-600">الوقت: {{ ($cart->additional_data['selected_time']) ?? '-' }}</p>
@@ -60,7 +60,7 @@
     {{-- الدفع الكلي ثابت --}}
     <div class="p-4 border-t bg-white sticky bottom-0 flex justify-between items-center">
         <div class="text-md font-bold text-gray-700">
-            المجموع: {{ $carts->sum('price') }} د.ج
+            المجموع: {{ $carts->sum('price') }} ريال
         </div>
         <button wire:click="checkout_all"
                 class="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl shadow-md transition">
