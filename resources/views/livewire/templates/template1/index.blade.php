@@ -416,7 +416,19 @@
     </div>
 @endif
 
-       
+@if ($step == 5)
+    @foreach ($Qa as $index => $Q)
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-1">
+                {{ $Q['question'] }}
+            </label>
+            <input type="text" wire:model.defer="Qa.{{ $index }}.answer"
+                   class="w-full border px-3 py-2 rounded shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+                   placeholder="اكتب إجابتك هنا">
+        </div>
+    @endforeach
+@endif
+
 @if ($step == 6)
     @if ($this->is_ready())
         <div class="space-y-6 bg-white shadow-md rounded-lg p-6">
@@ -485,7 +497,7 @@
             <a href="" class="inline-block bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">
                 عروض أخرى
             </a>
-            <a href="" class="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+            <a href="{{route("cart",1)}}" wire:navigate class="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
                 الذهاب إلى السلة
             </a>
         </div>

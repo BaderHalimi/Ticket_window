@@ -33,6 +33,7 @@ class TemplateRouter extends Component
     public $selectedBranch = null;
     public $branchDetails;
 
+    public $Qa = [];
     public function updatedSelectedBranch($branchId)
     {
         $this->branchDetails = Branch::find($branchId);
@@ -95,9 +96,24 @@ class TemplateRouter extends Component
         //dd(can_booking_now(33,1));
         //dd(get_coupons(33));
         $this->calendarDate = now()->toDateString();
+
         $this->offers_collection = Offering::where('user_id', $this->merchant->id)->where('status', 'active')->get();
         //dd(translate("هل تود الحصول على عرض اضافي","auto" ,$target = "en"));
         //dd($this->offers_collection, $this->merchant);
+    }
+    public function loadQ(){
+        if ($this->step==5 && empty($this->Qa)){
+
+            $data = $this->selectedOffer->additional_data;
+            $this->Qa = collect($data['questions'] ?? [])->map(function ($q) {
+            return [
+                'question' => $q['question'],
+                'answer' => '',
+            ];
+            })->toArray();
+
+
+        }
     }
     public function selectOffer($value)
     {
@@ -116,6 +132,7 @@ class TemplateRouter extends Component
         $this->pricing();
         $this->is_ready();
         $this->Get_Branches();
+        $this->loadQ();
         if ($this->step == 7) {
             $this->save();
         }
@@ -151,6 +168,7 @@ class TemplateRouter extends Component
             $this->Get_time();
             $this->pricing();
             $this->Get_Branches();
+            $this->loadQ();
 
         }
     }
@@ -333,7 +351,7 @@ class TemplateRouter extends Component
             $cart = Cart::create([
                 'item_id' => $this->selectedOffer->id,
                 'item_type' => $this->selectedOffer->type,
-                'user_id' => Auth::guard('customer')->id(),
+                'user_id' => Auth::guard('merchant')->id(),
                 'quantity' => $this->quantity,
                 'price' => $this->finalPrice,
                 'discount' => $this->discount,
@@ -342,6 +360,7 @@ class TemplateRouter extends Component
                     'selected_time' => $this->selectedTime,
                     'coupon_code' => $this->couponCode,
                     'branch' => $branchId,
+                    'Qa' => $this->Qa
                 ],
             ]);
 
