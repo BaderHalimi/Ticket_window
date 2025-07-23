@@ -9,12 +9,15 @@ use App\Models\Merchant\Branch;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\Cart;
+use Livewire\Attributes\On;
+
 class TemplateRouter extends Component
 {
+    public $loginError;
     public $merchant;
     public $offers_collection;
     public $selectedOffer;
-    
+
     public $step = 0;
     public $times;
     public $selectedTime;
@@ -30,6 +33,7 @@ class TemplateRouter extends Component
     public $discount = 0;
     public $stock = 10;
     public $branch;
+    public $enableNext = false;
     public $selectedBranch = null;
     public $branchDetails;
 
@@ -53,8 +57,8 @@ class TemplateRouter extends Component
         $date = Carbon::parse($date)->startOfDay();
 
         if ($this->selectedOffer->type == 'services') {
-            $maxDate = isset($this->times['max_reservation_date']) 
-                ? Carbon::parse($this->times['max_reservation_date'])->startOfDay() 
+            $maxDate = isset($this->times['max_reservation_date'])
+                ? Carbon::parse($this->times['max_reservation_date'])->startOfDay()
                 : null;
 
             $today = now()->startOfDay();
@@ -85,6 +89,7 @@ class TemplateRouter extends Component
 
             $this->selectedDate = $date->toDateString();
         }
+        $this->enableNext = true; // Enable next step when a date is selected
     }
 
 
@@ -101,33 +106,46 @@ class TemplateRouter extends Component
         //dd(translate("هل تود الحصول على عرض اضافي","auto" ,$target = "en"));
         //dd($this->offers_collection, $this->merchant);
     }
-    public function loadQ(){
-        if ($this->step==5 && empty($this->Qa)){
+    public function loadQ()
+    {
+        if ($this->step == 5 && empty($this->Qa)) {
 
             $data = $this->selectedOffer->additional_data;
             $this->Qa = collect($data['questions'] ?? [])->map(function ($q) {
-            return [
-                'question' => $q['question'],
-                'answer' => '',
-            ];
+                return [
+                    'question' => $q['question'],
+                    'answer' => '',
+                ];
             })->toArray();
-
-
         }
     }
     public function selectOffer($value)
     {
-        if (isset($this->selectedOffer) && isset($this->selectedOffer->id) && $value == $this->selectedOffer->id) {
-            return;
-        }   
+        if (!Auth::guard('customer')->check()) {
+            // dd(!Auth::guard('customer')->check());
+            $this->dispatch('login-error', message: 'يجب تسجيل الدخول للبدء في الحجز والشراء.');
+        } else {
 
-        $this->resetForm();
-        $this->step = 0;
-        $this->selectedOffer = Offering::find($value);
-
+            if (!(isset($this->selectedOffer) && isset($this->selectedOffer->id) && $value == $this->selectedOffer->id)) {
+                $this->resetForm();
+                $this->step = 0;
+                $this->selectedOffer = Offering::find($value);
+            }
+        }
     }
-    public function stepNext(){
-        $this->step++;
+    #[On('stepNext')]
+    public function stepNext()
+    {
+        if ($this->step == 0 && !($this->selectedOffer->type == "services" && $this->branch->isNotEmpty())) {
+            $this->step = 2;
+        } else if ($this->step == 4 && empty($this->Qa)) {
+            $this->step = 6;
+        } else {
+            $this->step++;
+        }
+        if ($this->step != 4) {
+            $this->enableNext = false; // Reset enableNext on step change
+        }
         $this->Get_time();
         $this->pricing();
         $this->is_ready();
@@ -136,6 +154,7 @@ class TemplateRouter extends Component
         if ($this->step == 7) {
             $this->save();
         }
+
 
         //logger('Current step: ' . $this->step);
     }
@@ -159,43 +178,62 @@ class TemplateRouter extends Component
 
         $this->times = null;
         $this->calendarDate = now()->toDateString();
-    
     }
     public function stepBack()
     {
         if ($this->step > 0) {
-            $this->step--;
+            if ($this->step == 2 && !($this->selectedOffer->type == "services" && $this->branch->isNotEmpty())) {
+                $this->step = 0;
+            } else if ($this->step == 6 && empty($this->Qa)) {
+                $this->step = 4;
+            } else {
+                $this->step--;
+            }
+            if ($this->step < 3) {
+                $this->selectedTime = null;
+            }
+            if ($this->step < 2) {
+                $this->selectedDate = null;
+            }
+            if ($this->step == 2 && $this->selectedDate != null) {
+                $this->enableNext = true; // Enable next step when a date is selected
+            }
+            if ($this->step == 3 && $this->selectedTime != null) {
+                $this->enableNext = true; // Enable next step when a date is selected
+            }
+            if ($this->step == 4) {
+                $this->enableNext = true; // Enable next step when a date is selected
+            }
             $this->Get_time();
             $this->pricing();
             $this->Get_Branches();
             $this->loadQ();
-
         }
     }
-    public function increaseQuantity() {
+    public function increaseQuantity()
+    {
         if ($this->quantity >= $this->stock) {
-            return; 
+            return;
         }
         $this->quantity++;
         $this->updatePricing();
-
-
     }
 
 
-    public function decreaseQuantity() {
+    public function decreaseQuantity()
+    {
         if ($this->quantity > 1 && $this->quantity <= $this->stock) {
             $this->quantity--;
             $this->updatePricing();
-
-
         }
     }
-    public function selectTime($time)
+    public function updatedSelectedTime($time)
     {
-        $this->selectedTime = $time;
+        // $this->selectedTime = $time;
+        $this->enableNext = true; // Enable next step when a time is selected
     }
-    public function applyCoupon() {
+    public function applyCoupon()
+    {
         $coupons = collect(get_coupons($this->selectedOffer->id));
 
         if ($coupons->isEmpty()) {
@@ -232,68 +270,81 @@ class TemplateRouter extends Component
         $this->couponCode = $coupon['code'];
         $this->discount = (float) $coupon['discount'];
     }
-    public function UpdateCopoun(){
+    public function UpdateCopoun()
+    {
         $this->applyCoupon();
         $this->updatePricing();
-
     }
 
-    public function updatePricing(){
+    public function updatePricing()
+    {
         $this->applyCoupon();
         $this->finalPrice = ($this->price * $this->quantity) * (1 - $this->discount / 100);
     }
 
-    public function pricing(){
+    public function pricing()
+    {
         if ($this->selectedOffer && $this->step === 4) {
             $this->price = $this->selectedOffer->price;
-            $this->stock = get_quantity($this->selectedOffer->id,$this->selectedBranch);
+            $this->stock = get_quantity($this->selectedOffer->id, $this->selectedBranch);
             $this->finalPrice = $this->price * $this->quantity;
-
         }
     }
 
-    public function Get_time(){
-        if ($this->step === 2){
+    public function Get_time()
+    {
+        if ($this->step === 2) {
             $this->times = fetch_time($this->selectedOffer->id);
         }
         //dd($offer_time);
     }
-    
-    public function Get_Branches(){
-        if ($this->step === 1){
+
+    public function Get_Branches()
+    {
+        if ($this->step === 1) {
             $this->branch = get_branches($this->selectedOffer->id);
             //dd($this->branch);
         }
         //dd($offer_time);
     }
-    public function ready() {
-    if (
-        $this->selectedOffer &&
-        $this->selectedTime &&
-        $this->selectedDate &&
-        $this->quantity &&
-        $this->finalPrice
-    ) {
-        if ($this->selectedOffer->type == 'services') {
-            if (get_branches($this->selectedOffer->id)->isNotEmpty()){
-                if (!$this->selectedBranch) {
-                    $this->dispatch('alert', [
-                        'type' => 'error',
-                        'message' => 'يرجى اختيار فرع قبل المتابعة.',
-                    ]);
-                    return false;
-                }
+    public function ready()
+    {
+        if (
+            $this->selectedOffer &&
+            $this->selectedTime &&
+            $this->selectedDate &&
+            $this->quantity &&
+            $this->finalPrice
+        ) {
+            if ($this->selectedOffer->type == 'services') {
+                if (get_branches($this->selectedOffer->id)->isNotEmpty()) {
+                    if (!$this->selectedBranch) {
+                        $this->dispatch('alert', [
+                            'type' => 'error',
+                            'message' => 'يرجى اختيار فرع قبل المتابعة.',
+                        ]);
+                        return false;
+                    }
 
-                if (!can_booking_now($this->selectedOffer->id, $this->selectedBranch)) {
-                    $this->dispatch('alert', [
-                        'type' => 'error',
-                        'message' => 'لا يمكن الحجز الآن لهذا العرض.',
-                    ]);
-                    return false;
+                    if (!can_booking_now($this->selectedOffer->id, $this->selectedBranch)) {
+                        $this->dispatch('alert', [
+                            'type' => 'error',
+                            'message' => 'لا يمكن الحجز الآن لهذا العرض.',
+                        ]);
+                        return false;
+                    }
+                } else {
+                    if (!can_booking_now($this->selectedOffer->id)) {
+                        $this->dispatch('alert', [
+                            'type' => 'error',
+                            'message' => 'لا يمكن الحجز الآن لهذا العرض.',
+                        ]);
+                        return false;
+                    }
                 }
+            }
 
-            
-            }else {
+            if ($this->selectedOffer->type == 'events') {
                 if (!can_booking_now($this->selectedOffer->id)) {
                     $this->dispatch('alert', [
                         'type' => 'error',
@@ -303,33 +354,23 @@ class TemplateRouter extends Component
                 }
             }
 
+            return true;
         }
 
-        if ($this->selectedOffer->type == 'events') {
-            if (!can_booking_now($this->selectedOffer->id)) {
-                $this->dispatch('alert', [
-                    'type' => 'error',
-                    'message' => 'لا يمكن الحجز الآن لهذا العرض.',
-                ]);
-                return false;
-            }
-        }
-
-        return true;
+        return false; // مهم جداً
     }
 
-    return false; // مهم جداً
-}
-
-    public function is_ready(){
-        if ($this->step == 6){
+    public function is_ready()
+    {
+        if ($this->step == 6) {
             return $this->ready();
         } else {
             return false;
         }
     }
-    public function save(){
-        if($this->ready() && $this->step == 7) {
+    public function save()
+    {
+        if ($this->ready() && $this->step == 7) {
             $user = Auth::user();
             $branchId = $this->selectedBranch ? $this->selectedBranch : null;
 
@@ -345,13 +386,13 @@ class TemplateRouter extends Component
             //         'coupon_code' => $this->couponCode,
             //         'branch' => $this->selectedBranch,
             //     ])
-        
+
             // ]);
             //dd(Auth::guard('merchant')->id());
             $cart = Cart::create([
                 'item_id' => $this->selectedOffer->id,
                 'item_type' => $this->selectedOffer->type,
-                'user_id' => Auth::guard('merchant')->id(),
+                'user_id' => Auth::guard('customer')->id(),
                 'quantity' => $this->quantity,
                 'price' => $this->finalPrice,
                 'discount' => $this->discount,
@@ -376,7 +417,7 @@ class TemplateRouter extends Component
     public function render()
     {
         //dd($this->merchant);
-        if ($this->step == 4){
+        if ($this->step == 4) {
             $this->updatePricing();
         }
 
