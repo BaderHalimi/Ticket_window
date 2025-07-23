@@ -12,9 +12,9 @@ class Carts extends Component
     public $user;
     public $carts;
     public function mount(){
-        $this->user = Auth::guard('merchant')->user();
+        $this->user = Auth::guard('customer')->user();
         if (!$this->user) {
-            return redirect()->route('login');
+            return redirect()->route('customer.login');
         }
         $this->carts = $this->user->carts;
         //dd($this->user);
@@ -47,10 +47,10 @@ class Carts extends Component
                 'recipient_id' => $cart->user_id,
                 'notes' => 'تم الدفع بنجاح',
                 'type' => 'pay',
-                'withdrawal' => false, 
+                'withdrawal' => false,
                 'status' => 'pending',
             ];
-            
+
             $merged = array_merge($oldData, $newData);
             logPayment([
                 'user_id' => $this->user->id,
@@ -67,10 +67,10 @@ class Carts extends Component
                 [
                     'type' => 'payment',
                     'offering_id' => $cart->offering->id,
-                    
+
                 ],
             );
-            
+
             notifcate(
                 $this->user->id,
                 'تم الدفع بنجاح',
@@ -78,7 +78,7 @@ class Carts extends Component
                 [
                     'type' => 'payment',
                     'offering_id' => $cart->offering->id,
-                    
+
                 ],
             );
             $cart->delete();
@@ -90,7 +90,7 @@ class Carts extends Component
     }
     public function delete($id){
         $cart = Cart::find($id);
-        
+
         if ($cart) {
             $cart->delete();
             $this->carts = $this->user->carts()->get();
@@ -100,7 +100,7 @@ class Carts extends Component
             return response()->json(['message' => 'Cart not found'], 404);
         }
     }
-    
+
 
     public function render()
     {

@@ -13,7 +13,7 @@ class Authenticate extends Middleware
             // التحقق من الـ guard المستخدم
             if ($request->is('merchant/*')) {
                 return route('login');  // إذا كان المستخدم مشرف
-            } elseif ($request->is('user/*')) {
+            } elseif ($request->is('user/*')||$request->is('cart-1')||$request->is('*/checkout/*')) {
                 return route('customer.login');  // إذا كان المستخدم عميل
             } elseif ($request->is('admin') || $request->is('admin/*')) {
                 return route('admin.login');  // إذا كان المستخدم عميل
