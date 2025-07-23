@@ -16,6 +16,7 @@ use App\Models\MerchantWallet;
 use App\Models\Merchant\Branch;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 if (!function_exists('getCard')){
     function getCard()
@@ -258,7 +259,7 @@ if (!function_exists('hasEssentialFields')) {
 
             'booking_duration'    => isFilled($features['booking_duration'] ?? null),
             'booking_unit'        => isFilled($features['booking_unit'] ?? null),
-            
+
             'max_users_unit'        => isFilled($features['max_user_unit'] ?? null),
             'max_users_per_time'        => isFilled($features['max_user_time'] ?? null),
 
@@ -714,5 +715,42 @@ if (!function_exists("get_coupons")){
         }
 
         return $validCoupons;
+    }
+}
+
+// if (!function_exists("L_trans")){
+//     function L_trans($text,$to = "en")
+//         {
+//             $response = Http::post('https://libretranslate.com/translate', [
+//                 'q' => "مرحبا",
+//                 'source' => 'auto',
+//                 'target' => $to,
+//                 'format' => 'text',
+//             ]);
+//             dd($response->status(), $response->body(), $response->json());
+
+        
+//             if ($response->successful()) {
+//                 dd($response->status(), $response->body());
+//                 //return $response->json()['translatedText'];
+//             }
+        
+//             return 'خطأ في الترجمة';
+//         }
+// }
+
+
+function translate($text, $source = 'auto', $target = 'fr') {
+    try {
+        $response = Http::timeout(10)->get("https://lingva.ml/api/v1/{$source}/{$target}/" . urlencode($text));
+
+        if ($response->successful()) {
+            $data = $response->json();
+            return $data['translation'] ?? 'خطأ في الترجمة';
+        } else {
+            return 'فشل الاتصال بـ Lingva';
+        }
+    } catch (\Exception $e) {
+        return 'حدث خطأ: ' . $e->getMessage();
     }
 }

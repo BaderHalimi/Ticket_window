@@ -417,7 +417,7 @@
 @endif
 
        
-@if ($step == 5)
+@if ($step == 6)
     @if ($this->is_ready())
         <div class="space-y-6 bg-white shadow-md rounded-lg p-6">
             <h2 class="text-xl font-bold text-gray-800 mb-4">مراجعة الحجز</h2>
@@ -467,7 +467,7 @@
 @endif
 
 
-@if ($step == 6)
+@if ($step == 7)
     <div class="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-10 space-y-6 text-center">
         {{-- الأيقونة --}}
         <div class="w-24 h-24 rounded-full bg-green-100 flex items-center justify-center">
@@ -491,7 +491,7 @@
         </div>
     </div>
 @endif
-@if($step < 6)
+@if($step < 7)
     <div class="mt-6">
         <div class="flex justify-between gap-4">
             @if($step > 0)
@@ -501,7 +501,7 @@
             </button>
             @endif
     
-            @if($step != 5)
+            @if($step != 6)
             <button wire:click="stepNext"
                     class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-xl transition">
                     <i class="ri-arrow-left-line"></i> التالي 

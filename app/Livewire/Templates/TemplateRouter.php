@@ -96,7 +96,7 @@ class TemplateRouter extends Component
         //dd(get_coupons(33));
         $this->calendarDate = now()->toDateString();
         $this->offers_collection = Offering::where('user_id', $this->merchant->id)->where('status', 'active')->get();
-        
+        //dd(translate("هل تود الحصول على عرض اضافي","auto" ,$target = "en"));
         //dd($this->offers_collection, $this->merchant);
     }
     public function selectOffer($value)
@@ -116,7 +116,7 @@ class TemplateRouter extends Component
         $this->pricing();
         $this->is_ready();
         $this->Get_Branches();
-        if ($this->step == 6) {
+        if ($this->step == 7) {
             $this->save();
         }
 
@@ -304,14 +304,14 @@ class TemplateRouter extends Component
 }
 
     public function is_ready(){
-        if ($this->step == 5){
+        if ($this->step == 6){
             return $this->ready();
         } else {
             return false;
         }
     }
     public function save(){
-        if($this->ready() && $this->step == 6) {
+        if($this->ready() && $this->step == 7) {
             $user = Auth::user();
             $branchId = $this->selectedBranch ? $this->selectedBranch : null;
 
@@ -333,7 +333,7 @@ class TemplateRouter extends Component
             $cart = Cart::create([
                 'item_id' => $this->selectedOffer->id,
                 'item_type' => $this->selectedOffer->type,
-                'user_id' => Auth::guard('merchant')->id(),
+                'user_id' => Auth::guard('customer')->id(),
                 'quantity' => $this->quantity,
                 'price' => $this->finalPrice,
                 'discount' => $this->discount,
