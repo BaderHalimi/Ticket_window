@@ -65,7 +65,7 @@ Route::get('/{id}/{offering}', function ($id, Offering $offering) {
 })->where(['id' => '[0-9]+', 'offering' => '[0-9]+'])->name('template1.item');
 
 Route::get('/cart-{template}', [Cart_controller::class, 'index'])
-    ->middleware('auth:merchant')
+    ->middleware('auth:customer')
     ->where('template', '[0-9]+')
     ->name('cart');
 
