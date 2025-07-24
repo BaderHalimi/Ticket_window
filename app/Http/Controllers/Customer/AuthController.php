@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Customer;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
@@ -25,30 +26,56 @@ class AuthController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request);
         $request->validate([
-            'f_name' => 'required|string|max:255',
-            'l_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'business_name' => 'nullable|string|max:255',
-            'business_type' => 'nullable|in:restaurant,events,show,other',
-            'phone' => 'nullable|string|max:15|unique:users',
-            'other_business_type' => 'nullable|required_if:business_type,other|string|max:255',
+            'f_name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s\-]+$/u',
+            ],
+            'l_name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s\-]+$/u',
+            ],
+            'email' => [
+                'required',
+                'email:rfc,dns',
+                'max:255',
+                'unique:users,email',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'max:20',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+                'confirmed',
+            ],
+            // 'business_name' => 'nullable|string|max:255',
+            // 'business_type' => 'nullable|in:restaurant,events,show,other',
+            // 'phone' => 'nullable|string|max:15|unique:users',
+            'country_code' => ['required', 'in:+1,+966,+971,+20'],
+            'phone' => ['required', 'regex:/^[0-9]{7,12}$/'], 
+            // 'other_business_type' => 'nullable|required_if:business_type,other|string|max:255',
         ]);
+        $fullPhone = $request->country_code . ltrim($request->phone, '0');
 
         $user = User::create([
             'f_name' => $request->f_name,
             'l_name' => $request->l_name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'business_name' => $request->business_name,
-            'business_type' => $request->business_type,
-            'phone' => $request->phone,
+            // 'business_name' => $request->business_name,
+            // 'business_type' => $request->business_type,
+            'phone' => $fullPhone,
             'additional_data' => [
-                'other_business_type' => $request->business_type === 'other' ? $request->other_business_type : null,
+                // 'other_business_type' => $request->business_type === 'other' ? $request->other_business_type : null,
 
             ],
-            'role' => 'merchant',
+            'role' => 'user',
 
         ]);
 
@@ -96,7 +123,7 @@ class AuthController extends Controller
         //
     }
 
-    public function update(Request $request, string $id)
+        public function update(Request $request, string $id)
     {
         $validated = $request->validate([
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',

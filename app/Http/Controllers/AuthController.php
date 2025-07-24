@@ -60,6 +60,7 @@ class AuthController extends Controller
                 'string',
                 'regex:/^\+\d{1,4}$/', // مثل +966 أو +1
             ],
+            'phone' => ['nullable', 'regex:/^[0-9]{7,12}$/'],
         ];
 
         if (Route::is('signup')) {
