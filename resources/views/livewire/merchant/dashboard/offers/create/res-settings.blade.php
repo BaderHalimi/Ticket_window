@@ -266,18 +266,17 @@
                 </label>
             </div>
         </div> --}}
-
+@if ($type == "services")
 <div>
-    <div class="flex items-center justify-between">
+    {{-- <div class="flex items-center justify-between">
         <label class="text-sm font-medium">هل تريد تحديد الفروع لهذه الخدمة؟</label>
         <label class="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" wire:model.lazy="enable_selected_branches" class="sr-only peer">
             <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
             <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-full transition-all"></div>
         </label>
-    </div>
+    </div> --}}
 
-    @if ($enable_selected_branches)
         <div class="mt-4 space-y-3">
             <label class="block text-sm font-medium mb-1">اختر الفروع التي تقدم هذه الخدمة:</label>
             <div class="border rounded-md p-3 bg-white shadow-sm space-y-2 max-h-64 overflow-y-auto">
@@ -294,8 +293,9 @@
                 @endforeach
             </div>
         </div>
-    @endif
-</div>
+</div> 
+@endif
+
 
 
 

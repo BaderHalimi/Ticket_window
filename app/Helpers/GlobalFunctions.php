@@ -248,7 +248,10 @@ if (!function_exists('hasEssentialFields')) {
         }
 
         $features = $offer->features ?? [];
-
+        $branch_for_ser = true;
+        if($offer->type == "services"){
+            $branch_for_ser=isFilled($features['selected_branches'] ?? null);
+        }
         $checks = [
             'name'                => isFilled($offer->name),
             'description'         => isFilled($offer->description),
@@ -262,7 +265,7 @@ if (!function_exists('hasEssentialFields')) {
 
             'max_users_unit'        => isFilled($features['max_user_unit'] ?? null),
             'max_users_per_time'        => isFilled($features['max_user_time'] ?? null),
-
+            'branch' => $branch_for_ser,
             // 'pricing_packages'    => !empty($features['pricing_packages']) &&
             //                           isFilled($features['pricing_packages'][0]['label'] ?? null),
             

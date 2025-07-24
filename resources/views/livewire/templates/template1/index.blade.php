@@ -1,4 +1,5 @@
 <div class="w-full max-w-6xl mx-auto mb-12" x-data="{ showForm: false }">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     {{-- البانر --}}
     <div class="relative w-full h-52 md:h-64 bg-cover bg-center rounded-b-3xl shadow-2xl ring-1 ring-orange-200"
@@ -19,22 +20,15 @@
 
         {{-- روابط تواصل اجتماعي --}}
         @if(isset($merchant['additional_data']['social_links']))
-        <div class="flex justify-center gap-4 mt-4 text-2xl text-slate-700">
+        <div class="flex justify-center gap-4 mt-4 text-2xl text-slate-700" id="merchant-social-links">
             @foreach($merchant['additional_data']['social_links'] as $link)
-            @php
-            $platform = '';
-            if (str_contains($link, 'instagram')) $platform = 'instagram';
-            elseif (str_contains($link, 'facebook')) $platform = 'facebook';
-            elseif (str_contains($link, 'tiktok')) $platform = 'tiktok';
-            else $platform = 'global';
-            @endphp
-
-            <a href="{{ $link }}" target="_blank" class="hover:text-orange-500 transition duration-300">
-                <i class="ri-{{ $platform }}-fill"></i>
+            <a href="{{ $link }}" target="_blank" class="hover:text-orange-500 transition duration-300" data-url="{{ $link }}">
+                <i class="ri-global-line"></i>
             </a>
             @endforeach
         </div>
         @endif
+        
     </div>
 
     {{-- تبويبات العروض --}}
@@ -377,7 +371,6 @@
     @if ($step == 4)
     <div class="space-y-6">
 
-        {{-- السعر الأساسي والستوك --}}
         <div class="flex justify-between items-center">
             <div class="text-lg font-semibold">
                 السعر: {{ $price }} ريال
@@ -387,7 +380,6 @@
             </div>
         </div>
 
-        {{-- التحكم في الكمية --}}
         <div class="flex items-center space-x-2 rtl:space-x-reverse">
             <button wire:click="decreaseQuantity"
                 class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
@@ -557,5 +549,40 @@
             }
         });
     });
+
+    
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('#merchant-social-links a').forEach(anchor => {
+            const url = anchor.dataset.url?.toLowerCase() || '';
+            let iconClass = 'ri-global-line';
+    
+            if (url.includes('facebook.com'))        iconClass = 'ri-facebook-fill';
+            else if (url.includes('twitter.com'))    iconClass = 'ri-twitter-x-fill';
+            else if (url.includes('instagram.com'))  iconClass = 'ri-instagram-line';
+            else if (url.includes('tiktok.com'))     iconClass = 'ri-tiktok-fill';
+            else if (url.includes('youtube.com'))    iconClass = 'ri-youtube-fill';
+            else if (url.includes('pinterest.com'))  iconClass = 'ri-pinterest-fill';
+            else if (url.includes('linkedin.com'))   iconClass = 'ri-linkedin-fill';
+            else if (url.includes('snapchat.com'))   iconClass = 'ri-snapchat-fill';
+            else if (url.includes('whatsapp.com'))   iconClass = 'ri-whatsapp-fill';
+            else if (url.includes('telegram.me') || url.includes('t.me')) iconClass = 'ri-telegram-fill';
+            else if (url.includes('github.com'))     iconClass = 'ri-github-fill';
+            else if (url.includes('reddit.com'))     iconClass = 'ri-reddit-fill';
+            else if (url.includes('medium.com'))     iconClass = 'ri-medium-fill';
+            else if (url.includes('dribbble.com'))   iconClass = 'ri-dribbble-fill';
+            else if (url.includes('behance.net'))    iconClass = 'ri-behance-fill';
+            else if (url.includes('flickr.com'))     iconClass = 'ri-flickr-fill';
+            else if (url.includes('tumblr.com'))     iconClass = 'ri-tumblr-fill';
+            else if (url.includes('vimeo.com'))      iconClass = 'ri-vimeo-fill';
+            else if (url.includes('itch.io'))        iconClass = 'fa-brands fa-itch-io'; // FontAwesome
+            else if (url.includes('discord.gg') || url.includes('discord.com')) iconClass = 'ri-discord-fill';
+    
+            const icon = anchor.querySelector('i');
+            icon.className = iconClass;
+        });
+    });
+    </script>
+    

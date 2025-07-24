@@ -44,7 +44,7 @@ class ResSettings extends Component
 
     public $type;
     
-    public $enable_selected_branches = false;
+    //public $enable_selected_branches = false;
     public $branches;
     public array $selected_branches = [];
 
@@ -87,7 +87,7 @@ class ResSettings extends Component
 
             'enable_weekly_recurrence' => false,
             'weekly_recurrence_days' => '',
-            'enable_selected_branches' => false,
+            //'enable_selected_branches' => false,
             'selected_branches' => [],
 
         ], $features));
@@ -140,7 +140,7 @@ class ResSettings extends Component
 
         $features['enable_weekly_recurrence'] = $this->enable_weekly_recurrence;
         $features['weekly_recurrence_days'] = $this->weekly_recurrence_days;
-        $features['enable_selected_branches'] = $this->enable_selected_branches;
+        //$features['enable_selected_branches'] = $this->enable_selected_branches;
         $features['selected_branches'] = collect($this->branches)
         ->whereIn('id', $this->selected_branches)
         ->pluck('id')

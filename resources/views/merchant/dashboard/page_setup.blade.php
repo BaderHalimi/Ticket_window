@@ -5,6 +5,7 @@
 $data = is_array(Auth::guard('merchant')->user()->additional_data??null) ? Auth::guard('merchant')->user()->additional_data : json_decode(Auth::guard('merchant')->user()->additional_data??'', true);
 $socialLinks = $data['social_links'] ?? [];
 @endphp
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
 <div class="flex-1 p-8">
     <form method="POST" action="{{ route('merchant.dashboard.update', ['id'=>Auth::id()]) }}" enctype="multipart/form-data" class="space-y-8">
@@ -163,14 +164,46 @@ $socialLinks = $data['social_links'] ?? [];
         const iconSpan = input.parentElement.querySelector('.icon');
         let iconClass = 'ri-global-line';
 
-        if (url.includes('facebook.com')) iconClass = 'ri-facebook-fill';
-        else if (url.includes('twitter.com')) iconClass = 'ri-twitter-x-fill';
-        else if (url.includes('instagram.com')) iconClass = 'ri-instagram-line';
-        else if (url.includes('tiktok.com')) iconClass = 'ri-tiktok-fill';
-        else if (url.includes('youtube.com')) iconClass = 'ri-youtube-fill';
+        //let iconClass = '';
+
+if (url.includes('facebook.com'))        iconClass = 'ri-facebook-fill';
+else if (url.includes('twitter.com'))    iconClass = 'ri-twitter-x-fill';
+else if (url.includes('instagram.com'))  iconClass = 'ri-instagram-line';
+else if (url.includes('tiktok.com'))     iconClass = 'ri-tiktok-fill';
+else if (url.includes('youtube.com'))    iconClass = 'ri-youtube-fill';
+else if (url.includes('pinterest.com'))  iconClass = 'ri-pinterest-fill';
+else if (url.includes('linkedin.com'))   iconClass = 'ri-linkedin-fill';
+else if (url.includes('snapchat.com'))   iconClass = 'ri-snapchat-fill';
+else if (url.includes('whatsapp.com'))   iconClass = 'ri-whatsapp-fill';
+else if (url.includes('telegram.me') || url.includes('t.me')) iconClass = 'ri-telegram-fill';
+else if (url.includes('github.com'))     iconClass = 'ri-github-fill';
+else if (url.includes('reddit.com'))     iconClass = 'ri-reddit-fill';
+else if (url.includes('medium.com'))     iconClass = 'ri-medium-fill';
+else if (url.includes('dribbble.com'))   iconClass = 'ri-dribbble-fill';
+else if (url.includes('behance.net'))    iconClass = 'ri-behance-fill';
+else if (url.includes('flickr.com'))     iconClass = 'ri-flickr-fill';
+else if (url.includes('tumblr.com'))     iconClass = 'ri-tumblr-fill';
+else if (url.includes('vimeo.com'))      iconClass = 'ri-vimeo-fill';
+else if (url.includes('itch.io'))        iconClass = 'fa-brands fa-itch-io'; // FontAwesome
+else if (url.includes('discord.gg') || url.includes('discord.com')) iconClass = 'ri-discord-fill';
+
 
         iconSpan.innerHTML = `<i class="${iconClass}"></i>`;
     }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('#social-links-container input[type="url"]').forEach(input => {
+        updateSocialIcon(input);
+      });
+    });
+
+  window.addEventListener('livewire:navigated', () => {
+    document.querySelectorAll('#social-links-container input[type="url"]').forEach(input => {
+        updateSocialIcon(input);
+    });
+  });
+
+
 </script>
 
 <!-- Remix Icon CDN -->
