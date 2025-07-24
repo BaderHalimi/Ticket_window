@@ -200,23 +200,20 @@ class AuthController extends Controller
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'social_links' => 'nullable|array',
-            'social_links.*' => 'nullable|url|max:255',
+            'social_links.*' => 'nullable|url|max:255', 
         ]);
 
         $user = User::findOrFail($id);
 
-        // decode existing data safely
         $data = is_array($user->additional_data)
             ? (object) $user->additional_data
             : (object) (json_decode($user->additional_data, true) ?? []);
 
-        // ✅ تحديث صورة البروفايل فقط إذا تم رفع صورة جديدة
         if ($request->hasFile('profile_picture')) {
             $file = $request->file('profile_picture');
             $uniqueName = 'profile_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $profilePicturePath = $file->storeAs('', $uniqueName, 'public');
 
-            // حذف القديم إن وجد
             if (!empty($data->profile_picture)) {
                 Storage::disk('public')->delete($data->profile_picture);
             }
@@ -224,7 +221,6 @@ class AuthController extends Controller
             $data->profile_picture = $profilePicturePath;
         }
 
-        // ✅ تحديث البانر فقط إذا تم رفعه
         if ($request->hasFile('banner')) {
             $file = $request->file('banner');
             $uniqueName = 'banner_' . uniqid() . '.' . $file->getClientOriginalExtension();
@@ -237,18 +233,67 @@ class AuthController extends Controller
             $data->banner = $bannerPath;
         }
 
-        // ✅ تحديث روابط التواصل فقط إذا وصلت قيمة
         if ($request->filled('social_links')) {
             $data->social_links = array_filter($request->input('social_links', []));
         }
 
-        // ✅ حفظ json بدون تغيير القيم غير المعدلة
         $user->additional_data = (array) $data;
         $user->save();
 
         return back()->with('success', 'تم تحديث البيانات بنجاح.');
     }
 
+    public function update_settings(Request $request, string $id){
+        //dd($request);
+        $validated = $request->validate([
+            'f_name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s\-]+$/u',
+            ],
+            'l_name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s\-]+$/u',
+            ],
+            'email' => [
+                'required',
+                'email:rfc,dns',
+                'max:255',
+                'unique:users,email,' . $id,
+            ],
+            'phone' => ['required', 'regex:/^\+?[0-9]{7,15}$/'],
+
+        ]);
+//        dd($validated);
+        $user = User::findOrFail($id);
+        $user->f_name = $validated["f_name"];
+        $user->l_name = $validated["l_name"];
+        $user->email = $validated["email"];
+        $user->phone = $validated["phone"];
+        $user->save();
+        return back()->with('success', 'تم تحديث البيانات بنجاح.');
+
+    }
+    public function update_password(Request $request,string $id){
+        $validated = $request->validate([
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'max:20',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+                'confirmed',
+            ],
+        ]);
+        $user = User::findOrFail($id);
+        $user->password = bcrypt($validated["password"]);
+        $user->save();
+        return back()->with('success', 'تم تحديث البيانات بنجاح.');
+
+    }
 
     /**
      * Remove the specified resource from storage.

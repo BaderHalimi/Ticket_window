@@ -86,7 +86,9 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->gro
     Route::resource('activity_log', \App\Http\Controllers\ActivityLog::class)->only(['index'])->names('activity_log');
 
     Route::post('update/{id}', [AuthController::class,'update'])->name('update');
-
+    Route::post('updateS/{id}', [AuthController::class,'update_settings'])->name('update_settings');
+    Route::post('updateP/{id}', [AuthController::class,'update_password'])->name('update_password');
+    
 
 
 });
