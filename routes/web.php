@@ -40,7 +40,7 @@ Route::post('login', [AuthController::class, 'login'])->middleware('guest:mercha
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:merchant')->name('logout');
 
 Route::get('status', function (Request $request) {
-    if (!$request->session()->get('status',false))
+    if (!$request->session()->get('status', false))
         return redirect()->route('home');
     return view('auth.status', [
         'status' => $request->session()->get('status'),
@@ -76,3 +76,8 @@ Route::get('/{id}/checkout', [Checkout::class, 'paid'])
 Route::get('/{id}/checkout/success', [Checkout::class, 'success'])
     ->middleware('auth:customer')
     ->name('template1.checkout.success');
+
+Route::view('payment', 'payment')->name('payment');
+Route::view('payment/error', 'payment')->name('payment.error');
+Route::view('payment/cancel', 'payment')->name('payment.cancel');
+Route::view('payment/success', 'payment')->name('payment.success');
