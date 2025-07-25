@@ -1,10 +1,29 @@
 <div class="w-full max-w-6xl mx-auto mb-12" x-data="{ showForm: false }">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    {{-- البانر --}}
-    <div class="relative w-full h-52 md:h-64 bg-cover bg-center rounded-b-3xl shadow-2xl ring-1 ring-orange-200"
-        style="background-image: url('{{ asset('storage/' . $merchant['additional_data']['banner']) }}')">
-    </div>
+{{-- البانر --}}
+<div class="relative w-full h-52 md:h-64 bg-cover bg-center rounded-b-3xl shadow-2xl ring-1 ring-orange-200"
+    style="background-image: url('{{ asset('storage/' . $merchant['additional_data']['banner']) }}')">
+    
+
+<div class="absolute top-2 left-4 flex gap-4 z-20">
+
+    <a href="{{route("cart",1)}}" wire:navigate>
+        <button class="bg-white p-3 rounded-md shadow-lg hover:bg-gray-300 transition text-2xl text-gray-800">
+            <i class="ri-shopping-cart-2-line"></i>
+        </button>
+    </a>
+    <a href="{{route("customer.dashboard.overview")}}" wire:navigate>
+        <button class="bg-white p-3 rounded-md shadow-lg hover:bg-gray-300 transition text-2xl text-gray-800">
+            <i class="ri-user-settings-line"></i>
+        </button>
+    </a>
+</div>
+
+    
+    
+</div>
+
 
     {{-- الصورة الشخصية --}}
     <div class="relative w-full flex justify-center -mt-16 md:-mt-20 z-10">
