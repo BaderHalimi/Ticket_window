@@ -7,6 +7,7 @@ use App\Models\Offering;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -77,7 +78,27 @@ Route::get('/{id}/checkout/success', [Checkout::class, 'success'])
     ->middleware('auth:customer')
     ->name('template1.checkout.success');
 
-Route::view('payment', 'payment')->name('payment');
+Route::get('payment', function(){
+    $response = Http::withHeaders([
+        'x-api-key' => "", // المفتاح السري من .env
+        'Content-Type' => 'application/json',
+    ])->post('https://ticket-window.ottu.com/api/v3/checkout', [
+        'amount' => 12, // بالـ fils = 10 KWD
+        'currency' => 'SAR',
+        'lang' => 'ar',
+        'success_url' => route('payment.success'),
+        'error_url' => route('payment.error'),
+        'cancel_url' => route('payment.cancel'),
+    ]);
+
+    $data = $response->json();
+
+    return view('payment', [
+        'session_id' => $data['session_id'],
+        'public_key' => "",
+        'merchant_id' => 'ticket-window.ottu.com'
+    ]);
+})->name('payment');
 Route::view('payment/error', 'payment')->name('payment.error');
 Route::view('payment/cancel', 'payment')->name('payment.cancel');
 Route::view('payment/success', 'payment')->name('payment.success');

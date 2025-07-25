@@ -22,9 +22,10 @@
         // Checkout.reload();
         Checkout.init({
             selector: 'checkout',
-            merchant_id: 'localhost:8000',
-            session_id: '{{ session()->getId() }}',
-            apiKey: '1287348f-8b2c-4d3a-9e1f-5c6d7e8f9a0b',
+            merchant_id: '{{ $merchant_id }}',
+            displayMode: 'grid',
+            session_id: '{{ $session_id }}',
+            apiKey: '{{ $public_key }}',
             // Default values configured for Apple Pay
             applePayInit: {
                 version: 6,
