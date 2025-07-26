@@ -10,9 +10,16 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\Cart;
 use Livewire\Attributes\On;
+use App\Models\MerchantChat;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class TemplateRouter extends Component
 {
+    use WithFileUploads;
+
     public $loginError;
     public $merchant;
     public $offers_collection;
@@ -36,8 +43,15 @@ class TemplateRouter extends Component
     public $enableNext = false;
     public $selectedBranch = null;
     public $branchDetails;
-
+    
+    public $tickets;
+    public $ticketTitle;
+    public $ticketImage;
+    public $ticketDescription;
+    public $savedTicket;
+    public $newTicket = null;
     public $Qa = [];
+
     public function updatedSelectedBranch($branchId)
     {
         $this->branchDetails = Branch::find($branchId);
@@ -414,12 +428,64 @@ class TemplateRouter extends Component
         }
     }
 
+    public function load_chats(){
+        //dd(Auth::guard('merchant')->id());
+        $this->tickets = MerchantChat::where("user_id",Auth::guard('merchant')->id())
+        ->where("merchant_id",$this->merchant->id)
+        ->get();
+
+        //dd($tickets);
+
+        //dd($this->merchant->additional_data);
+    }
+    public function add_ticket(){
+        $this->newTicket = new MerchantChat;
+    }
+    public function deleteTicket($id){
+        $ticket = MerchantChat::find($id);
+        if ($ticket->attachment) {
+            Storage::disk('public')->delete($ticket->attachment);
+        }
+
+        $ticket->delete();
+        $this->load_chats();
+
+    }
+    public function save_ticket(){
+            $this->validate([
+                'ticketTitle' => 'required|string|max:255',
+                'ticketDescription' => 'required|string',
+                'ticketImage' => 'nullable|image|max:2048', 
+            ]);
+
+            if ($this->ticketImage) {
+                $imagePath = $this->ticketImage->store('tickets', 'public');
+                $this->newTicket->attachment = $imagePath;
+            }
+            $this->newTicket->merchant_id = $this->merchant->id;
+            $this->newTicket->user_id = Auth::guard('merchant')->id();
+            $this->newTicket->subject = $this->ticketTitle;
+            //$this->newTicket->image = $this->ticketImage;
+            $this->newTicket->description = $this->ticketDescription;
+            $this->newTicket->save();
+            $this->savedTicket = true;
+            $this->load_chats();
+        
+    }
+    public function reset_ticket(){
+        $this->newTicket = null;
+        $this->ticketTitle = null;
+        $this->ticketImage = null;
+        $this->ticketDescription = null;
+        $this->savedTicket = null;
+    }
     public function render()
     {
         //dd($this->merchant);
         if ($this->step == 4) {
             $this->updatePricing();
         }
+        //$this->load_chats();
 
         return view('livewire.templates.template1.index');
     }

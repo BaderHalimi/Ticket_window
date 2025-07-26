@@ -2,79 +2,83 @@
 @section('content')
 
 <div class="flex-1 p-8">
-  @livewire('under-review')
-
   <div class="space-y-8">
-    <div class="flex justify-between items-center">
-      <h2 class="text-3xl font-bold text-slate-800">السياسات والإعدادات</h2>
-      <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-orange-500 hover:bg-orange-600 h-10 px-4 py-2 text-white">
-        <svg class="w-4 h-4 ml-2" ...></svg>
-        حفظ الإعدادات
-      </button>
-    </div>
-
-    <!-- سياسة الإلغاء -->
-    <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
-      <div class="flex flex-col space-y-1.5 p-6">
-        <h3 class="text-xl font-semibold tracking-tight flex items-center gap-2">
-          <svg class="lucide lucide-file-text" ...></svg>
-          سياسة الإلغاء والاسترجاع
-        </h3>
-        <p class="text-sm text-slate-500">حدد الشروط التي يمكن للعملاء بموجبها إلغاء حجوزاتهم واسترداد أموالهم.</p>
+    <!-- العنوان والزر -->
+    <form action="{{ route('merchant.dashboard.policies_settings.store') }}" method="POST">
+      @csrf
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-slate-800">السياسات والإعدادات</h2>
+        <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold px-5 py-2.5 shadow-md transition">
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+          حفظ الإعدادات
+        </button>
       </div>
-      <div class="p-6 pt-0 space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2" for="cancellation-policy">نص السياسة</label>
-          <textarea id="cancellation-policy" class="w-full rounded-md border bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 mt-2 min-h-[120px]" placeholder="مثال: لا يمكن استرجاع المبلغ قبل 24 ساعة من موعد الفعالية..."></textarea>
+
+      <!-- سياسة الإلغاء -->
+      <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-xl">
+        <div class="p-6 border-b">
+          <h3 class="text-xl font-semibold flex items-center gap-2">
+            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M4 4h16v16H4z"/>
+            </svg>
+            سياسة الإلغاء والاسترجاع
+          </h3>
+          <p class="text-sm text-slate-500 mt-1">حدد الشروط التي يمكن للعملاء بموجبها إلغاء حجوزاتهم واسترداد أموالهم.</p>
         </div>
-        <div class="flex items-center space-x-2 space-x-reverse">
-          <button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" id="allow-refund"
-            class="peer h-4 w-4 shrink-0 rounded-sm border border-orange-500 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-orange-500 text-white">
-          </button>
-          <label for="allow-refund" class="block text-sm font-medium text-gray-700 mb-2">السماح بالاسترجاع التلقائي وفقًا للشروط</label>
+        <div class="p-6 space-y-5">
+          <div>
+            <label for="cancellation-policy" class="block text-sm font-medium mb-2">نص السياسة</label>
+            <textarea id="cancellation-policy" name="policies" class="w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 px-4 py-2 text-sm min-h-[120px]" placeholder="مثال: لا يمكن استرجاع المبلغ قبل 24 ساعة من موعد الفعالية...">{{ old('policies', $user->additional_data['policies'] ?? '') }}</textarea>
+          </div>
+          <div class="flex items-center justify-between bg-slate-50 p-3 rounded-lg">
+            <span class="text-sm font-medium text-gray-700">السماح بالاسترجاع التلقائي</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" name="allow_refund" value="1" class="sr-only peer" id="allow-refund"
+                {{ old('allow_refund', $user->additional_data['allow_refund'] ?? false) ? 'checked' : '' }}>
+              <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-orange-500 transition"></div>
+              <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full peer-checked:translate-x-5 transition"></div>
+            </label>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- إعدادات الدفع -->
-    <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
-      <div class="flex flex-col space-y-1.5 p-6">
-        <h3 class="text-xl font-semibold tracking-tight flex items-center gap-2">
-          <svg class="lucide lucide-credit-card" ...></svg>
-          إعدادات الدفع
-        </h3>
-        <p class="text-sm text-slate-500">اختر وسائل الدفع التي ترغب في توفيرها لعملائك.</p>
-      </div>
-      <div class="p-6 pt-0 space-y-4">
-
-        @php
-          $payments = [
-            ['id' => 'visa-mastercard', 'label' => 'بطاقات فيزا وماستركارد'],
-            ['id' => 'mada', 'label' => 'مدى'],
-            ['id' => 'apple-pay', 'label' => 'Apple Pay'],
-            ['id' => 'stc-pay', 'label' => 'STC Pay', 'checked' => false],
-          ];
-        @endphp
-
-        @foreach ($payments as $payment)
-        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-          <label for="{{ $payment['id'] }}" class="block text-sm font-medium text-gray-700 mb-2">{{ $payment['label'] }}</label>
-          <button type="button" role="checkbox"
-            aria-checked="{{ $payment['checked'] ?? true ? 'true' : 'false' }}"
-            data-state="{{ $payment['checked'] ?? true ? 'checked' : 'unchecked' }}"
-            value="on" id="{{ $payment['id'] }}"
-            class="peer h-4 w-4 shrink-0 rounded-sm border border-orange-500 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-orange-500 text-white">
-            @if (($payment['checked'] ?? true) === true)
-              <span data-state="checked" class="flex items-center justify-center text-current">
-                <svg class="h-4 w-4" ...></svg>
-              </span>
-            @endif
-          </button>
+      <!-- إعدادات الدفع -->
+      <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-xl mt-6">
+        <div class="p-6 border-b">
+          <h3 class="text-xl font-semibold flex items-center gap-2">
+            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M2 7h20M2 11h20M2 15h20"/>
+            </svg>
+            إعدادات الدفع
+          </h3>
+          <p class="text-sm text-slate-500 mt-1">اختر وسائل الدفع التي ترغب في توفيرها لعملائك.</p>
         </div>
-        @endforeach
+        <div class="p-6 space-y-4">
+          @php
+            $payments = [
+              ['id' => 'visa-mastercard', 'label' => 'بطاقات فيزا وماستركارد'],
+              ['id' => 'mada', 'label' => 'مدى'],
+              ['id' => 'apple-pay', 'label' => 'Apple Pay'],
+              ['id' => 'stc-pay', 'label' => 'STC Pay'],
+            ];
+          @endphp
 
+          @foreach ($payments as $payment)
+          <div class="flex items-center justify-between bg-slate-50 p-3 rounded-lg">
+            <span class="text-sm font-medium text-gray-700">{{ $payment['label'] }}</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" name="payments[]" value="{{ $payment['id'] }}" class="sr-only peer"
+                {{ in_array($payment['id'], old('payments', $user->additional_data['payments'] ?? [])) ? 'checked' : '' }}>
+              <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-orange-500 transition"></div>
+              <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full peer-checked:translate-x-5 transition"></div>
+            </label>
+          </div>
+          @endforeach
+        </div>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 

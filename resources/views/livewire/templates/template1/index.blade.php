@@ -1,4 +1,4 @@
-<div class="w-full max-w-6xl mx-auto mb-12" x-data="{ showForm: false }">
+<div class="w-full max-w-6xl mx-auto mb-12" x-data="{ showForm: false, showTform:false }">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
 {{-- البانر --}}
@@ -39,14 +39,44 @@
 
         {{-- روابط تواصل اجتماعي --}}
         @if(isset($merchant['additional_data']['social_links']))
-        <div class="flex justify-center gap-4 mt-4 text-2xl text-slate-700" id="merchant-social-links">
+        <div 
+            class="flex justify-center gap-4 mt-4 text-2xl text-slate-700" 
+            x-data="{
+                getIcon(url) {
+                    url = url.toLowerCase();
+                    if (url.includes('facebook.com')) return 'ri-facebook-fill';
+                    if (url.includes('twitter.com')) return 'ri-twitter-x-fill';
+                    if (url.includes('instagram.com')) return 'ri-instagram-line';
+                    if (url.includes('tiktok.com')) return 'ri-tiktok-fill';
+                    if (url.includes('youtube.com')) return 'ri-youtube-fill';
+                    if (url.includes('pinterest.com')) return 'ri-pinterest-fill';
+                    if (url.includes('linkedin.com')) return 'ri-linkedin-fill';
+                    if (url.includes('snapchat.com')) return 'ri-snapchat-fill';
+                    if (url.includes('whatsapp.com')) return 'ri-whatsapp-fill';
+                    if (url.includes('telegram.me') || url.includes('t.me')) return 'ri-telegram-fill';
+                    if (url.includes('github.com')) return 'ri-github-fill';
+                    if (url.includes('reddit.com')) return 'ri-reddit-fill';
+                    if (url.includes('medium.com')) return 'ri-medium-fill';
+                    if (url.includes('dribbble.com')) return 'ri-dribbble-fill';
+                    if (url.includes('behance.net')) return 'ri-behance-fill';
+                    if (url.includes('flickr.com')) return 'ri-flickr-fill';
+                    if (url.includes('tumblr.com')) return 'ri-tumblr-fill';
+                    if (url.includes('vimeo.com')) return 'ri-vimeo-fill';
+                    if (url.includes('itch.io')) return 'fa-brands fa-itch-io'; // FontAwesome
+                    if (url.includes('discord.gg') || url.includes('discord.com')) return 'ri-discord-fill';
+                    return 'ri-global-line';
+                }
+            }">
+        
             @foreach($merchant['additional_data']['social_links'] as $link)
-            <a href="{{ $link }}" target="_blank" class="hover:text-orange-500 transition duration-300" data-url="{{ $link }}">
-                <i class="ri-global-line"></i>
+            <a href="{{ $link }}" target="_blank" 
+               class="hover:text-orange-500 transition duration-300">
+                <i :class="getIcon('{{ $link }}')"></i>
             </a>
             @endforeach
         </div>
         @endif
+        
         
     </div>
 
@@ -63,9 +93,142 @@
                 class="pb-1 text-lg font-semibold transition">
                 الفعاليات
             </button>
+
+            <button @click="tab = 'policies'" 
+                :class="tab === 'policies' ? 'text-orange-600 border-b-2 border-orange-600' : 'text-slate-600'"
+                class="pb-1 text-lg font-semibold transition">
+                السياسات والأحكام
+            </button>
+            <button  @click="tab = 'support'"  wire:click="load_chats"
+                :class="tab === 'support' ? 'text-orange-600 border-b-2 border-orange-600' : 'text-slate-600'"
+                class="pb-1 text-lg font-semibold transition">
+                الدعم
+            </button>
         </div>
 
+        <div x-show="tab === 'policies'" x-transition  class="flex items-center justify-center min-h-screen">
+            <div class="bg-white shadow-lg rounded-2xl p-6 space-y-6 w-full max-w-2xl ">
+                
+                <!-- العنوان -->
+                <h3 class="text-xl font-bold text-slate-800 flex gap-2">
+                    <i class="ri-file-text-line text-orange-500 text-2xl"></i>
+                    السياسات والأحكام
+                </h3>
+        
+                <!-- نص السياسة -->
+                <div class="bg-slate-50 rounded-xl p-4 shadow-sm">
+                    <h4 class="text-lg font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                        <i class="ri-article-line text-orange-500"></i> نص السياسة
+                    </h4>
+                    <p class="text-slate-600">
+                        {{ $merchant->additional_data['policies'] ?? 'لا توجد سياسة محددة حالياً.' }}
+                    </p>
+                </div>
+        
+                <!-- السماح بالاسترجاع -->
+                <div class="bg-slate-50 rounded-xl p-4 shadow-sm">
+                    <h4 class="text-lg font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                        <i class="ri-refresh-line text-orange-500"></i> الاسترجاع التلقائي
+                    </h4>
+                    <p class="flex items-center gap-2 text-slate-700">
+                        @if(!empty($merchant->additional_data['allow_refund']) && $merchant->additional_data['allow_refund'])
+                            <i class="ri-checkbox-circle-line text-green-500"></i> مسموح بالاسترجاع التلقائي وفق الشروط.
+                        @else
+                            <i class="ri-close-circle-line text-red-500"></i> غير مسموح بالاسترجاع التلقائي.
+                        @endif
+                    </p>
+                </div>
+        
+                <!-- وسائل الدفع -->
+                <div class="bg-slate-50 rounded-xl p-4 shadow-sm">
+                    <h4 class="text-lg font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                        <i class="ri-bank-card-line text-orange-500"></i> وسائل الدفع المتاحة
+                    </h4>
+                    @if(!empty($merchant->additional_data['payments']))
+                        <ul class="space-y-2 text-slate-600">
+                            @foreach($merchant->additional_data['payments'] as $payment)
+                                <li class="flex items-center gap-2">
+                                    <i class="ri-check-line text-orange-500"></i>
+                                    @switch($payment)
+                                        @case('visa-mastercard') بطاقات فيزا وماستركارد @break
+                                        @case('mada') مدى @break
+                                        @case('apple-pay') Apple Pay @break
+                                        @case('stc-pay') STC Pay @break
+                                        @default {{ $payment }}
+                                    @endswitch
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p class="text-slate-500 flex items-center gap-2">
+                            <i class="ri-information-line text-orange-500"></i> لا توجد وسائل دفع محددة.
+                        </p>
+                    @endif
+                </div>
+        
+            </div>
+        </div>
+
+        <div x-show="tab === 'support'" x-transition class="flex justify-center pt-10">
+            <div class="bg-white shadow-lg rounded-2xl p-6 space-y-6 w-full max-w-2xl">
+                
+                <!-- زر إضافة تذكرة جديدة -->
+                <div class="flex justify-end">
+                    <button @click="showTform = true" wire:click="add_ticket"
+                    class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
+                    + إضافة تذكرة جديدة
+                </button>
+                
+                </div>
+                
+                <!-- عرض التذاكر -->
+                @if(!empty($tickets) && count($tickets) > 0)
+                    <div class="space-y-4">
+                        @foreach($tickets as $ticket)
+                        <div class="border rounded-lg p-4 shadow-sm hover:shadow-md transition">
+                            <div class="flex items-start gap-4">
+                                <!-- الصورة -->
+                                <img src="{{ asset('storage/' . ($ticket['attachment'] ?? 'default-image.jpg')) }}" 
+                                     alt="معاينة الصورة" 
+                                     class="w-16 h-16 object-cover rounded-lg shadow">
+                    
+                                <!-- النص مع زر الحذف -->
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-center">
+                                        <h3 class="text-lg font-semibold text-slate-700">
+                                            #{{ $ticket['id'] }} - {{ $ticket['subject'] ?? 'بدون عنوان' }}
+                                        </h3>
+                                        <button wire:click="deleteTicket({{ $ticket['id'] }})" 
+                                                class="text-red-500 hover:text-red-700 text-lg">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+                                    </div>
+                                    <p class="text-slate-600">
+                                        {{ $ticket['description'] ?? 'لا يوجد وصف للتذكرة.' }}
+                                    </p>
+                                    <p class="text-sm text-slate-500 mt-2">
+                                        <i class="ri-time-line"></i>
+                                        {{ $ticket['created_at'] ?? 'تاريخ غير متوفر' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    
+                    
+                    </div>
+                @else
+                    <p class="text-center text-slate-500">لا توجد تذاكر حالياً.</p>
+                @endif
+        
+            </div>
+        </div>
+        
+        
+        
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+
             @foreach($offers_collection as $offer)
             @php
             $type = $offer['type'] ?? 'services';
@@ -73,6 +236,7 @@
             if (is_string($features)) $features = json_decode($features, true);
             $calendar = $features['calendar'][0] ?? null;
             @endphp
+
 
             <div x-show="tab === '{{ $type }}'"
                 x-transition
@@ -118,9 +282,53 @@
         </div>
     </div>
 
+@if($newTicket)
+<div x-show="showTform" x-transition
+    class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+    @click.self="showTform = false">
+
+    <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg relative">
+        
+        <button wire:click="reset_ticket" @click="showTform = false"
+            class="absolute top-3 right-3 text-slate-400 hover:text-orange-500 text-xl">
+            <i class="ri-close-line"></i>
+        </button>
+
+        @if(!$savedTicket)
+            <h2 class="text-xl font-bold mb-4 text-slate-800">طلب تذكرة دعم</h2>
+
+            <div class="space-y-4">
+                <input type="text" wire:model.lazy="ticketTitle" placeholder="عنوان التذكرة" class="w-full p-2 border rounded" />
+                <input type="file" wire:model="ticketImage" class="w-full p-2 border rounded" />
+                
+                <textarea wire:model.lazy="ticketDescription" placeholder="وصف التذكرة" class="w-full p-2 border rounded" rows="4"></textarea>
+                <button wire:click="save_ticket" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded">
+                    إرسال
+                </button>
+            </div>
+
+        @else
+            <h2 class="text-xl font-bold mb-4 text-slate-800">نجاح</h2>
+            <div class="flex items-center justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <p class="text-center text-slate-700">تمت العملية بنجاح!</p>
+            <div class="mt-4 text-center">
+                <button @click="showTform = false" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+                    إغلاق
+                </button>
+            </div>
+        @endif
+
+    </div>
+</div>
 
 
-    @if ($selectedOffer)
+@endif
+
+@if ($selectedOffer)
     <div x-show="showForm" x-transition
         class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
         @click.self="showForm = false">
@@ -573,35 +781,35 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('#merchant-social-links a').forEach(anchor => {
-            const url = anchor.dataset.url?.toLowerCase() || '';
-            let iconClass = 'ri-global-line';
+    // document.addEventListener('DOMContentLoaded', () => {
+    //     document.querySelectorAll('#merchant-social-links a').forEach(anchor => {
+    //         const url = anchor.dataset.url?.toLowerCase() || '';
+    //         let iconClass = 'ri-global-line';
     
-            if (url.includes('facebook.com'))        iconClass = 'ri-facebook-fill';
-            else if (url.includes('twitter.com'))    iconClass = 'ri-twitter-x-fill';
-            else if (url.includes('instagram.com'))  iconClass = 'ri-instagram-line';
-            else if (url.includes('tiktok.com'))     iconClass = 'ri-tiktok-fill';
-            else if (url.includes('youtube.com'))    iconClass = 'ri-youtube-fill';
-            else if (url.includes('pinterest.com'))  iconClass = 'ri-pinterest-fill';
-            else if (url.includes('linkedin.com'))   iconClass = 'ri-linkedin-fill';
-            else if (url.includes('snapchat.com'))   iconClass = 'ri-snapchat-fill';
-            else if (url.includes('whatsapp.com'))   iconClass = 'ri-whatsapp-fill';
-            else if (url.includes('telegram.me') || url.includes('t.me')) iconClass = 'ri-telegram-fill';
-            else if (url.includes('github.com'))     iconClass = 'ri-github-fill';
-            else if (url.includes('reddit.com'))     iconClass = 'ri-reddit-fill';
-            else if (url.includes('medium.com'))     iconClass = 'ri-medium-fill';
-            else if (url.includes('dribbble.com'))   iconClass = 'ri-dribbble-fill';
-            else if (url.includes('behance.net'))    iconClass = 'ri-behance-fill';
-            else if (url.includes('flickr.com'))     iconClass = 'ri-flickr-fill';
-            else if (url.includes('tumblr.com'))     iconClass = 'ri-tumblr-fill';
-            else if (url.includes('vimeo.com'))      iconClass = 'ri-vimeo-fill';
-            else if (url.includes('itch.io'))        iconClass = 'fa-brands fa-itch-io'; // FontAwesome
-            else if (url.includes('discord.gg') || url.includes('discord.com')) iconClass = 'ri-discord-fill';
+    //         if (url.includes('facebook.com'))        iconClass = 'ri-facebook-fill';
+    //         else if (url.includes('twitter.com'))    iconClass = 'ri-twitter-x-fill';
+    //         else if (url.includes('instagram.com'))  iconClass = 'ri-instagram-line';
+    //         else if (url.includes('tiktok.com'))     iconClass = 'ri-tiktok-fill';
+    //         else if (url.includes('youtube.com'))    iconClass = 'ri-youtube-fill';
+    //         else if (url.includes('pinterest.com'))  iconClass = 'ri-pinterest-fill';
+    //         else if (url.includes('linkedin.com'))   iconClass = 'ri-linkedin-fill';
+    //         else if (url.includes('snapchat.com'))   iconClass = 'ri-snapchat-fill';
+    //         else if (url.includes('whatsapp.com'))   iconClass = 'ri-whatsapp-fill';
+    //         else if (url.includes('telegram.me') || url.includes('t.me')) iconClass = 'ri-telegram-fill';
+    //         else if (url.includes('github.com'))     iconClass = 'ri-github-fill';
+    //         else if (url.includes('reddit.com'))     iconClass = 'ri-reddit-fill';
+    //         else if (url.includes('medium.com'))     iconClass = 'ri-medium-fill';
+    //         else if (url.includes('dribbble.com'))   iconClass = 'ri-dribbble-fill';
+    //         else if (url.includes('behance.net'))    iconClass = 'ri-behance-fill';
+    //         else if (url.includes('flickr.com'))     iconClass = 'ri-flickr-fill';
+    //         else if (url.includes('tumblr.com'))     iconClass = 'ri-tumblr-fill';
+    //         else if (url.includes('vimeo.com'))      iconClass = 'ri-vimeo-fill';
+    //         else if (url.includes('itch.io'))        iconClass = 'fa-brands fa-itch-io'; // FontAwesome
+    //         else if (url.includes('discord.gg') || url.includes('discord.com')) iconClass = 'ri-discord-fill';
     
-            const icon = anchor.querySelector('i');
-            icon.className = iconClass;
-        });
-    });
+    //         const icon = anchor.querySelector('i');
+    //         icon.className = iconClass;
+    //     });
+    // });
     </script>
     

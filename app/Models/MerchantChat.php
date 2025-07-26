@@ -11,7 +11,16 @@ class MerchantChat extends Model
     protected $fillable = [
         'merchant_id',
         'user_id',
+        'subject',
+        'description',
+        'attachment',
+        'additional_data',
+        
     ];
+    protected $casts = [
+        'additional_data' => 'array',
+    ];
+    
     public function messages()
     {
         return $this->hasMany(MerchantMessage::class, 'merchant_chat_id');

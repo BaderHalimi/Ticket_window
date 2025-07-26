@@ -9,6 +9,7 @@ use App\Http\Controllers\Merchantwithdraw;
 use App\Http\Controllers\Page_statistics;
 use App\Http\Controllers\PosSystemController;
 use App\Models\Role;
+use App\Http\Controllers\policies_settings;
 use App\Http\Controllers\M_dashboard_index;
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->group(function(){
     Route::get('/',[M_dashboard_index::class,"index"])->name('overview');
@@ -66,9 +67,12 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->gro
     Route::get('page_setup',function(){
         return view('merchant.dashboard.page_setup');
     })->name('page_setup');
-    Route::get('policies_settings',function(){
-        return view('merchant.dashboard.policies_settings');
-    })->name('policies_settings');
+    // Route::get('policies_settings',function(){
+    //     return view('merchant.dashboard.policies_settings');
+    // })->name('policies_settings');
+
+    Route::resource('policies_settings', policies_settings::class)->names("policies_settings");
+
     Route::get('languages_translation',function(){
         return view('merchant.dashboard.languages_translation');
     })->name('languages_translation');

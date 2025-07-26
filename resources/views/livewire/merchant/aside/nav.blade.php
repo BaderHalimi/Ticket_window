@@ -145,7 +145,7 @@
         <span>إعداد الصفحة</span>
     </a>
 
-    <a @if($merchant??false) href="{{ route('merchant.dashboard.m.policies_settings',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.policies_settings') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.policies_settings') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.policies_settings')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
+    <a @if($merchant??false) href="{{ route('merchant.dashboard.m.policies_settings',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.policies_settings.index') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.policies_settings.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.policies_settings.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <circle cx="6" cy="13" r="3"></circle>
             <path d="m9.7 14.4-.9-.3"></path>
@@ -171,13 +171,13 @@
         <span>اللغات والترجمة</span>
     </a>
 
-    <a @if($merchant??false) href="{{ route('merchant.dashboard.m.api',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.api') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.api') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.api')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
+    {{-- <a @if($merchant??false) href="{{ route('merchant.dashboard.m.api',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.api') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.api') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.api')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <polyline points="16 18 22 12 16 6"></polyline>
             <polyline points="8 6 2 12 8 18"></polyline>
         </svg>
         <span>API والتكاملات</span>
-    </a>
+    </a> --}}
 
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.activity_log.index',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.activity_log.index') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.activity_log.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.activity_log.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">

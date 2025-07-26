@@ -58,7 +58,7 @@
                                 </svg></div>
                         </div>
                         <div class="p-6 pt-0" bis_skin_checked="1">
-                            <p class="text-3xl font-bold text-slate-900">{{$topOfferName}}</p>
+                            <p class="text-3xl font-bold text-slate-900">{{$topOfferName ?? "لايوجد"}}</p>
                         </div>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                             @endforelse
                         
                             <div class="mt-4">
-                                {{ $notification->links() }} <!-- روابط التنقل -->
+                                {{ $notification->links() }} 
                             </div>
                         </div>
                         
