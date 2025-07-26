@@ -5,7 +5,7 @@
         <div bis_skin_checked="1" style="opacity: 1; transform: none;">
             <div class="space-y-8" bis_skin_checked="1">
                 <h2 class="text-3xl font-bold text-slate-800">نظرة عامة</h2>
-                @livewire('under-review')
+                {{-- @livewire('under-review') --}}
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6" bis_skin_checked="1">
                     <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg card-hover" bis_skin_checked="1">
                         <div class="space-y-1.5 p-6 flex flex-row items-center justify-between pb-2" bis_skin_checked="1">
@@ -30,7 +30,7 @@
                                 </svg></div>
                         </div>
                         <div class="p-6 pt-0" bis_skin_checked="1">
-                            <p class="text-3xl font-bold text-slate-900">--</p>
+                            <p class="text-3xl font-bold text-slate-900"> {{$activeReservationsCount}} </p>
                         </div>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg card-hover" bis_skin_checked="1">
@@ -43,7 +43,7 @@
                                 </svg></div>
                         </div>
                         <div class="p-6 pt-0" bis_skin_checked="1">
-                            <p class="text-3xl font-bold text-slate-900">-,--- ريال</p>
+                            <p class="text-3xl font-bold text-slate-900">{{$wallet}} ريال</p>
                         </div>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg card-hover" bis_skin_checked="1">

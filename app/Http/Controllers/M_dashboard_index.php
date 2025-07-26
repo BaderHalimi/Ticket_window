@@ -15,8 +15,29 @@ class M_dashboard_index extends Controller
     {
         $statistics = get_statistics(Auth::id());
         $payments = $statistics["payments"];
-        $offers = $statistics["offers"]->Reservations;
-        //dd($offers);
+        $offers = $statistics["offers"];
+        $now = Carbon::now();
+        $wallet = $statistics["wallet"]->balance;
+        //dd($wallet);
+        $activeReservationsCount = collect($statistics["offers"])
+        ->flatMap(function ($offer) {
+            return $offer->Reservations ?? [];
+        })
+        ->filter(function ($reservation) use ($now) {
+            $data = json_decode($reservation->additional_data, true);
+    
+            if (!isset($data['selected_date']) || !isset($data['selected_time'])) {
+                return false;
+            }
+    
+            $datetimeStr = $data['selected_date'] . ' ' . $data['selected_time'];
+            $startTime = Carbon::parse($datetimeStr);
+    
+            return $startTime->gt($now); 
+        })
+        ->count();
+
+        //dd($activeReservationsCount);
         $today = Carbon::today();
 
         $todayPayments = $payments->filter(function ($payment) use ($today) {
@@ -24,7 +45,7 @@ class M_dashboard_index extends Controller
         })->sum("amount");
 
         //dd($todayPayments);   
-        return view("merchant.dashboard.index",compact('todayPayments'));
+        return view("merchant.dashboard.index",compact('todayPayments',"activeReservationsCount","wallet"));
     }
 
     /**
