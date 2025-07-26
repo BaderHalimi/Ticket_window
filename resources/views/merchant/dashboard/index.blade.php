@@ -16,7 +16,7 @@
                                 </svg></div>
                         </div>
                         <div class="p-6 pt-0" bis_skin_checked="1">
-                            <p class="text-3xl font-bold text-slate-900">-,--- ريال</p>
+                            <p class="text-3xl font-bold text-slate-900">{{$todayPayments}} ريال</p>
                         </div>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg card-hover" bis_skin_checked="1">

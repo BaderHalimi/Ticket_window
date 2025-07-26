@@ -9,11 +9,9 @@ use App\Http\Controllers\Merchantwithdraw;
 use App\Http\Controllers\Page_statistics;
 use App\Http\Controllers\PosSystemController;
 use App\Models\Role;
-
+use App\Http\Controllers\M_dashboard_index;
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->group(function(){
-    Route::get('/',function(){
-        return view('merchant.dashboard.index');
-    })->name('overview');
+    Route::get('/',[M_dashboard_index::class,"index"])->name('overview');
     // Route::get('services',function(){
     //     return view('merchant.dashboard.services');
     // })->name('services');
