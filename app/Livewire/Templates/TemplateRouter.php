@@ -468,6 +468,21 @@ class TemplateRouter extends Component
             //$this->newTicket->image = $this->ticketImage;
             $this->newTicket->description = $this->ticketDescription;
             $this->newTicket->save();
+            $userName = Auth::guard('merchant')->user()->name;
+            //dd(function_exists('notifcate'));
+
+            notifcate(
+                $this->merchant->id,
+                "إشعار جديد",
+                "قام {$userName} بإنشاء تذكرة دعم بعنوان: {$this->ticketTitle}",
+                []
+            );
+            notifcate(
+                Auth::guard('merchant')->id(),
+                "تم إنشاء التذكرة بنجاح",
+                "لقد أنشأت تذكرة بعنوان: {$this->ticketTitle}",
+                []
+            );
             $this->savedTicket = true;
             $this->load_chats();
         

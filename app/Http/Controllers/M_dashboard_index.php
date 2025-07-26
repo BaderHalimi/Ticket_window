@@ -42,8 +42,10 @@ class M_dashboard_index extends Controller
         $topOffer = $topOfferData['offer']; 
         $topOfferName = $topOffer->name;   
 
-        $notification = notifications::where("user_id", Auth::id())->paginate(10);
-        //dd($notification);
+        $notification = notifications::where("user_id", Auth::id())
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+            //dd($notification);
         $today = Carbon::today();
 
         $todayPayments = $payments->filter(function ($payment) use ($today) {

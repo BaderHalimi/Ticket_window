@@ -235,6 +235,18 @@
       renderDonutChart();
       renderPeakTimeChart();
   });
+  document.addEventListener("livewire:load", () => {
+      renderCharts();
+      renderWeeklySalesChart();
+      renderDonutChart();
+      renderPeakTimeChart();
+  });
+  document.addEventListener("livewire:navigate", () => {
+      renderCharts();
+      renderWeeklySalesChart();
+      renderDonutChart();
+      renderPeakTimeChart();
+  });
 
   document.getElementById("export-all").addEventListener("click", function () {
       try {
