@@ -58,7 +58,7 @@
                                 </svg></div>
                         </div>
                         <div class="p-6 pt-0" bis_skin_checked="1">
-                            <p class="text-3xl font-bold text-slate-900">------</p>
+                            <p class="text-3xl font-bold text-slate-900">{{$topOfferName}}</p>
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,54 @@
                         <h3 class="text-xl font-semibold leading-none tracking-tight">الإشعارات الجديدة</h3>
                     </div>
                     <div class="p-6 pt-0" bis_skin_checked="1">
-                        <p class="text-slate-500">لا توجد إشعارات جديدة حالياً.</p>
+                        <div class="p-6 pt-0 space-y-4">
+                            @forelse ($notification as $note)
+                                <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="font-semibold text-slate-700">
+                                            {{ $note->subject }}
+                                        </h3>
+                                        <span class="text-xs text-slate-400">
+                                            {{ $note->created_at->diffForHumans() }}
+                                        </span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm mb-2">
+                                        {{ $note->message }}
+                                    </p>
+                                    @php
+                                        $data = json_decode($note->additional_data, true);
+                                    @endphp
+                        
+                                    @if(isset($data['from']) && isset($data['to']))
+                                        <div class="text-xs text-slate-500">
+                                            من: <span class="font-medium">{{ $data['from'] }}</span> |
+                                            إلى: <span class="font-medium">{{ $data['to'] }}</span>
+                                        </div>
+                                    @endif
+                        
+                                    <div class="mt-2 text-xs">
+                                        النوع:
+                                        <span class="inline-block px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+                                            {{ $note->type }}
+                                        </span>
+                        
+                                        @if(!$note->is_read)
+                                            <span class="ml-2 inline-block px-2 py-0.5 rounded bg-blue-100 text-blue-600">
+                                                غير مقروء
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                            @empty
+                                <p class="text-slate-500">لا توجد إشعارات جديدة حالياً.</p>
+                            @endforelse
+                        
+                            <div class="mt-4">
+                                {{ $notification->links() }} <!-- روابط التنقل -->
+                            </div>
+                        </div>
+                        
+                        
                     </div>
                 </div>
             </div>

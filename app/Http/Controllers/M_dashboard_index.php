@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-
+use App\Models\notifications;
 class M_dashboard_index extends Controller
 {
     /**
@@ -37,7 +37,13 @@ class M_dashboard_index extends Controller
         })
         ->count();
 
-        //dd($activeReservationsCount);
+        $offersPercent = $statistics['offersPercent'];
+        $topOfferData = $offersPercent->sortByDesc('percentage')->first();
+        $topOffer = $topOfferData['offer']; 
+        $topOfferName = $topOffer->name;   
+
+        $notification = notifications::where("user_id", Auth::id())->paginate(10);
+        //dd($notification);
         $today = Carbon::today();
 
         $todayPayments = $payments->filter(function ($payment) use ($today) {
@@ -45,7 +51,7 @@ class M_dashboard_index extends Controller
         })->sum("amount");
 
         //dd($todayPayments);   
-        return view("merchant.dashboard.index",compact('todayPayments',"activeReservationsCount","wallet"));
+        return view("merchant.dashboard.index",compact('todayPayments',"activeReservationsCount","wallet","topOfferName","notification"));
     }
 
     /**
