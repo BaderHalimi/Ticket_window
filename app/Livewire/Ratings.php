@@ -14,10 +14,10 @@ class Ratings extends Component
     public $visible = true;
 
 
-    public function mount($id)
+    public function mount($id=null)
     {
         $this->id = $id;
-
+    
         $user = Auth::guard('customer')->user();
         if ($user) {
             $existing = Customer_Ratings::where('user_id', $user->id)
@@ -47,7 +47,7 @@ class Ratings extends Component
             session()->flash('error', 'يجب عليك تسجيل الدخول لتقييم الخدمة.');
             return;
         }
-
+        //dd($this->id);
         Customer_Ratings::updateOrCreate(
             [
                 'user_id' => $user->id,

@@ -757,3 +757,18 @@ function translate($text, $source = 'auto', $target = 'fr') {
         return 'حدث خطأ: ' . $e->getMessage();
     }
 }
+
+if(!function_exists("pendingRes")){
+    function pendingRes($collection){
+        $today = Carbon::today();
+
+        $res = $collection->filter(function ($item) use ($today) {
+            $data = json_decode($item->additional_data ?? '{}', true);
+            $selectedDate = isset($data['selected_date']) ? Carbon::parse($data['selected_date']) : null;
+        
+            return $item->quantity == 0 && $selectedDate && $selectedDate->lt($today);
+        });
+        return $res;
+    
+    }
+}

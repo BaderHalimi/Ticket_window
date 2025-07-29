@@ -7,6 +7,7 @@ use App\Http\Controllers\Customer\Tickets;
 use App\Http\Controllers\SupportController;
 use App\Models\PaidReservation;
 use Carbon\Carbon;
+use App\Http\Controllers\CustomerExperince;
 
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->group(function () {
 
@@ -62,10 +63,10 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->gro
     Route::get('rewards', function () {
         return view('customer.dashboard.reward');
     })->name('rewards');
-    Route::get('expirence', function () {
-        return view('customer.dashboard.expirence');
-    })->name('expirences');
-
+    // Route::get('expirence', function () {
+    //     return view('customer.dashboard.expirence');
+    // })->name('expirences');
+    Route::resource('expirence', CustomerExperince::class)->names("expirences");
 
     Route::resource('tickets', Tickets::class)->names('tickets');
     Route::resource('support', SupportController::class)->names('support');

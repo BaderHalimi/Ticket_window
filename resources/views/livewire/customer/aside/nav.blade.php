@@ -79,7 +79,7 @@
                 <path d="m9.17 14.83-4.24 4.24"></path>
                 <circle cx="12" cy="12" r="4"></circle>
             </svg>الدعم الفني</a>
-        <a href="{{ route('customer.dashboard.expirences') }}"
+        <a href="{{ route('customer.dashboard.expirences.index') }}"
             class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('customer.dashboard.support')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
