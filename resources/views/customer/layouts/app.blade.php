@@ -22,7 +22,7 @@
 </head>
 
 <body class="bg-slate-100 font-sans">
-  <div class="relative h-screen flex overflow-hidden" dir="rtl" x-data="{ openSidebar: false }">
+  <div class="relative h-screen flex overflow-hidden" dir="rtl" x-data="{ openSidebar: true }">
     
     <!-- ✅ السايدبار -->
     <div

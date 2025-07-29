@@ -29,6 +29,12 @@
                                 @php
                                     $offering = $reservation->offering;
                                     $features = is_string($offering->features ?? '') ? json_decode($offering->features) : (object) ($offering->features ?? []);
+                                    $additional_data = is_string($reservation->additional_data ?? '') 
+    ? json_decode($reservation->additional_data, true)  // ← هنا
+    : (array) ($reservation->additional_data ?? []);
+                                    $datetime = isset($additional_data['selected_date'], $additional_data['selected_time']) 
+                                    ? Carbon\Carbon::parse($additional_data['selected_date'] . ' ' . $additional_data['selected_time']) 
+                                    : null;
                                 @endphp
                                 <tr class="bg-white shadow-sm rounded-md">
                                     <td class="px-4 py-2 font-medium">
@@ -36,7 +42,7 @@
                                     </td>
                                     <td class="px-4 py-2">{{ $offering->name ?? '—' }}</td>
                                     <td class="px-4 py-2">{{ $offering->location ?? '—' }}</td>
-                                    <td class="px-4 py-2">{{ $offering->start_time ? $offering->start_time->format('Y-m-d H:i') : '—' }}</td>
+                                    <td class="px-4 py-2">{{  $datetime->format('Y-m-d H:i') ?? '—' }}</td>
                                     <td class="px-4 py-2">{{ $reservation->price }} SAR</td>
                                     <td class="px-4 py-2 text-center flex justify-center gap-2">
                                         <!-- QR Icon -->
@@ -50,7 +56,7 @@
                                             'type' => $reservation->item_type === 'event' ? 'Event Ticket' : 'Table Booking',
                                             'title' => $offering->name,
                                             'location' => $offering->location,
-                                            'time' => $offering->start_time,
+                                            'time' => $datetime->format('Y-m-d H:i'),
                                             'price' => $reservation->price
                                         ]) }})" class="text-gray-600 hover:text-black text-xl">
                                             <i class="ri-file-pdf-line"></i>

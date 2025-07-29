@@ -39,7 +39,7 @@
                 <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
                 <path d="M12 17V7"></path>
             </svg>السجل المالي</a>
-    <a href="{{ route('customer.dashboard.rewards') }}"
+    {{-- <a href="{{ route('customer.dashboard.rewards') }}"
             class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('home')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base"><svg
                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -47,7 +47,7 @@
                 <polygon
                     points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                 </polygon>
-            </svg>المكافآت</a>
+            </svg>المكافآت</a> --}}
         <a href="{{ route('customer.dashboard.profile') }}"
             class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('customer.dashboard.profile')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base"><svg
                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
