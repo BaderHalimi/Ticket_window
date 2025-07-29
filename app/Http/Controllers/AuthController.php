@@ -60,7 +60,7 @@ class AuthController extends Controller
                 'string',
                 'regex:/^\+\d{1,4}$/', // مثل +966 أو +1
             ],
-            'phone' => ['nullable', 'regex:/^[0-9]{7,12}$/'],
+            'phone' => ['required', 'regex:/^[0-9\s-]{7,20}$/'],
         ];
 
         if (Route::is('signup')) {
@@ -264,7 +264,7 @@ class AuthController extends Controller
                 'max:255',
                 'unique:users,email,' . $id,
             ],
-            'phone' => ['required', 'regex:/^\+?[0-9]{7,15}$/'],
+            'phone' => ['required', 'regex:/^[0-9\s-]{7,20}$/'],
 
         ]);
 //        dd($validated);

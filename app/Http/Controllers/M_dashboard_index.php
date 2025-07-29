@@ -37,10 +37,10 @@ class M_dashboard_index extends Controller
         })
         ->count();
 
-        $offersPercent = $statistics['offersPercent'];
+        $offersPercent = $statistics['offersPercent']  ?? null;
         $topOfferData = $offersPercent->sortByDesc('percentage')->first();
-        $topOffer = $topOfferData['offer']; 
-        $topOfferName = $topOffer->name;   
+        $topOffer = $topOfferData['offer'] ?? null; 
+        $topOfferName = $topOffer->name  ?? null;   
 
         $notification = notifications::where("user_id", Auth::id())
         ->orderBy('created_at', 'desc')

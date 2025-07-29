@@ -106,10 +106,39 @@ class TemplateRouter extends Component
         $this->enableNext = true; // Enable next step when a date is selected
     }
 
+    public function selectDateE($D, $T)
+    {
+    
+        $this->selectedDate = $D;
+        $this->selectedTime = $T;
+
+        $found = false;
+
+        foreach ($this->times["data"] as $time) {
+            
+            $startDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i', $time['start_date'] . ' ' . $time['start_time']);
+            $endDateTime   = \Carbon\Carbon::createFromFormat('Y-m-d H:i', $time['end_date'] . ' ' . $time['end_time']);
+            $selectedDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i', $D . ' ' . $T);
+
+            if ($selectedDateTime->between($startDateTime, $endDateTime)) {
+                $found = true;
+                break;
+            }
+        }
+
+        $this->enableNext = $found;
+
+        if (!$found) {
+            $this->addError('selectedTime', 'الوقت غير متاح ضمن الفترات المحددة.');
+        }
+    }
+
+
 
 
     public function mount($merchant, $offers_collection = null)
     {
+        //dd($this->merchant);
         //dd(fetch_time(33));
         //get_quantity(33);
         //dd(can_booking_now(33,1));
@@ -159,6 +188,11 @@ class TemplateRouter extends Component
         }
         if ($this->step != 4) {
             $this->enableNext = false; // Reset enableNext on step change
+        }
+        if ($this->step ==3 && $this->selectedOffer->type == "events"){
+            $this->step +=1;
+            $this->enableNext = true;
+
         }
         $this->Get_time();
         $this->pricing();
@@ -217,6 +251,11 @@ class TemplateRouter extends Component
             }
             if ($this->step == 4) {
                 $this->enableNext = true; // Enable next step when a date is selected
+            }
+            if ($this->step ==3 && $this->selectedOffer->type == "events"){
+            $this->step -=1;
+            //$this->enableNext = true;
+
             }
             $this->Get_time();
             $this->pricing();
@@ -430,7 +469,7 @@ class TemplateRouter extends Component
 
     public function load_chats(){
         //dd(Auth::guard('merchant')->id());
-        $this->tickets = MerchantChat::where("user_id",Auth::guard('merchant')->id())
+        $this->tickets = MerchantChat::where("user_id",Auth::guard('customer')->id())
         ->where("merchant_id",$this->merchant->id)
         ->get();
 
@@ -463,12 +502,12 @@ class TemplateRouter extends Component
                 $this->newTicket->attachment = $imagePath;
             }
             $this->newTicket->merchant_id = $this->merchant->id;
-            $this->newTicket->user_id = Auth::guard('merchant')->id();
+            $this->newTicket->user_id = Auth::guard('customer')->id();
             $this->newTicket->subject = $this->ticketTitle;
             //$this->newTicket->image = $this->ticketImage;
             $this->newTicket->description = $this->ticketDescription;
             $this->newTicket->save();
-            $userName = Auth::guard('merchant')->user()->name;
+            $userName = Auth::guard('customer')->user()->name;
             //dd(function_exists('notifcate'));
 
             notifcate(
@@ -478,7 +517,7 @@ class TemplateRouter extends Component
                 []
             );
             notifcate(
-                Auth::guard('merchant')->id(),
+                Auth::guard('customer')->id(),
                 "تم إنشاء التذكرة بنجاح",
                 "لقد أنشأت تذكرة بعنوان: {$this->ticketTitle}",
                 []

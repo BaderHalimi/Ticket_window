@@ -3,8 +3,8 @@
 
 {{-- البانر --}}
 <div class="relative w-full h-52 md:h-64 bg-cover bg-center rounded-b-3xl shadow-2xl ring-1 ring-orange-200"
-    style="background-image: url('{{ asset('storage/' . $merchant['additional_data']['banner']) }}')">
-    
+    style="background-image: url('{{ isset($merchant['additional_data']['banner']) ? asset('storage/' . $merchant['additional_data']['banner']) : asset('default-banner.jpg') }}')">
+
 
 <div class="absolute top-2 left-4 flex gap-4 z-20">
 
@@ -27,13 +27,13 @@
 
     {{-- الصورة الشخصية --}}
     <div class="relative w-full flex justify-center -mt-16 md:-mt-20 z-10">
-        <img src="{{ asset('storage/' . $merchant['additional_data']['profile_picture']) }}"
+        <img src="{{isset($merchant['additional_data']['profile_picture']) ? asset('storage/' . $merchant['additional_data']['profile_picture']) : asset('default-avatar.png') }}"
             class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white shadow-2xl object-cover ring-2 ring-orange-400" />
     </div>
 
     {{-- معلومات التاجر --}}
     <div class="text-center mt-4 px-4">
-        <h1 class="text-2xl md:text-3xl font-bold text-slate-800">{{ $merchant['f_name'] }} {{ $merchant['l_name'] }}</h1>
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-800">{{ $merchant['f_name'] ?? null }} {{ $merchant['l_name'] ?? null}}</h1>
         <p class="text-slate-600 mt-1 text-lg font-medium">{{ $merchant['business_name'] }}</p>
         <p class="text-slate-500 text-sm">{{ $merchant['phone'] }}</p>
 
@@ -81,7 +81,7 @@
     </div>
 
     {{-- تبويبات العروض --}}
-    <div x-data="{ tab: '{{ $merchant->offers()->latest()->first()->type }}' }" class="mt-10 px-4">
+    <div x-data="{ tab: '{{ $merchant->offers()->latest()->first()->type ?? null}}' }" class="mt-10 px-4">
         <div class="flex justify-center gap-6 mb-6">
             <button @click="tab = 'services'"
                 :class="tab === 'services' ? 'text-orange-600 border-b-2 border-orange-600' : 'text-slate-600'"
@@ -405,72 +405,53 @@
 
             @if ($step == 2)
             @if ($selectedOffer->type == 'events')
-            @php
-            $currentDate = isset($calendarDate) ? \Carbon\Carbon::parse($calendarDate) : now();
-            $startOfMonth = $currentDate->copy()->startOfMonth();
-            $endOfMonth = $currentDate->copy()->endOfMonth();
-            $firstDayOfWeek = $startOfMonth->dayOfWeek;
-            $daysInMonth = $currentDate->daysInMonth;
-            $rangeStart = \Carbon\Carbon::parse($times['data'][0]['start_date']);
-            $rangeEnd = \Carbon\Carbon::parse($times['data'][0]['end_date']);
-            $today = now()->toDateString();
-            @endphp
-
-            <div class="space-y-4">
-                <div class="flex justify-between items-center">
-                    <button wire:click="previousMonth" class="text-slate-500 hover:text-orange-500 text-xl">
-                        <i class="ri-arrow-left-s-line"></i>
-                    </button>
-                    <h3 class="text-lg font-semibold text-slate-800">
-                        <i class="ri-calendar-line text-orange-500 text-xl"></i>
-                        {{ $currentDate->format('F Y') }}
-                    </h3>
-                    <button wire:click="nextMonth" class="text-slate-500 hover:text-orange-500 text-xl">
-                        <i class="ri-arrow-right-s-line"></i>
-                    </button>
-                </div>
-
-                {{-- أسماء الأيام --}}
-                <div class="grid grid-cols-7 gap-2 text-center text-slate-500 font-medium text-sm">
-                    <div>أحد</div>
-                    <div>اثنين</div>
-                    <div>ثلاثاء</div>
-                    <div>أربعاء</div>
-                    <div>خميس</div>
-                    <div>جمعة</div>
-                    <div>سبت</div>
-                </div>
-
-                {{-- تقويم الشهر --}}
-                <div class="grid grid-cols-7 gap-2 text-center text-sm">
-                    @for ($i = 0; $i < $firstDayOfWeek; $i++)
-                        <div>
-                </div> {{-- فراغات قبل أول يوم --}}
-                @endfor
-
-                @for ($day = 1; $day <= $daysInMonth; $day++)
                     @php
-                    $date=$currentDate->copy()->day($day);
-                    $dateString = $date->toDateString();
-                    $inRange = $date->between($rangeStart, $rangeEnd);
-                    $isToday = $dateString === $today;
-                    $isSelected = isset($selectedDate) && $dateString === $selectedDate;
-                    @endphp
+                    $selected = $selectedDate ?? null;
+                    $selectedT = $selectedTime ?? null;
+                
+                    $uniqueDates = collect($times['data'] ?? [])
+                        ->flatMap(function ($item) {
+                            return [
+                                [\Carbon\Carbon::parse($item['start_date'])->format('Y-m-d'),
+                                \Carbon\Carbon::parse($item['start_time'])->format('H:i')
+                                ]
+                                //\Carbon\Carbon::parse($item['end_date'])->format('Y-m-d'),
+                            ];
+                        })
+                        ->unique()
+                        ->sort()
+                        ->values();
+                        //dd($uniqueDates,$times['data'] );
+                @endphp
+                
+                <div class="space-y-3">
+                    @foreach ($uniqueDates as $date)
+                        @php
+                            $isSelected = ($date[0] === $selected) && ($date[1] === $selectedT);
+                            $dateW = $date[0];
+                            $time = $date[1];
+                        @endphp
+<button wire:click="selectDateE('{{ $dateW }}', '{{ $time }}')"
+class="w-full flex flex-col items-start justify-center px-4 py-3 rounded-lg border transition gap-1
+    {{ $isSelected ? 'bg-orange-500 text-white border-orange-600' : 'bg-white text-slate-700 hover:bg-orange-100 border-slate-200' }}">
 
-                    @if ($inRange)
-                    <button wire:click="selectDate('{{ $dateString }}')"
-                        class="py-2 rounded-xl border font-medium transition
-                                        {{ $isSelected ? 'bg-orange-500 text-white border-orange-600' : ($isToday ? 'bg-orange-100 border-orange-300 text-slate-700' : 'bg-slate-100 hover:bg-orange-100 border-slate-200 text-slate-700') }}">
-                        {{ $day }}
-                    </button>
-                    @else
-                    <div class="py-2 rounded-xl border border-slate-100 text-slate-300 line-through bg-gray-100 cursor-not-allowed">
-                        {{ $day }}
-                    </div>
-                    @endif
-                    @endfor
-            </div>
-        </div>
+<div class="flex justify-between items-center w-full">
+    <div class="flex flex-col text-right">
+        <span class="font-semibold">
+            {{ \Carbon\Carbon::parse($dateW)->translatedFormat('j F Y') }}
+        </span>
+        <span class="text-sm {{ $isSelected ? 'text-orange-100' : 'text-slate-500' }}">
+            {{ \Carbon\Carbon::parse($time)->translatedFormat('H:i') }}
+        </span>
+    </div>
+    <i class="ri-arrow-left-s-line text-xl {{ $isSelected ? 'text-white' : 'text-slate-400' }}"></i>
+</div>
+</button>
+
+
+                    @endforeach
+                </div>
+        
         @elseif ($selectedOffer->type == 'services')
         @php
         $currentDate = isset($calendarDate) ? \Carbon\Carbon::parse($calendarDate) : now();
@@ -538,7 +519,7 @@
                 $isSelected = isset($selectedDate) && $dateString === $selectedDate;
                 $dayOfWeek = $date->dayOfWeek; // 0 (الأحد) إلى 6 (السبت)
 
-                $dayName = array_search($dayOfWeek, $dayToCarbon); // نحصل على اسم اليوم بالنص
+                $dayName = array_search($dayOfWeek, $dayToCarbon);
                 $isDayAvailable = isset($availableDays[$dayName]);
 
                 $withinMaxDate = !$maxDate || $date->lte($maxDate);
@@ -565,33 +546,41 @@
     @endif
 
     @if ($step == 3)
-    @php
+        @if ($selectedOffer->type == 'events')
 
-    $dayName = Carbon\Carbon::parse($selectedDate)->locale('en')->dayName; // e.g. "Saturday"
-    $dayName = strtolower($dayName); // Ensure match with array keys
-    $minTime = '00:00';
-    $maxTime = '23:59';
+            {{-- @php
+                    $this->dispatch('stepNext');
+            @endphp --}}
+        @elseif ($selectedOffer->type == 'services')
+            @php
+                
+            $dayName = Carbon\Carbon::parse($selectedDate)->locale('en')->dayName; // e.g. "Saturday"
+            $dayName = strtolower($dayName); // Ensure match with array keys
+            $minTime = '00:00';
+            $maxTime = '23:59';
 
-    if ($selectedOffer->type == 'events') {
-    $minTime = $times['data'][0]['start_time'] ?? '00:00';
-    $maxTime = $times['data'][0]['end_time'] ?? '23:59';
-    } elseif ($selectedOffer->type == 'services' && isset($times['data'][$dayName])) {
-    $minTime = $times['data'][$dayName]['from'] ?? '00:00';
-    $maxTime = $times['data'][$dayName]['to'] ?? '23:59';
-    }
-    @endphp
+            if ($selectedOffer->type == 'events') {
+            $minTime = $times['data'][0]['start_time'] ?? '00:00';
+            $maxTime = $times['data'][0]['end_time'] ?? '23:59';
+            } elseif ($selectedOffer->type == 'services' && isset($times['data'][$dayName])) {
+            $minTime = $times['data'][$dayName]['from'] ?? '00:00';
+            $maxTime = $times['data'][$dayName]['to'] ?? '23:59';
+            }
+            @endphp
 
-    <div class="mt-4">
-        <label for="selected_time" class="block text-sm font-medium text-gray-700">اختر الوقت:</label>
-        <input
-            type="time"
-            id="selected_time"
-            wire:model.lazy="selectedTime"
-            min="{{ $minTime }}"
-            max="{{ $maxTime }}"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
-        <p class="text-xs text-gray-500 mt-1">من {{ $minTime }} إلى {{ $maxTime }}</p>
-    </div>
+            <div class="mt-4">
+                <label for="selected_time" class="block text-sm font-medium text-gray-700">اختر الوقت:</label>
+                <input
+                    type="time"
+                    id="selected_time"
+                    wire:model.lazy="selectedTime"
+                    min="{{ $minTime }}"
+                    max="{{ $maxTime }}"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
+                <p class="text-xs text-gray-500 mt-1">من {{ $minTime }} إلى {{ $maxTime }}</p>
+            </div>
+        @endif
+
     @endif
 
 
@@ -812,4 +801,3 @@
     //     });
     // });
     </script>
-    

@@ -52,6 +52,9 @@ Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard')
 
 Route::get('/{id}', function ($id) {
     $merchant = User::findOrFail($id);
+    if ($merchant->status != 'active' || $merchant->role != 'merchant') {
+        abort(404);
+    }
     set_viewed($merchant->id);
     return view('template', compact('merchant'));
 })->where(['id' => '[0-9]+'])->name('template');

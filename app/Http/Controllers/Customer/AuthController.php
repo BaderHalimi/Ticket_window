@@ -58,7 +58,7 @@ class AuthController extends Controller
             // 'business_type' => 'nullable|in:restaurant,events,show,other',
             // 'phone' => 'nullable|string|max:15|unique:users',
             'country_code' => ['required', 'in:+1,+966,+971,+20'],
-            'phone' => ['required', 'regex:/^[0-9]{7,12}$/'], 
+            'phone' => ['required', 'regex:/^[0-9\s-]{7,20}$/'],
             // 'other_business_type' => 'nullable|required_if:business_type,other|string|max:255',
         ]);
         $fullPhone = $request->country_code . ltrim($request->phone, '0');
