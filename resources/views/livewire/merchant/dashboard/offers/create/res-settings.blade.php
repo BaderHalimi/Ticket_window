@@ -266,7 +266,8 @@
                 </label>
             </div>
         </div> --}}
-@if ($type == "services")
+        
+@if ($offering->type == "services")
 <div>
     {{-- <div class="flex items-center justify-between">
         <label class="text-sm font-medium">هل تريد تحديد الفروع لهذه الخدمة؟</label>

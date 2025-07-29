@@ -55,6 +55,11 @@ class TemplateRouter extends Component
     public function updatedSelectedBranch($branchId)
     {
         $this->branchDetails = Branch::find($branchId);
+        if ($this->branchDetails) {
+            $this->enableNext = true;
+        }
+
+
     }
     public function previousMonth()
     {
@@ -89,20 +94,22 @@ class TemplateRouter extends Component
             }
 
             $this->selectedDate = $date->toDateString();
+            $this->enableNext = true;
+
             return;
         }
 
-        if ($this->selectedOffer->type == 'events') {
-            $start = Carbon::parse($this->times['data'][0]["start_date"])->startOfDay();
-            $end = Carbon::parse($this->times['data'][0]["end_date"])->startOfDay();
+        // if ($this->selectedOffer->type == 'events') {
+        //     $start = Carbon::parse($this->times['data'][0]["start_date"])->startOfDay();
+        //     $end = Carbon::parse($this->times['data'][0]["end_date"])->startOfDay();
 
-            if ($date->lt($start) || $date->gt($end)) {
-                dd('التاريخ خارج النطاق المحدد للفعالية.');
-                return;
-            }
+        //     if ($date->lt($start) || $date->gt($end)) {
+        //         dd('التاريخ خارج النطاق المحدد للفعالية.');
+        //         return;
+        //     }
 
-            $this->selectedDate = $date->toDateString();
-        }
+        //     $this->selectedDate = $date->toDateString();
+        // }
         $this->enableNext = true; // Enable next step when a date is selected
     }
 
@@ -179,7 +186,7 @@ class TemplateRouter extends Component
     #[On('stepNext')]
     public function stepNext()
     {
-        if ($this->step == 0 && !($this->selectedOffer->type == "services" && $this->branch->isNotEmpty())) {
+        if ($this->step == 0 && !($this->selectedOffer->type == "services" )) {
             $this->step = 2;
         } else if ($this->step == 4 && empty($this->Qa)) {
             $this->step = 6;
@@ -232,6 +239,8 @@ class TemplateRouter extends Component
         if ($this->step > 0) {
             if ($this->step == 2 && !($this->selectedOffer->type == "services" && $this->branch->isNotEmpty())) {
                 $this->step = 0;
+                $this->enableNext = true;
+
             } else if ($this->step == 6 && empty($this->Qa)) {
                 $this->step = 4;
             } else {
@@ -242,6 +251,7 @@ class TemplateRouter extends Component
             }
             if ($this->step < 2) {
                 $this->selectedDate = null;
+
             }
             if ($this->step == 2 && $this->selectedDate != null) {
                 $this->enableNext = true; // Enable next step when a date is selected
@@ -539,6 +549,7 @@ class TemplateRouter extends Component
         if ($this->step == 4) {
             $this->updatePricing();
         }
+
         //$this->load_chats();
 
         return view('livewire.templates.template1.index');
