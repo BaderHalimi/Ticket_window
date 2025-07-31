@@ -2,6 +2,8 @@
     <div class="space-y-6">
 
         {{-- Toggle: تفعيل تحديد مدة الحجز --}}
+        @if ($offering->type == "services")
+
         <div>
             {{-- <div class="flex items-center justify-between">
                 <label class="text-sm font-medium">تحديد مدة الحجز؟</label>
@@ -189,6 +191,9 @@
                 </div>
             @endif
         </div>
+
+        @endif
+
 
         <div>
             <div class="flex items-center justify-between">
