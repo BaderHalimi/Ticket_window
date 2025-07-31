@@ -289,7 +289,7 @@ class AuthController extends Controller
             ],
         ]);
         $user = User::findOrFail($id);
-        $user->password = bcrypt($validated["password"]);
+        $user->password = Hash::make($validated["password"]);
         $user->save();
         return back()->with('success', 'تم تحديث البيانات بنجاح.');
 

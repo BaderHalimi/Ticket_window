@@ -65,7 +65,7 @@
             <!-- Progress Bar -->
 
         </div>
-        <div class="mt-4 max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6 space-y-6">
+        <div class="mt-4 max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6 space-y-6" x-data="{ loadingStep: null }">
             <h2 class="text-2xl font-bold text-slate-800">تعديل الخدمة</h2>
 
             <div class="grid grid-cols-12 gap-6">
@@ -81,15 +81,30 @@
                     6 => ['title' => 'الأسئلة', 'desc' => 'تفاصيل اكثر', 'icon' => 'ri-question-mark'],
                     ];
                     @endphp
-
                     @foreach ($steps as $step => $data)
-                    <div
+                    <div             @click.prevent="
+                    loadingStep = {{ $step }};
+                    setTimeout(() => {
+                        $wire.setStep({{ $step }});
+                        loadingStep = null;
+                    }, 500);
+                "
                         wire:click="setStep({{ $step }})"
                         class="flex items-start p-3 rounded-lg transition cursor-pointer
                             {{ $currentStep === $step ? 'border border-red-300 bg-red-50' : 'hover:bg-slate-50' }}">
-
-                        <i class="{{ $data['icon'] }} text-xl mt-1 ml-2
-                            {{ $currentStep === $step ? 'text-red-500' : 'text-slate-500' }}"></i>
+                            <div class="w-6 h-6 mt-1 ml-2 flex items-center justify-center">
+                                <template x-if="loadingStep === {{ $step }}">
+                                    <svg class="animate-spin h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                         viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                                    </svg>
+                                </template>
+                                <i x-show="loadingStep !== {{ $step }}" class="{{ $data['icon'] }} text-xl 
+                                    {{ $currentStep === $step ? 'text-red-500' : 'text-slate-500' }}"></i>
+                            </div>
 
                         <div>
                             <div class="font-semibold {{ $currentStep === $step ? 'text-red-800' : 'text-slate-800' }}">
@@ -101,7 +116,6 @@
                         </div>
                     </div>
                     @endforeach
-
 
                 </div>
 
