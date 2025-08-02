@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\OtpConfermation;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+Route::resource("/confermation",OtpConfermation::class)->names("otpConfermation");
 
 Route::get('/pricing', function () {
     return view('pricing');
@@ -105,3 +106,4 @@ Route::get('payment', function(){
 Route::view('payment/error', 'payment')->name('payment.error');
 Route::view('payment/cancel', 'payment')->name('payment.cancel');
 Route::view('payment/success', 'payment')->name('payment.success');
+

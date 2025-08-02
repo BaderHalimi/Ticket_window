@@ -18,6 +18,10 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
+
 if (!function_exists('getCard')){
     function getCard()
     {
@@ -770,5 +774,19 @@ if(!function_exists("pendingRes")){
         });
         return $res;
     
+    }
+}
+if (!function_exists("sendOTP")) {
+    function sendOTP($email) {
+        $otp = rand(100000, 999999);
+        Session::put('otp_code', $otp);
+        Session::put('otp_email', $email);
+        Session::put('otp_expires_at', now()->addMinutes(10));
+
+        Mail::raw("Your OTP code is: $otp", function ($message) use ($email) {
+            $message->to($email)
+                    ->subject("OTP Verification Code");
+        });
+        return $otp;
     }
 }

@@ -98,10 +98,12 @@ class AuthController extends Controller
         // تسجيل الدخول وتوجيه
         if ($validated['role'] === 'user') {
             Auth::guard('customer')->login($user);
-            return redirect()->intended($request->redirect ?? route('customer.dashboard.overview'))->with(request()->all());
-        } elseif ($validated['role'] === 'merchant') {
-            return redirect()->route('status')->with(['status' => 'pending']);
-        }
+            session(['email' => $user->email]);
+            return redirect()->route('otpConfermation.index')->with('success', 'Registration successful!');
+                   } elseif ($validated['role'] === 'merchant') {
+                    session(['email' => $user->email]);
+                    return redirect()->route('otpConfermation.index')->with('success', 'Registration successful!');
+                         }
 
         return redirect()->intended(route('login', ['redirect' => $request->redirect ?? '']))
             ->with('success', 'تم التسجيل بنجاح!');

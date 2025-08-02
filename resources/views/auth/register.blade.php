@@ -12,6 +12,7 @@
             /* حتى لا تختفي خلف عناصر أخرى */
         }
     </style>
+
     <main class="pt-16">
         <div bis_skin_checked="1" style="opacity: 1; transform: none;">
             <div class="min-h-screen bg-orange-500/5 py-12" bis_skin_checked="1">
