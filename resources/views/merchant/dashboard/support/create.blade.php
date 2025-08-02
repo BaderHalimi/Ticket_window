@@ -1,7 +1,7 @@
-@extends('customer.layouts.app')
+@extends('merchant.layouts.app')
 
 @section('content')
-<form action="{{ route('customer.dashboard.support.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 bg-white p-6 rounded-xl shadow-lg">
+<form action="{{ route('merchant.dashboard.support.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 bg-white p-6 rounded-xl shadow-lg">
     @csrf
 
     <div>

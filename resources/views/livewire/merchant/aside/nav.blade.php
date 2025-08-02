@@ -162,6 +162,20 @@
         <span>السياسات والإعدادات</span>
     </a>
 
+
+        <a @if($merchant??false) href="{{ route('merchant.dashboard.support.index',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.support.index') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.support.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.support.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="m4.93 4.93 4.24 4.24"></path>
+            <path d="m14.83 9.17 4.24-4.24"></path>
+            <path d="m14.83 14.83 4.24 4.24"></path>
+            <path d="m9.17 14.83-4.24 4.24"></path>
+            <circle cx="12" cy="12" r="4"></circle>
+        </svg>
+        <span>الدعم الفني</span>
+    </a>
+
+
     {{-- <a @if($merchant??false) href="{{ route('merchant.dashboard.m.languages_translation',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.languages_translation') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.languages_translation') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.languages_translation')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <circle cx="12" cy="12" r="10"></circle>

@@ -1,4 +1,4 @@
-@extends('customer.layouts.app')
+@extends('merchant.layouts.app')
 
 @section('content')
 
@@ -7,7 +7,7 @@
     <!-- عنوان وزر إضافة -->
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold text-gray-800">طلبات الدعم</h2>
-        <a href="{{ route('customer.dashboard.support.create') }}" class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700">
+        <a href="{{ route('merchant.dashboard.support.create') }}" class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700">
             + إضافة تذكرة جديدة
         </a>
     </div>
@@ -43,13 +43,13 @@
                         <td class="px-6 py-4 text-gray-500">{{ $ticket->created_at->format('Y-m-d H:i') }}</td>
                         <td class="px-6 py-4">
                             @if($ticket->status == 'open')
-                                <form action="{{ route('customer.dashboard.support.destroy', $ticket->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف التذكرة؟')">
+                                <form action="{{ route('merchant.dashboard.support.destroy', $ticket->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف التذكرة؟')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:underline text-sm">حذف</button>
                                 </form>
                             @else
-                                <a href="{{ route('customer.dashboard.support.show', $ticket->id) }}" class="text-blue-600 hover:underline text-sm">عرض</a>
+                                <a href="{{ route('merchant.dashboard.support.show', $ticket->id) }}" class="text-blue-600 hover:underline text-sm">عرض</a>
                             @endif
                         </td>
                     </tr>
