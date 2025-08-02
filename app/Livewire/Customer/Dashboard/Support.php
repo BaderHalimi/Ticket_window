@@ -46,7 +46,7 @@ class Support extends Component
 
     public function render()
     {
-        return view('livewire.customer.dashboard.support');
+        return view('livewire.dashboard.support');
     }
 }
 

@@ -80,8 +80,8 @@
                         {{-- Merchant --}}
                         <td class="px-4 py-4 text-center">
                             <div class="flex flex-col items-center gap-2">
-                                @if($merchant && ($merchant->additional_data['profile_image'] ?? null))
-                                    <img src="{{ asset('storage/' . $merchant->additional_data['profile_image']) }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-orange-300 shadow">
+                                @if($merchant && ($merchant->additional_data['profile_picture'] ?? null))
+                                    <img src="{{ asset('storage/' . $merchant->additional_data['profile_picture']) }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-orange-300 shadow">
                                 @else
                                     <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-bold">ت</div>
                                 @endif
@@ -93,8 +93,8 @@
                         {{-- Customer --}}
                         <td class="px-4 py-4 text-center">
                             <div class="flex flex-col items-center gap-2">
-                                @if($customer && ($customer->additional_data['profile_image'] ?? null))
-                                    <img src="{{ asset('storage/' . $customer->additional_data['profile_image']) }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-orange-300 shadow">
+                                @if($customer && ($customer->additional_data['profile_picture'] ?? null))
+                                    <img src="{{ asset('storage/' . $customer->additional_data['profile_picture']) }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-orange-300 shadow">
                                 @else
                                     <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-bold">ع</div>
                                 @endif

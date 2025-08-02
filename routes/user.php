@@ -9,7 +9,7 @@ use App\Models\PaidReservation;
 use Carbon\Carbon;
 use App\Http\Controllers\CustomerExperince;
 
-Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->group(function () {
+Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer','verified_user'])->group(function () {
 
     Route::get('/', function () {
 
@@ -71,7 +71,9 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer'])->gro
     Route::resource('tickets', Tickets::class)->names('tickets');
     Route::resource('support', SupportController::class)->names('support');
 
-
+    Route::get('/chatC', function () {
+        return view('customer.dashboard.chat');
+    })->name('chatC');
 
 
 });

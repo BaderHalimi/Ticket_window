@@ -57,7 +57,7 @@ class Profile extends Component
         // رفع الصورة وتخزين الرابط في additional_data
         if ($this->image) {
             $path = $this->image->store('profile-photos', 'public');
-            $data['profile_image'] = $path;
+            $data['profile_picture'] = $path;
         }
     
         $user->additional_data = $data;

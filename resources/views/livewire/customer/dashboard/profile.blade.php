@@ -1,8 +1,8 @@
 <form wire:submit.prevent="save" class="max-w-5xl mx-auto mt-12 bg-white p-8 rounded-xl shadow space-y-6" enctype="multipart/form-data">
     <div class="flex items-center gap-6">
         <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-200">
-            @if (isset(Auth::user()->additional_data['profile_image']))
-                <img src="{{ asset('storage/' . Auth::user()->additional_data['profile_image']) }}" class="w-full h-full object-cover" />
+            @if (isset(Auth::user()->additional_data['profile_picture']))
+                <img src="{{ asset('storage/' . Auth::user()->additional_data['profile_picture']) }}" class="w-full h-full object-cover" />
             @else
                 <img src="https://via.placeholder.com/150" class="w-full h-full object-cover" />
             @endif

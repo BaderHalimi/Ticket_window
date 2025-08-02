@@ -27,7 +27,7 @@
         <div class="flex flex-col md:flex-row items-center gap-8 border-b border-orange-200 pb-8">
             <div>
                 @php
-                    $userImage = $reservation->user->additional_data["profile_image"] ?? null;
+                    $userImage = $reservation->user->additional_data["profile_picture"] ?? null;
                 @endphp
                 @if($userImage)
                     <img src="{{ asset('storage/' . $userImage) }}" alt="صورة المستخدم"

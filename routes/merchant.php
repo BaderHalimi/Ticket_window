@@ -11,7 +11,7 @@ use App\Http\Controllers\PosSystemController;
 use App\Models\Role;
 use App\Http\Controllers\policies_settings;
 use App\Http\Controllers\M_dashboard_index;
-Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant'])->group(function(){
+Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verified_user'])->group(function(){
     Route::get('/',[M_dashboard_index::class,"index"])->name('overview');
     // Route::get('services',function(){
     //     return view('merchant.dashboard.services');
@@ -170,3 +170,4 @@ Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->g
 
 
 });
+

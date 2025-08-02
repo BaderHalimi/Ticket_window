@@ -8,7 +8,7 @@ use App\Models\MerchantChat;
 use App\Models\MerchantMessage as MerchantChatMessage;
 use Illuminate\Support\Facades\Auth;
 
-class ChatCenter extends Component
+class UserChat extends Component
 {
     use WithFileUploads;
 
@@ -82,7 +82,7 @@ class ChatCenter extends Component
     public function render()
     {
         $chats = MerchantChat::with(['messages' => fn($q) => $q->latest()->limit(1), 'user'])
-            ->where('merchant_id', Auth::id())
+            ->where('user_id', Auth::id())
             ->latest()
             ->get();
 
@@ -108,6 +108,6 @@ class ChatCenter extends Component
                 ->get();
         }
 
-        return view('livewire.chat-center', compact('chats', 'messages', 'currentChat', 'currentChatStatus'));
+        return view('livewire.user-chat', compact('chats', 'messages', 'currentChat', 'currentChatStatus'));
     }
 }

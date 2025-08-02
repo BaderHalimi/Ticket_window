@@ -60,7 +60,7 @@
                             <div class="rounded-xl border p-4">
                                 <div class="flex items-start gap-4">
 
-                                    <img class="h-10 w-10 rounded-full" src="{{Storage::url($review->user->additional_data['profile_image'] ?? '') ?: 'https://ui-avatars.com/api/?name=' . urlencode($review->user->f_name)}}" alt="Avatar">
+                                    <img class="h-10 w-10 rounded-full" src="{{Storage::url($review->user->additional_data['profile_picture'] ?? '') ?: 'https://ui-avatars.com/api/?name=' . urlencode($review->user->f_name)}}" alt="Avatar">
 
                                     <div class="flex-1">
                                         <div class="flex justify-between items-start mb-1">

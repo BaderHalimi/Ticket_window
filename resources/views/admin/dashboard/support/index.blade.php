@@ -40,7 +40,7 @@
                         <td class="px-6 py-4 text-gray-500">{{ $ticket->created_at->format('Y-m-d H:i') }}</td>
                         <td class="px-6 py-4">
                             @if($ticket->status == 'open')
-                                {{-- <form action="{{ route('customer.dashboard.support.destroy', $ticket->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف التذكرة؟')">
+                                {{-- <form action="{{ route('support.destroy', $ticket->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف التذكرة؟')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:underline text-sm">حذف</button>

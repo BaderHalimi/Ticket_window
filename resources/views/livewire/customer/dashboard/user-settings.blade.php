@@ -1,5 +1,5 @@
 @php
-    $image = auth()->user()->additional_data['profile_image'] ?? null;
+    $image = auth()->user()->additional_data['profile_picture'] ?? null;
     $image = $image
         ? (Str::startsWith($image, 'http') ? $image : asset('storage/' . $image))
         : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->f_name ?? 'U');

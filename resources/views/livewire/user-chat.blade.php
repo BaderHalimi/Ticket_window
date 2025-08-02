@@ -5,7 +5,7 @@
         <ul class="space-y-2 flex-1 overflow-y-auto">
             @forelse ($chats as $chat)
                 @php
-                    $user = $chat->user;
+                    $user = $chat->merchant;
                     $name = $user->f_name . ' ' . ($user->l_name ?? '');
                     $profilePicture = $user->additional_data['profile_picture'] ?? 'default.png';
                     $profilePictureUrl = asset('storage/' . $profilePicture);
@@ -114,16 +114,7 @@
                 @endforelse
             </div>
 
-            <!-- Conditional Input / Action -->
-            @if (empty($chatData['status']) || $chatData['status'] === 'open')
-                <div class="mt-4 border rounded-lg p-4 bg-yellow-50 text-center">
-                    <p class="mb-2 text-sm text-gray-700">هل ترغب ببدء المحادثة مع هذا المستخدم؟</p>
-                    <button wire:click="acceptChat({{ $chat_id }})"
-                            class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                        قبول الطلب
-                    </button>
-                </div>
-            @else
+
                 <form wire:submit.prevent="send" class="mt-4 border rounded-lg overflow-hidden shadow relative">
                     <input type="file" wire:model="attachment" id="attachment" class="hidden">
                     <div class="flex items-center gap-2 p-2">
@@ -132,7 +123,6 @@
                         <button type="submit" class="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600 text-sm rounded">إرسال</button>
                     </div>
                 </form>
-            @endif
 
         @else
             <div class="flex items-center justify-center h-full text-gray-400">

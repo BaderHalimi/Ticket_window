@@ -29,7 +29,7 @@
         @foreach($messages as $message)
             @php
                 $isMine = $message->user_id === auth()->id();
-                $profileImagePath = $message->user->additional_data['profile_image'] ?? null;
+                $profileImagePath = $message->user->additional_data['profile_picture'] ?? null;
                 $userName = $message->user->f_name ?? 'U';
                 $userImage = $profileImagePath
                     ? (Str::startsWith($profileImagePath, 'http') ? $profileImagePath : asset('storage/' . $profileImagePath))

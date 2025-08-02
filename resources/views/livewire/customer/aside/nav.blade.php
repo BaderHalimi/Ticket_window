@@ -39,6 +39,19 @@
                 <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
                 <path d="M12 17V7"></path>
             </svg>السجل المالي</a>
+
+            <a href="{{ route('customer.dashboard.chatC') }}"
+            class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('customer.dashboard.tickets.payHistory')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base">
+             <svg xmlns="http://www.w3.org/2000/svg" 
+                  width="24" height="24" viewBox="0 0 24 24" 
+                  fill="none" stroke="currentColor" 
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                  class="w-5 h-5 ml-3">
+                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+             </svg>
+             مركز الرسائل
+         </a>
+         
     {{-- <a href="{{ route('customer.dashboard.rewards') }}"
             class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('home')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base"><svg
                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -67,8 +80,8 @@
                 </path>
                 <circle cx="12" cy="12" r="3"></circle>
             </svg>الإعدادات</a>
-        <a href="{{route('customer.dashboard.support.index')}}"
-            class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('customer.dashboard.support.index')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base"><svg
+        <a href="{{route('support.index')}}"
+            class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('support.index')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base"><svg
                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="w-5 h-5 ml-3">
@@ -80,7 +93,7 @@
                 <circle cx="12" cy="12" r="4"></circle>
             </svg>الدعم الفني</a>
         <a href="{{ route('customer.dashboard.expirences.index') }}"
-            class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('customer.dashboard.support')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base">
+            class="inline-flex items-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @if (Route::is('support')) bg-gray-100 @else hover:bg-gray-100 hover:text-gray-100-foreground @endif h-10 px-4 py-2 w-full justify-start text-base">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round" class="w-5 h-5 ml-3">

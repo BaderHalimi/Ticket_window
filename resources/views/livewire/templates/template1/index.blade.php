@@ -198,10 +198,22 @@
                                         <h3 class="text-lg font-semibold text-slate-700">
                                             #{{ $ticket['id'] }} - {{ $ticket['subject'] ?? 'بدون عنوان' }}
                                         </h3>
-                                        <button wire:click="deleteTicket({{ $ticket['id'] }})" 
-                                                class="text-red-500 hover:text-red-700 text-lg">
-                                            <i class="ri-delete-bin-line"></i>
-                                        </button>
+
+                                        @if ($ticket->additional_data["status"] == "pending")
+                                        <a href="{{route("customer.dashboard.chatC")}}">
+                                        <button 
+                                        class="text-blue-500 hover:text-blue-700 text-lg">
+                                        <i class="ri-chat-3-line"></i>
+                                    </button>
+                                        </a>
+                                    @else
+                                    <button 
+                                    wire:click="deleteTicket({{ $ticket['id'] }})" 
+                                    class="text-red-500 hover:text-red-700 text-lg">
+                                    <i class="ri-delete-bin-line"></i>
+                                </button>
+                                    @endif
+                                    
                                     </div>
                                     <p class="text-slate-600">
                                         {{ $ticket['description'] ?? 'لا يوجد وصف للتذكرة.' }}
