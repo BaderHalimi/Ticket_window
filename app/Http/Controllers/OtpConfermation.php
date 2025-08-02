@@ -41,7 +41,6 @@ class OtpConfermation extends Controller
      */
     public function store(Request $request)
     {
-        //dd("zebi");
         $request->validate([
             'otp' => 'required|string',
         ]);
