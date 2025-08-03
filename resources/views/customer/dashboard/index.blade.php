@@ -1,8 +1,7 @@
 @extends('customer.layouts.app')
 @section('content')
 
-@livewire('under-review') 
-<br>
+
 
 <div bis_skin_checked="1" style="opacity: 1; transform: none;">
 
@@ -21,8 +20,8 @@
                     </svg></h3>
             </div>
             <div class="p-6 pt-0" bis_skin_checked="1">
-                <p class="text-2xl font-bold">--</p>
-                <p class="text-indigo-200">--- / ---</p><button class="inline-flex items-center justify-center rounded-md text-sm text-gray-900 font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gray-100 text-gray-100-foreground hover:bg-gray-100/80 h-10 px-4 py-2 mt-4">عرض التذكرة <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
+                <p class="text-2xl font-bold">{{$nearestReservation->offering->name ?? "--"}}</p>
+                <p class="text-indigo-200">{{json_decode($nearestReservation->additional_data)->selected_date ?? "---"}} / {{json_decode($nearestReservation->additional_data)->selected_time ?? "--"}} </p><button class="inline-flex items-center justify-center rounded-md text-sm text-gray-900 font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gray-100 text-gray-100-foreground hover:bg-gray-100/80 h-10 px-4 py-2 mt-4">عرض التذكرة <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
                         <path d="m12 19-7-7 7-7"></path>
                         <path d="M19 12H5"></path>
                     </svg></button>
@@ -40,10 +39,10 @@
                 </div>
                 <div class="p-6 pt-0" bis_skin_checked="1">
                     <p class="text-3xl font-bold">-</p>
-                    <p class="text-slate-500">لديك - حجوزات قادمة هذا الشهر.</p>
+                    <p class="text-slate-500">لديك {{$futureCount ?? "-"}} حجوزات قادمة هذا الشهر.</p>
                 </div>
             </div>
-            <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg" bis_skin_checked="1">
+            {{-- <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg" bis_skin_checked="1">
                 <div class="flex flex-col space-y-1.5 p-6" bis_skin_checked="1">
                     <h3 class="text-xl font-semibold leading-none tracking-tight flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-star">
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
@@ -53,7 +52,7 @@
                     <p class="text-3xl font-bold">-,-- نقطة</p>
                     <p class="text-slate-500">يمكنك استبدالها بخصومات رائعة!</p>
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div class="rounded-2xl border text-slate-900 shadow-lg border-amber-500 bg-amber-50" bis_skin_checked="1">
             <div class="flex flex-col space-y-1.5 p-6" bis_skin_checked="1">

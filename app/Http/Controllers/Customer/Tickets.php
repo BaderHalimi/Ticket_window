@@ -48,7 +48,7 @@ class Tickets extends Controller
         
         $merged = array_merge($oldData, $newData);
         $fee = ( (float) $reservation->price * (float) $reservation->offering->features["cancellation_fee"]) / 100;
-        $amount = (float) $reservation->price * (1  - ($fee * 100));
+        $amount = (float) $reservation->price  - $fee;
         logPayment([
             'user_id' => $reservation->user_id,
             'item_id' => $reservation->offering->id,

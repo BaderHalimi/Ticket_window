@@ -90,13 +90,13 @@
         <span>الذكاء والتحليلات</span>
     </a> --}}
 
-    <a @if($merchant??false) href="{{ route('merchant.dashboard.m.notification_management',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.notification_management') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.notification_management') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.notification_management')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
+    {{-- <a @if($merchant??false) href="{{ route('merchant.dashboard.m.notification_management',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.notification_management') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.notification_management') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.notification_management')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
             <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
             <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
         </svg>
         <span>إدارة الإشعارات</span>
-    </a>
+    </a> --}}
 
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.message_center',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.message_center') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.message_center') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.message_center')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">

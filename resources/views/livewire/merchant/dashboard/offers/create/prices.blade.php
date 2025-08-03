@@ -106,7 +106,7 @@
         </div>
         @if ($enable_cancellation)
             <div class="mt-2">
-                <label class="block text-sm font-medium mb-1">رسوم الإلغاء</label>
+                <label class="block text-sm font-medium mb-1">رسوم الالغاء (با المئة ) %</label>
                 <input type="number" step="0.01" wire:model.lazy="cancellation_fee" class="w-full border rounded-md p-2">
             </div>
             <label class="text-sm font-medium">تحديد آخر وقت للإلغاء؟</label>

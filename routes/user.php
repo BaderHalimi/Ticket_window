@@ -43,7 +43,7 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:customer','verif
                 }
             }
         }
-    
+    //dd($nearestReservation,$futureCount);
         return view('customer.dashboard.index', [
             'nearestReservation' => $nearestReservation,
             'futureCount' => $futureCount,
