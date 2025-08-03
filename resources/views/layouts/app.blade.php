@@ -73,7 +73,7 @@
                             <li><a href="#" class="hover:text-primary transition-colors">الرئيسية</a></li>
                             <!-- <li><a href="" class="hover:text-primary transition-colors">المميزات</a></li>
                             <li><a href="#" class="hover:text-primary transition-colors">الأدوار والرحلات</a></li> -->
-                            <li><a href="#" class="hover:text-primary transition-colors">الأسعار</a></li>
+                            <li><a href="#" class="hover:text-primary transition-colors">الباقات</a></li>
                             <li><a href="#" class="hover:text-primary transition-colors">انضم كتاجر</a></li>
                         </ul>
                     </div>

@@ -57,7 +57,7 @@
                                     </svg></div>
 
                                 <h3 class="text-2xl font-bold text-slate-800 mb-2">الأساسية</h3>
-                                <p class="text-slate-500 mb-6">مجاني للحجوزات الغير مدفوعة</p>
+                                <p class="text-slate-500 mb-6">مجاني للمنشئات المبتدئة والمتوسطة</p>
                                 <div class="mb-8" bis_skin_checked="1"><span class="text-4xl font-extrabold text-slate-900">3.5%</span><span class="text-slate-500 ml-1">+ 1.5 ريال / تذكرة على الحجوزات المدفوعة</span></div>
                             </div>
                             <ul class="space-y-4 mb-10">
@@ -112,7 +112,7 @@
                                             <path d="M20 6 9 17l-5-5"></path>
                                         </svg></div><span class="text-slate-600">نظام التحقق من التذاكر</span>
                                 </li>
-                            </ul><button class="inline-flex items-center justify-center ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-orange-500 hover:bg-orange-500/90 h-11 rounded-md px-8 w-full py-6 text-lg font-bold bg-orange-500 text-white">اختر الخطة الاحترافية</button>
+                            </ul><button class="inline-flex items-center justify-center ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-orange-500 hover:bg-orange-500/90 h-11 rounded-md px-8 w-full py-6 text-lg font-bold bg-orange-500 text-white">اختر الخطة الأساسية</button>
                         </div>
                         <div class="relative bg-white rounded-3xl p-8 shadow-xl border border-slate-200" bis_skin_checked="1" style="opacity: 1; transform: none;">
                             <div class="text-center" bis_skin_checked="1">
