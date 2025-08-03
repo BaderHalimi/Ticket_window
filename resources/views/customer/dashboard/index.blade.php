@@ -38,7 +38,7 @@
                         </svg> حجوزاتك النشطة</h3>
                 </div>
                 <div class="p-6 pt-0" bis_skin_checked="1">
-                    <p class="text-3xl font-bold">-</p>
+                    <p class="text-3xl font-bold">{{$futureCount ?? "-"}}</p>
                     <p class="text-slate-500">لديك {{$futureCount ?? "-"}} حجوزات قادمة هذا الشهر.</p>
                 </div>
             </div>

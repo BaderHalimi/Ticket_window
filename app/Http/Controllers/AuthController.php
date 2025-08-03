@@ -254,7 +254,6 @@ class AuthController extends Controller
             
             abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
         }
-        //dd(Auth::id());
         
         //dd($request);
         $validated = $request->validate([
@@ -293,7 +292,8 @@ class AuthController extends Controller
         if (Auth::id() != $id) {
             abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
         }
-        
+        //dd($request->all());Abc@123111
+
         $validated = $request->validate([
             'password' => [
                 'required',

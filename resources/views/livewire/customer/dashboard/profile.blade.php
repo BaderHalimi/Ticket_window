@@ -35,9 +35,35 @@
             <input type="text" wire:model.lazy="phone" class="w-full border rounded-md p-2" />
         </div>
 
+
+    </div>
+
+    <div class="bg-gray-50 p-6 rounded-xl shadow-inner space-y-4">
+        <h2 class="text-xl font-semibold text-gray-800 border-b pb-2">تغيير كلمة المرور</h2>
+
         <div>
-            <label class="block text-sm font-medium mb-1">كلمة المرور الجديدة</label>
-            <input type="password" wire:model.lazy="password" class="w-full border rounded-md p-2" />
+            <label class="block text-sm font-medium text-gray-700 mb-1">كلمة المرور الجديدة</label>
+            <input type="password" wire:model.lazy="password"
+                   class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+            @error('password')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">تأكيد كلمة المرور</label>
+            <input type="password" wire:model.lazy="password_confirmation"
+                   class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+            @error('password_confirmation')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div class="text-left">
+            <button wire:click="updatePass"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition shadow">
+                تحديث كلمة المرور
+            </button>
         </div>
     </div>
 

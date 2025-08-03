@@ -22,7 +22,7 @@ class SecureFileUploads
                     'image/png',
                     'image/jpg',
                     'image/gif',
-                    'image/svg+xml',
+                    //'image/svg+xml',
                     'image/webp',      
                     'image/bmp',       
                     'image/tiff',       
