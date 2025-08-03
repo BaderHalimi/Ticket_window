@@ -63,7 +63,7 @@
                                         </button>
 
                                         <!-- Cancel Icon -->
-                                        @if (!empty($features->enable_cancellation) && $features->enable_cancellation)
+                                        @if (!empty($features->enable_cancellation) && $features->enable_cancellation && can_cancel($reservation))
                                             <button onclick="cancelReservation('{{ route('customer.dashboard.tickets.cancel', $reservation->id) }}')"
                                                     class="text-red-600 hover:text-red-800 text-xl">
                                                 <i class="ri-close-circle-line"></i>

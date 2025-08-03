@@ -790,3 +790,23 @@ if (!function_exists("sendOTP")) {
         return $otp;
     }
 }
+
+
+if (!function_exists("can_cancel")){
+
+    function can_cancel( $res) {
+        $offer = $res->offering;
+        if (!$offer->features["enable_cancellation"]) {
+            return false;
+        }
+        //dd($res);
+        $additional_data = is_string($res->additional_data ?? '') ? json_decode($res->additional_data) : (object) ($res->additional_data ?? []);
+
+        $reservation_time = Carbon::parse($additional_data->selected_date  . ' ' . $additional_data->selected_time);
+    
+        $now = Carbon::now(); 
+        $diff = $reservation_time->diffInMinutes($now, false); 
+    
+        return $diff <= (-1 * $offer->features['cancellation_deadline_minutes']);
+    }
+}

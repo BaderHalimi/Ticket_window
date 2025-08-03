@@ -31,6 +31,11 @@ class Tickets extends Controller
         if ($reservation->user_id !== Auth::id()) {
             return redirect()->back()->with('error', 'Unauthorized action.');
         }
+        if (!can_cancel($reservation)){
+            return redirect()->back()->with('error', 'Unauthorized action.');
+
+        }
+
         /* هنا استرداد الفلوس لما يوفر لنا بوابة دفع */
         $oldData = json_decode($reservation->additional_data ?? '{}', true) ?? [];
 
@@ -42,13 +47,14 @@ class Tickets extends Controller
         ];
         
         $merged = array_merge($oldData, $newData);
-        
+        $fee = ( (float) $reservation->price * (float) $reservation->offering->features["cancellation_fee"]) / 100;
+        $amount = (float) $reservation->price * (1  - ($fee * 100));
         logPayment([
             'user_id' => $reservation->user_id,
             'item_id' => $reservation->offering->id,
             'transaction_id' => uniqid('TXN_'),
             'payment_method' => 'paypal',
-            'amount' => $reservation->price,
+            'amount' => $amount,
             'additional_data' => $merged,
         ]);
         notifcate(
