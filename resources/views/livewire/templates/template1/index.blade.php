@@ -1,28 +1,28 @@
 <div class="w-full max-w-6xl mx-auto mb-12" x-data="{ showForm: false, showTform:false }">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-{{-- البانر --}}
-<div class="relative w-full h-52 md:h-64 bg-cover bg-center rounded-b-3xl shadow-2xl ring-1 ring-orange-200"
-    style="background-image: url('{{ isset($merchant['additional_data']['banner']) ? asset('storage/' . $merchant['additional_data']['banner']) : asset('default-banner.jpg') }}')">
+    {{-- البانر --}}
+    <div class="relative w-full h-52 md:h-64 bg-cover bg-center rounded-b-3xl shadow-2xl ring-1 ring-orange-200"
+        style="background-image: url('{{ isset($merchant['additional_data']['banner']) ? asset('storage/' . $merchant['additional_data']['banner']) : asset('default-banner.jpg') }}')">
 
 
-<div class="absolute top-2 left-4 flex gap-4 z-20">
+        <div class="absolute top-2 left-4 flex gap-4 z-20">
 
-    <a href="{{route("cart",1)}}" wire:navigate>
-        <button class="bg-white p-3 rounded-md shadow-lg hover:bg-gray-300 transition text-2xl text-gray-800">
-            <i class="ri-shopping-cart-2-line"></i>
-        </button>
-    </a>
-    <a href="{{route("customer.dashboard.overview")}}" wire:navigate>
-        <button class="bg-white p-3 rounded-md shadow-lg hover:bg-gray-300 transition text-2xl text-gray-800">
-            <i class="ri-user-settings-line"></i>
-        </button>
-    </a>
-</div>
+            <a href="{{route("cart",1)}}" wire:navigate>
+                <button class="bg-white p-3 rounded-md shadow-lg hover:bg-gray-300 transition text-2xl text-gray-800">
+                    <i class="ri-shopping-cart-2-line"></i>
+                </button>
+            </a>
+            <a href="{{route("customer.dashboard.overview")}}" wire:navigate>
+                <button class="bg-white p-3 rounded-md shadow-lg hover:bg-gray-300 transition text-2xl text-gray-800">
+                    <i class="ri-user-settings-line"></i>
+                </button>
+            </a>
+        </div>
 
-    
-    
-</div>
+
+
+    </div>
 
 
     {{-- الصورة الشخصية --}}
@@ -33,14 +33,24 @@
 
     {{-- معلومات التاجر --}}
     <div class="text-center mt-4 px-4">
-        <h1 class="text-2xl md:text-3xl font-bold text-slate-800">{{ $merchant['f_name'] ?? null }} {{ $merchant['l_name'] ?? null}}</h1>
-        <p class="text-slate-600 mt-1 text-lg font-medium">{{ $merchant['business_name'] }}</p>
-        <p class="text-slate-500 text-sm">{{ $merchant['phone'] }}</p>
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-800">{{ $merchant['business_name']??'' }}</h1>
+        <p class="text-slate-600 mt-1 text-lg font-medium">{{ $merchant->additional_data?$merchant->additional_data['discription']??'':'' }}</p>
+        <div class="mt-4 flex justify-center items-center flex-wrap gap-4 text-sm text-gray-500">
+            @if(isset($merchant->phone))
+            <div class="flex items-center gap-1">
+                <a href="tel:{{ $merchant->phone }}" dir="ltr">{{ $merchant->phone }}</a>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 2H8a2 2 0 00-2 2v16a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2zM12 18h.01" />
+                </svg>
+
+            </div>
+            @endif
+        </div>
 
         {{-- روابط تواصل اجتماعي --}}
         @if(isset($merchant['additional_data']['social_links']))
-        <div 
-            class="flex justify-center gap-4 mt-4 text-2xl text-slate-700" 
+        <div
+            class="flex justify-center gap-4 mt-4 text-2xl text-slate-700"
             x-data="{
                 getIcon(url) {
                     url = url.toLowerCase();
@@ -67,17 +77,17 @@
                     return 'ri-global-line';
                 }
             }">
-        
+
             @foreach($merchant['additional_data']['social_links'] as $link)
-            <a href="{{ $link }}" target="_blank" 
-               class="hover:text-orange-500 transition duration-300">
+            <a href="{{ $link }}" target="_blank"
+                class="hover:text-orange-500 transition duration-300">
                 <i :class="getIcon('{{ $link }}')"></i>
             </a>
             @endforeach
         </div>
         @endif
-        
-        
+
+
     </div>
 
     {{-- تبويبات العروض --}}
@@ -94,37 +104,37 @@
                 الفعاليات
             </button>
 
-            <button @click="tab = 'policies'" 
+            <button @click="tab = 'policies'"
                 :class="tab === 'policies' ? 'text-orange-600 border-b-2 border-orange-600' : 'text-slate-600'"
                 class="pb-1 text-lg font-semibold transition">
                 السياسات والأحكام
             </button>
-            <button  @click="tab = 'support'"  wire:click="load_chats"
+            <button @click="tab = 'support'" wire:click="load_chats"
                 :class="tab === 'support' ? 'text-orange-600 border-b-2 border-orange-600' : 'text-slate-600'"
                 class="pb-1 text-lg font-semibold transition">
                 الدعم
             </button>
         </div>
 
-        <div x-show="tab === 'policies'" x-transition  class="flex items-center justify-center min-h-screen">
+        <div x-show="tab === 'policies'" x-transition class="flex items-center justify-center min-h-screen">
             <div class="bg-white shadow-lg rounded-2xl p-6 space-y-6 w-full max-w-2xl ">
-                
+
                 <!-- العنوان -->
                 <h3 class="text-xl font-bold text-slate-800 flex gap-2">
                     <i class="ri-file-text-line text-orange-500 text-2xl"></i>
                     السياسات والأحكام
                 </h3>
-        
+
                 <!-- نص السياسة -->
                 <div class="bg-slate-50 rounded-xl p-4 shadow-sm">
                     <h4 class="text-lg font-semibold text-slate-700 mb-2 flex items-center gap-2">
                         <i class="ri-article-line text-orange-500"></i> نص السياسة
                     </h4>
                     <p class="text-slate-600">
-                        {{ $merchant->additional_data['policies'] ?? 'لا توجد سياسة محددة حالياً.' }}
+                        {!! $merchant->additional_data['policies'] ?? 'لا توجد سياسة محددة حالياً.' !!}
                     </p>
                 </div>
-        
+
                 <!-- السماح بالاسترجاع -->
                 <div class="bg-slate-50 rounded-xl p-4 shadow-sm">
                     <h4 class="text-lg font-semibold text-slate-700 mb-2 flex items-center gap-2">
@@ -132,112 +142,112 @@
                     </h4>
                     <p class="flex items-center gap-2 text-slate-700">
                         @if(!empty($merchant->additional_data['allow_refund']) && $merchant->additional_data['allow_refund'])
-                            <i class="ri-checkbox-circle-line text-green-500"></i> مسموح بالاسترجاع التلقائي وفق الشروط.
+                        <i class="ri-checkbox-circle-line text-green-500"></i> مسموح بالاسترجاع التلقائي وفق الشروط.
                         @else
-                            <i class="ri-close-circle-line text-red-500"></i> غير مسموح بالاسترجاع التلقائي.
+                        <i class="ri-close-circle-line text-red-500"></i> غير مسموح بالاسترجاع التلقائي.
                         @endif
                     </p>
                 </div>
-        
+
                 <!-- وسائل الدفع -->
                 <div class="bg-slate-50 rounded-xl p-4 shadow-sm">
                     <h4 class="text-lg font-semibold text-slate-700 mb-2 flex items-center gap-2">
                         <i class="ri-bank-card-line text-orange-500"></i> وسائل الدفع المتاحة
                     </h4>
                     @if(!empty($merchant->additional_data['payments']))
-                        <ul class="space-y-2 text-slate-600">
-                            @foreach($merchant->additional_data['payments'] as $payment)
-                                <li class="flex items-center gap-2">
-                                    <i class="ri-check-line text-orange-500"></i>
-                                    @switch($payment)
-                                        @case('visa-mastercard') بطاقات فيزا وماستركارد @break
-                                        @case('mada') مدى @break
-                                        @case('apple-pay') Apple Pay @break
-                                        @case('stc-pay') STC Pay @break
-                                        @default {{ $payment }}
-                                    @endswitch
-                                </li>
-                            @endforeach
-                        </ul>
+                    <ul class="space-y-2 text-slate-600">
+                        @foreach($merchant->additional_data['payments'] as $payment)
+                        <li class="flex items-center gap-2">
+                            <i class="ri-check-line text-orange-500"></i>
+                            @switch($payment)
+                            @case('visa-mastercard') بطاقات فيزا وماستركارد @break
+                            @case('mada') مدى @break
+                            @case('apple-pay') Apple Pay @break
+                            @case('stc-pay') STC Pay @break
+                            @default {{ $payment }}
+                            @endswitch
+                        </li>
+                        @endforeach
+                    </ul>
                     @else
-                        <p class="text-slate-500 flex items-center gap-2">
-                            <i class="ri-information-line text-orange-500"></i> لا توجد وسائل دفع محددة.
-                        </p>
+                    <p class="text-slate-500 flex items-center gap-2">
+                        <i class="ri-information-line text-orange-500"></i> لا توجد وسائل دفع محددة.
+                    </p>
                     @endif
                 </div>
-        
+
             </div>
         </div>
 
         <div x-show="tab === 'support'" x-transition class="flex justify-center pt-10">
             <div class="bg-white shadow-lg rounded-2xl p-6 space-y-6 w-full max-w-2xl">
-                
+
                 <!-- زر إضافة تذكرة جديدة -->
                 <div class="flex justify-end">
                     <button @click="showTform = true" wire:click="add_ticket"
-                    class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
-                    + إضافة تذكرة جديدة
-                </button>
-                
+                        class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
+                        + إضافة تذكرة جديدة
+                    </button>
+
                 </div>
-                
+
                 <!-- عرض التذاكر -->
                 @if(!empty($tickets) && count($tickets) > 0)
-                    <div class="space-y-4">
-                        @foreach($tickets as $ticket)
-                        <div class="border rounded-lg p-4 shadow-sm hover:shadow-md transition">
-                            <div class="flex items-start gap-4">
-                                <!-- الصورة -->
-                                <img src="{{ asset('storage/' . ($ticket['attachment'] ?? 'default-image.jpg')) }}" 
-                                     alt="معاينة الصورة" 
-                                     class="w-16 h-16 object-cover rounded-lg shadow">
-                    
-                                <!-- النص مع زر الحذف -->
-                                <div class="flex-1">
-                                    <div class="flex justify-between items-center">
-                                        <h3 class="text-lg font-semibold text-slate-700">
-                                            #{{ $ticket['id'] }} - {{ $ticket['subject'] ?? 'بدون عنوان' }}
-                                        </h3>
+                <div class="space-y-4">
+                    @foreach($tickets as $ticket)
+                    <div class="border rounded-lg p-4 shadow-sm hover:shadow-md transition">
+                        <div class="flex items-start gap-4">
+                            <!-- الصورة -->
+                            <img src="{{ asset('storage/' . ($ticket['attachment'] ?? 'default-image.jpg')) }}"
+                                alt="معاينة الصورة"
+                                class="w-16 h-16 object-cover rounded-lg shadow">
 
-                                        @if ($ticket->additional_data["status"] == "pending")
-                                        <a href="{{route("customer.dashboard.chatC")}}">
-                                        <button 
-                                        class="text-blue-500 hover:text-blue-700 text-lg">
-                                        <i class="ri-chat-3-line"></i>
-                                    </button>
-                                        </a>
+                            <!-- النص مع زر الحذف -->
+                            <div class="flex-1">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-lg font-semibold text-slate-700">
+                                        #{{ $ticket['id'] }} - {{ $ticket['subject'] ?? 'بدون عنوان' }}
+                                    </h3>
+
+                                    @if ($ticket->additional_data["status"] == "pending")
+                                    <a href="{{route("customer.dashboard.chatC")}}">
+                                        <button
+                                            class="text-blue-500 hover:text-blue-700 text-lg">
+                                            <i class="ri-chat-3-line"></i>
+                                        </button>
+                                    </a>
                                     @else
-                                    <button 
-                                    wire:click="deleteTicket({{ $ticket['id'] }})" 
-                                    class="text-red-500 hover:text-red-700 text-lg">
-                                    <i class="ri-delete-bin-line"></i>
-                                </button>
+                                    <button
+                                        wire:click="deleteTicket({{ $ticket['id'] }})"
+                                        class="text-red-500 hover:text-red-700 text-lg">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
                                     @endif
-                                    
-                                    </div>
-                                    <p class="text-slate-600">
-                                        {{ $ticket['description'] ?? 'لا يوجد وصف للتذكرة.' }}
-                                    </p>
-                                    <p class="text-sm text-slate-500 mt-2">
-                                        <i class="ri-time-line"></i>
-                                        {{ $ticket['created_at'] ?? 'تاريخ غير متوفر' }}
-                                    </p>
+
                                 </div>
+                                <p class="text-slate-600">
+                                    {{ $ticket['description'] ?? 'لا يوجد وصف للتذكرة.' }}
+                                </p>
+                                <p class="text-sm text-slate-500 mt-2">
+                                    <i class="ri-time-line"></i>
+                                    {{ $ticket['created_at'] ?? 'تاريخ غير متوفر' }}
+                                </p>
                             </div>
                         </div>
-                    @endforeach
-                    
-                    
                     </div>
+                    @endforeach
+
+
+                </div>
                 @else
-                    <p class="text-center text-slate-500">لا توجد تذاكر حالياً.</p>
+                <p class="text-center text-slate-500">لا توجد تذاكر حالياً.</p>
                 @endif
-        
+
             </div>
         </div>
-        
-        
-        
+
+
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
 
@@ -294,32 +304,32 @@
         </div>
     </div>
 
-@if($newTicket)
-<div x-show="showTform" x-transition
-    class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
-    @click.self="showTform = false">
+    @if($newTicket)
+    <div x-show="showTform" x-transition
+        class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+        @click.self="showTform = false">
 
-    <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg relative">
-        
-        <button wire:click="reset_ticket" @click="showTform = false"
-            class="absolute top-3 right-3 text-slate-400 hover:text-orange-500 text-xl">
-            <i class="ri-close-line"></i>
-        </button>
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg relative">
 
-        @if(!$savedTicket)
+            <button wire:click="reset_ticket" @click="showTform = false"
+                class="absolute top-3 right-3 text-slate-400 hover:text-orange-500 text-xl">
+                <i class="ri-close-line"></i>
+            </button>
+
+            @if(!$savedTicket)
             <h2 class="text-xl font-bold mb-4 text-slate-800">طلب تذكرة دعم</h2>
 
             <div class="space-y-4">
                 <input type="text" wire:model.lazy="ticketTitle" placeholder="عنوان التذكرة" class="w-full p-2 border rounded" />
                 <input type="file" wire:model="ticketImage" class="w-full p-2 border rounded" />
-                
+
                 <textarea wire:model.lazy="ticketDescription" placeholder="وصف التذكرة" class="w-full p-2 border rounded" rows="4"></textarea>
                 <button wire:click="save_ticket" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded">
                     إرسال
                 </button>
             </div>
 
-        @else
+            @else
             <h2 class="text-xl font-bold mb-4 text-slate-800">نجاح</h2>
             <div class="flex items-center justify-center mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -332,15 +342,15 @@
                     إغلاق
                 </button>
             </div>
-        @endif
+            @endif
 
+        </div>
     </div>
-</div>
 
 
-@endif
+    @endif
 
-@if ($selectedOffer)
+    @if ($selectedOffer)
     <div x-show="showForm" x-transition
         class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
         @click.self="showForm = false">
@@ -398,7 +408,7 @@
                 </select>
                 @else
                 @php
-                    $this->dispatch('stepNext');
+                $this->dispatch('stepNext');
                 @endphp
                 <div class="text-red-500 font-semibold">لا يوجد فروع متاحة حالياً.</div>
                 @endif
@@ -417,340 +427,340 @@
 
             @if ($step == 2)
             @if ($selectedOffer->type == 'events')
-                    @php
-                    $selected = $selectedDate ?? null;
-                    $selectedT = $selectedTime ?? null;
-                
-                    $uniqueDates = collect($times['data'] ?? [])
-                        ->flatMap(function ($item) {
-                            return [
-                                [\Carbon\Carbon::parse($item['start_date'])->format('Y-m-d'),
-                                \Carbon\Carbon::parse($item['start_time'])->format('H:i')
-                                ]
-                                //\Carbon\Carbon::parse($item['end_date'])->format('Y-m-d'),
-                            ];
-                        })
-                        ->unique()
-                        ->sort()
-                        ->values();
-                        //dd($uniqueDates,$times['data'] );
+            @php
+            $selected = $selectedDate ?? null;
+            $selectedT = $selectedTime ?? null;
+
+            $uniqueDates = collect($times['data'] ?? [])
+            ->flatMap(function ($item) {
+            return [
+            [\Carbon\Carbon::parse($item['start_date'])->format('Y-m-d'),
+            \Carbon\Carbon::parse($item['start_time'])->format('H:i')
+            ]
+            //\Carbon\Carbon::parse($item['end_date'])->format('Y-m-d'),
+            ];
+            })
+            ->unique()
+            ->sort()
+            ->values();
+            //dd($uniqueDates,$times['data'] );
+            @endphp
+
+            <div class="space-y-3">
+                @foreach ($uniqueDates as $date)
+                @php
+                $isSelected = ($date[0] === $selected) && ($date[1] === $selectedT);
+                $dateW = $date[0];
+                $time = $date[1];
                 @endphp
-                
-                <div class="space-y-3">
-                    @foreach ($uniqueDates as $date)
-                        @php
-                            $isSelected = ($date[0] === $selected) && ($date[1] === $selectedT);
-                            $dateW = $date[0];
-                            $time = $date[1];
-                        @endphp
-<button wire:click="selectDateE('{{ $dateW }}', '{{ $time }}')"
-class="w-full flex flex-col items-start justify-center px-4 py-3 rounded-lg border transition gap-1
+                <button wire:click="selectDateE('{{ $dateW }}', '{{ $time }}')"
+                    class="w-full flex flex-col items-start justify-center px-4 py-3 rounded-lg border transition gap-1
     {{ $isSelected ? 'bg-orange-500 text-white border-orange-600' : 'bg-white text-slate-700 hover:bg-orange-100 border-slate-200' }}">
 
-<div class="flex justify-between items-center w-full">
-    <div class="flex flex-col text-right">
-        <span class="font-semibold">
-            {{ \Carbon\Carbon::parse($dateW)->translatedFormat('j F Y') }}
-        </span>
-        <span class="text-sm {{ $isSelected ? 'text-orange-100' : 'text-slate-500' }}">
-            {{ \Carbon\Carbon::parse($time)->translatedFormat('H:i') }}
-        </span>
-    </div>
-    <i class="ri-arrow-left-s-line text-xl {{ $isSelected ? 'text-white' : 'text-slate-400' }}"></i>
-</div>
-</button>
-
-
-                    @endforeach
-                </div>
-        
-        @elseif ($selectedOffer->type == 'services')
-        @php
-        $currentDate = isset($calendarDate) ? \Carbon\Carbon::parse($calendarDate) : now();
-        $startOfMonth = $currentDate->copy()->startOfMonth();
-        $endOfMonth = $currentDate->copy()->endOfMonth();
-        $firstDayOfWeek = $startOfMonth->dayOfWeek;
-        $daysInMonth = $currentDate->daysInMonth;
-        $today = now()->toDateString();
-        $maxDate = isset($times['max_reservation_date']) ? \Carbon\Carbon::parse($times['max_reservation_date']) : null;
-
-        $availableDays = array_filter($times['data'] ?? [], function ($day) {
-        return !empty($day['enabled']) && !empty($day['from']) && !empty($day['to']);
-        });
-        //dd($availableDays);
-
-        // تحويل أسماء الأيام من الإنجليزية إلى أرقام Carbon
-        $dayToCarbon = [
-        'sunday' => 0,
-        'monday' => 1,
-        'tuesday' => 2,
-        'wednesday' => 3,
-        'thursday' => 4,
-        'friday' => 5,
-        'saturday' => 6,
-        ];
-        @endphp
-
-        <div class="space-y-4">
-            <div class="flex justify-between items-center">
-                <button wire:click="previousMonth" class="text-slate-500 hover:text-orange-500 text-xl">
-                    <i class="ri-arrow-left-s-line"></i>
+                    <div class="flex justify-between items-center w-full">
+                        <div class="flex flex-col text-right">
+                            <span class="font-semibold">
+                                {{ \Carbon\Carbon::parse($dateW)->translatedFormat('j F Y') }}
+                            </span>
+                            <span class="text-sm {{ $isSelected ? 'text-orange-100' : 'text-slate-500' }}">
+                                {{ \Carbon\Carbon::parse($time)->translatedFormat('H:i') }}
+                            </span>
+                        </div>
+                        <i class="ri-arrow-left-s-line text-xl {{ $isSelected ? 'text-white' : 'text-slate-400' }}"></i>
+                    </div>
                 </button>
-                <h3 class="text-lg font-semibold text-slate-800">
-                    <i class="ri-calendar-line text-orange-500 text-xl"></i>
-                    {{ $currentDate->format('F Y') }}
-                </h3>
-                <button wire:click="nextMonth" class="text-slate-500 hover:text-orange-500 text-xl">
-                    <i class="ri-arrow-right-s-line"></i>
-                </button>
+
+
+                @endforeach
             </div>
 
-            {{-- أسماء الأيام --}}
-            <div class="grid grid-cols-7 gap-2 text-center text-slate-500 font-medium text-sm">
-                <div>أحد</div>
-                <div>اثنين</div>
-                <div>ثلاثاء</div>
-                <div>أربعاء</div>
-                <div>خميس</div>
-                <div>جمعة</div>
-                <div>سبت</div>
-            </div>
+            @elseif ($selectedOffer->type == 'services')
+            @php
+            $currentDate = isset($calendarDate) ? \Carbon\Carbon::parse($calendarDate) : now();
+            $startOfMonth = $currentDate->copy()->startOfMonth();
+            $endOfMonth = $currentDate->copy()->endOfMonth();
+            $firstDayOfWeek = $startOfMonth->dayOfWeek;
+            $daysInMonth = $currentDate->daysInMonth;
+            $today = now()->toDateString();
+            $maxDate = isset($times['max_reservation_date']) ? \Carbon\Carbon::parse($times['max_reservation_date']) : null;
 
-            {{-- تقويم الشهر --}}
-            <div class="grid grid-cols-7 gap-2 text-center text-sm">
-                @for ($i = 0; $i < $firstDayOfWeek; $i++)
-                    <div>
-            </div> {{-- فراغات قبل أول يوم --}}
-            @endfor
+            $availableDays = array_filter($times['data'] ?? [], function ($day) {
+            return !empty($day['enabled']) && !empty($day['from']) && !empty($day['to']);
+            });
+            //dd($availableDays);
 
-            @for ($day = 1; $day <= $daysInMonth; $day++)
-                @php
-                $date=$currentDate->copy()->day($day);
-                $dateString = $date->toDateString();
-                $isToday = $dateString === $today;
-                $isSelected = isset($selectedDate) && $dateString === $selectedDate;
-                $dayOfWeek = $date->dayOfWeek; // 0 (الأحد) إلى 6 (السبت)
+            // تحويل أسماء الأيام من الإنجليزية إلى أرقام Carbon
+            $dayToCarbon = [
+            'sunday' => 0,
+            'monday' => 1,
+            'tuesday' => 2,
+            'wednesday' => 3,
+            'thursday' => 4,
+            'friday' => 5,
+            'saturday' => 6,
+            ];
+            @endphp
 
-                $dayName = array_search($dayOfWeek, $dayToCarbon);
-                $isDayAvailable = isset($availableDays[$dayName]);
-
-                $withinMaxDate = !$maxDate || $date->lte($maxDate);
-                $inFuture = $date->isSameDay(now()) || $date->isAfter(now());
-                $canReserve = $isDayAvailable && $inFuture && $withinMaxDate;
-                @endphp
-
-                @if ($canReserve)
-                <button wire:click="selectDate('{{ $dateString }}')"
-                    class="py-2 rounded-xl border font-medium transition
-                                        {{ $isSelected ? 'bg-orange-500 text-white border-orange-600' : ($isToday ? 'bg-orange-100 border-orange-300 text-slate-700' : 'bg-slate-100 hover:bg-orange-100 border-slate-200 text-slate-700') }}">
-                    {{ $day }}
-                </button>
-                @else
-                <div class="py-2 rounded-xl border border-slate-100 text-slate-300 line-through bg-gray-100 cursor-not-allowed">
-                    {{ $day }}
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <button wire:click="previousMonth" class="text-slate-500 hover:text-orange-500 text-xl">
+                        <i class="ri-arrow-left-s-line"></i>
+                    </button>
+                    <h3 class="text-lg font-semibold text-slate-800">
+                        <i class="ri-calendar-line text-orange-500 text-xl"></i>
+                        {{ $currentDate->format('F Y') }}
+                    </h3>
+                    <button wire:click="nextMonth" class="text-slate-500 hover:text-orange-500 text-xl">
+                        <i class="ri-arrow-right-s-line"></i>
+                    </button>
                 </div>
-                @endif
+
+                {{-- أسماء الأيام --}}
+                <div class="grid grid-cols-7 gap-2 text-center text-slate-500 font-medium text-sm">
+                    <div>أحد</div>
+                    <div>اثنين</div>
+                    <div>ثلاثاء</div>
+                    <div>أربعاء</div>
+                    <div>خميس</div>
+                    <div>جمعة</div>
+                    <div>سبت</div>
+                </div>
+
+                {{-- تقويم الشهر --}}
+                <div class="grid grid-cols-7 gap-2 text-center text-sm">
+                    @for ($i = 0; $i < $firstDayOfWeek; $i++)
+                        <div>
+                </div> {{-- فراغات قبل أول يوم --}}
                 @endfor
+
+                @for ($day = 1; $day <= $daysInMonth; $day++)
+                    @php
+                    $date=$currentDate->copy()->day($day);
+                    $dateString = $date->toDateString();
+                    $isToday = $dateString === $today;
+                    $isSelected = isset($selectedDate) && $dateString === $selectedDate;
+                    $dayOfWeek = $date->dayOfWeek; // 0 (الأحد) إلى 6 (السبت)
+
+                    $dayName = array_search($dayOfWeek, $dayToCarbon);
+                    $isDayAvailable = isset($availableDays[$dayName]);
+
+                    $withinMaxDate = !$maxDate || $date->lte($maxDate);
+                    $inFuture = $date->isSameDay(now()) || $date->isAfter(now());
+                    $canReserve = $isDayAvailable && $inFuture && $withinMaxDate;
+                    @endphp
+
+                    @if ($canReserve)
+                    <button wire:click="selectDate('{{ $dateString }}')"
+                        class="py-2 rounded-xl border font-medium transition
+                                        {{ $isSelected ? 'bg-orange-500 text-white border-orange-600' : ($isToday ? 'bg-orange-100 border-orange-300 text-slate-700' : 'bg-slate-100 hover:bg-orange-100 border-slate-200 text-slate-700') }}">
+                        {{ $day }}
+                    </button>
+                    @else
+                    <div class="py-2 rounded-xl border border-slate-100 text-slate-300 line-through bg-gray-100 cursor-not-allowed">
+                        {{ $day }}
+                    </div>
+                    @endif
+                    @endfor
+            </div>
         </div>
-    </div>
-    @endif
+        @endif
 
-    @endif
+        @endif
 
-    @if ($step == 3)
+        @if ($step == 3)
         @if ($selectedOffer->type == 'events')
 
-            {{-- @php
+        {{-- @php
                     $this->dispatch('stepNext');
             @endphp --}}
         @elseif ($selectedOffer->type == 'services')
-            @php
-                
-            $dayName = Carbon\Carbon::parse($selectedDate)->locale('en')->dayName; // e.g. "Saturday"
-            $dayName = strtolower($dayName); // Ensure match with array keys
-            $minTime = '00:00';
-            $maxTime = '23:59';
+        @php
 
-            if ($selectedOffer->type == 'events') {
-            $minTime = $times['data'][0]['start_time'] ?? '00:00';
-            $maxTime = $times['data'][0]['end_time'] ?? '23:59';
-            } elseif ($selectedOffer->type == 'services' && isset($times['data'][$dayName])) {
-            $minTime = $times['data'][$dayName]['from'] ?? '00:00';
-            $maxTime = $times['data'][$dayName]['to'] ?? '23:59';
-            }
-            @endphp
+        $dayName = Carbon\Carbon::parse($selectedDate)->locale('en')->dayName; // e.g. "Saturday"
+        $dayName = strtolower($dayName); // Ensure match with array keys
+        $minTime = '00:00';
+        $maxTime = '23:59';
 
-            <div class="mt-4">
-                <label for="selected_time" class="block text-sm font-medium text-gray-700">اختر الوقت:</label>
-                <input
-                    type="time"
-                    id="selected_time"
-                    wire:model.lazy="selectedTime"
-                    min="{{ $minTime }}"
-                    max="{{ $maxTime }}"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
-                <p class="text-xs text-gray-500 mt-1">من {{ $minTime }} إلى {{ $maxTime }}</p>
-            </div>
-        @endif
+        if ($selectedOffer->type == 'events') {
+        $minTime = $times['data'][0]['start_time'] ?? '00:00';
+        $maxTime = $times['data'][0]['end_time'] ?? '23:59';
+        } elseif ($selectedOffer->type == 'services' && isset($times['data'][$dayName])) {
+        $minTime = $times['data'][$dayName]['from'] ?? '00:00';
+        $maxTime = $times['data'][$dayName]['to'] ?? '23:59';
+        }
+        @endphp
 
-    @endif
-
-
-    @if ($step == 4)
-    <div class="space-y-6">
-
-        <div class="flex justify-between items-center">
-            <div class="text-lg font-semibold">
-                السعر: {{ $price }} ريال
-            </div>
-            <div class="text-sm text-gray-600">
-                الكمية المتوفرة: {{ $stock }}
-            </div>
-        </div>
-
-        <div class="flex items-center space-x-2 rtl:space-x-reverse">
-            <button wire:click="decreaseQuantity"
-                class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
-                -
-            </button>
-            <input type="number" wire:model.lazy="quantity"
-                class="w-16 text-center border rounded p-1" min="1" max="{{ $stock }}">
-            <button wire:click="increaseQuantity"
-                class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">
-                +
-            </button>
-        </div>
-
-        {{-- الكوبون --}}
-        <div class="flex items-center space-x-2 rtl:space-x-reverse">
-            <input type="text" wire:model.lazy="couponCode"
-                placeholder="أدخل كود الخصم"
-                class="flex-1 p-2 border rounded">
-            <button wire:click="applyCoupon"
-                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                تحقق
-            </button>
-        </div>
-
-        {{-- السعر النهائي --}}
-        <div class="text-xl font-bold text-right">
-            السعر النهائي: {{ $finalPrice }} ريال
-        </div>
-
-    </div>
-    @endif
-
-    @if ($step == 5)
-    @foreach ($Qa as $index => $Q)
-    <div class="mb-4">
-        <label class="block text-gray-700 font-semibold mb-1">
-            {{ $Q['question'] }}
-        </label>
-        <input type="text" wire:model.defer="Qa.{{ $index }}.answer"
-            class="w-full border px-3 py-2 rounded shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-            placeholder="اكتب إجابتك هنا">
-    </div>
-    @endforeach
-    @endif
-
-    @if ($step == 6)
-    @if ($this->is_ready())
-    <div class="space-y-6 bg-white shadow-md rounded-lg p-6">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">مراجعة الحجز</h2>
-
-        {{-- بيانات الفرع --}}
-        <div>
-            <h3 class="font-semibold text-gray-700">الفرع:</h3>
-            <p>{{ $selectedBranchData['name'] ?? 'غير محدد' }}</p>
-            <p class="text-sm text-gray-500">{{ $selectedBranchData['location'] ?? '' }}</p>
-        </div>
-
-        {{-- التاريخ والوقت --}}
-        <div>
-            <h3 class="font-semibold text-gray-700">التاريخ والوقت:</h3>
-            <p>{{ $selectedDate }}</p>
-            <p>{{ $selectedTime }}</p>
-        </div>
-
-        {{-- السعر والكمية --}}
-        <div>
-            <h3 class="font-semibold text-gray-700">السعر:</h3>
-            <p>{{ $price }} ريال x {{ $quantity }} = <strong>{{ $price * $quantity }} ريال</strong></p>
-        </div>
-
-        {{-- الكوبون --}}
-        @if ($coupon)
-        <div>
-            <h3 class="font-semibold text-gray-700">الكوبون:</h3>
-            <p>تم تطبيق الكوبون <strong>{{ $couponCode }}</strong>، الخصم: {{ $discount }} ريال</p>
+        <div class="mt-4">
+            <label for="selected_time" class="block text-sm font-medium text-gray-700">اختر الوقت:</label>
+            <input
+                type="time"
+                id="selected_time"
+                wire:model.lazy="selectedTime"
+                min="{{ $minTime }}"
+                max="{{ $maxTime }}"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
+            <p class="text-xs text-gray-500 mt-1">من {{ $minTime }} إلى {{ $maxTime }}</p>
         </div>
         @endif
 
-        {{-- السعر النهائي --}}
-        <div class="text-lg font-bold text-green-600">
-            السعر النهائي: {{ $finalPrice }} ريال
+        @endif
+
+
+        @if ($step == 4)
+        <div class="space-y-6">
+
+            <div class="flex justify-between items-center">
+                <div class="text-lg font-semibold">
+                    السعر: {{ $price }} ريال
+                </div>
+                <div class="text-sm text-gray-600">
+                    الكمية المتوفرة: {{ $stock }}
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                <button wire:click="decreaseQuantity"
+                    class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                    -
+                </button>
+                <input type="number" wire:model.lazy="quantity"
+                    class="w-16 text-center border rounded p-1" min="1" max="{{ $stock }}">
+                <button wire:click="increaseQuantity"
+                    class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">
+                    +
+                </button>
+            </div>
+
+            {{-- الكوبون --}}
+            <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                <input type="text" wire:model.lazy="couponCode"
+                    placeholder="أدخل كود الخصم"
+                    class="flex-1 p-2 border rounded">
+                <button wire:click="applyCoupon"
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                    تحقق
+                </button>
+            </div>
+
+            {{-- السعر النهائي --}}
+            <div class="text-xl font-bold text-right">
+                السعر النهائي: {{ $finalPrice }} ريال
+            </div>
+
         </div>
+        @endif
 
-        {{-- زر التأكيد --}}
-
-
-    </div>
-    @else
-    <div class="text-center text-red-600 font-semibold py-10">
-        لا يمكن عرض المعاينة حالياً، يرجى التأكد من إدخال جميع البيانات بشكل صحيح.
-    </div>
-    @endif
-    @endif
-
-
-    @if ($step == 7)
-    <div class="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-10 space-y-6 text-center">
-        {{-- الأيقونة --}}
-        <div class="w-24 h-24 rounded-full bg-green-100 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
+        @if ($step == 5)
+        @foreach ($Qa as $index => $Q)
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-1">
+                {{ $Q['question'] }}
+            </label>
+            <input type="text" wire:model.defer="Qa.{{ $index }}.answer"
+                class="w-full border px-3 py-2 rounded shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+                placeholder="اكتب إجابتك هنا">
         </div>
+        @endforeach
+        @endif
 
-        {{-- الرسالة --}}
-        <h2 class="text-2xl font-bold text-green-700">تمت الإضافة بنجاح</h2>
-        <p class="text-gray-600">تمت إضافة العرض إلى السلة بنجاح. يمكنك متابعة التسوق أو الانتقال إلى السلة لإتمام الحجز.</p>
+        @if ($step == 6)
+        @if ($this->is_ready())
+        <div class="space-y-6 bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">مراجعة الحجز</h2>
 
-        {{-- زر الانتقال --}}
-        <div class="space-x-4">
-            <a href="" class="inline-block bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">
-                عروض أخرى
-            </a>
-            <a href="{{route("cart",1)}}" wire:navigate class="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
-                الذهاب إلى السلة
-            </a>
-        </div>
-    </div>
-    @endif
-    @if($step < 7)
-        <div class="mt-6">
-        <div class="flex justify-between gap-4">
-            @if($step > 0)
-            <button wire:click="stepBack"
-                class="w-full bg-gray-200 hover:bg-gray-300 text-slate-700 font-semibold py-2 rounded-xl transition">
-                رجوع <i class="ri-arrow-right-line"></i>
-            </button>
+            {{-- بيانات الفرع --}}
+            <div>
+                <h3 class="font-semibold text-gray-700">الفرع:</h3>
+                <p>{{ $selectedBranchData['name'] ?? 'غير محدد' }}</p>
+                <p class="text-sm text-gray-500">{{ $selectedBranchData['location'] ?? '' }}</p>
+            </div>
+
+            {{-- التاريخ والوقت --}}
+            <div>
+                <h3 class="font-semibold text-gray-700">التاريخ والوقت:</h3>
+                <p>{{ $selectedDate }}</p>
+                <p>{{ $selectedTime }}</p>
+            </div>
+
+            {{-- السعر والكمية --}}
+            <div>
+                <h3 class="font-semibold text-gray-700">السعر:</h3>
+                <p>{{ $price }} ريال x {{ $quantity }} = <strong>{{ $price * $quantity }} ريال</strong></p>
+            </div>
+
+            {{-- الكوبون --}}
+            @if ($coupon)
+            <div>
+                <h3 class="font-semibold text-gray-700">الكوبون:</h3>
+                <p>تم تطبيق الكوبون <strong>{{ $couponCode }}</strong>، الخصم: {{ $discount }} ريال</p>
+            </div>
             @endif
 
-            @if($step != 6)
-            <button wire:click="stepNext" @if(!$enableNext && $step!=0) disabled @endif
-                class="w-full @if(!$enableNext && $step!=0) bg-gray-400 @else bg-orange-500 hover:bg-orange-600 @endif text-white font-semibold py-2 rounded-xl transition">
-                <i class="ri-arrow-left-line"></i> التالي
-            </button>
-            @else
-            <button wire:click="stepNext"
-                class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-xl transition">
-                الحجز <i class="ri-check-double-line"></i>
-            </button>
-            @endif
+            {{-- السعر النهائي --}}
+            <div class="text-lg font-bold text-green-600">
+                السعر النهائي: {{ $finalPrice }} ريال
+            </div>
+
+            {{-- زر التأكيد --}}
+
+
         </div>
-</div>
-@endif
+        @else
+        <div class="text-center text-red-600 font-semibold py-10">
+            لا يمكن عرض المعاينة حالياً، يرجى التأكد من إدخال جميع البيانات بشكل صحيح.
+        </div>
+        @endif
+        @endif
+
+
+        @if ($step == 7)
+        <div class="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-10 space-y-6 text-center">
+            {{-- الأيقونة --}}
+            <div class="w-24 h-24 rounded-full bg-green-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+
+            {{-- الرسالة --}}
+            <h2 class="text-2xl font-bold text-green-700">تمت الإضافة بنجاح</h2>
+            <p class="text-gray-600">تمت إضافة العرض إلى السلة بنجاح. يمكنك متابعة التسوق أو الانتقال إلى السلة لإتمام الحجز.</p>
+
+            {{-- زر الانتقال --}}
+            <div class="space-x-4">
+                <a href="" class="inline-block bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">
+                    عروض أخرى
+                </a>
+                <a href="{{route("cart",1)}}" wire:navigate class="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+                    الذهاب إلى السلة
+                </a>
+            </div>
+        </div>
+        @endif
+        @if($step < 7)
+            <div class="mt-6">
+            <div class="flex justify-between gap-4">
+                @if($step > 0)
+                <button wire:click="stepBack"
+                    class="w-full bg-gray-200 hover:bg-gray-300 text-slate-700 font-semibold py-2 rounded-xl transition">
+                    رجوع <i class="ri-arrow-right-line"></i>
+                </button>
+                @endif
+
+                @if($step != 6)
+                <button wire:click="stepNext" @if(!$enableNext && $step!=0) disabled @endif
+                    class="w-full @if(!$enableNext && $step!=0) bg-gray-400 @else bg-orange-500 hover:bg-orange-600 @endif text-white font-semibold py-2 rounded-xl transition">
+                    <i class="ri-arrow-left-line"></i> التالي
+                </button>
+                @else
+                <button wire:click="stepNext"
+                    class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-xl transition">
+                    الحجز <i class="ri-check-double-line"></i>
+                </button>
+                @endif
+            </div>
+    </div>
+    @endif
 </div>
 
 </div>
@@ -777,8 +787,6 @@ class="w-full flex flex-col items-start justify-center px-4 py-3 rounded-lg bord
             }
         });
     });
-
-    
 </script>
 
 <script>
@@ -786,7 +794,7 @@ class="w-full flex flex-col items-start justify-center px-4 py-3 rounded-lg bord
     //     document.querySelectorAll('#merchant-social-links a').forEach(anchor => {
     //         const url = anchor.dataset.url?.toLowerCase() || '';
     //         let iconClass = 'ri-global-line';
-    
+
     //         if (url.includes('facebook.com'))        iconClass = 'ri-facebook-fill';
     //         else if (url.includes('twitter.com'))    iconClass = 'ri-twitter-x-fill';
     //         else if (url.includes('instagram.com'))  iconClass = 'ri-instagram-line';
@@ -807,9 +815,9 @@ class="w-full flex flex-col items-start justify-center px-4 py-3 rounded-lg bord
     //         else if (url.includes('vimeo.com'))      iconClass = 'ri-vimeo-fill';
     //         else if (url.includes('itch.io'))        iconClass = 'fa-brands fa-itch-io'; // FontAwesome
     //         else if (url.includes('discord.gg') || url.includes('discord.com')) iconClass = 'ri-discord-fill';
-    
+
     //         const icon = anchor.querySelector('i');
     //         icon.className = iconClass;
     //     });
     // });
-    </script>
+</script>

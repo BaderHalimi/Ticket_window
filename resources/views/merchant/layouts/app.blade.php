@@ -109,7 +109,7 @@
             </div>
         </main>
     </div>
-
+    <script src="https://cdn.tiny.cloud/1/evqw8zgybaz9h1ukpi5qcps683qv0ef37icy3d3o5xjbo9it/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
     @livewireScripts
     @stack('scripts')
 </body>

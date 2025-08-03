@@ -30,8 +30,8 @@ class policies_settings extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "policies" => "string|required|max:2048",
-            'payments' => 'array',       
+            "policies" => "required|max:10000",
+            'payments' => 'array',
             'payments.*' => 'in:visa-mastercard,mada,apple-pay,stc-pay',
             //'allow_refund' => 'nullable|boolean',
             'allow_refund' => 'nullable|boolean',
@@ -42,7 +42,7 @@ class policies_settings extends Controller
             'allow_refund' => $request->has('allow_refund'),
             'payments' => $request->input('payments', []),
         ];
-        
+
         $user = auth()->user();
         $user->additional_data = array_merge($user->additional_data ?? [], $data);
         $user->save();

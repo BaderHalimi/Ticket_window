@@ -22,7 +22,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 2H8a2 2 0 00-2 2v16a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2zM12 18h.01" />
             </svg>
 
-            <a href="tel:{{ $merchant->phone }}">{{ $merchant->phone }}</a>
+            <a href="tel:{{ $merchant->phone }}" dir="ltr">{{ $merchant->phone }}</a>
         </div>
         @endif
         <!-- <div class="flex items-center gap-1">
