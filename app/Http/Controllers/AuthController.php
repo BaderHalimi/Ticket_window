@@ -198,6 +198,10 @@ class AuthController extends Controller
 
     public function update(Request $request, string $id)
     {
+        if (Auth::id() != $id) {
+            abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
+        }
+        
         $validated = $request->validate([
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
@@ -246,6 +250,12 @@ class AuthController extends Controller
     }
 
     public function update_settings(Request $request, string $id){
+        if (Auth::id() != $id) {
+            
+            abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
+        }
+        //dd(Auth::id());
+        
         //dd($request);
         $validated = $request->validate([
             'f_name' => [
@@ -280,6 +290,10 @@ class AuthController extends Controller
 
     }
     public function update_password(Request $request,string $id){
+        if (Auth::id() != $id) {
+            abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
+        }
+        
         $validated = $request->validate([
             'password' => [
                 'required',
