@@ -121,6 +121,7 @@
 
                 @php
                     $additional = $reservation->additional_data ?? [];
+                    //dd($additional);
                 @endphp
 
                 <p><span class="font-semibold text-orange-600">التاريخ المحجوز:</span> {{ $additional['selected_date'] ?? 'غير محدد' }}</p>

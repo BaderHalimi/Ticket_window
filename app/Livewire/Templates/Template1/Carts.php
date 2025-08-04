@@ -42,13 +42,14 @@ class Carts extends Component
                 'code' => uniqid('code_'),
                 'additional_data' => json_encode($cart->additional_data),
             ]);
-            $oldData = json_decode($item->additional_data ?? '{}', true) ?? [];
+            $oldData = json_decode($res->additional_data ?? '{}', true) ?? [];
             $newData = [
                 'recipient_id' => $cart->user_id,
                 'notes' => 'تم الدفع بنجاح',
                 'type' => 'pay',
                 'withdrawal' => false,
                 'status' => 'pending',
+
             ];
 
             $merged = array_merge($oldData, $newData);
