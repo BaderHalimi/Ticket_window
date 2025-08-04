@@ -14,19 +14,29 @@ class OtpConfermation extends Controller
     public function index()
     {
         $email = session('email');
-        if (!$email){
+    
+        if (!$email) {
             abort(403);
-            //return redirect()->back();
         }
-        $otp = sendOTP($email);
-        session([
-            'otp' => $otp,
+    
+        $lastSent = session('otp_sent_at');
+    
+        if (!$lastSent || now()->diffInSeconds($lastSent) >= 60) {
+            $otp = sendOTP($email);
+    
+            session([
+                'otp' => $otp,
+                'email' => $email,
+                'otp_sent_at' => now(),
+            ]);
+        }
+    
+        return view('otpConfermation', [
+            'otp' => session('otp'),
             'email' => $email,
         ]);
-        
-        
-        return view('otpConfermation',compact('otp', 'email'));
     }
+    
 
     /**
      * Show the form for creating a new resource.

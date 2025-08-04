@@ -13,6 +13,10 @@ use Livewire\Attributes\On;
 use App\Models\MerchantChat;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+
+
 
 
 
@@ -51,6 +55,10 @@ class TemplateRouter extends Component
     public $savedTicket;
     public $newTicket = null;
     public $Qa = [];
+    public $f_name, $l_name, $email, $password, $password_confirmation, $country_code, $phone;
+
+    public $LoginStep = 0;
+    public $EnableLogin,$errors;
 
     public function updatedSelectedBranch($branchId)
     {
@@ -61,6 +69,8 @@ class TemplateRouter extends Component
 
 
     }
+
+
     public function previousMonth()
     {
         $this->calendarDate = Carbon::parse($this->calendarDate)->subMonth()->toDateString();
@@ -171,17 +181,22 @@ class TemplateRouter extends Component
     }
     public function selectOffer($value)
     {
-        if (!Auth::guard('customer')->check()) {
-            // dd(!Auth::guard('customer')->check());
-            $this->dispatch('login-error', message: 'يجب تسجيل الدخول للبدء في الحجز والشراء.');
-        } else {
+        // if (!Auth::guard('customer')->check()) {
+        //     // dd(!Auth::guard('customer')->check());
+        //     //$this->dispatch('login-error', message: 'يجب تسجيل الدخول للبدء في الحجز والشراء.');
+        //     if (!(isset($this->selectedOffer) && isset($this->selectedOffer->id) && $value == $this->selectedOffer->id)) {
+        //         $this->resetForm();
+        //         $this->step = 0;
+        //         $this->selectedOffer = Offering::find($value);
+        //     }
+        // } else {
 
             if (!(isset($this->selectedOffer) && isset($this->selectedOffer->id) && $value == $this->selectedOffer->id)) {
                 $this->resetForm();
                 $this->step = 0;
                 $this->selectedOffer = Offering::find($value);
             }
-        }
+        //}
     }
     #[On('stepNext')]
     public function stepNext()
@@ -563,12 +578,192 @@ class TemplateRouter extends Component
         $this->ticketDescription = null;
         $this->savedTicket = null;
     }
+
+    public function store()
+    {
+        $rules = [
+            'f_name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s\-]+$/u',
+            ],
+            'l_name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s\-]+$/u',
+            ],
+            'email' => [
+                'required',
+                'email:rfc,dns',
+                'max:255',
+                'unique:users,email',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'max:20',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+                'confirmed',
+            ],
+
+            'phone' => ['required', 'regex:/^[0-9\s-]{7,20}$/'],
+        ];
+
+
+        $this->validate($rules);
+
+        $cleanPhone = preg_replace('/\D/', '', $this->phone);
+        $fullPhone = $cleanPhone;
+
+
+        $user = User::create([
+            'f_name' => $this->f_name,
+            'l_name' => $this->l_name,
+            'email' => $this->email,
+            'phone' => $fullPhone,
+            'password' => Hash::make($this->password),
+            'role' => 'user',
+        ]);
+
+        //Auth::login($user);
+        Auth::guard('customer')->login($user);
+
+    }
+
+    public function NextStepLogin(){
+        if ($this->LoginStep >= 0){
+            $this->LoginStep++;
+            $this->CheckenableNext();
+        }
+        if ($this->LoginStep == 4){
+            $this->store();
+
+        }
+
+    }
+
+    public function BackStepLogin(){
+        if ($this->LoginStep > 0){
+            $this->LoginStep--;
+            $this->CheckenableNext();
+
+        }
+    }
+
+
+    public function CheckenableNext()
+    {
+        $EnableLogin = false;
+
+        if ($this->LoginStep == 1) {
+            $data = [
+                'f_name' => $this->f_name,
+                'l_name' => $this->l_name,
+            ];
+
+            $rules = [
+                'f_name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/^[\pL\s\-]+$/u',
+                ],
+                'l_name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/^[\pL\s\-]+$/u',
+                ],
+            ];
+            $validator = Validator::make($data, $rules);
+
+if ($validator->fails()) {
+    $this->errors = $validator->errors()->toArray();
+    $this->EnableLogin = false;
+} else {
+    $this->errors = [];
+    $this->EnableLogin = true;
+}
+        }
+
+        if ($this->LoginStep == 2) {
+            $data = [
+                'email' => $this->email,
+                'phone' => $this->phone,
+                //'country_code' => $this->country_code,
+            ];
+
+            $rules = [
+                'email' => [
+                    'required',
+                    'email:rfc,dns',
+                    'max:255',
+                    'unique:users,email',
+                ],
+                'phone' => ['required', 'regex:/^[0-9\s-]{7,20}$/'],
+                // 'country_code' => [
+                //     'required',
+                //     'string',
+                //     'regex:/^\+\d{1,4}$/',
+                // ],
+            ];
+                    $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()) {
+            $this->errors = $validator->errors()->toArray();
+            $this->EnableLogin = false;
+        } else {
+            $this->errors = [];
+            $this->EnableLogin = true;
+        }
+        }
+
+        if ($this->LoginStep == 3) {
+            $data = [
+                'password' => $this->password,
+                'password_confirmation' => $this->password_confirmation,
+            ];
+
+            $rules = [
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'max:20',
+                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+                    'confirmed',
+                ],
+            ];
+            $validator = Validator::make($data, $rules);
+
+if ($validator->fails()) {
+    $this->errors = $validator->errors()->toArray();
+    $this->EnableLogin = false;
+} else {
+    $this->errors = [];
+    $this->EnableLogin = true;
+}
+        }
+
+
+
+        //return $EnableLogin;
+    }
+    public function updated($propertyName)
+    {
+        $this->CheckenableNext();
+    }
+
     public function render()
     {
         //dd($this->merchant);
         if ($this->step == 4) {
             $this->updatePricing();
         }
+        //$this->CheckenableNext();
 
         //$this->load_chats();
 

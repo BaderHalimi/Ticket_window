@@ -70,13 +70,13 @@ class AuthController extends Controller
         }
 
         $validated = $request->validate($rules);
-        $validated['phone'] = '+' . preg_replace('/\D/', '', $validated['country_code'] . $request->phone);
-        if (User::where('phone', $validated['phone'])->exists()) {
+        $cleanPhone = preg_replace('/\D/', '', $request->phone);
+        $fullPhone = $validated['country_code'] . $cleanPhone;
+        if (User::where('phone', $fullPhone)->exists()) {
             return back()->withErrors(['phone' => 'رقم الهاتف مستخدم بالفعل.'])->withInput();
         }
-
-        // دمج country_code مع phone لتخزينه في خانة واحدة
-        $validated['phone'] = $validated['country_code'] . $validated['phone'];
+        $validated['phone'] = $fullPhone;
+        
 
         unset($validated['country_code']);
 

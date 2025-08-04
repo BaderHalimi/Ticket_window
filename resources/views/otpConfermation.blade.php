@@ -15,9 +15,8 @@
         </div>
     @endif
 
-    <form method="POST" action="{{route("otpConfermation.store")}}">
+    <form method="POST" action="{{ route('otpConfermation.store') }}">
         @csrf
-
 
         <div class="mb-4">
             <label for="otp" class="block text-gray-700 mb-1">رمز التحقق</label>
@@ -32,29 +31,68 @@
             تأكيد الرمز
         </button>
     </form>
+
+    <div class="mt-6 text-center">
+        <button id="resend-btn"
+                class="bg-gray-300 text-gray-700 px-4 py-2 rounded cursor-not-allowed opacity-50"
+                disabled>
+            إعادة إرسال الكود (30)
+        </button>
+    </div>
 </div>
 
-{{-- سكريبت التحقق --}}
 <script>
-    // المتغير الصحيح من الباك اند
     const correctOtp = "{{ $otp }}";
+    const input = document.getElementById('otp');
+    const submitBtn = document.querySelector('button[type="submit"]');
+    const errorText = document.getElementById('otp-error');
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const input = document.getElementById('otp');
-        const button = document.querySelector('button[type="submit"]');
-        const errorText = document.getElementById('otp-error');
+    input.addEventListener('input', function () {
+        if (input.value === correctOtp) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            errorText.classList.add('hidden');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            errorText.classList.remove('hidden');
+        }
+    });
 
-        input.addEventListener('input', function () {
-            if (input.value === correctOtp) {
-                button.disabled = false;
-                button.classList.remove('opacity-50', 'cursor-not-allowed');
-                errorText.classList.add('hidden');
-            } else {
-                button.disabled = true;
-                button.classList.add('opacity-50', 'cursor-not-allowed');
-                errorText.classList.remove('hidden');
-            }
-        });
+    const resendBtn = document.getElementById('resend-btn');
+    let secondsLeft = 30;
+
+    @if(session('otp_sent_at'))
+        const otpSentAt = new Date("{{ \Carbon\Carbon::parse(session('otp_sent_at'))->format('Y-m-d H:i:s') }}");
+        const now = new Date();
+        const diff = Math.floor((now - otpSentAt) / 1000);
+        if (diff < 60) {
+            secondsLeft = 60;
+        } else {
+            secondsLeft = 0;
+        }
+    @endif
+
+    function updateResendButton() {
+        if (secondsLeft <= 0) {
+            resendBtn.disabled = false;
+            resendBtn.textContent = "إعادة إرسال الكود";
+            resendBtn.classList.remove('cursor-not-allowed', 'opacity-50', 'bg-gray-300');
+            resendBtn.classList.add('bg-orange-500', 'hover:bg-orange-600', 'text-white');
+        } else {
+            resendBtn.textContent = "إعادة إرسال الكود (" + secondsLeft + ")";
+            resendBtn.disabled = true;
+            secondsLeft--;
+            setTimeout(updateResendButton, 1000);
+        }
+    }
+
+    updateResendButton();
+
+    resendBtn.addEventListener('click', function () {
+        if (!resendBtn.disabled) {
+            location.reload();
+        }
     });
 </script>
 @endsection

@@ -19,13 +19,35 @@
                         <line x1="3" x2="21" y1="10" y2="10"></line>
                     </svg></h3>
             </div>
-            <div class="p-6 pt-0" bis_skin_checked="1">
-                <p class="text-2xl font-bold">{{$nearestReservation->offering->name ?? "--"}}</p>
-                <p class="text-indigo-200">{{json_decode($nearestReservation->additional_data)->selected_date ?? "---"}} / {{json_decode($nearestReservation->additional_data)->selected_time ?? "--"}} </p><button class="inline-flex items-center justify-center rounded-md text-sm text-gray-900 font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gray-100 text-gray-100-foreground hover:bg-gray-100/80 h-10 px-4 py-2 mt-4">عرض التذكرة <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
-                        <path d="m12 19-7-7 7-7"></path>
-                        <path d="M19 12H5"></path>
-                    </svg></button>
+            @if ($nearestReservation && $nearestReservation->additional_data)
+            @php
+                $data = json_decode($nearestReservation->additional_data);
+            @endphp
+        
+            <div class="p-6 pt-0">
+                <p class="text-2xl font-bold">
+                    {{ $nearestReservation->offering->name ?? "--" }}
+                </p>
+        
+                <p class="text-indigo-200">
+                    {{ $data->selected_date ?? "---" }} / {{ $data->selected_time ?? "--" }}
+                </p>
+        
+                <button class="inline-flex items-center justify-center rounded-md text-sm text-gray-900 font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gray-100 text-gray-100-foreground hover:bg-gray-100/80 h-10 px-4 py-2 mt-4">
+                    عرض التذكرة
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
+                        <path d="m12 19-7-7 7-7" />
+                        <path d="M19 12H5" />
+                    </svg>
+                </button>
             </div>
+        @else
+            <div class="p-6 pt-0">
+                <p class="text-gray-400">لا توجد حجز قريب</p>
+            </div>
+        @endif
+        
         </div>
         <div class="grid md:grid-cols-2 gap-6" bis_skin_checked="1">
             <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg" bis_skin_checked="1">
