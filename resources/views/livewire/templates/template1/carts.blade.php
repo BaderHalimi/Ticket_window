@@ -15,6 +15,17 @@
             </div>
         </div>
 
+        {{-- زر الرجوع --}}
+<div class="flex justify-start p-4">
+    <a href="{{route("customer.dashboard.tickets.index")}}" wire:navigate>
+    <button 
+        class="text-sm text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-4 py-1 rounded-lg shadow-sm transition">
+        ← الرجوع
+    </button>
+    </a>
+</div>
+
+
         {{-- الكارتات داخل Scroll --}}
         <div class="flex-1 overflow-y-auto p-4 space-y-4">
 

@@ -45,6 +45,7 @@
 </head>
 
 <body class="font-sans">
+
     @livewire('front.nav')
     @yield('content')
     <footer class="bg-slate-900 text-white py-12">

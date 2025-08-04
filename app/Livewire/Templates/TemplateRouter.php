@@ -33,7 +33,7 @@ class TemplateRouter extends Component
     public $selectedDate;
 
     public $price = 1000;
-    public $quantity = 1;
+    public $quantity = 0;
     public $couponCode = '';
     public $coupon;
     public $finalPrice;
@@ -221,7 +221,7 @@ class TemplateRouter extends Component
         $this->selectedTime = null;
         $this->selectedDate = null;
         $this->price = null;
-        $this->quantity = 1;
+        $this->quantity = 0;
         $this->couponCode = '';
         $this->coupon = null;
         $this->finalPrice = null;
@@ -341,13 +341,26 @@ class TemplateRouter extends Component
 
     public function updatePricing()
     {
+
         $this->applyCoupon();
+        if ($this->quantity <= 0) {
+                $this->enableNext = false;
+            }
+        else {
+            $this->enableNext = true;
+        }
         $this->finalPrice = ($this->price * $this->quantity) * (1 - $this->discount / 100);
     }
 
     public function pricing()
     {
         if ($this->selectedOffer && $this->step === 4) {
+            if ($this->quantity <= 0) {
+                $this->enableNext = false;
+            }
+            else {
+                $this->enableNext = true;
+            }
             $this->price = $this->selectedOffer->price;
             $this->stock = get_quantity($this->selectedOffer->id, $this->selectedBranch);
             $this->finalPrice = $this->price * $this->quantity;
@@ -366,6 +379,13 @@ class TemplateRouter extends Component
     {
         if ($this->step === 1) {
             $this->branch = get_branches($this->selectedOffer->id);
+            if ($this->branch->count() == 1){
+                $this->selectedBranch = $this->branch->first()->id;
+                $this->branchDetails = Branch::find($this->selectedBranch);
+                if ($this->branchDetails) {
+                    $this->enableNext = true;
+                }
+            }
             //dd($this->branch);
         }
         //dd($offer_time);

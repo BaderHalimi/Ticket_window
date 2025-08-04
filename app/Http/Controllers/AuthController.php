@@ -255,7 +255,7 @@ class AuthController extends Controller
             abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
         }
         
-        //dd($request);
+        //dd($request->all());
         $validated = $request->validate([
             'f_name' => [
                 'required',
@@ -273,16 +273,22 @@ class AuthController extends Controller
                 'required',
                 'email:rfc,dns',
                 'max:255',
-                'unique:users,email,' . $id,
+                //'unique:users,email,' . $id,
             ],
-            'phone' => ['required', 'regex:/^[0-9\s-]{7,20}$/'],
+            //dd(1),
+            'phone' => ['required', 'max:16','regex:/^[^a-zA-Z.]+$/'],
 
         ]);
-//        dd($validated);
+          
+        
         $user = User::findOrFail($id);
         $user->f_name = $validated["f_name"];
         $user->l_name = $validated["l_name"];
-        $user->email = $validated["email"];
+
+        $data = $user->additional_data;
+        $data['page_email'] = $validated["email"];
+
+        $user->additional_data = $data;
         $user->phone = $validated["phone"];
         $user->save();
         return back()->with('success', 'تم تحديث البيانات بنجاح.');
@@ -295,6 +301,13 @@ class AuthController extends Controller
         //dd($request->all());Abc@123111
 
         $validated = $request->validate([
+             'old_password' =>[
+                'required',
+                'string',
+                'min:8',
+                'max:20',
+                //'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+             ],
             'password' => [
                 'required',
                 'string',
@@ -303,14 +316,64 @@ class AuthController extends Controller
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
                 'confirmed',
             ],
-        ]);
+        ]);//Abc@123111
         $user = User::findOrFail($id);
+
+        if (!Hash::check($validated["old_password"], $user->password)) {
+            return back()->with('error', 'كلمة المورو القديمة غير مطابقة.');
+        }
         $user->password = Hash::make($validated["password"]);
         $user->save();
         return back()->with('success', 'تم تحديث البيانات بنجاح.');
 
     }
 
+    public function update_work(Request $request,string $id){
+        if (Auth::id() != $id) {
+            abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
+        }
+        //dd($request->all());Abc@123111
+
+        $validated = $request->validate([
+             'business_name' =>[
+                'required',
+                'string',
+                'max:32'
+                //'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+             ],
+            'business_type' => [
+                'required',
+                'string',
+                'in:events,restaurant,show,other',
+
+                //'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+                //'confirmed',
+            ],
+            'other_business_type' => [
+                'required_if:business_type,other',
+                'nullable',
+                'string',
+                'max:20',
+            ],
+            
+        ]);//Abc@123111
+        $user = User::findOrFail($id);
+
+
+        $user->business_name = $validated["business_name"];
+        $user->business_type = $validated["business_type"];
+
+        if ($validated["other_business_type"]){
+            $data = $user->additional_data;
+            $data['other_business_type'] = $validated["other_business_type"];
+    
+            $user->additional_data = $data;
+        }
+//dd(1);
+        $user->save();
+        return back()->with('success', 'تم تحديث البيانات بنجاح.');
+
+    }
     /**
      * Remove the specified resource from storage.
      */

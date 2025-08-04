@@ -3,6 +3,7 @@
 namespace App\Livewire\Merchant\Dashboard\Offers\Create;
 use Livewire\Component;
 use App\Models\Offering;
+use Carbon\Carbon;
 
 class Time extends Component
 {
@@ -19,6 +20,8 @@ class Time extends Component
         'to' => null,
     ];
     public $max_reservation_date;
+    public $active_max_reservation_date;
+
     
     public function mount()
     {
@@ -28,7 +31,7 @@ class Time extends Component
             $this->enable_time = $features['enabled'] ?? true;
     
             if ($this->offering->type == 'services') {
-                // تهيئة المصفوفات
+                $this->active_max_reservation_date = $features['active_max_reservation_date'] ?? null;
                 $this->max_reservation_date = $features['max_reservation_date'] ?? null;
                 $this->day = [
                     'saturday' => false,
@@ -43,7 +46,6 @@ class Time extends Component
                 $this->from_time = [];
                 $this->to_time = [];
     
-                // تحميل البيانات المحفوظة
                 if (isset($features['days'])) {
                     foreach ($features['days'] as $dayName => $dayData) {
                         if (array_key_exists($dayName, $this->day)) {
@@ -92,7 +94,12 @@ class Time extends Component
         $features = $this->offering->features ?? [];
     
         $features['enabled'] = $this->enable_time;
-        $features['max_reservation_date'] = $this->max_reservation_date ?? null;
+        $features['active_max_reservation_date'] = $this->active_max_reservation_date ?? null;
+        if ($this->active_max_reservation_date){
+            $features['max_reservation_date'] = $this->max_reservation_date ?? null;
+        }else{
+            $features['max_reservation_date'] = Carbon::parse("3000-12-31");
+        }
         if ($this->offering->type == 'services') {
             $features['type'] = 'service';
             $features['days'] = [];
@@ -107,12 +114,10 @@ class Time extends Component
             }
         }
     
-        // لاحظ هنا استخدمنا أسماء الحقول الصحيحة
         $features['calendar'] = array_values(array_filter($this->calendar, function ($event) {
             return !empty($event['start_date']) && !empty($event['end_date']) && !empty($event['start_time']) && !empty($event['end_time']);
         }));
     
-        // حفظ الخصائص
         $this->offering->features = $features;
         $this->offering->save();
     

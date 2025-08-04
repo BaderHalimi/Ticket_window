@@ -489,7 +489,6 @@
             });
             //dd($availableDays);
 
-            // تحويل أسماء الأيام من الإنجليزية إلى أرقام Carbon
             $dayToCarbon = [
             'sunday' => 0,
             'monday' => 1,
@@ -624,7 +623,7 @@
                     -
                 </button>
                 <input type="number" wire:model.lazy="quantity"
-                    class="w-16 text-center border rounded p-1" min="1" max="{{ $stock }}">
+                    class="w-16 text-center border rounded p-1" min="0" max="{{ $stock }}">
                 <button wire:click="increaseQuantity"
                     class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">
                     +
@@ -671,8 +670,8 @@
             {{-- بيانات الفرع --}}
             <div>
                 <h3 class="font-semibold text-gray-700">الفرع:</h3>
-                <p>{{ $selectedBranchData['name'] ?? 'غير محدد' }}</p>
-                <p class="text-sm text-gray-500">{{ $selectedBranchData['location'] ?? '' }}</p>
+                <p>{{ $branchDetails->name ?? 'غير محدد' }}</p>
+                <p class="text-sm text-gray-500">{{ $branchDetails->location ?? '' }}</p>
             </div>
 
             {{-- التاريخ والوقت --}}

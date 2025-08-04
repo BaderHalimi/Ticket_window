@@ -144,6 +144,16 @@
         </svg>
         <span>إعداد الصفحة</span>
     </a>
+    
+    <a @if($merchant??false) href="{{ route('merchant.dashboard.m.profile_setup',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.profile_setup') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.profile_setup') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.profile_setup')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12c2.761 0 5-2.239 5-5S14.761 2 12 2 7 4.239 7 7s2.239 5 5 5zm0 2c-3.866 0-7 2.015-7 4.5V20h14v-1.5c0-2.485-3.134-4.5-7-4.5z" />
+          </svg>
+          
+          
+          
+        <span>إعداد الحساب</span>
+    </a>
 
     <a @if($merchant??false) href="{{ route('merchant.dashboard.m.policies_settings',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.policies_settings.index') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.policies_settings.index') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.policies_settings.index')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
@@ -174,7 +184,6 @@
         </svg>
         <span>الدعم الفني</span>
     </a>
-
 
     {{-- <a @if($merchant??false) href="{{ route('merchant.dashboard.m.languages_translation',['merchant'=>$merchant]) }}" @else href="{{ route('merchant.dashboard.languages_translation') }}" @endif wire:click.prevent="intended('{{ route('merchant.dashboard.languages_translation') }}')" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all @if(Route::is('merchant.dashboard.languages_translation')) bg-orange-500 text-white shadow-md @else text-slate-600 hover:bg-slate-100 @endif">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">

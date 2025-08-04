@@ -14,7 +14,7 @@
                     <div class="mb-3">
                         <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
                             <div class="bg-lime-500 h-4 text-xs font-medium text-white text-center leading-4" style="width: {{ $percent_progress }}%;">
-                                {{ $percent_progress }}%
+                                {{ number_format($percent_progress, 2) }}%
                             </div>
                         </div>
                     </div>

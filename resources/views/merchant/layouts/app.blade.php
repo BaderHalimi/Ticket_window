@@ -26,6 +26,41 @@
     @livewireStyles
     @stack('styles')
 </head>
+@if(session('error') || session('success') || session('message'))
+    @php
+        $message = session('error') ?? session('success') ?? session('message');
+        $type = session('error') ? 'error' : (session('success') ? 'success' : 'info');
+        $bgColor = match($type) {
+            'success' => 'bg-green-500',
+            'error' => 'bg-red-500',
+            'info' => 'bg-gray-700',
+        };
+    @endphp
+
+    <div 
+        x-data="{ show: true }"
+        x-init="setTimeout(() => show = false, 2500)"
+        x-show="show"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-x-10"
+        x-transition:enter-end="opacity-100 translate-x-0"
+        x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="opacity-100 translate-x-0"
+        x-transition:leave-end="opacity-0 translate-x-10"
+        class="fixed bottom-5 right-5 z-50 max-w-xs w-full {{ $bgColor }} text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-3"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            @if($type === 'success')
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            @elseif($type === 'error')
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            @else
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m0-4h.01M12 18h.01" />
+            @endif
+        </svg>
+        <span class="text-sm font-medium">{{ $message }}</span>
+    </div>
+@endif
 
 <body class="bg-slate-100 font-sans">
     <div class="relative h-screen flex overflow-hidden" dir="rtl" x-data="{ openSidebar: true }">

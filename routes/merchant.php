@@ -81,6 +81,11 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
     Route::get('api',function(){
         return view('merchant.dashboard.api');
     })->name('api');
+
+    Route::get('profile_setup',function(){
+        return view('merchant.dashboard.Profile_Setup');
+    })->name('profile_setup');
+
     Route::resource('support', SupportControllerM::class)->names('support');
 
 
@@ -92,7 +97,8 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
     Route::post('update/{id}', [AuthController::class,'update'])->name('update');
     Route::post('updateS/{id}', [AuthController::class,'update_settings'])->name('update_settings');
     Route::post('updateP/{id}', [AuthController::class,'update_password'])->name('update_password');
-    
+    Route::post('updateW/{id}', [AuthController::class,'update_Work'])->name('update_work');
+
 
 
 });
@@ -144,6 +150,10 @@ Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->g
     // Route::get('branch_management',function(){
     //     return view('merchant.dashboard.index');
     // })->name('branch_management');
+    
+    Route::get('m/{merchant}/profile_setup',function(){
+        return view('merchant.dashboard.Profile_Setup');
+    })->name('profile_setup');
     Route::get('m/{merchant}/team_management',function(){
         return view('merchant.dashboard.team_management');
     })->name('team_management');

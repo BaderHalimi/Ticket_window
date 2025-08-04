@@ -124,7 +124,7 @@ $user = Auth::guard('merchant')->user();
 </div> -->
 
 <div class="rounded-2xl border mt-4 border-slate-200 bg-white text-slate-900 shadow-lg p-6 space-y-6">
-  <h2 class="text-2xl font-bold">تعديل إعدادات الحساب</h2>
+  <h2 class="text-2xl font-bold">تعديل إعدادات الصفحة</h2>
 
   <form method="POST" action="{{route("merchant.dashboard.update_settings",['id'=>Auth::id()])}}" class="space-y-4">
       @csrf
@@ -146,16 +146,16 @@ $user = Auth::guard('merchant')->user();
 
       <!-- البريد الإلكتروني -->
       <div>
-          <label class="block text-sm font-medium mb-1" for="email">البريد الإلكتروني</label>
-          <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}"
+          <label class="block text-sm font-medium mb-1" for="email">البريد الإلكتروني الخاص بصفحة</label>
+          <input type="email" name="email" id="email" value="{{ old('email', $user->additional_data['page_email'] ?? null) }}"
               class="w-full px-4 py-2 rounded-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
       </div>
 
       <!-- رقم الهاتف -->
       <div>
           <label class="block text-sm font-medium mb-1" for="phone">رقم الهاتف</label>
-          <input type="tel" name="phone" id="phone" value="{{ old('phone', $user->phone) }}"
-              class="w-full px-4 py-2 rounded-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+          <input type="tel"  name="phone" id="phone" value="{{ old('phone', $user->phone) }}"
+              class="w-full px-4 py-2 rounded-md border border-slate-300 text-sm rtl:text-right focus:outline-none focus:ring-2 focus:ring-orange-500">
       </div>
 
       <!-- زر الحفظ -->
@@ -168,43 +168,74 @@ $user = Auth::guard('merchant')->user();
 
 
 <div class="rounded-2xl border mt-4 border-slate-200 bg-white text-slate-900 shadow-lg p-6 space-y-6">
-    <h2 class="text-2xl font-bold">تغيير كلمة المرور</h2>
-  
-    <form method="POST" action="{{ route('merchant.dashboard.update_password', ['id' => Auth::id()]) }}" class="space-y-4">
-        @csrf
-  
-        <!-- كلمة المرور الجديدة -->
-        <div>
-            <label class="block text-sm font-medium mb-1" for="password">كلمة المرور الجديدة</label>
-            <input type="password" name="password" id="password"
-                class="w-full px-4 py-2 rounded-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                required
-                
-                placeholder="كلمة المرور"
-                pattern="(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{8,}"
-                title="كلمة المرور يجب أن تحتوي على حرف كبير، رقم، وحرف خاص، وألا تقل عن 8 أحرف">
-            @error('password') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
-        </div>
-  
-        <!-- تأكيد كلمة المرور -->
-        <div>
-            <label class="block text-sm font-medium mb-1" for="password_confirmation">تأكيد كلمة المرور</label>
-            <input type="password" name="password_confirmation" id="password_confirmation"
-                class="w-full px-4 py-2 rounded-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                required placeholder="الحقق من كلمة المرور">
-        </div>
-  
-        <!-- زر الحفظ -->
-        <div class="text-end">
-            <button type="submit"
-                class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-md text-sm">
-                حفظ كلمة المرور
-            </button>
-        </div>
-    </form>
-  </div>
-  
+  <h2 class="text-2xl font-bold">تعديل إعدادات النشاط</h2>
 
+  <form method="POST" action="{{route("merchant.dashboard.update_work",['id'=>Auth::id()])}}" class="space-y-4">
+      @csrf
+      
+
+      {{-- <!-- الاسم الأول -->
+      <div>
+          <label class="block text-sm font-medium mb-1" for="f_name">الاسم الأول</label>
+          <input type="text" name="f_name" id="f_name" value="{{ old('f_name', $user->f_name) }}"
+              class="w-full px-4 py-2 rounded-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+      </div>
+
+      <!-- الاسم الأخير -->
+      <div>
+          <label class="block text-sm font-medium mb-1" for="l_name">الاسم الأخير</label>
+          <input type="text" name="l_name" id="l_name" value="{{ old('l_name', $user->l_name) }}"
+              class="w-full px-4 py-2 rounded-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+      </div> --}}
+
+      <div bis_skin_checked="1">
+        <label class="block text-sm font-medium text-gray-700 mb-2" for="activityType">نوع
+            النشاط</label>
+            <select name="business_type" required id="activityType"
+            class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all bg-white @error('business_type') border-red-500 @else border-slate-300 @enderror">
+            <option @selected(old('business_type', $user->business_type) == null || old('business_type', $user->business_type) == '') disabled>اختر نوع النشاط</option>
+            <option @selected(old('business_type', $user->business_type) == 'events') value="events">تنظيم الفعاليات</option>
+            <option @selected(old('business_type', $user->business_type) == 'restaurant') value="restaurant">مطعم</option>
+            <option @selected(old('business_type', $user->business_type) == 'show') value="show">معارض</option>
+            <option @selected(old('business_type', $user->business_type) == 'other') value="other">أخرى</option>
+        </select>
+        
+        @error('business_type')
+            <label for="" class="text-red-500">{{ $message }}</label>
+        @enderror
+    </div>
+
+    <div id="otherInputContainer"
+        @if (old('business_type', $user->business_type) == 'other') style="display: block;" @else style="display: none;" @endif
+        class="mt-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2" for="otherInput">يرجى
+            تحديد نوع النشاط</label>
+        <input type="text" id="otherInput" name="other_business_type"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all bg-white @error('other_business_type') border-red-500 @else border-slate-300 @enderror"
+            value="{{ old('other_business_type',$user->additional_data['other_business_type'] ?? '') }}" placeholder="اكتب نوع النشاط">
+        @error('other_business_type')
+            <label for="otherInput" class="text-red-500">{{ $message }}</label>
+        @enderror
+    </div>
+
+    <div bis_skin_checked="1">
+        <label class="block text-sm font-medium text-gray-700 mb-2" for="businessName">اسم
+            النشاط التجاري</label>
+        <input name="business_name"
+            class="flex h-10 w-full rounded-lg border bg-white px-4 py-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all @error('business_name') border-red-500 @else border-slate-300 @enderror"
+            value="{{ old('business_name',$user->business_name) }}" required="" id="businessName"
+            placeholder="أدخل اسم نشاطك التجاري">
+        @error('businessName')
+            <label for="businessName" class="text-red-500">{{ $message }}</label>
+        @enderror
+    </div>
+
+      <!-- زر الحفظ -->
+      <div class="text-end">
+          <button type="submit"
+              class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-md text-sm">حفظ التغييرات</button>
+      </div>
+  </form>
 </div>
 
 <!-- سكريبت المعاينة والتبديل -->
@@ -292,5 +323,16 @@ else if (url.includes('discord.gg') || url.includes('discord.com')) iconClass = 
 
 <!-- Remix Icon CDN -->
 <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+<script>
+  const activitySelect = document.getElementById("activityType");
+  const otherInputContainer = document.getElementById("otherInputContainer");
 
+  activitySelect.addEventListener("change", function () {
+    if (this.value === "other") {
+      otherInputContainer.style.display = "block";
+    } else {
+      otherInputContainer.style.display = "none";
+    }
+  });
+</script>
 @endsection

@@ -46,6 +46,37 @@
                             @endif
                         </div>
                     @endforeach
+
+                    
+                </div>
+                <div class="w-full border-t pt-4 mt-6">
+                    <div class="w-full bg-gray-100 p-4 rounded-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                            <h4 class="text-sm font-bold text-gray-700 mb-1">تفعيل تاريخ انتهاء الحجز</h4>
+                            <p class="text-sm text-gray-500">يمنع الحجز بعد التاريخ المحدد. أوقف التفعيل للسماح بالحجوزات بلا تاريخ انتهاء.</p>
+                        </div>
+                    
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-medium {{ $active_max_reservation_date ? 'text-blue-600' : 'text-gray-500' }}">
+                                {{ $active_max_reservation_date ? 'مفعّل' : 'غير مفعّل' }}
+                            </span>
+                    
+                            <button type="button"
+                                wire:click="$toggle('active_max_reservation_date')"
+                                class="relative inline-flex items-center h-8 w-16 rounded-full transition-colors duration-300 ease-in-out 
+                                    {{ $active_max_reservation_date ? 'bg-blue-600' : 'bg-gray-300' }}">
+                                
+                                <span class="absolute left-1 top-1 h-6 w-6 rounded-full bg-white shadow-md transform transition-transform duration-300 ease-in-out 
+                                    {{ $active_max_reservation_date ? 'translate-x-8' : 'translate-x-0' }}">
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                
+                
+                
+                @if ($active_max_reservation_date)
                     <div>
                         <label class="block text-sm font-bold mb-2">آخر تاريخ متاح للحجز <span class="text-red-500">*</span></label>
                         <input
@@ -55,7 +86,8 @@
                             class="w-full border rounded-md p-2"
                         >
                         <p class="text-sm text-gray-500 mt-1">لن يتمكن العملاء من الحجز بعد هذا التاريخ. حتى يتم تجديده</p>
-                    </div>                </div>
+                    </div>
+                @endif
             </div>
         @endif
 
