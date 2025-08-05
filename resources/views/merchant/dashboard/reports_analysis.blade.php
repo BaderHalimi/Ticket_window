@@ -78,6 +78,11 @@
 <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
 
 <script>
+if (!window.__dashboard_charts_initialized__) {
+  window.__dashboard_charts_initialized__ = true;
+
+  let chart, myChart, donutChart, myChart4;
+
   const offersPercent = @json($offersPercent);
   const salesData = @json(array_values($sells_day));
   const dayLabels = @json(array_keys($sells_day));
@@ -87,17 +92,15 @@
   const allRefunds = @json($all_refunds);
   const peak_time = {!! json_encode($Peak_Time) !!};
 
-  let chart, myChart, donutChart, myChart4;
-
   function renderCharts() {
       const chartDom = document.getElementById('servicePieChart');
       if (!chartDom) return;
       chart = echarts.init(chartDom);
 
-      const offersData = offersPercent.map(item => ({
+      const offersData = Array.isArray(offersPercent) ? offersPercent.map(item => ({
           name: item.offer?.name ?? 'بدون اسم',
           value: item.percentage
-      }));
+      })) : [];
 
       chart.setOption({
           title: { text: 'توزيع الحجوزات', left: 'center' },
@@ -222,33 +225,19 @@
       });
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  function renderAllCharts() {
       renderCharts();
       renderWeeklySalesChart();
       renderDonutChart();
       renderPeakTimeChart();
-  });
+  }
 
-  document.addEventListener("livewire:navigated", () => {
-      renderCharts();
-      renderWeeklySalesChart();
-      renderDonutChart();
-      renderPeakTimeChart();
-  });
-  document.addEventListener("livewire:load", () => {
-      renderCharts();
-      renderWeeklySalesChart();
-      renderDonutChart();
-      renderPeakTimeChart();
-  });
-  document.addEventListener("livewire:navigate", () => {
-      renderCharts();
-      renderWeeklySalesChart();
-      renderDonutChart();
-      renderPeakTimeChart();
-  });
+  document.addEventListener("DOMContentLoaded", renderAllCharts);
+  document.addEventListener("livewire:navigated", renderAllCharts);
+  document.addEventListener("livewire:load", renderAllCharts);
+  document.addEventListener("livewire:navigate", renderAllCharts);
 
-  document.getElementById("export-all").addEventListener("click", function () {
+  document.getElementById("export-all")?.addEventListener("click", function () {
       try {
           let csv = "الرسم,العنصر,القيمة\n";
 
@@ -289,7 +278,9 @@
           console.error(err);
       }
   });
+}
 </script>
+
 
 
 
