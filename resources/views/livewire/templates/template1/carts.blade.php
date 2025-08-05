@@ -3,7 +3,7 @@
 
         {{-- معلومات البروفايل --}}
         <div class="flex items-center gap-4 p-4 border-b">
-            <img src="{{ Storage::url(auth()->guard('customer')->user()->additional_data?auth()->guard('customer')->user()->additional_data['profile_picture']:'') }}"
+            <img src="{{ Storage::url(auth()->guard('customer')->user()->additional_data['profile_picture'] ?? null) }}"
                 alt="Profile"
                 class="w-14 h-14 rounded-full object-cover ring-2 ring-orange-500 shadow-sm">
             <div class="flex-1">
