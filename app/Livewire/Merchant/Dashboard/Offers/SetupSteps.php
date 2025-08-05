@@ -50,7 +50,7 @@ class SetupSteps extends Component
     public function render()
     {
 
-        $off = $this->offering->fresh();
+        $off = $this->offering;
         $isPublished = $off->status;
         $isReady = true;//($this->offering->id)['status'];
         $percent_progress = 100.0;

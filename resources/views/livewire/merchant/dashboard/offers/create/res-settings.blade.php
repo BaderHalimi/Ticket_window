@@ -197,8 +197,19 @@
 
         <div>
             <div class="flex items-center justify-between">
-                <label class="text-sm font-medium">اقصى عدد للاشخاص الذين يمكنهم الحجز في نفس الوقت ؟</label>
-                <label class="relative inline-flex items-center cursor-pointer">
+                <div class="space-y-2">
+                    <label class="text-sm font-medium block">
+                        أقصى عدد للأشخاص الذين يمكنهم الحجز في نفس الوقت؟
+                    </label>
+                
+                    <p class="text-sm text-gray-500">
+                        عند تفعيل هذه الخاصية، يمكنك تحديد عدد أقصى للأشخاص الذين يمكنهم الحجز في نفس الدقيقة.  
+                        مثلاً: إذا تم تحديد الحد بـ 10 أشخاص لدقيقة، فلن يتمكن أي شخص إضافي من الحجز في تلك الدقيقة إذا وصل العدد للحد الأقصى، وسيتوجب عليه الانتضار حتى تنتهي الدقيقة وتتجدد الكمية.
+                    </p>
+                </div>
+                
+                
+
                     {{-- <input type="checkbox" wire:model.lazy="enable_max_users" class="sr-only peer"> --}}
                     {{-- <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
                     <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-full transition-all"></div> --}}

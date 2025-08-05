@@ -6,12 +6,16 @@
 
     <!-- عنوان وزر إضافة -->
     <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-bold text-gray-800">طلبات الدعم</h2>
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">طلبات الدعم</h2>
+            <p class="text-sm text-gray-500 mt-1">التذاكر المرسلة يتم التعامل معها من قبل فريق الإدارة، وسيتم الرد عليك في أقرب وقت.</p>
+        </div>
+    
         <a href="{{ route('customer.dashboard.support.create') }}" class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700">
             + إضافة تذكرة جديدة
         </a>
     </div>
-
+    
     <!-- جدول التذاكر -->
     <div class="overflow-x-auto bg-white rounded-xl shadow border border-gray-200">
         <table class="min-w-full divide-y divide-gray-200 text-sm">
