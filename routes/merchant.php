@@ -98,7 +98,11 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
     Route::post('updateS/{id}', [AuthController::class,'update_settings'])->name('update_settings');
     Route::post('updateP/{id}', [AuthController::class,'update_password'])->name('update_password');
     Route::post('updateW/{id}', [AuthController::class,'update_Work'])->name('update_work');
+    Route::post('update_PS/{id}', [AuthController::class,'update_PS'])->name('update_ProfileS');
 
+
+
+    
 
 
 });

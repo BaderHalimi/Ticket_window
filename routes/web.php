@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OtpConfermation;
+use App\Http\Controllers\offerView;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -73,6 +74,12 @@ Route::get('/cart-{template}', [Cart_controller::class, 'index'])
     ->middleware('auth:customer')
     ->where('template', '[0-9]+')
     ->name('cart');
+
+
+Route::get('/view-{template}/{id}', [offerView::class, 'index'])
+    //->middleware('auth:customer')
+    ->where('template', '[0-9]+')
+    ->name('offer_view');
 
 
 Route::get('/{id}/checkout', [Checkout::class, 'paid'])

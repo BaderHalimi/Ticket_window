@@ -257,18 +257,18 @@ class AuthController extends Controller
         
         //dd($request->all());
         $validated = $request->validate([
-            'f_name' => [
-                'required',
-                'string',
-                'max:255',
-                'regex:/^[\pL\s\-]+$/u',
-            ],
-            'l_name' => [
-                'required',
-                'string',
-                'max:255',
-                'regex:/^[\pL\s\-]+$/u',
-            ],
+            // 'f_name' => [
+            //     'required',
+            //     'string',
+            //     'max:255',
+            //     'regex:/^[\pL\s\-]+$/u',
+            // ],
+            // 'l_name' => [
+            //     'required',
+            //     'string',
+            //     'max:255',
+            //     'regex:/^[\pL\s\-]+$/u',
+            // ],
             'email' => [
                 'required',
                 'email:rfc,dns',
@@ -282,14 +282,47 @@ class AuthController extends Controller
           
         
         $user = User::findOrFail($id);
-        $user->f_name = $validated["f_name"];
-        $user->l_name = $validated["l_name"];
+        //$user->f_name = $validated["f_name"];
+        //$user->l_name = $validated["l_name"];
 
         $data = $user->additional_data;
         $data['page_email'] = $validated["email"];
 
         $user->additional_data = $data;
         $user->phone = $validated["phone"];
+        $user->save();
+        return back()->with('success', 'تم تحديث البيانات بنجاح.');
+
+    }
+    public function update_PS(Request $request, string $id){
+        if (Auth::id() != $id) {
+            
+            abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
+        }
+        
+        //dd($request->all());
+        $validated = $request->validate([
+            'f_name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s\-]+$/u',
+            ],
+            'l_name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s\-]+$/u',
+            ],
+
+
+        ]);
+          
+        
+        $user = User::findOrFail($id);
+        $user->f_name = $validated["f_name"];
+        $user->l_name = $validated["l_name"];
+
         $user->save();
         return back()->with('success', 'تم تحديث البيانات بنجاح.');
 

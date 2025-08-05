@@ -10,6 +10,38 @@ $user = Auth::guard('merchant')->user();
 
 <div class="flex-1 p-8">
 
+    <div class="rounded-2xl border mt-4 border-slate-200 bg-white text-slate-900 shadow-lg p-6 space-y-6">
+        <h2 class="text-2xl font-bold">تعديل إعدادات الصفحة</h2>
+      
+        <form method="POST" action="{{route("merchant.dashboard.update_ProfileS",['id'=>Auth::id()])}}" class="space-y-4">
+            @csrf
+            
+      
+            <!-- الاسم الأول -->
+            <div>
+                <label class="block text-sm font-medium mb-1" for="f_name">الاسم الأول</label>
+                <input type="text" name="f_name" id="f_name" value="{{ old('f_name', $user->f_name) }}"
+                    class="w-full px-4 py-2 rounded-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+            </div>
+      
+            <!-- الاسم الأخير -->
+            <div>
+                <label class="block text-sm font-medium mb-1" for="l_name">الاسم الأخير</label>
+                <input type="text" name="l_name" id="l_name" value="{{ old('l_name', $user->l_name) }}"
+                    class="w-full px-4 py-2 rounded-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+            </div>
+      
+
+      
+            <!-- زر الحفظ -->
+            <div class="text-end">
+                <button type="submit"
+                    class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-md text-sm">حفظ التغييرات</button>
+            </div>
+        </form>
+      </div>
+
+
   <div class="rounded-2xl border mt-4 border-slate-200 bg-white text-slate-900 shadow-lg p-6 space-y-6">
     <h2 class="text-2xl font-bold">تغيير كلمة المرور</h2>
   

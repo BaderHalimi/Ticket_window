@@ -59,6 +59,10 @@ class TemplateRouter extends Component
 
     public $LoginStep = 0;
     public $EnableLogin,$errors;
+    //public $selectedTime;
+    public $selectedHour;
+    public $selectedMinute;
+
 
     public function updatedSelectedBranch($branchId)
     {
@@ -245,6 +249,8 @@ class TemplateRouter extends Component
         $this->branch = null;
         $this->selectedBranch = null;
         $this->branchDetails = null;
+        $this->selectedHour = null;
+        $this->selectedMinute = null;
 
         $this->times = null;
         $this->calendarDate = now()->toDateString();
@@ -263,6 +269,8 @@ class TemplateRouter extends Component
             }
             if ($this->step < 3) {
                 $this->selectedTime = null;
+                $this->selectedHour = null;
+                $this->selectedMinute = null;
             }
             if ($this->step < 2) {
                 $this->selectedDate = null;
@@ -307,8 +315,25 @@ class TemplateRouter extends Component
     }
     public function updatedSelectedTime($time)
     {
-        // $this->selectedTime = $time;
+        //$this->selectedTime = $time;
         $this->enableNext = true; // Enable next step when a time is selected
+    }
+    public function updatedSelectedHour()
+    {
+        $this->generateSelectedTime();
+    }
+
+    public function updatedSelectedMinute()
+    {
+        $this->generateSelectedTime();
+    }
+
+    public function generateSelectedTime()
+    {
+        if (!is_null($this->selectedHour) && !is_null($this->selectedMinute)) {
+            $this->selectedTime = str_pad($this->selectedHour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($this->selectedMinute, 2, '0', STR_PAD_LEFT);
+            $this->enableNext = true; 
+        }
     }
     public function applyCoupon()
     {

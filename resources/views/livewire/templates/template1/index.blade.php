@@ -280,8 +280,22 @@
             <div x-show="tab === '{{ $type }}'"
                 x-transition
                 class="bg-white shadow-lg hover:shadow-xl ring-1 ring-orange-100 rounded-2xl overflow-hidden transition duration-300">
-                <img src="{{ asset('storage/' . $offer['image']) }}" class="w-full h-40 object-cover" />
-
+                <div class="relative">
+                    <img src="{{ asset('storage/' . $offer['image']) }}" class="w-full h-40 object-cover rounded-lg shadow" />
+                
+                    <a href="{{ route('offer_view',['template' => 1,'id' => $offer['id']]) }}" wire:navigate
+                       class="absolute top-2 right-2 bg-black bg-opacity-60 text-white p-2 rounded-full hover:bg-opacity-80 transition"
+                       title="عرض التفاصيل">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                             stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </a>
+                </div>
+                
                 <div class="p-4 space-y-2">
                     <h3 class="text-lg font-bold text-slate-800">{{ $offer['name'] }}</h3>
                     <p class="text-sm text-slate-600">{{ Str::limit($offer['description'], 100) }}</p>
@@ -391,10 +405,12 @@
 
                         {{-- العنوان والسعر --}}
                         <div class="flex justify-between items-center">
+                            <a href="{{route("offer_view",["template" => 1,'id' => $selectedOffer->id])}}" wire:navigate>
                             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
                                 <i class="ri-building-4-line text-orange-500 text-xl"></i>
                                 {{ $selectedOffer->name }}
                             </h2>
+                            </a>
                             <span class="text-sm bg-orange-100 text-orange-600 font-semibold px-3 py-1 rounded-full shadow-sm">
                                 <i class="ri-money-dollar-circle-line"></i> {{ number_format($selectedOffer->price, 2) }} ريال
                             </span>
@@ -407,7 +423,7 @@
                         </div>
 
                         {{-- الوصف --}}
-                        <div class="text-sm text-slate-600 leading-relaxed border-t pt-3">
+                        <div class="text-sm text-slate-600 leading-relaxed border-t pt-3 max-h-36 overflow-y-auto">
                             {!! nl2br(e($selectedOffer->description)) !!}
                         </div>
                     </div>
@@ -605,19 +621,75 @@
                 $minTime = $times['data'][$dayName]['from'] ?? '00:00';
                 $maxTime = $times['data'][$dayName]['to'] ?? '23:59';
                 }
+                //dd($minTime,$maxTime);
+                @endphp
+                @php
+
+                $start = Carbon\Carbon::createFromFormat('H:i', $minTime);
+                $end = Carbon\Carbon::createFromFormat('H:i', $maxTime);
+
+                if ($end->lessThan($start)) {
+                    $end->addDay();
+                }
+
+                $intervalMinutes = 1;
+                $times = [];
+                while ($start->lessThanOrEqualTo($end)) {
+                    $times[] = $start->format('H:i');
+                    $start->addMinutes($intervalMinutes);
+                }
+
+                // استخراج الساعات والدقائق للسكرول
+                $hours = collect($times)->map(fn($t) => (int)explode(':', $t)[0])->unique()->values();
+                $minutes = collect($times)->map(fn($t) => (int)explode(':', $t)[1])->unique()->sort()->values();
                 @endphp
 
-                <div class="mt-4">
-                    <label for="selected_time" class="block text-sm font-medium text-gray-700">اختر الوقت:</label>
-                    <input
-                        type="time"
-                        id="selected_time"
-                        wire:model.lazy="selectedTime"
-                        min="{{ $minTime }}"
-                        max="{{ $maxTime }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
-                    <p class="text-xs text-gray-500 mt-1">من {{ $minTime }} إلى {{ $maxTime }}</p>
+                <div class="p-6 rounded-2xl  w-full max-w-md mx-auto">
+                <h2 class="text-xl font-bold mb-6 text-center text-gray-700">اختيار الوقت</h2>
+
+                <div class="flex gap-4 justify-center">
+                    <!-- الساعات -->
+                    <div class="w-1/2 max-h-64 overflow-y-auto border rounded-xl">
+                        <h3 class="text-center font-semibold text-gray-600 my-2">الساعة</h3>
+                        @foreach ($hours as $h)
+                            <div
+                                wire:click="$set('selectedHour', {{ $h }})"
+                                class="cursor-pointer text-center py-2 mx-2 my-1 rounded-lg transition
+                                    {{ isset($selectedHour) && $selectedHour === $h ? 'bg-blue-500 text-white' : 'bg-gray-100 hover:bg-blue-100' }}">
+                                {{ str_pad($h, 2, '0', STR_PAD_LEFT) }}:00
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- الدقائق -->
+                    <div class="w-1/2 max-h-64 overflow-y-auto border rounded-xl">
+                        <h3 class="text-center font-semibold text-gray-600 my-2">الدقيقة</h3>
+                        @foreach ($minutes as $m)
+                            <div
+                                wire:click="$set('selectedMinute', {{ $m }})"
+                                class="cursor-pointer text-center py-2 mx-2 my-1 rounded-lg transition
+                                    {{ isset($selectedMinute) && $selectedMinute === $m ? 'bg-green-500 text-white' : 'bg-gray-100 hover:bg-green-100' }}">
+                                {{ str_pad($m, 2, '0', STR_PAD_LEFT) }}
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
+
+                {{-- عرض الوقت المختار --}}
+                @if (isset($selectedHour, $selectedMinute))
+                    @php
+                        $selectedTime = str_pad($selectedHour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($selectedMinute, 2, '0', STR_PAD_LEFT);
+                    @endphp
+
+                    <div class="mt-6 text-center text-lg text-green-700 font-semibold">
+                        الوقت المختار: {{ $selectedTime }}
+                    </div>
+
+                    {{-- تخزينه في selectedTime --}}
+                    <input type="hidden" wire:model.lazy="selectedTime">
+                    @endif
+                </div>
+
                 @endif
 
                 @endif
@@ -640,8 +712,9 @@
                             class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
                             -
                         </button>
-                        <input type="number" wire:model.lazy="quantity"
-                            class="w-16 text-center border rounded p-1" min="0" max="{{ $stock }}">
+                        {{-- <input type="number" wire:model.lazy="quantity"
+                            class="w-16 text-center border rounded p-1" min="0" max="{{ $stock }}"> --}}
+                        <span class="w-16 text-center border rounded p-1"> {{$quantity}} </span>
                         <button wire:click="increaseQuantity"
                             class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">
                             +

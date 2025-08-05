@@ -130,7 +130,7 @@ $user = Auth::guard('merchant')->user();
       @csrf
       
 
-      <!-- الاسم الأول -->
+      {{-- <!-- الاسم الأول -->
       <div>
           <label class="block text-sm font-medium mb-1" for="f_name">الاسم الأول</label>
           <input type="text" name="f_name" id="f_name" value="{{ old('f_name', $user->f_name) }}"
@@ -142,7 +142,7 @@ $user = Auth::guard('merchant')->user();
           <label class="block text-sm font-medium mb-1" for="l_name">الاسم الأخير</label>
           <input type="text" name="l_name" id="l_name" value="{{ old('l_name', $user->l_name) }}"
               class="w-full px-4 py-2 rounded-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
-      </div>
+      </div> --}}
 
       <!-- البريد الإلكتروني -->
       <div>
