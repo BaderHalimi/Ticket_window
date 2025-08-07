@@ -59,7 +59,7 @@ class Information extends Component
             //'end_time' => 'nullable|date|after_or_equal:start_time',
             //'status' => 'nullable|in:active,inactive',
             'type' => 'nullable|in:events,services',
-            'category' => 'nullable|in:vip,one_day,several_days,reapeted',
+            'category' => 'required|in:conference,exhibition,children_event,sports_fitness,online,workshop,social_party,seasonal,on_demand,vip',
             //'has_chairs' => 'boolean',
             //'chairs_count' => 'required_if:has_chairs,true|integer|min:0',
         ];

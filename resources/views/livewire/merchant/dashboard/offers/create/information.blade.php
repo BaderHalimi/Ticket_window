@@ -54,11 +54,19 @@
             <div >
                 <label class="block text-sm font-medium mb-1">الفئة</label>
                 <select wire:model.lazy="category" class="w-full border rounded-md p-2">
-                    <option value="vip">VIP</option>
-                    <option value="one_day">فعالية يوم واحد</option>
-                    <option value="several_days">عدة أيام</option>
-                    <option value="reapeted">متكررة</option>
+                    <option value="">-- اختر نوع الفعالية --</option>
+                    <option value="conference">مؤتمر</option>
+                    <option value="exhibition">معرض</option>
+                    <option value="children_event">فعالية أطفال</option>
+                    <option value="sports_fitness">رياضة / لياقة</option>
+                    <option value="online">فعالية أونلاين</option>
+                    <option value="workshop">ورشة / دورة تدريبية</option>
+                    <option value="social_party">فعالية اجتماعية / حفلة</option>
+                    <option value="seasonal">فعالية موسمية</option>
+                    <option value="on_demand">فعالية حسب الطلب</option>
+                    <option value="vip">فعالية VIP / حصرية</option>
                 </select>
+                
             </div>
 @endif
 
