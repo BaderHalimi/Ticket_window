@@ -194,7 +194,7 @@
 
         @endif
 
-
+        @if ($offering->type == "services")
         <div>
             <div class="flex items-center justify-between">
                 <div class="space-y-2">
@@ -234,6 +234,22 @@
 
 
         </div>
+        @elseif ($offering->type == "events")
+        <div class="flex items-center justify-between">
+            <div class="space-y-2">
+        <label class="text-sm font-medium block">
+            أقصى عدد للأشخاص الذين يمكنهم الانضمام ?
+        </label>
+        <div>
+            <label class="block text-sm font-medium mb-1">العدد المسموح</label>
+            <input type="number" wire:model.lazy="max_user_time" class="w-full border rounded-md p-2">
+        </div>
+        </div>
+    </div>
+
+        @endif
+
+
 
         {{-- Toggle: أقصى وقت للحجز قبل البداية --}}
         <div>

@@ -58,7 +58,7 @@
                     <option value="conference">مؤتمر</option>
                     <option value="exhibition">معرض</option>
                     <option value="children_event">فعالية أطفال</option>
-                    <option value="sports_fitness">رياضة / لياقة</option>
+                    {{-- <option value="sports_fitness">رياضة / لياقة</option> --}}
                     <option value="online">فعالية أونلاين</option>
                     <option value="workshop">ورشة / دورة تدريبية</option>
                     <option value="social_party">فعالية اجتماعية / حفلة</option>

@@ -253,8 +253,15 @@ if (!function_exists('hasEssentialFields')) {
 
         $features = $offer->features ?? [];
         $branch_for_ser = true;
+        $eventMaxQuantity = true;
         if($offer->type == "services"){
             $branch_for_ser=isFilled($features['selected_branches'] ?? null);
+        }
+        if ($offer->type == "events"){
+            $eventMaxQuantity =  isFilled($features['eventMaxQuantity'] ?? null);
+        }elseif ($offer->type == "services"){
+            $eventMaxQuantity = isFilled($features['max_user_time'] ?? null) &&
+                                isFilled($features['max_user_unit'] ?? null);
         }
         $checks = [
             'name'                => isFilled($offer->name),
@@ -267,8 +274,9 @@ if (!function_exists('hasEssentialFields')) {
             'booking_duration'    => isFilled($features['booking_duration'] ?? null),
             'booking_unit'        => isFilled($features['booking_unit'] ?? null),
 
-            'max_users_unit'        => isFilled($features['max_user_unit'] ?? null),
-            'max_users_per_time'        => isFilled($features['max_user_time'] ?? null),
+            //'max_users_unit'        => isFilled($features['max_user_unit'] ?? null),
+            //'max_users_per_time'        => isFilled($features['max_user_time'] ?? null),
+            'user_limit' => $eventMaxQuantity,
             'branch' => $branch_for_ser,
             // 'pricing_packages'    => !empty($features['pricing_packages']) &&
             //                           isFilled($features['pricing_packages'][0]['label'] ?? null),
@@ -597,31 +605,35 @@ if (!function_exists('pending_reservations_at')) {
         if (!$item) {
             return [];
         }
+        if ($item->type = "services"){
+            $now = Carbon::now();
 
-        $now = Carbon::now();
+            $reservations = $item->Reservations->filter(function ($reservation) use ($now, $unit, $branch) {
+                $createdAt = Carbon::parse($reservation->created_at);
+                $data = json_decode($reservation->additional_data, true);
+    
+                if ($branch !== null && (!isset($data['branch']) || $data['branch'] != $branch)) {
+                    return false;
+                }
+    
+                switch ($unit) {
+                    case 'minute':
+                        return $createdAt->diffInMinutes($now) === 0;
+                    case 'hour':
+                        return $createdAt->diffInHours($now) === 0;
+                    case 'week':
+                        return $createdAt->isSameWeek($now);
+                    case 'day':
+                    default:
+                        return $createdAt->isSameDay($now);
+                }
+            })->values();
+    
+            return $reservations;
+        }elseif($item->type = "events"){
+            return $item->Reservations;
+        }
 
-        $reservations = $item->Reservations->filter(function ($reservation) use ($now, $unit, $branch) {
-            $createdAt = Carbon::parse($reservation->created_at);
-            $data = json_decode($reservation->additional_data, true);
-
-            if ($branch !== null && (!isset($data['branch']) || $data['branch'] != $branch)) {
-                return false;
-            }
-
-            switch ($unit) {
-                case 'minute':
-                    return $createdAt->diffInMinutes($now) === 0;
-                case 'hour':
-                    return $createdAt->diffInHours($now) === 0;
-                case 'week':
-                    return $createdAt->isSameWeek($now);
-                case 'day':
-                default:
-                    return $createdAt->isSameDay($now);
-            }
-        })->values();
-
-        return $reservations;
     }
 }
 
@@ -632,12 +644,23 @@ if (!function_exists('can_booking_now')){
     function can_booking_now($offer_id,$branch = null)
     {
         $offer = Offering::find($offer_id);
-        if (!$offer->features["max_user_unit"]){
+        if (!$offer->features["max_user_unit"] || !$offer->features["eventMaxQuantity"]){
             return false;
         }
-        $unit = $offer->features["max_user_unit"];
-        $max_limit = $offer->features["max_user_time"] ?? 0;
-        $res = pending_reservations_at($offer_id, $unit, $branch);
+        $unit = 0;
+        $max_limit =  0;
+        $res = 0;
+
+        if ($offer->type == "events"){
+            $max_limit = $offer->features["eventMaxQuantity"] ?? 0;
+            $res = pending_reservations_at($offer_id, $unit, $branch);
+        }elseif ($offer->type == "services"){
+            $max_limit = $offer->features["max_user_time"] ?? 0;
+            $unit = $offer->features["max_user_unit"];
+
+            $res = pending_reservations_at($offer_id, $unit, $branch);
+
+        }
         //dd($res);
         if ($res->isEmpty()) {
             return true;
@@ -658,9 +681,24 @@ if (!function_exists("get_quantity")) {
         if (!$offer->features["max_user_unit"]){
             return false;
         }
-        $unit = $offer->features["max_user_unit"];
-        $max_limit = $offer->features["max_user_time"] ?? 0;
-        $res = pending_reservations_at($offer_id, $unit, $branch);
+        // $unit = $offer->features["max_user_unit"];
+        // $max_limit = $offer->features["max_user_time"] ?? 0;
+        // $res = pending_reservations_at($offer_id, $unit, $branch);
+
+        $unit = 0;
+        $max_limit =  0;
+        $res = 0;
+
+        if ($offer->type == "events"){
+            $max_limit = $offer->features["eventMaxQuantity"] ?? 0;
+            $res = pending_reservations_at($offer_id, $unit, $branch);
+        }elseif ($offer->type == "services"){
+            $max_limit = $offer->features["max_user_time"] ?? 0;
+            $unit = $offer->features["max_user_unit"];
+
+            $res = pending_reservations_at($offer_id, $unit, $branch);
+
+        }
         //dd($res);
         if ($res->isEmpty()) {
             return true;

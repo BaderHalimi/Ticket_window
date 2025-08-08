@@ -41,6 +41,7 @@ class ResSettings extends Component
     public bool $enable_max_users = false;
     public $max_user_time = 1;
     public $max_user_unit = 'hour';
+    public $eventMaxQuantity = 0;
 
     public $type;
     
@@ -89,6 +90,7 @@ class ResSettings extends Component
             'weekly_recurrence_days' => '',
             //'enable_selected_branches' => false,
             'selected_branches' => [],
+            'eventMaxQuantity' => 0,
 
         ], $features));
     }
@@ -140,6 +142,7 @@ class ResSettings extends Component
 
         $features['enable_weekly_recurrence'] = $this->enable_weekly_recurrence;
         $features['weekly_recurrence_days'] = $this->weekly_recurrence_days;
+        $features['eventMaxQuantity'] = (int) $this->eventMaxQuantity;
         //$features['enable_selected_branches'] = $this->enable_selected_branches;
         $features['selected_branches'] = collect($this->branches)
         ->whereIn('id', $this->selected_branches)
