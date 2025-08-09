@@ -11,6 +11,7 @@ class OfferSettings extends Component
     use WithFileUploads;
     public Offering $offering;
     public $category;
+    public $type;
 
     public $sessions = [];
     public $sponsors = [];
@@ -19,6 +20,8 @@ class OfferSettings extends Component
     public $products = [];
     public $games = [];
     public $activities = [];
+    public $services = [];
+    public $requirements = [];
     public $editingIndex = null;
     public $sponsorEditingIndex = null;
     public $SpeakereditingIndex = null;
@@ -31,6 +34,13 @@ class OfferSettings extends Component
     public $workshops = [];
     public $workshopEditingIndex = null;
 
+    public $links = [];
+    public $linksEditingIndex = null;
+    public $trainingWorkshops = [];
+    public $trainingWorkshopsEditingIndex = null;
+    public $servicesEditingIndex = null;
+    public $requirementsEditingIndex = null;
+
 
 
 
@@ -38,116 +48,262 @@ class OfferSettings extends Component
     public function mount()
     {
         $this->category = $this->offering->category;
+        $this->type = $this->offering->type;
 
-        if (isset($this->offering->features['sessions'])) {
-            $this->sessions = $this->offering->features['sessions'];
-        } else {
-            $this->sessions = [
-                [
-                    'speaker' => '',
-                    'date' => '',
-                    'time' => '',
-                    'location' => '',
-                    'description' => '',
-                    'image' => ''
-                ]
-            ];
+        if ($this->type == "events"){
+            if (isset($this->offering->features['sessions'])) {
+                $this->sessions = $this->offering->features['sessions'];
+            } else {
+                $this->sessions = [
+                    [
+                        'speaker' => '',
+                        'date' => '',
+                        'time' => '',
+                        'location' => '',
+                        'description' => '',
+                        'image' => ''
+                    ]
+                ];
+            }
+    
+            if (isset($this->offering->features['speakers'])) {
+                $this->speakers = $this->offering->features['speakers'];
+            } else {
+                $this->speakers = [
+                    [
+                        'name' => '',
+                        'title' => '',
+                        'cv' => '',
+                        'image' => '',
+                        'shortDescreption' => '',
+                    ]
+                ];
+            }
+    
+            if (isset($this->offering->features['activities'])) {
+                $this->activities = $this->offering->features['activities'];
+            } else {
+                $this->activities = [
+                    [
+                        'title' => '',
+                        'description' => '',
+                        'time' => '',
+                        'location' => '',
+                        'image' => '',
+                    ]
+                ];
+            }
+            if (isset($this->offering->features['services'])) {
+                $this->services = $this->offering->features['services'];
+            } else {
+                $this->services = [
+                    [
+                        'title' => '',
+                        'description' => '',
+                        'time' => '',
+                        'location' => '',
+                        'image' => '',
+                    ]
+                ];
+            }
+            if (isset($this->offering->features['requirements'])) {
+                $this->requirements = $this->offering->features['requirements'];
+            } else {
+                $this->requirements = [
+                    [
+                        'title' => '',
+                        'hint' => '',       
+                    ]
+                ];
+            }
+            if (isset($this->offering->features['products'])) {
+                $this->products = $this->offering->features['products'];
+            } else {
+                $this->products = [
+                    [
+                        'name' => '',
+                        'image' => '',
+                        'price' => '',
+                        'description' => '',
+                        'category' => '',
+                        'link' => '',
+                        'booth' => ''
+                    ]
+                ];
+            }
+            if (isset($this->offering->features['sponsors'])) {
+                $this->sponsors = $this->offering->features['sponsors'];
+            } else {
+                $this->sponsors = [
+                    [
+                        'name' => '',
+                        'level' => '',
+                        'logo' => '',
+                        'link' => '',
+                        'description' => '',
+                    ]
+                ];
+            }
+            if (isset($this->offering->features['games']) && $this->category =="children_event") {
+                $this->games = $this->offering->features['games'];
+            } else {
+                $this->games = [
+                    [
+                        'name' => '',
+                        'description' => '',
+                        'age_range' => '',
+                        'image' => '',
+                        'location' => '',
+                        'supervisor' => '',
+                        'rules' => '',
+                    ]
+                ];
+            }
+    
+            if (isset($this->offering->features['workshops']) && $this->category =="children_event") {
+                $this->workshops = $this->offering->features['workshops'];
+            } else {
+                $this->workshops = [
+                    [
+                        'title' => '',
+                        'description' => '',
+                        'image' => '',
+                    ]
+                ];
+            }
+            if (isset($this->offering->features['cartoons']) && $this->category =="children_event") {
+                $this->cartoons = $this->offering->features['cartoons'];
+            } else {
+                $this->cartoons = [
+                    [
+                        'name' => '',
+                        'description' => '',
+                        'image' => '',
+                    ]
+                ];
+            }
+            if (isset($this->offering->features['links']) && $this->category =="online") {
+                $this->links = $this->offering->features['links'];
+            } else {
+                $this->links = [
+                    [
+                        'platform' => '',
+                        'url' => '',
+                        'description' => '',
+                    ]
+                ];
+            }
+            if (isset($this->offering->features['trainingWorkshops']) && $this->category =="workshop") {
+                $this->trainingWorkshops = $this->offering->features['trainingWorkshops'];
+            } else {
+                $this->trainingWorkshops = [
+                    [
+                        'title' => '',          
+                        'description' => '',            
+                        'duration' => '',
+                        'location' => '',       
+                        'instructor' => '',      
+                        'image' => '',         
+                        'certificate' => false, 
+                    ]
+                ];
+            }
         }
 
-        if (isset($this->offering->features['speakers'])) {
-            $this->speakers = $this->offering->features['speakers'];
-        } else {
-            $this->speakers = [
-                [
-                    'name' => '',
-                    'title' => '',
-                    'cv' => '',
-                    'image' => '',
-                    'shortDescreption' => '',
-                ]
-            ];
+    }
+
+    public function addTrainingWorkshop()
+    {
+        $this->trainingWorkshops[] = [
+            'title' => '',          
+            'description' => '',           
+            'duration' => '',       
+            'location' => '',      
+            'instructor' => '',      
+            'image' => '',         
+            'certificate' => false, 
+        ];
+    }
+    public function editTrainingWorkshop($index)
+    {
+        $this->trainingWorkshopsEditingIndex = $index;
+    }
+
+    public function saveTrainingWorkshop($index)
+    {
+        if (isset($this->trainingWorkshops[$index]['image']) && is_object($this->trainingWorkshops[$index]['image'])) {
+            $path = $this->trainingWorkshops[$index]['image']->store('workshops', 'public');
+            $this->trainingWorkshops[$index]['image'] = $path;
         }
 
-        if (isset($this->offering->features['activities'])) {
-            $this->activities = $this->offering->features['activities'];
-        } else {
-            $this->activities = [
-                [
-                    'title' => '',
-                    'description' => '',
-                    'time' => '',
-                    'location' => '',
-                    'image' => '',
-                ]
-            ];
-        }
-        if (isset($this->offering->features['products'])) {
-            $this->products = $this->offering->features['products'];
-        } else {
-            $this->products = [
-                [
-                    'name' => '',
-                    'image' => '',
-                    'price' => '',
-                    'description' => '',
-                    'category' => '',
-                    'link' => '',
-                    'booth' => ''
-                ]
-            ];
-        }
-        if (isset($this->offering->features['sponsors'])) {
-            $this->sponsors = $this->offering->features['sponsors'];
-        } else {
-            $this->sponsors = [
-                [
-                    'name' => '',
-                    'level' => '',
-                    'logo' => '',
-                    'link' => '',
-                    'description' => '',
-                ]
-            ];
-        }
-        if (isset($this->offering->features['games'])) {
-            $this->games = $this->offering->features['games'];
-        } else {
-            $this->games = [
-                [
-                    'name' => '',
-                    'description' => '',
-                    'age_range' => '',
-                    'image' => '',
-                    'location' => '',
-                    'supervisor' => '',
-                    'rules' => '',
-                ]
-            ];
-        }
+        $this->trainingWorkshopsEditingIndex = null;
+    }
 
-        if (isset($this->offering->features['workshops'])) {
-            $this->workshops = $this->offering->features['workshops'];
-        } else {
-            $this->workshops = [
-                [
-                    'title' => '',
-                    'description' => '',
-                    'image' => '',
-                ]
-            ];
-        }
-        if (isset($this->offering->features['cartoons'])) {
-            $this->cartoons = $this->offering->features['cartoons'];
-        } else {
-            $this->cartoons = [
-                [
-                    'name' => '',
-                    'description' => '',
-                    'image' => '',
-                ]
-            ];
+    public function removeTrainingWorkshop($index)
+    {
+        array_splice($this->trainingWorkshops, $index, 1);
+        if ($this->trainingWorkshopsEditingIndex === $index) {
+            $this->trainingWorkshopsEditingIndex = null;
+        } elseif ($this->trainingWorkshopsEditingIndex > $index) {
+            $this->trainingWorkshopsEditingIndex--;
         }
     }
+
+    public function saveTrainingWorkshops()
+    {
+        foreach ($this->trainingWorkshops as $i => $w) {
+            if (isset($w['image']) && is_object($w['image'])) {
+                $path = $w['image']->store('workshops', 'public');
+                $this->trainingWorkshops[$i]['image'] = $path;
+            }
+        }
+
+        $this->offering->features = array_merge(
+            $this->offering->features ?? [],
+            ['trainingWorkshops' => $this->trainingWorkshops]
+        );
+
+        $this->offering->save();
+
+        session()->flash('success', 'تم حفظ الدورات والورش بنجاح');
+    }
+    public function addLink()
+    {
+        $this->links[] = [
+            'platform' => '',
+            'url' => '',
+            'description' => '',
+        ];
+    }
+
+    public function editLink($index)
+    {
+        $this->linksEditingIndex = $index;
+    }
+
+    public function saveLink($index)
+    {
+        $this->linksEditingIndex = null;
+    }
+
+    public function removeLink($index)
+    {
+        unset($this->links[$index]);
+        $this->links = array_values($this->links);
+    }
+
+    public function saveLinks()
+    {
+        $this->offering->features = array_merge(
+            $this->offering->features ?? [],
+            ['links' => $this->links]
+        );
+
+        $this->offering->save();
+
+        session()->flash('success', 'تم حفظ روابط الفعالية بنجاح');
+    }
+
     
     public function addCartoon()
     {
@@ -349,6 +505,52 @@ class OfferSettings extends Component
         $this->offering->save();
 
         session()->flash('success', 'تم حفظ المنتجات بنجاح');
+    }
+    public function addService()
+    {
+        $this->services[] = [
+            'title' => '',
+            'description' => '',
+            'time' => '',
+            'location' => '',
+            'image' => '',
+        ];
+        
+    }
+    
+    public function editServiceRow($index)
+    {
+        $this->servicesEditingIndex = $index;
+    }
+
+    public function saveServiceRow($index)
+    {
+        $this->servicesEditingIndex = null;
+    }
+
+    public function removeService($index)
+    {
+        unset($this->services[$index]);
+        $this->services = array_values($this->services);
+    }
+
+    public function saveServices()
+    {
+        foreach ($this->services as $i => $activity) {
+            if (isset($activity['image']) && is_object($activity['image'])) {
+                $path = $activity['image']->store('services', 'public');
+                $this->services[$i]['image'] = $path;
+            }
+        }
+
+        //$this->offering->activities = $this->activities;
+        $this->offering->features = array_merge(
+            $this->offering->features ?? [],
+            ['services' => $this->services]
+        );
+        $this->offering->save();
+
+        session()->flash('success', 'تم حفظ الفعاليات بنجاح');
     }
     public function addActivity()
     {

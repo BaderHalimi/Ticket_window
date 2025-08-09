@@ -12,8 +12,7 @@ class Information extends Component
     public Offering $offering;
 
     public $name, $location, $description, $image;
-    public  $category, $type, $services_type;
-    //public $has_chairs, $chairs_count; $start_time, $end_time, $status, $type,, $price
+    public $category, $type, $services_type, $center;
     public $tags = [];
     public array $successFields = [];
     public array $errorFields = [];
@@ -21,7 +20,6 @@ class Information extends Component
     public function mount(Offering $offering)
     {
         $this->offering = $offering;
-        //$this->services_type = $this->offering->features['services_type']??'events';
         foreach (
             [
                 'name',
@@ -29,61 +27,50 @@ class Information extends Component
                 'description',
                 'image',
                 'category',
-                'type' //,'type'
-                //'start_time', 'end_time', 'status', 'type', 'category', 'price',
-                //'has_chairs', 'chairs_count'
+                'type'
             ] as $field
         ) {
             $this->{$field} = $offering->{$field};
         }
+        $this->center = $offering->features['center'] ?? null;
         $this->dispatch('ServiceUpdated');
-
-        //$this->start_time = $offering->start_time ? $offering->start_time->format('Y-m-d H:i') : null;
-        //$this->end_time = $offering->end_time ? $offering->end_time->format('Y-m-d H:i') : null;
     }
 
     public function updated($field)
     {
-        // Clear old messages
         unset($this->successFields[$field]);
         unset($this->errorFields[$field]);
 
-        // Define validation rules per field
         $rules = [
             'name' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-            //'price' => 'nullable|numeric|min:0',
-            //'start_time' => 'nullable|date',
-            //'end_time' => 'nullable|date|after_or_equal:start_time',
-            //'status' => 'nullable|in:active,inactive',
             'type' => 'nullable|in:events,services',
             'category' => 'required|in:conference,exhibition,children_event,sports_fitness,online,workshop,social_party,seasonal,on_demand,vip',
-            //'has_chairs' => 'boolean',
-            //'chairs_count' => 'required_if:has_chairs,true|integer|min:0',
+            'center' => [
+                Rule::requiredIf(function () {
+                    return $this->type == 'services';
+                }),
+                Rule::in(['place', 'mobile']),
+            ]
         ];
 
-
-
         try {
-            // validate only updated field
             $this->validateOnly($field, $rules);
 
-            // Update value
-            // if ($field == 'services_type') {
-            //     $features = $this->offering->features ?? [];
-            //     $features['services_type'] = $this->services_type;
-            //     //$features['tags'] = $this->tags;
-            //     $this->offering->features = $features;
-            // } else
-                 $this->offering->{$field} = $this->{$field};
-
+            if ($field === 'center') {
+                $this->offering->features = array_merge(
+                    $this->offering->features ?? [],
+                    ['center' => $this->center]
+                );
+            } else {
+                $this->offering->{$field} = $this->{$field};
+            }
 
             $this->offering->status = 'inactive';
             $this->offering->save();
             $this->dispatch('ServiceUpdated');
-            // Show success message
             $this->successFields[$field] = 'تم الحفظ بنجاح ✅';
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->errorFields[$field] = $e->validator->errors()->first($field);
