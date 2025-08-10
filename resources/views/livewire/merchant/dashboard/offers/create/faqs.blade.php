@@ -8,8 +8,11 @@
     <div class="space-y-3 border border-slate-200 rounded-lg p-4">
         <div>
             <label class="text-sm font-medium">السؤال</label>
-            <input type="text" wire:model.lazy="questions.{{ $qIndex }}.question" class="w-full border rounded-md p-2">
-        </div>
+            <input type="text"
+            wire:model.lazy="questions.{{ $qIndex }}.question"
+            class="w-full border rounded-md p-2"
+            @if(($question['status'] ?? null) === 'critical') disabled @endif>
+             </div>
 
 
 
@@ -41,9 +44,15 @@
         </div>
 
         {{-- زر حذف السؤال --}}
+        @if (($question['status'] ?? null) !== 'critical')
         <div class="text-right">
-            <button type="button" wire:click="removeQuestion({{ $qIndex }})" class="text-red-600 hover:underline text-sm">حذف السؤال</button>
+            <button type="button" wire:click="removeQuestion({{ $qIndex }})" class="text-red-600 hover:underline text-sm">
+                حذف السؤال
+            </button>
         </div>
+        @endif
+    
+
     </div>
     @endforeach
 </div>

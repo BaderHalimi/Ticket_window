@@ -14,6 +14,7 @@ class Information extends Component
     public $name, $location, $description, $image;
     public $category, $type, $services_type, $center;
     public $tags = [];
+    public array $questions = [];
     public array $successFields = [];
     public array $errorFields = [];
 
@@ -35,7 +36,16 @@ class Information extends Component
         $this->center = $offering->features['center'] ?? null;
         $this->dispatch('ServiceUpdated');
     }
-
+    public function addQuestion()
+    {
+        $this->questions[] = [
+            'question' => 'مكان السكن :',
+            'translations' => [],
+            'name' => 'location',
+            'status' => 'critical',
+        ];
+        //$this->save();
+    }
     public function updated($field)
     {
         unset($this->successFields[$field]);
@@ -67,6 +77,49 @@ class Information extends Component
             } else {
                 $this->offering->{$field} = $this->{$field};
             }
+
+            $locationQuestion = [
+                'question' => 'مكان السكن :',
+                'translations' => [],
+                'name' => 'location',
+                'status' => 'critical',
+            ];
+            
+            if ($this->center === "mobile") {
+                // إذا السؤال مش موجود أضفه
+                if (!collect($this->offering->additional_data['questions'])->contains(fn($q) =>
+                    ($q['status'] ?? null) === 'critical' &&
+                    ($q['name'] ?? null) === 'location'
+                )) {
+                    $this->questions[] = $locationQuestion;
+
+                    $this->offering->additional_data = array_merge(
+                        $this->offering->additional_data ?? [],
+                        [
+                            'questions' => array_merge(
+                                $this->offering->additional_data['questions'] ?? [],
+                                $this->questions
+                            )
+                        ]
+                    );
+                }
+            } else {
+                $this->questions = array_values(array_filter($this->offering->additional_data['questions'], fn($q) =>
+                    !(($q['status'] ?? null) === 'critical' &&
+                      ($q['name'] ?? null) === 'location')
+                ));
+                $this->offering->additional_data = array_merge(
+                    $this->offering->additional_data ?? [],
+                    [
+                        'questions' => $this->questions
+                    
+                    ]
+                );
+            }
+            
+
+
+            
 
             $this->offering->status = 'inactive';
             $this->offering->save();

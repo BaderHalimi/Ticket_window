@@ -52,11 +52,35 @@ class Faqs extends Component
 
     public function save()
     {
+        $originalData = $this->offering->getOriginal('additional_data') ?? [];
+        $originalQuestions = $originalData['questions'] ?? [];
+    
+        $finalQuestions = $this->questions;
+    
+        foreach ($originalQuestions as $index => $question) {
+            if (($question['status'] ?? null) === 'critical') {
+                $preservedQuestion = $question;
+    
+                if (isset($finalQuestions[$index]['translations'])) {
+                    $preservedQuestion['translations'] = $finalQuestions[$index]['translations'];
+                }
+    
+                $finalQuestions[$index] = $preservedQuestion;
+            }
+        }
+    
         $data = $this->offering->additional_data ?? [];
-        $data['questions'] = $this->questions;
-        $this->offering->update(['additional_data' => $data, 'status' => 'inactive']);
+        $data['questions'] = $finalQuestions;
+    
+        $this->offering->update([
+            'additional_data' => $data,
+            'status' => 'inactive'
+        ]);
+    
         $this->dispatch('ServiceUpdated');
     }
+    
+    
     public function updated($field)
     {
         $this->save();

@@ -254,7 +254,8 @@ if (!function_exists('hasEssentialFields')) {
         $features = $offer->features ?? [];
         $branch_for_ser = true;
         $eventMaxQuantity = true;
-        if($offer->type == "services"){
+        $center = $offer->features['center'] ?? null;
+        if($offer->type == "services" && $center == "place"){
             $branch_for_ser=isFilled($features['selected_branches'] ?? null);
         }
         if ($offer->type == "events"){
