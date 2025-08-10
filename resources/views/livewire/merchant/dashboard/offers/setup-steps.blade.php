@@ -74,7 +74,7 @@
                     @php
                     $steps = [
                     1 => ['title' => 'معلومات الحجز', 'desc' => 'تفاصيل الحجز الأساسية', 'icon' => 'ri-file-info-line'],
-                    2 => ['title' => 'اعدادات العرض', 'desc' => 'تفاصيل العرض', 'icon' => 'ri-file-info-line'],
+                    2 => ['title' => 'اعدادات العرض', 'desc' => 'تفاصيل العرض', 'icon' => 'ri-folder-settings-line'],
                     3 => ['title' => 'إعدادات الحجز', 'desc' => 'قواعد الحجز والتوفر', 'icon' => 'ri-settings-3-line'],
                     4 => ['title' => 'وقت الحجز', 'desc' => 'تحديد الوقت للحجوزات', 'icon' => 'ri-time-line'],
                     5 => ['title' => 'معرض الصور', 'desc' => 'صور المنتج', 'icon' => 'ri-image-line'],

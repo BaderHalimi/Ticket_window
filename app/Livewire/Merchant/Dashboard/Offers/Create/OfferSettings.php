@@ -5,6 +5,7 @@ namespace App\Livewire\Merchant\Dashboard\Offers\Create;
 use Livewire\Component;
 use App\Models\Offering;
 use Livewire\WithFileUploads;
+use Illuminate\Http\UploadedFile;
 
 class OfferSettings extends Component
 {
@@ -57,7 +58,37 @@ class OfferSettings extends Component
 
     public $plats = null;
     public $platsEditingIndex = null;
-
+    public function validateAllUploadedImages()
+    {
+        $fieldsToCheck = [
+            'sessions', 'sponsors', 'speakers', 'products', 'games', 'activities', 'services',
+            'requirements', 'cartoons', 'workshops', 'links', 'trainingWorkshops', 'Portfolio',
+            'supportedDevices', 'availableTools', 'Offerfeatures', 'Destenations', 'plats',
+        ];
+    
+        $rules = [];
+    
+        foreach ($fieldsToCheck as $field) {
+            $value = $this->$field;
+    
+            if (is_array($value)) {
+                foreach ($value as $key => $item) {
+                    if ($item instanceof \Illuminate\Http\UploadedFile) {
+                        $rules["$field.$key"] = 'image|mimes:jpeg,png,jpg,gif,bmp,webp|max:2048';
+                    }
+                }
+            } else {
+                if ($value instanceof \Illuminate\Http\UploadedFile) {
+                    $rules[$field] = 'image|mimes:jpeg,png,jpg,gif,bmp,webp|max:2048';
+                }
+            }
+        }
+    
+        if (!empty($rules)) {
+            $this->validate($rules);
+        }
+    }
+    
 
     public function mount()
     {
@@ -355,6 +386,8 @@ class OfferSettings extends Component
 
     public function savePlats()
     {
+        $this->validateAllUploadedImages();
+
         foreach ($this->plats as $i => $plat) {
             if (isset($plat['image']) && is_object($plat['image'])) {
                 $path = $plat['image']->store('plats', 'public');
@@ -368,6 +401,7 @@ class OfferSettings extends Component
         );
 
         $this->offering->save();
+        
 
         session()->flash('success', 'تم حفظ الأطباق بنجاح');
     }
@@ -406,6 +440,8 @@ class OfferSettings extends Component
 
     public function saveDestenations()
     {
+        $this->validateAllUploadedImages();
+
         foreach ($this->Destenations as $i => $destination) {
             if (isset($destination['image']) && is_object($destination['image'])) {
                 $path = $destination['image']->store('destenations', 'public');
@@ -456,6 +492,8 @@ class OfferSettings extends Component
 
     public function saveOfferFeatures()
     {
+        $this->validateAllUploadedImages();
+
         foreach ($this->Offerfeatures as $i => $feature) {
             if (isset($feature['image']) && is_object($feature['image'])) {
                 $path = $feature['image']->store('offerfeatures', 'public');
@@ -511,6 +549,8 @@ class OfferSettings extends Component
     }
     public function saveAvailableTools()
     {
+        $this->validateAllUploadedImages();
+
         foreach ($this->availableTools as $i => $tool) {
             if (isset($tool['image']) && is_object($tool['image'])) {
                 $path = $tool['image']->store('available_tools', 'public');
@@ -549,6 +589,8 @@ class OfferSettings extends Component
     
     public function saveSupportedDevices()
     {
+        $this->validateAllUploadedImages();
+
         foreach ($this->supportedDevices as $i => $device) {
             if (isset($device['image']) && is_object($device['image'])) {
                 $path = $device['image']->store('supported_devices', 'public');
@@ -621,6 +663,8 @@ class OfferSettings extends Component
     
     public function savePortfolio()
     {
+        $this->validateAllUploadedImages();
+
         foreach ($this->Portfolio as $i => $item) {
             if (isset($item['image']) && is_object($item['image'])) {
                 $path = $item['image']->store('portfolio', 'public');
@@ -678,6 +722,8 @@ class OfferSettings extends Component
 
     public function saveTrainingWorkshops()
     {
+        $this->validateAllUploadedImages();
+
         foreach ($this->trainingWorkshops as $i => $w) {
             if (isset($w['image']) && is_object($w['image'])) {
                 $path = $w['image']->store('workshops', 'public');
@@ -721,6 +767,8 @@ class OfferSettings extends Component
 
     public function saveLinks()
     {
+        $this->validateAllUploadedImages();
+
         $this->offering->features = array_merge(
             $this->offering->features ?? [],
             ['links' => $this->links]
@@ -748,6 +796,7 @@ class OfferSettings extends Component
 
     public function saveCartoon($index)
     {
+
         if (isset($this->cartoons[$index]['image']) && is_object($this->cartoons[$index]['image'])) {
             $path = $this->cartoons[$index]['image']->store('cartoons', 'public');
             $this->cartoons[$index]['image'] = $path;
@@ -766,6 +815,8 @@ class OfferSettings extends Component
 
     public function saveCartoons()
     {
+        $this->validateAllUploadedImages();
+
         $cartoons = $this->cartoons;
 
         // حفظ الصور إن وجدت (تأكدت من ذلك داخل saveCartoon أيضاً)
@@ -818,6 +869,8 @@ class OfferSettings extends Component
 
     public function saveWorkshops()
     {
+        $this->validateAllUploadedImages();
+
         $workshops = $this->workshops;
 
         foreach ($workshops as $i => $workshop) {
@@ -870,22 +923,24 @@ class OfferSettings extends Component
         }
     }
     public function saveGames()
-{
-    foreach ($this->games as $i => $game) {
-        if (isset($game['image']) && is_object($game['image'])) {
-            $path = $game['image']->store('games', 'public');
-            $this->games[$i]['image'] = $path;
+    {
+        $this->validateAllUploadedImages();
+
+        foreach ($this->games as $i => $game) {
+            if (isset($game['image']) && is_object($game['image'])) {
+                $path = $game['image']->store('games', 'public');
+                $this->games[$i]['image'] = $path;
+            }
         }
+
+        $this->offering->features = array_merge(
+            $this->offering->features ?? [],
+            ['games' => $this->games]
+        );
+        $this->offering->save();
+
+        session()->flash('success', 'تم حفظ الألعاب بنجاح');
     }
-
-    $this->offering->features = array_merge(
-        $this->offering->features ?? [],
-        ['games' => $this->games]
-    );
-    $this->offering->save();
-
-    session()->flash('success', 'تم حفظ الألعاب بنجاح');
-}
     public function addProduct()
     {
         $this->products[] = 
@@ -917,6 +972,8 @@ class OfferSettings extends Component
     }
     public function saveProducts()
     {
+        $this->validateAllUploadedImages();
+
         foreach ($this->products as $i => $product) {
             if (isset($product['image']) && is_object($product['image'])) {
                 $path = $product['image']->store('products', 'public');
@@ -963,6 +1020,8 @@ class OfferSettings extends Component
 
     public function saveServices()
     {
+        $this->validateAllUploadedImages();
+
         foreach ($this->services as $i => $activity) {
             if (isset($activity['image']) && is_object($activity['image'])) {
                 $path = $activity['image']->store('services', 'public');
@@ -1009,6 +1068,8 @@ class OfferSettings extends Component
 
     public function saveActivities()
     {
+        $this->validateAllUploadedImages();
+
         foreach ($this->activities as $i => $activity) {
             if (isset($activity['image']) && is_object($activity['image'])) {
                 $path = $activity['image']->store('activities', 'public');
@@ -1054,6 +1115,8 @@ class OfferSettings extends Component
 
     public function saveSpeakers()
     {
+        $this->validateAllUploadedImages();
+
         foreach ($this->speakers as $i => $speaker) {
             if (isset($speaker['image']) && is_object($speaker['image'])) {
                 $path = $speaker['image']->store('speakers', 'public');
@@ -1103,6 +1166,8 @@ class OfferSettings extends Component
 
     public function saveSponsors()
     {
+        $this->validateAllUploadedImages();
+
         foreach ($this->sponsors as $i => $sponsor) {
             if (isset($sponsor['logo']) && is_object($sponsor['logo'])) {
                 $path = $sponsor['logo']->store('sponsors', 'public');

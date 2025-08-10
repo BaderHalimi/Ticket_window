@@ -3119,5 +3119,10 @@
     </div>
 </div>
 
+<script>
+    document.querySelectorAll('input[type=file]').forEach(input => {
+    input.setAttribute('accept', 'image/*');
+});
 
+</script>
 </div>
