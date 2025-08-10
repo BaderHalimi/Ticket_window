@@ -28,12 +28,13 @@ class Information extends Component
                 'description',
                 'image',
                 'category',
-                'type'
+                'type',
             ] as $field
         ) {
             $this->{$field} = $offering->{$field};
         }
         $this->center = $offering->features['center'] ?? null;
+        $this->services_type = $offering->features['services_type'] ?? null;
         $this->dispatch('ServiceUpdated');
     }
     public function addQuestion()
@@ -57,7 +58,37 @@ class Information extends Component
             'description' => 'nullable|string|max:1000',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'type' => 'nullable|in:events,services',
-            'category' => 'required|in:conference,exhibition,children_event,sports_fitness,online,workshop,social_party,seasonal,on_demand,vip',
+            'category' => [
+                    'required',
+                    Rule::when($this->type === 'events', Rule::in([
+                        'conference',
+                        'exhibition',
+                        'children_event',
+                        'sports_fitness',
+                        'online',
+                        'workshop',
+                        'social_party',
+                        'seasonal',
+                        'on_demand',
+                        'vip',
+                    ])),
+                    Rule::when($this->type === 'services', Rule::in([
+                        'digital',
+                        'restaurant',
+                        'consulting',
+                        'educational',
+                        'technical',
+                        'personal',
+                        'central',
+                        'business',
+                        'medical',
+                        'real_estate',
+                        'tourism',
+                        'financial',
+                        'maintenance',
+                        'other',
+                    ])),
+            ],
             'center' => [
                 Rule::requiredIf(function () {
                     return $this->type == 'services';
@@ -69,7 +100,12 @@ class Information extends Component
         try {
             $this->validateOnly($field, $rules);
 
-            if ($field === 'center') {
+            if ($field === 'services_type') {
+                $this->offering->features = array_merge(
+                    $this->offering->features ?? [],
+                    ['services_type' => $this->services_type]
+                );
+            } elseif ($field === 'center') {
                 $this->offering->features = array_merge(
                     $this->offering->features ?? [],
                     ['center' => $this->center]
@@ -77,9 +113,11 @@ class Information extends Component
             } else {
                 $this->offering->{$field} = $this->{$field};
             }
+            
+
 
             $locationQuestion = [
-                'question' => 'مكان السكن :',
+                'question' => 'المكان المطلوب :',
                 'translations' => [],
                 'name' => 'location',
                 'status' => 'critical',

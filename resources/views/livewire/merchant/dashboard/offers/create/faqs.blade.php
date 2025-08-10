@@ -1,6 +1,6 @@
 <div class="space-y-6">
     <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold">الأسئلة التوضيحية</h3>
+        <h3 class="text-lg font-semibold">الأسئلة المطلوب الاجابة عليها  من قبل المستخدم</h3>
         <button type="button" wire:click="addQuestion" class="text-blue-600 hover:underline text-sm">+ إضافة سؤال</button>
     </div>
 

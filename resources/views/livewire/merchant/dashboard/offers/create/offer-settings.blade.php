@@ -1,7 +1,8 @@
 <div>
+    <p class="text-red-600">لايتم اضهار الصور حتى يتم الحفض</p>
+
 @if ($type == "events")
 <div>
-    <p class="text-red-600">لايتم اضهار الصور حتى يتم الحفض</p>
 
     
     @if ($category === 'conference')
@@ -2297,8 +2298,826 @@
 @endif
 
 @if ($type == "services")
+    @if ($category == "digital")
+
     
+    @endif
+    @if ($category == "maintenance")
+    <div class="mb-6">
+        <label class="block text-base font-semibold mb-3 text-gray-700">الأجهزة المدعومة التي تقوم بتصليحها</label>
+    
+        <div class="overflow-y-auto max-h-72 border border-gray-300 rounded bg-white">
+            <table class="w-full table-auto border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-300 px-3 py-2 text-right">اسم الجهاز</th>
+                        <th class="border border-gray-300 px-3 py-2 text-right">موديل الجهاز</th>
+                        <th class="border border-gray-300 px-3 py-2 text-right">الوصف</th>
+                        <th class="border border-gray-300 px-3 py-2 text-center">الصورة</th>
+                        <th class="border border-gray-300 px-3 py-2 text-center">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($supportedDevices as $index => $device)
+                        <tr>
+                            @if($supportedDevicesEditingIndex === $index)
+                                <td class="border border-gray-300 px-2 py-1">
+                                    <input type="text" wire:model.lazy="supportedDevices.{{ $index }}.device_name" placeholder="اسم الجهاز" class="w-full p-1 border rounded" />
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1">
+                                    <input type="text" wire:model.lazy="supportedDevices.{{ $index }}.model" placeholder="موديل الجهاز" class="w-full p-1 border rounded" />
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1">
+                                    <textarea wire:model.lazy="supportedDevices.{{ $index }}.description" placeholder="وصف الجهاز (اختياري)" class="w-full p-1 border rounded" rows="2"></textarea>
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1 text-center">
+                                    @if(isset($device['image']) && $device['image'])
+                                        <img src="{{ is_string($device['image']) ? asset('storage/'.$device['image']) : $device['image']->temporaryUrl() }}" class="mx-auto w-24 h-16 object-cover rounded" alt="صورة الجهاز">
+                                    @endif
+                                    <input type="file" wire:model="supportedDevices.{{ $index }}.image" class="mt-1" />
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
+                                    <button wire:click="saveSupportedDevice({{ $index }})" class="text-green-600 hover:text-green-800 mr-2" title="حفظ">
+                                        <i class="ri-save-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removeSupportedDevice({{ $index }})" class="text-red-600 hover:text-red-800" title="حذف">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @else
+                                <td class="border border-gray-300 px-2 py-1">{{ $device['device_name'] }}</td>
+                                <td class="border border-gray-300 px-2 py-1">{{ $device['model'] }}</td>
+                                <td class="border border-gray-300 px-2 py-1">{{ Str::limit($device['description'], 50) }}</td>
+                                <td class="border border-gray-300 px-2 py-1 text-center">
+                                    @if(!empty($device['image']))
+                                        <img src="{{ asset('storage/' . $device['image']) }}" alt="صورة الجهاز" class="mx-auto w-24 h-16 object-cover rounded" />
+                                    @endif
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
+                                    <button wire:click="editSupportedDevice({{ $index }})" class="text-blue-600 hover:text-blue-800 mr-2" title="تعديل">
+                                        <i class="ri-edit-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removeSupportedDevice({{ $index }})" class="text-red-600 hover:text-red-800" title="حذف">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @endif
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    
+        <div class="mt-4 flex gap-3">
+            <button wire:click="addSupportedDevice" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                + إضافة جهاز مدعوم
+            </button>
+            <button wire:click="saveSupportedDevices" class="px-5 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                حفظ الأجهزة
+            </button>
+        </div>
+    </div>
+    
+      
+    @endif
+    @if ($category == "central")
+        <div class="mb-6">
+            <label class="block text-base font-semibold mb-3 text-gray-700">الجلسات</label>
+        
+            <table class="w-full text-sm border border-gray-200 rounded overflow-hidden shadow-sm">
+                <thead class="bg-gray-100 text-gray-700 font-medium">
+                    <tr>
+                        <th class="border px-3 py-2">الشخص</th>
+                        <th class="border px-3 py-2">التاريخ</th>
+                        <th class="border px-3 py-2">الوقت</th>
+                        <th class="border px-3 py-2">المكان</th>
+                        <th class="border px-3 py-2">الوصف</th>
+                        <th class="border px-3 py-2">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center text-gray-800">
+                    @foreach ($sessions as $index => $session)
+                        <tr class="hover:bg-gray-50 transition">
+                            @if ($editingIndex === $index)
+                                {{-- حالة التعديل --}}
+                                <td class="border px-2 py-1">
+                                    <input type="text" wire:model.lazy="sessions.{{ $index }}.speaker" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="date" wire:model.lazy="sessions.{{ $index }}.date" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="time" wire:model.lazy="sessions.{{ $index }}.time" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="text" wire:model.lazy="sessions.{{ $index }}.location" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="text" wire:model.lazy="sessions.{{ $index }}.description" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1 flex justify-center gap-2 items-center">
+                                    <button wire:click="saveRow({{ $index }})" class="text-green-600 hover:text-green-800">
+                                        <i class="ri-save-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removeSession({{ $index }})" class="text-red-600 hover:text-red-800">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @else
+                                {{-- حالة العرض --}}
+                                <td class="border px-2 py-1">{{ $session['speaker'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['date'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['time'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['location'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['description'] }}</td>
+                                <td class="border px-2 py-1 flex justify-center gap-2 items-center">
+                                    <button wire:click="editRow({{ $index }})" class="text-blue-600 hover:text-blue-800">
+                                        <i class="ri-edit-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removeSession({{ $index }})" class="text-red-600 hover:text-red-800">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @endif
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        
+            <div class="flex items-center mt-4 gap-3">
+                <button type="button" wire:click="addSession" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition">
+                    + أضف جلسة
+                </button>
+        
+                <button type="button" wire:click="saveSessions" class="px-5 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition">
+                    حفظ كل الجلسات
+                </button>
+            </div>
+        </div>
+    @endif
+
+    @if ($category == "tourism")
+    <div class="mb-6">
+        <label class="block text-base font-semibold mb-3 text-gray-700">الوجهات السياحية</label>
+    
+        <div class="overflow-y-auto max-h-72 border border-gray-300 rounded bg-white">
+            <table class="w-full table-auto border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-300 px-3 py-2 text-right">الاسم</th>
+                        <th class="border border-gray-300 px-3 py-2 text-right">الوصف</th>
+                        <th class="border border-gray-300 px-3 py-2 text-center">الصورة</th>
+                        <th class="border border-gray-300 px-3 py-2 text-center">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($Destenations as $index => $destination)
+                        <tr>
+                            @if($DestenationsEditingIndex === $index)
+                                <td class="border border-gray-300 px-2 py-1">
+                                    <input type="text" wire:model.lazy="Destenations.{{ $index }}.name" placeholder="اسم الوجهة" class="w-full p-1 border rounded" />
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1">
+                                    <textarea wire:model.lazy="Destenations.{{ $index }}.description" placeholder="وصف الوجهة" class="w-full p-1 border rounded" rows="2"></textarea>
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1 text-center">
+                                    @if(isset($destination['image']) && $destination['image'])
+                                        <img src="{{ is_string($destination['image']) ? asset('storage/'.$destination['image']) : $destination['image']->temporaryUrl() }}" class="mx-auto w-24 h-16 object-cover rounded" alt="صورة الوجهة">
+                                    @endif
+                                    <input type="file" wire:model="Destenations.{{ $index }}.image" class="mt-1" />
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
+                                    <button wire:click="saveDestination({{ $index }})" class="text-green-600 hover:text-green-800 mr-2" title="حفظ">
+                                        <i class="ri-save-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removeDestination({{ $index }})" class="text-red-600 hover:text-red-800" title="حذف">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @else
+                                <td class="border border-gray-300 px-2 py-1">{{ $destination['name'] }}</td>
+                                <td class="border border-gray-300 px-2 py-1">{{ Str::limit($destination['description'], 50) }}</td>
+                                <td class="border border-gray-300 px-2 py-1 text-center">
+                                    @if(!empty($destination['image']))
+                                        <img src="{{ asset('storage/' . $destination['image']) }}" alt="صورة الوجهة" class="mx-auto w-24 h-16 object-cover rounded" />
+                                    @endif
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
+                                    <button wire:click="editDestination({{ $index }})" class="text-blue-600 hover:text-blue-800 mr-2" title="تعديل">
+                                        <i class="ri-edit-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removeDestination({{ $index }})" class="text-red-600 hover:text-red-800" title="حذف">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @endif
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    
+        <div class="mt-4 flex gap-3">
+            <button wire:click="addDestination" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                + إضافة وجهة جديدة
+            </button>
+            <button wire:click="saveDestenations" class="px-5 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                حفظ الوجهات
+            </button>
+        </div>
+    </div>
+    
+    @endif
+
+    @if ($category == "personal")
+        <div class="mb-6">
+            <label class="block text-base font-semibold mb-3 text-gray-700">الجلسات</label>
+        
+            <table class="w-full text-sm border border-gray-200 rounded overflow-hidden shadow-sm">
+                <thead class="bg-gray-100 text-gray-700 font-medium">
+                    <tr>
+                        <th class="border px-3 py-2">الشخص</th>
+                        <th class="border px-3 py-2">التاريخ</th>
+                        <th class="border px-3 py-2">الوقت</th>
+                        <th class="border px-3 py-2">المكان</th>
+                        <th class="border px-3 py-2">الوصف</th>
+                        <th class="border px-3 py-2">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center text-gray-800">
+                    @foreach ($sessions as $index => $session)
+                        <tr class="hover:bg-gray-50 transition">
+                            @if ($editingIndex === $index)
+                                {{-- حالة التعديل --}}
+                                <td class="border px-2 py-1">
+                                    <input type="text" wire:model.lazy="sessions.{{ $index }}.speaker" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="date" wire:model.lazy="sessions.{{ $index }}.date" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="time" wire:model.lazy="sessions.{{ $index }}.time" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="text" wire:model.lazy="sessions.{{ $index }}.location" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="text" wire:model.lazy="sessions.{{ $index }}.description" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1 flex justify-center gap-2 items-center">
+                                    <button wire:click="saveRow({{ $index }})" class="text-green-600 hover:text-green-800">
+                                        <i class="ri-save-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removeSession({{ $index }})" class="text-red-600 hover:text-red-800">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @else
+                                {{-- حالة العرض --}}
+                                <td class="border px-2 py-1">{{ $session['speaker'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['date'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['time'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['location'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['description'] }}</td>
+                                <td class="border px-2 py-1 flex justify-center gap-2 items-center">
+                                    <button wire:click="editRow({{ $index }})" class="text-blue-600 hover:text-blue-800">
+                                        <i class="ri-edit-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removeSession({{ $index }})" class="text-red-600 hover:text-red-800">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @endif
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        
+            <div class="flex items-center mt-4 gap-3">
+                <button type="button" wire:click="addSession" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition">
+                    + أضف جلسة
+                </button>
+        
+                <button type="button" wire:click="saveSessions" class="px-5 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition">
+                    حفظ كل الجلسات
+                </button>
+            </div>
+        </div>
+
+    @endif
+
+    @if ($category == "medical")
+        <div class="mb-6">
+            <label class="block text-base font-semibold mb-3 text-gray-700">الجلسات</label>
+        
+            <table class="w-full text-sm border border-gray-200 rounded overflow-hidden shadow-sm">
+                <thead class="bg-gray-100 text-gray-700 font-medium">
+                    <tr>
+                        <th class="border px-3 py-2">الشخص</th>
+                        <th class="border px-3 py-2">التاريخ</th>
+                        <th class="border px-3 py-2">الوقت</th>
+                        <th class="border px-3 py-2">المكان</th>
+                        <th class="border px-3 py-2">الوصف</th>
+                        <th class="border px-3 py-2">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center text-gray-800">
+                    @foreach ($sessions as $index => $session)
+                        <tr class="hover:bg-gray-50 transition">
+                            @if ($editingIndex === $index)
+                                {{-- حالة التعديل --}}
+                                <td class="border px-2 py-1">
+                                    <input type="text" wire:model.lazy="sessions.{{ $index }}.speaker" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="date" wire:model.lazy="sessions.{{ $index }}.date" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="time" wire:model.lazy="sessions.{{ $index }}.time" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="text" wire:model.lazy="sessions.{{ $index }}.location" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="text" wire:model.lazy="sessions.{{ $index }}.description" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1 flex justify-center gap-2 items-center">
+                                    <button wire:click="saveRow({{ $index }})" class="text-green-600 hover:text-green-800">
+                                        <i class="ri-save-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removeSession({{ $index }})" class="text-red-600 hover:text-red-800">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @else
+                                {{-- حالة العرض --}}
+                                <td class="border px-2 py-1">{{ $session['speaker'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['date'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['time'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['location'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['description'] }}</td>
+                                <td class="border px-2 py-1 flex justify-center gap-2 items-center">
+                                    <button wire:click="editRow({{ $index }})" class="text-blue-600 hover:text-blue-800">
+                                        <i class="ri-edit-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removeSession({{ $index }})" class="text-red-600 hover:text-red-800">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @endif
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        
+            <div class="flex items-center mt-4 gap-3">
+                <button type="button" wire:click="addSession" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition">
+                    + أضف جلسة
+                </button>
+        
+                <button type="button" wire:click="saveSessions" class="px-5 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition">
+                    حفظ كل الجلسات
+                </button>
+            </div>
+        </div>
+
+
+        
+
+    @endif
+
+    @if ($category == "consulting")
+        <div class="mb-6">
+            <label class="block text-base font-semibold mb-3 text-gray-700">الجلسات</label>
+        
+            <table class="w-full text-sm border border-gray-200 rounded overflow-hidden shadow-sm">
+                <thead class="bg-gray-100 text-gray-700 font-medium">
+                    <tr>
+                        <th class="border px-3 py-2">المؤدي</th>
+                        <th class="border px-3 py-2">التاريخ</th>
+                        <th class="border px-3 py-2">الوقت</th>
+                        <th class="border px-3 py-2">المكان</th>
+                        <th class="border px-3 py-2">الوصف</th>
+                        <th class="border px-3 py-2">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center text-gray-800">
+                    @foreach ($sessions as $index => $session)
+                        <tr class="hover:bg-gray-50 transition">
+                            @if ($editingIndex === $index)
+                                {{-- حالة التعديل --}}
+                                <td class="border px-2 py-1">
+                                    <input type="text" wire:model.lazy="sessions.{{ $index }}.speaker" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="date" wire:model.lazy="sessions.{{ $index }}.date" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="time" wire:model.lazy="sessions.{{ $index }}.time" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="text" wire:model.lazy="sessions.{{ $index }}.location" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1">
+                                    <input type="text" wire:model.lazy="sessions.{{ $index }}.description" class="w-full p-1 border rounded text-sm" />
+                                </td>
+                                <td class="border px-2 py-1 flex justify-center gap-2 items-center">
+                                    <button wire:click="saveRow({{ $index }})" class="text-green-600 hover:text-green-800">
+                                        <i class="ri-save-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removeSession({{ $index }})" class="text-red-600 hover:text-red-800">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @else
+                                {{-- حالة العرض --}}
+                                <td class="border px-2 py-1">{{ $session['speaker'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['date'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['time'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['location'] }}</td>
+                                <td class="border px-2 py-1">{{ $session['description'] }}</td>
+                                <td class="border px-2 py-1 flex justify-center gap-2 items-center">
+                                    <button wire:click="editRow({{ $index }})" class="text-blue-600 hover:text-blue-800">
+                                        <i class="ri-edit-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removeSession({{ $index }})" class="text-red-600 hover:text-red-800">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @endif
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        
+            <div class="flex items-center mt-4 gap-3">
+                <button type="button" wire:click="addSession" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition">
+                    + أضف جلسة
+                </button>
+        
+                <button type="button" wire:click="saveSessions" class="px-5 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition">
+                    حفظ كل الجلسات
+                </button>
+            </div>
+        </div>
+        
+
+    @endif
+    @if ($category =="restaurant")
+    <div class="mb-6">
+        <label class="block text-base font-semibold mb-3 text-gray-700">الأطباق في المطاعم</label>
+    
+        <div class="overflow-y-auto max-h-72 border border-gray-300 rounded bg-white">
+            <table class="w-full table-auto border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-300 px-3 py-2 text-right">اسم الطبق</th>
+                        <th class="border border-gray-300 px-3 py-2 text-right">الوصف</th>
+                        <th class="border border-gray-300 px-3 py-2 text-center">الصورة</th>
+                        <th class="border border-gray-300 px-3 py-2 text-center">السعر</th>
+                        <th class="border border-gray-300 px-3 py-2 text-center">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($plats as $index => $plat)
+                        <tr>
+                            @if($platsEditingIndex === $index)
+                                <td class="border border-gray-300 px-2 py-1">
+                                    <input type="text" wire:model.lazy="plats.{{ $index }}.name" placeholder="اسم الطبق" class="w-full p-1 border rounded" />
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1">
+                                    <textarea wire:model.lazy="plats.{{ $index }}.description" placeholder="وصف الطبق" class="w-full p-1 border rounded" rows="2"></textarea>
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1 text-center">
+                                    @if(isset($plat['image']) && $plat['image'])
+                                        <img src="{{ is_string($plat['image']) ? asset('storage/'.$plat['image']) : $plat['image']->temporaryUrl() }}" class="mx-auto w-24 h-16 object-cover rounded" alt="صورة الطبق">
+                                    @endif
+                                    <input type="file" wire:model="plats.{{ $index }}.image" class="mt-1" />
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1 text-center">
+                                    <input type="number" wire:model.lazy="plats.{{ $index }}.price" placeholder="السعر" class="w-20 p-1 border rounded text-center" />
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
+                                    <button wire:click="savePlat({{ $index }})" class="text-green-600 hover:text-green-800 mr-2" title="حفظ">
+                                        <i class="ri-save-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removePlat({{ $index }})" class="text-red-600 hover:text-red-800" title="حذف">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @else
+                                <td class="border border-gray-300 px-2 py-1">{{ $plat['name'] }}</td>
+                                <td class="border border-gray-300 px-2 py-1">{{ Str::limit($plat['description'], 50) }}</td>
+                                <td class="border border-gray-300 px-2 py-1 text-center">
+                                    @if(!empty($plat['image']))
+                                        <img src="{{ asset('storage/' . $plat['image']) }}" alt="صورة الطبق" class="mx-auto w-24 h-16 object-cover rounded" />
+                                    @endif
+                                </td>
+                                <td class="border border-gray-300 px-2 py-1 text-center">{{ $plat['price'] }}</td>
+                                <td class="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
+                                    <button wire:click="editPlat({{ $index }})" class="text-blue-600 hover:text-blue-800 mr-2" title="تعديل">
+                                        <i class="ri-edit-line text-lg"></i>
+                                    </button>
+                                    <button wire:click="removePlat({{ $index }})" class="text-red-600 hover:text-red-800" title="حذف">
+                                        <i class="ri-delete-bin-line text-lg"></i>
+                                    </button>
+                                </td>
+                            @endif
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    
+        <div class="mt-4 flex gap-3">
+            <button wire:click="addPlat" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                + إضافة طبق جديد
+            </button>
+            <button wire:click="savePlats" class="px-5 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                حفظ الأطباق
+            </button>
+        </div>
+    </div>
+    
+    @endif
+    <div class="mb-6">
+        <label class="block text-base font-semibold mb-3 text-gray-700">الأدوات المتاحة</label>
+    
+        <table class="w-full table-auto border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="border border-gray-300 px-3 py-2 text-right">الاسم</th>
+                    <th class="border border-gray-300 px-3 py-2 text-right">التصنيف</th>
+                    <th class="border border-gray-300 px-3 py-2 text-right">الموديل</th>
+                    <th class="border border-gray-300 px-3 py-2 text-right">التوفر</th>
+                    <th class="border border-gray-300 px-3 py-2 text-right">المميزات</th>
+                    <th class="border border-gray-300 px-3 py-2 text-right">الوصف</th>
+                    <th class="border border-gray-300 px-3 py-2 text-center">الصورة</th>
+                    <th class="border border-gray-300 px-3 py-2 text-center">الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($availableTools as $index => $tool)
+                    <tr>
+                        @if ($availableToolsEditingIndex === $index)
+                            <td class="border border-gray-300 px-2 py-1">
+                                <input type="text" wire:model.lazy="availableTools.{{ $index }}.name" class="w-full p-1 border rounded" />
+                            </td>
+                            <td class="border border-gray-300 px-2 py-1">
+                                <input type="text" wire:model.lazy="availableTools.{{ $index }}.category" class="w-full p-1 border rounded" />
+                            </td>
+                            <td class="border border-gray-300 px-2 py-1">
+                                <input type="text" wire:model.lazy="availableTools.{{ $index }}.model" class="w-full p-1 border rounded" />
+                            </td>
+                            <td class="border border-gray-300 px-2 py-1">
+                                <input type="text" wire:model.lazy="availableTools.{{ $index }}.availability" class="w-full p-1 border rounded" />
+                            </td>
+                            <td class="border border-gray-300 px-2 py-1">
+                                <textarea wire:model.lazy="availableTools.{{ $index }}.features" class="w-full p-1 border rounded" rows="2"></textarea>
+                            </td>
+                            <td class="border border-gray-300 px-2 py-1">
+                                <textarea wire:model.lazy="availableTools.{{ $index }}.description" class="w-full p-1 border rounded" rows="2"></textarea>
+                            </td>
+                            <td class="border border-gray-300 px-2 py-1 text-center">
+                                @if (isset($tool['image']) && $tool['image'])
+                                    <img src="{{ is_string($tool['image']) ? asset('storage/'.$tool['image']) : $tool['image']->temporaryUrl() }}" class="mx-auto w-16 h-16 object-cover rounded" alt="صورة الأداة">
+                                @endif
+                                <input type="file" wire:model="availableTools.{{ $index }}.image" class="mt-1" />
+                            </td>
+                            <td class="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
+                                <button wire:click="saveAvailableTool({{ $index }})" class="text-green-600 hover:text-green-800 mr-2" title="حفظ">
+                                    <i class="ri-save-line text-lg"></i>
+                                </button>
+                                <button wire:click="removeAvailableTool({{ $index }})" class="text-red-600 hover:text-red-800" title="حذف">
+                                    <i class="ri-delete-bin-line text-lg"></i>
+                                </button>
+                            </td>
+                        @else
+                            <td class="border border-gray-300 px-2 py-1">{{ $tool['name'] }}</td>
+                            <td class="border border-gray-300 px-2 py-1">{{ $tool['category'] }}</td>
+                            <td class="border border-gray-300 px-2 py-1">{{ $tool['model'] }}</td>
+                            <td class="border border-gray-300 px-2 py-1">{{ $tool['availability'] }}</td>
+                            <td class="border border-gray-300 px-2 py-1">{{ Str::limit($tool['features'], 50) }}</td>
+                            <td class="border border-gray-300 px-2 py-1">{{ Str::limit($tool['description'], 50) }}</td>
+                            <td class="border border-gray-300 px-2 py-1 text-center">
+                                @if (!empty($tool['image']))
+                                    <img src="{{ asset('storage/' . $tool['image']) }}" class="mx-auto w-16 h-16 object-cover rounded" alt="صورة الأداة">
+                                @endif
+                            </td>
+                            <td class="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
+                                <button wire:click="editAvailableTool({{ $index }})" class="text-blue-600 hover:text-blue-800 mr-2" title="تعديل">
+                                    <i class="ri-edit-line text-lg"></i>
+                                </button>
+                                <button wire:click="removeAvailableTool({{ $index }})" class="text-red-600 hover:text-red-800" title="حذف">
+                                    <i class="ri-delete-bin-line text-lg"></i>
+                                </button>
+                            </td>
+                        @endif
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    
+        <div class="mt-4 flex gap-3">
+            <button wire:click="addAvailableTool" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                + أضف أداة جديدة
+            </button>
+            <button wire:click="saveAvailableTools" class="px-5 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                حفظ الأدوات
+            </button>
+        </div>
+    </div>
+
+    <div class="mb-6">
+        <label class="block text-base font-semibold mb-3 text-gray-700">البورتفوليو</label>
+    
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto pr-1">
+            @foreach ($Portfolio as $index => $item)
+                <div class="border rounded-md p-4 shadow-sm bg-white relative">
+                    @if ($portfolioEditingIndex === $index)
+                        <div class="space-y-2">
+                            <input type="text" wire:model.lazy="Portfolio.{{ $index }}.title" placeholder="العنوان" class="w-full p-2 border rounded text-sm" />
+                            <textarea wire:model.lazy="Portfolio.{{ $index }}.description" placeholder="الوصف" class="w-full p-2 border rounded text-sm"></textarea>
+                            <input type="url" wire:model.lazy="Portfolio.{{ $index }}.link" placeholder="الرابط" class="w-full p-2 border rounded text-sm" />
+                            <input type="date" wire:model.lazy="Portfolio.{{ $index }}.date" class="w-full p-2 border rounded text-sm" />
+                            <input type="text" wire:model.lazy="Portfolio.{{ $index }}.tools" placeholder="الأدوات مفصولة بفواصل" class="w-full p-2 border rounded text-sm" />
+                            <input type="file" wire:model="Portfolio.{{ $index }}.image" class="w-full p-2 border rounded text-sm" />
+                            
+                            <div class="flex justify-end gap-2 mt-2">
+                                <button wire:click="savePortfolioRow({{ $index }})" class="text-green-600 hover:text-green-800">
+                                    حفظ
+                                </button>
+                                <button wire:click="removePortfolio({{ $index }})" class="text-red-600 hover:text-red-800">
+                                    حذف
+                                </button>
+                            </div>
+                        </div>
+                    @else
+                        <div class="space-y-1">
+                            <h3 class="font-semibold text-sm text-gray-800">{{ $item['title'] }}</h3>
+                            <p class="text-xs text-gray-500">{{ $item['date'] }}</p>
+                            <p class="text-sm text-gray-600 line-clamp-3">{{ $item['description'] }}</p>
+                            <p class="text-xs text-gray-500">الأدوات: {{ $item['tools'] }}</p>
+                            <a href="{{ $item['link'] }}" target="_blank" class="text-blue-600 underline text-sm">رابط المشروع</a>
+    
+                            @if (!empty($item['image']))
+                                <img src="{{ asset('storage/' . $item['image']) }}" class="mt-2 w-full h-28 object-cover rounded" alt="صورة المشروع">
+                            @endif
+                        </div>
+    
+                        <div class="absolute top-2 left-2 flex gap-2">
+                            <button wire:click="editPortfolioRow({{ $index }})" class="text-blue-600 hover:text-blue-800">
+                                تعديل
+                            </button>
+                            <button wire:click="removePortfolio({{ $index }})" class="text-red-600 hover:text-red-800">
+                                حذف
+                            </button>
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    
+        <div class="flex items-center mt-4 gap-3">
+            <button wire:click="addPortfolio" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                + أضف مشروع جديد
+            </button>
+    
+            <button wire:click="savePortfolio" class="px-5 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                حفظ البورتفوليو
+            </button>
+        </div>
+    </div>
+    <div class="mb-6">
+        <label class="block text-base font-semibold mb-3 text-gray-700">الخدمات الاضافية</label>
+    
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto pr-1">
+            @foreach ($services as $index => $activity)
+                <div class="border rounded-md p-4 shadow-sm bg-white relative">
+                    @if ($servicesEditingIndex === $index)
+                        {{-- حالة التعديل --}}
+                        <div class="space-y-2">
+                            <input type="text" wire:model.lazy="services.{{ $index }}.title" placeholder="عنوان الخدمة" class="w-full p-2 border rounded text-sm">
+                            <input type="time" wire:model.lazy="services.{{ $index }}.time" class="w-full p-2 border rounded text-sm">
+                            <input type="text" wire:model.lazy="services.{{ $index }}.location" placeholder="الموقع" class="w-full p-2 border rounded text-sm">
+                            <textarea wire:model.lazy="services.{{ $index }}.description" placeholder="الوصف" class="w-full p-2 border rounded text-sm"></textarea>
+                            
+                            <input type="file" wire:model="services.{{ $index }}.image" class="w-full p-1 border rounded text-sm">
+                            
+                            <div class="flex justify-end gap-2 mt-2">
+                                <button wire:click="saveServiceRow({{ $index }})" class="text-green-600 hover:text-green-800">
+                                    <i class="ri-save-line text-lg"></i>
+                                </button>
+                                <button wire:click="removeService({{ $index }})" class="text-red-600 hover:text-red-800">
+                                    <i class="ri-delete-bin-line text-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                    @else
+                        {{-- حالة العرض --}}
+                        <div class="space-y-1">
+                            <h3 class="font-semibold text-sm text-gray-800">{{ $activity['title'] }}</h3>
+                            <p class="text-xs text-gray-500">{{ $activity['time'] }} | {{ $activity['location'] }}</p>
+                            <p class="text-sm text-gray-600 line-clamp-3">{{ $activity['description'] }}</p>
+    
+                            @if (!empty($activity['image']))
+                                <img src="{{ asset('storage/' . $activity['image']) }}" class="mt-2 w-full h-28 object-cover rounded" alt="Activity Image">
+                            @endif
+                        </div>
+    
+                        <div class="absolute top-2 left-2 flex gap-2">
+                            <button wire:click="editServiceRow({{ $index }})" class="text-blue-600 hover:text-blue-800">
+                                <i class="ri-edit-line text-lg"></i>
+                            </button>
+                            <button wire:click="removeService({{ $index }})" class="text-red-600 hover:text-red-800">
+                                <i class="ri-delete-bin-line text-lg"></i>
+                            </button>
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    
+        <div class="flex items-center mt-4 gap-3">
+            <button type="button" wire:click="addService" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition">
+                + أضف خدمة
+            </button>
+    
+            <button type="button" wire:click="saveServices" class="px-5 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition">
+                حفظ الخدمات
+            </button>
+        </div>
+    </div>
 @endif
+<div class="mb-6">
+    <label class="block text-base font-semibold mb-3 text-gray-700">مزايا العرض (Offer Features)</label>
+
+    <div class="overflow-y-auto max-h-72 border border-gray-300 rounded bg-white">
+        <table class="w-full table-auto border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="border border-gray-300 px-3 py-2 text-right">الاسم</th>
+                    <th class="border border-gray-300 px-3 py-2 text-right">الوصف</th>
+                    <th class="border border-gray-300 px-3 py-2 text-center">الصورة</th>
+                    <th class="border border-gray-300 px-3 py-2 text-center">الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($Offerfeatures as $index => $feature)
+                    <tr>
+                        @if($OfferfeaturesEditingIndex === $index)
+                            <td class="border border-gray-300 px-2 py-1">
+                                <input type="text" wire:model.lazy="Offerfeatures.{{ $index }}.name" placeholder="اسم الميزة" class="w-full p-1 border rounded" />
+                            </td>
+                            <td class="border border-gray-300 px-2 py-1">
+                                <textarea wire:model.lazy="Offerfeatures.{{ $index }}.description" placeholder="وصف الميزة" class="w-full p-1 border rounded" rows="2"></textarea>
+                            </td>
+                            <td class="border border-gray-300 px-2 py-1 text-center">
+                                @if(isset($feature['image']) && $feature['image'])
+                                    <img src="{{ is_string($feature['image']) ? asset('storage/'.$feature['image']) : $feature['image']->temporaryUrl() }}" class="mx-auto w-24 h-16 object-cover rounded" alt="صورة الميزة">
+                                @endif
+                                <input type="file" wire:model="Offerfeatures.{{ $index }}.image" class="mt-1" />
+                            </td>
+                            <td class="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
+                                <button wire:click="saveOfferFeature({{ $index }})" class="text-green-600 hover:text-green-800 mr-2" title="حفظ">
+                                    <i class="ri-save-line text-lg"></i>
+                                </button>
+                                <button wire:click="removeOfferFeature({{ $index }})" class="text-red-600 hover:text-red-800" title="حذف">
+                                    <i class="ri-delete-bin-line text-lg"></i>
+                                </button>
+                            </td>
+                        @else
+                            <td class="border border-gray-300 px-2 py-1">{{ $feature['name'] }}</td>
+                            <td class="border border-gray-300 px-2 py-1">{{ Str::limit($feature['description'], 50) }}</td>
+                            <td class="border border-gray-300 px-2 py-1 text-center">
+                                @if(!empty($feature['image']))
+                                    <img src="{{ asset('storage/' . $feature['image']) }}" alt="صورة الميزة" class="mx-auto w-24 h-16 object-cover rounded" />
+                                @endif
+                            </td>
+                            <td class="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
+                                <button wire:click="editOfferFeature({{ $index }})" class="text-blue-600 hover:text-blue-800 mr-2" title="تعديل">
+                                    <i class="ri-edit-line text-lg"></i>
+                                </button>
+                                <button wire:click="removeOfferFeature({{ $index }})" class="text-red-600 hover:text-red-800" title="حذف">
+                                    <i class="ri-delete-bin-line text-lg"></i>
+                                </button>
+                            </td>
+                        @endif
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-4 flex gap-3">
+        <button wire:click="addOfferFeature" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+            + إضافة ميزة جديدة
+        </button>
+        <button wire:click="saveOfferFeatures" class="px-5 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+            حفظ المزايا
+        </button>
+    </div>
+</div>
 
 
 </div>

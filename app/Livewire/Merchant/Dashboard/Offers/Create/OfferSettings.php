@@ -41,8 +41,22 @@ class OfferSettings extends Component
     public $servicesEditingIndex = null;
     public $requirementsEditingIndex = null;
 
+    public $Portfolio = null;
+    public $portfolioEditingIndex = null;
 
+    public $supportedDevices = null;
+    public $supportedDevicesEditingIndex = null;
 
+    public $availableTools = null;
+    public $availableToolsEditingIndex = null;
+    public $Offerfeatures = null;
+    public $OfferfeaturesEditingIndex = null;
+
+    public $Destenations = null;
+    public $DestenationsEditingIndex = null;
+
+    public $plats = null;
+    public $platsEditingIndex = null;
 
 
     public function mount()
@@ -209,8 +223,421 @@ class OfferSettings extends Component
                 ];
             }
         }
+        if ($this->type == "services"){
+            
+            if (isset($this->offering->features['Portfolio'])) {
+                $this->Portfolio = $this->offering->features['Portfolio'];
+            } else {
+                $this->Portfolio = [
+                    [
+                        'title' => '',          
+                        'description' => '',    
+                        'link' => '',           
+                        'image' => '',           
+                        'date' => '',            
+                        'tools' => '',       
+                    ]
+                ];
+            }
+            if (isset($this->offering->features['services'])) {
+                $this->services = $this->offering->features['services'];
+            } else {
+                $this->services = [
+                    [
+                        'title' => '',
+                        'description' => '',
+                        'time' => '',
+                        'location' => '',
+                        'image' => '',
+                    ]
+                ];
+            }
+            if (isset($this->offering->features['supportedDevices'])) {
+                $this->supportedDevices = $this->offering->features['supportedDevices'];
+            } else {
+                $this->supportedDevices = [
+                    [
+                        'device_name' => '',
+                        'model' => '',
+                        'description' => '',
+                        'image' => null,
+                    ]
+                ];
+            }
+            if (isset($this->offering->features['availableTools'])) {
+                $this->availableTools = $this->offering->features['availableTools'];
+            } else {
+                $this->availableTools = [
+                    [
+                        'name' => '',          
+                        'category' => '',      
+                        'description' => '',   
+                        'model' => '',         
+                        'image' => '',         
+                        'availability' => '',  
+                        'features' => '',     
+                
+                    ]
+                ];
+            }
+            if (isset($this->offering->features['Destenations'])) {
+                $this->Destenations = $this->offering->features['Destenations'];
+            } else {
+                $this->Destenations = [
+                    [
+                        'name' => '',
+                        'description' => '',
+                        'image' => null,     
+                
+                    ]
+                ];
+            }
+            if (isset($this->offering->features['plats'])) {
+                $this->plats = $this->offering->features['plats'];
+            } else {
+                $this->plats = [
+                    [
+                        'name' => '',
+                        'description' => '',
+                        'image' => null,
+                        'price' => '',  
+                
+                    ]
+                ];
+            }
+        }
+        if (isset($this->offering->features['Offerfeatures'])) {
+            $this->Offerfeatures = $this->offering->features['Offerfeatures'];
+        } else {
+            $this->Offerfeatures = [
+                [
+                    'name' => '',
+                    'description' => '',
+                    'image' => null,
+            
+                ]
+            ];
+        }
 
     }
+    public function addPlat()
+    {
+        $this->plats[] = [
+            'name' => '',
+            'description' => '',
+            'image' => null,
+            'price' => '',
+        ];
+        $this->platsEditingIndex = count($this->plats) - 1;
+    }
+
+    public function editPlat($index)
+    {
+        $this->platsEditingIndex = $index;
+    }
+
+    public function savePlat($index)
+    {
+        $this->platsEditingIndex = null;
+    }
+
+    public function removePlat($index)
+    {
+        unset($this->plats[$index]);
+        $this->plats = array_values($this->plats);
+
+        if ($this->platsEditingIndex === $index) {
+            $this->platsEditingIndex = null;
+        } elseif ($this->platsEditingIndex > $index) {
+            $this->platsEditingIndex--;
+        }
+    }
+
+    public function savePlats()
+    {
+        foreach ($this->plats as $i => $plat) {
+            if (isset($plat['image']) && is_object($plat['image'])) {
+                $path = $plat['image']->store('plats', 'public');
+                $this->plats[$i]['image'] = $path;
+            }
+        }
+
+        $this->offering->features = array_merge(
+            $this->offering->features ?? [],
+            ['plats' => $this->plats]
+        );
+
+        $this->offering->save();
+
+        session()->flash('success', 'تم حفظ الأطباق بنجاح');
+    }
+
+    public function addDestination()
+    {
+        $this->Destenations[] = [
+            'name' => '',
+            'description' => '',
+            'image' => null,
+        ];
+        $this->DestenationsEditingIndex = count($this->Destenations) - 1;
+    }
+
+    public function editDestination($index)
+    {
+        $this->DestenationsEditingIndex = $index;
+    }
+
+    public function saveDestination($index)
+    {
+        $this->DestenationsEditingIndex = null;
+    }
+
+    public function removeDestination($index)
+    {
+        unset($this->Destenations[$index]);
+        $this->Destenations = array_values($this->Destenations);
+
+        if ($this->DestenationsEditingIndex === $index) {
+            $this->DestenationsEditingIndex = null;
+        } elseif ($this->DestenationsEditingIndex > $index) {
+            $this->DestenationsEditingIndex--;
+        }
+    }
+
+    public function saveDestenations()
+    {
+        foreach ($this->Destenations as $i => $destination) {
+            if (isset($destination['image']) && is_object($destination['image'])) {
+                $path = $destination['image']->store('destenations', 'public');
+                $this->Destenations[$i]['image'] = $path;
+            }
+        }
+
+        $this->offering->features = array_merge(
+            $this->offering->features ?? [],
+            ['Destenations' => $this->Destenations]
+        );
+
+        $this->offering->save();
+
+        session()->flash('success', 'تم حفظ الوجهات السياحية بنجاح');
+    }
+    public function addOfferFeature()
+    {
+        $this->Offerfeatures[] = [
+            'name' => '',
+            'description' => '',
+            'image' => null,
+        ];
+        $this->OfferfeaturesEditingIndex = count($this->Offerfeatures) - 1;
+    }
+
+    public function editOfferFeature($index)
+    {
+        $this->OfferfeaturesEditingIndex = $index;
+    }
+
+    public function saveOfferFeature($index)
+    {
+        $this->OfferfeaturesEditingIndex = null;
+    }
+
+    public function removeOfferFeature($index)
+    {
+        unset($this->Offerfeatures[$index]);
+        $this->Offerfeatures = array_values($this->Offerfeatures);
+
+        if ($this->OfferfeaturesEditingIndex === $index) {
+            $this->OfferfeaturesEditingIndex = null;
+        } elseif ($this->OfferfeaturesEditingIndex > $index) {
+            $this->OfferfeaturesEditingIndex--;
+        }
+    }
+
+    public function saveOfferFeatures()
+    {
+        foreach ($this->Offerfeatures as $i => $feature) {
+            if (isset($feature['image']) && is_object($feature['image'])) {
+                $path = $feature['image']->store('offerfeatures', 'public');
+                $this->Offerfeatures[$i]['image'] = $path;
+            }
+        }
+
+        $this->offering->features = array_merge(
+            $this->offering->features ?? [],
+            ['Offerfeatures' => $this->Offerfeatures]
+        );
+
+        $this->offering->save();
+
+        session()->flash('success', 'تم حفظ مزايا العرض بنجاح');
+    }
+
+    public function addAvailableTool()
+    {
+        $this->availableTools[] = [
+            'name' => '',
+            'category' => '',
+            'description' => '',
+            'model' => '',
+            'image' => null,
+            'availability' => '',
+            'features' => '',
+        ];
+        $this->availableToolsEditingIndex = count($this->availableTools) - 1; 
+    }
+    public function editAvailableTool($index)
+    {
+        $this->availableToolsEditingIndex = $index;
+    }
+    public function saveAvailableTool($index)
+    {
+        // if (isset($this->availableTools[$index]['image']) && is_object($this->availableTools[$index]['image'])) {
+        //     $path = $this->availableTools[$index]['image']->store('available_tools', 'public');
+        //     $this->availableTools[$index]['image'] = $path;
+        // }
+        $this->availableToolsEditingIndex = null;
+    }
+    public function removeAvailableTool($index)
+    {
+        unset($this->availableTools[$index]);
+        $this->availableTools = array_values($this->availableTools);
+    
+        if ($this->availableToolsEditingIndex === $index) {
+            $this->availableToolsEditingIndex = null;
+        } elseif ($this->availableToolsEditingIndex > $index) {
+            $this->availableToolsEditingIndex--;
+        }
+    }
+    public function saveAvailableTools()
+    {
+        foreach ($this->availableTools as $i => $tool) {
+            if (isset($tool['image']) && is_object($tool['image'])) {
+                $path = $tool['image']->store('available_tools', 'public');
+                $this->availableTools[$i]['image'] = $path;
+            }
+        }
+
+        $this->offering->features = array_merge(
+            $this->offering->features ?? [],
+            ['availableTools' => $this->availableTools]
+        );
+        $this->offering->save();
+
+        session()->flash('success', 'تم حفظ الأدوات المتاحة بنجاح');
+    }
+    public function addSupportedDevice()
+    {
+        $this->supportedDevices[] = [
+            'device_name' => '',
+            'model' => '',
+            'description' => '',
+            'image' => '',
+        ];
+        $this->supportedDevicesEditingIndex = count($this->supportedDevices) - 1; 
+    }
+    
+    public function editSupportedDevice($index)
+    {
+        $this->supportedDevicesEditingIndex = $index;
+    }
+    
+    public function saveSupportedDevice($index)
+    {
+        $this->supportedDevicesEditingIndex = null;
+    }
+    
+    public function saveSupportedDevices()
+    {
+        foreach ($this->supportedDevices as $i => $device) {
+            if (isset($device['image']) && is_object($device['image'])) {
+                $path = $device['image']->store('supported_devices', 'public');
+                $this->supportedDevices[$i]['image'] = $path;
+            }
+        }
+    
+        $this->offering->features = array_merge(
+            $this->offering->features ?? [],
+            ['supportedDevices' => $this->supportedDevices]
+        );
+        $this->offering->save();
+    
+        session()->flash('success', 'تم حفظ الأجهزة المدعومة بنجاح');
+    }
+    
+    
+    public function removeSupportedDevice($index)
+    {
+        unset($this->supportedDevices[$index]);
+        $this->supportedDevices = array_values($this->supportedDevices);
+    
+        if ($this->supportedDevicesEditingIndex === $index) {
+            $this->supportedDevicesEditingIndex = null;
+        } elseif ($this->supportedDevicesEditingIndex > $index) {
+            $this->supportedDevicesEditingIndex--;
+        }
+    }
+    
+
+    public function addPortfolio()
+    {
+        $this->Portfolio[] = [
+            'title' => '',
+            'description' => '',
+            'link' => '',
+            'image' => '',
+            'date' => '',
+            'tools' => '',
+        ];
+        $this->portfolioEditingIndex = count($this->Portfolio) - 1;
+    }
+    
+    public function editPortfolioRow($index)
+    {
+        $this->portfolioEditingIndex = $index;
+    }
+    
+    public function savePortfolioRow($index)
+    {
+        if (isset($this->Portfolio[$index]['image']) && is_object($this->Portfolio[$index]['image'])) {
+            $path = $this->Portfolio[$index]['image']->store('portfolio', 'public');
+            $this->Portfolio[$index]['image'] = $path;
+        }
+    
+        $this->portfolioEditingIndex = null;
+    }
+    
+    public function removePortfolio($index)
+    {
+        unset($this->Portfolio[$index]);
+        $this->Portfolio = array_values($this->Portfolio);
+    
+        if ($this->portfolioEditingIndex === $index) {
+            $this->portfolioEditingIndex = null;
+        } elseif ($this->portfolioEditingIndex > $index) {
+            $this->portfolioEditingIndex--;
+        }
+    }
+    
+    public function savePortfolio()
+    {
+        foreach ($this->Portfolio as $i => $item) {
+            if (isset($item['image']) && is_object($item['image'])) {
+                $path = $item['image']->store('portfolio', 'public');
+                $this->Portfolio[$i]['image'] = $path;
+            }
+        }
+    
+        $this->offering->features = array_merge(
+            $this->offering->features ?? [],
+            ['Portfolio' => $this->Portfolio]
+        );
+    
+        $this->offering->save();
+    
+        session()->flash('success', 'تم حفظ البورتفوليو بنجاح');
+    }
+    
 
     public function addTrainingWorkshop()
     {
