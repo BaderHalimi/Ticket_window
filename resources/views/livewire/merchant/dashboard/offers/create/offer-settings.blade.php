@@ -2843,8 +2843,9 @@
     <div class="mb-6">
         <label class="block text-base font-semibold mb-3 text-gray-700">الأدوات المتاحة</label>
     
-        <table class="w-full table-auto border-collapse border border-gray-300">
-            <thead>
+        <div class="overflow-y-auto max-h-72 border border-gray-300 rounded bg-white">
+            <table class="w-full table-auto border-collapse border border-gray-300">
+                <thead>
                 <tr class="bg-gray-100">
                     <th class="border border-gray-300 px-3 py-2 text-right">الاسم</th>
                     <th class="border border-gray-300 px-3 py-2 text-right">التصنيف</th>
@@ -2917,6 +2918,7 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
     
         <div class="mt-4 flex gap-3">
             <button wire:click="addAvailableTool" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">

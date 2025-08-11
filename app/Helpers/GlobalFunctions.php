@@ -255,6 +255,10 @@ if (!function_exists('hasEssentialFields')) {
         $branch_for_ser = true;
         $eventMaxQuantity = true;
         $center = $offer->features['center'] ?? null;
+        $boolcenter = true;
+        if($offer->type == "services"){
+            $boolcenter = isFilled($features['center'] ?? null);
+        }
         if($offer->type == "services" && $center == "place"){
             $branch_for_ser=isFilled($features['selected_branches'] ?? null);
         }
@@ -279,6 +283,7 @@ if (!function_exists('hasEssentialFields')) {
             //'max_users_per_time'        => isFilled($features['max_user_time'] ?? null),
             'user_limit' => $eventMaxQuantity,
             'branch' => $branch_for_ser,
+            'center' => $boolcenter,
             // 'pricing_packages'    => !empty($features['pricing_packages']) &&
             //                           isFilled($features['pricing_packages'][0]['label'] ?? null),
             

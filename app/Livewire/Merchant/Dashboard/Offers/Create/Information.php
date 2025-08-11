@@ -122,38 +122,44 @@ class Information extends Component
                 'name' => 'location',
                 'status' => 'critical',
             ];
-            
-            if ($this->center === "mobile") {
-                // إذا السؤال مش موجود أضفه
-                if (!collect($this->offering->additional_data['questions'])->contains(fn($q) =>
-                    ($q['status'] ?? null) === 'critical' &&
-                    ($q['name'] ?? null) === 'location'
-                )) {
-                    $this->questions[] = $locationQuestion;
+            if ($this->offering->type == "services"){
+                if ($this->center === "mobile") {
+                    $questions = $this->offering->additional_data['questions'] ?? [];
 
+                    if (!collect($questions)->contains(fn($q) =>
+                        ($q['status'] ?? null) === 'critical' &&
+                        ($q['name'] ?? null) === 'location'
+                    )) {
+                        $this->questions[] = $locationQuestion;
+                    
+                        $this->offering->additional_data = array_merge(
+                            $this->offering->additional_data ?? [],
+                            [
+                                'questions' => array_merge(
+                                    $questions,
+                                    $this->questions
+                                )
+                            ]
+                        );
+                    }
+                    
+                } else {
+                    $questions = $this->offering->additional_data['questions'] ?? [];
+                    $this->questions = array_values(array_filter($questions, fn($q) =>
+                        !(($q['status'] ?? null) === 'critical' &&
+                          ($q['name'] ?? null) === 'location')
+                    ));
+                    
                     $this->offering->additional_data = array_merge(
                         $this->offering->additional_data ?? [],
                         [
-                            'questions' => array_merge(
-                                $this->offering->additional_data['questions'] ?? [],
-                                $this->questions
-                            )
+                            'questions' => $this->questions
                         ]
                     );
-                }
-            } else {
-                $this->questions = array_values(array_filter($this->offering->additional_data['questions'], fn($q) =>
-                    !(($q['status'] ?? null) === 'critical' &&
-                      ($q['name'] ?? null) === 'location')
-                ));
-                $this->offering->additional_data = array_merge(
-                    $this->offering->additional_data ?? [],
-                    [
-                        'questions' => $this->questions
                     
-                    ]
-                );
+                }
             }
+
             
 
 
