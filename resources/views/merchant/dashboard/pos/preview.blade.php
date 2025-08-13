@@ -5,7 +5,7 @@
 
     <!-- زر الرجوع -->
     <div class="mb-6">
-        <a href="{{ route('merchant.dashboard.pos.index') }}"
+        <a href="{{ isset($merchantid) ? route('merchant.dashboard.m.pos.index',["merchant" => $merchantid]) :route('merchant.dashboard.pos.index') }}"
            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold shadow-md transition duration-300">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />

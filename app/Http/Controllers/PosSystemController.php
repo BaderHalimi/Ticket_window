@@ -44,9 +44,13 @@ class PosSystemController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id = null,$merchantid = null)
+    public function show($merchantid = null, $id= null)
     {
         //dd($merchantid, $id);
+        if ($id === null) {
+            $id = $merchantid;
+            $merchantid = null;
+        }
         $finalID = can_enter($merchantid, "pos_view");
 
         $reservation = PaidReservation::findOrFail($id);
@@ -77,10 +81,15 @@ class PosSystemController extends Controller
      */
     public function destroy($merchantid = null,string $id)
     {
+        if ($id === null) {
+            $id = $merchantid;
+            $merchantid = null;
+        }
         $finalID = can_enter($merchantid, "pos_delete");
 
         $reservation = PaidReservation::findOrFail($id);
-        if ($reservation->user_id !== $merchantid) {
+        ///dd($finalID,$reservation->user_id);
+        if ((string ) $reservation->user_id !== $finalID) {
             return redirect()->back()->with('error', 'Unauthorized action.');
         }
         

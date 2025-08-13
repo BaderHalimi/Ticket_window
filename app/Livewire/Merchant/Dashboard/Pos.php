@@ -34,10 +34,12 @@ class Pos extends Component
 
     public $allowedDates = [];
     public $allowedTimes = [];
-    public $finalID ;
+    public $finalID ,$merchantid;
+
     public function mount($merchantid = null)
     {
         //dd($merchantid);
+        $this->merchantid = $merchantid;
         $this->finalID = can_enter($merchantid, "pos_create");
         $this->offerings = Offering::where('user_id', $this->finalID)->where('status', 'active')->get();
     }
@@ -151,7 +153,15 @@ class Pos extends Component
             'selectedDay',
             'selectedTime',
         ]);
-        $this->redirectIntended(route('merchant.dashboard.pos.index'), true);
+        if ($this->merchantid) {
+            //dd($this->merchantid);
+            $this->redirectIntended(route('merchant.dashboard.m.pos.index', ['merchant' => $this->finalID]), true);
+
+
+        }else{
+            $this->redirectIntended(route('merchant.dashboard.pos.index'), true);
+
+        }
     }
 
     public function updatedTickets($value)

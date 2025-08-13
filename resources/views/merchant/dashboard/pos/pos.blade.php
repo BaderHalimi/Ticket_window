@@ -66,7 +66,7 @@
                     <td class="px-4 py-3 text-sm">
                         <div class="flex items-center space-x-2 space-x-reverse">
                             @if ($hasPosViewPermission)
-                            <a href="{{isset($merchantid) ? route('merchant.dashboard.m.pos.show', [$merchantid,$reservation->id]) : route('merchant.dashboard.pos.show', $reservation->id) }}"
+                            <a href="{{isset($merchantid) ? route('merchant.dashboard.m.pos.show', ['merchant'=>$merchantid,'po'=>$reservation->id]) : route('merchant.dashboard.pos.show', ['merchant'=>null,'po'=>$reservation->id]) }}"
                                 class="text-orange-500 hover:text-orange-600 font-bold transition duration-200">
                                  عرض
                              </a>  
@@ -78,8 +78,8 @@
                             <span class="text-slate-400">/</span>
                             @if ($hasPosDeletePermission)
                             <form action="{{ isset($merchantid) 
-                                ? route('merchant.dashboard.m.pos.destroy', [$merchantid, $reservation->id]) 
-                                : route('merchant.dashboard.pos.destroy', $reservation->id) }}"
+                                ? route('merchant.dashboard.m.pos.destroy', [ 'merchant'=>$merchantid, 'po'=> $reservation->id]) 
+                                : route('merchant.dashboard.pos.destroy', [ 'merchant'=>null,'po' => $reservation->id]) }}"
                                  method="POST" class="inline">
                                 @method('DELETE')
                                 @csrf
