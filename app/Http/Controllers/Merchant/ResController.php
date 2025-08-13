@@ -46,7 +46,7 @@ class ResController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($merchantid = null, string $id = null)
+    public function show(string $id = null,$merchantid = null)
     {
         //dd($merchantid, Auth::id());
         //dd(fetch_Permetions(Auth::id(), $merchantid));

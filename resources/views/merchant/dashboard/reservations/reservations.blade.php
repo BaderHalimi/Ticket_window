@@ -5,11 +5,11 @@
     <div class="space-y-6">
         <h2 class="text-3xl font-bold text-slate-800">إدارة الحجوزات</h2>
         @php
-            if($merchantid){
-                $hasReservationDetailsPermission = has_Permetion(Auth::id(),'merchant_reservation_details', $merchantid);
+            $hasReservationDetailsPermission = true;
 
-            }else {
-                $hasReservationDetailsPermission = true;
+            if($merchantid){
+                $hasReservationDetailsPermission = has_Permetion(Auth::id(),'reservation_detail', $merchantid);
+
             }
         @endphp
         <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
