@@ -1,4 +1,4 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app',['merchant' => $merchantid ?? false])
 @section('content')
     <div class="flex-1 p-8" bis_skin_checked="1">
 

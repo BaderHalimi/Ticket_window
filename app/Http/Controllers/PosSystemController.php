@@ -10,23 +10,27 @@ class PosSystemController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($merchantid = null)
     {
-        $reservations = PaidReservation::where('user_id', Auth::id())
+        //dd(can_enter($merchantid, "pos_page"));
+        $finalID = can_enter($merchantid, "pos_page");
+        $reservations = PaidReservation::where('user_id', $finalID)
         ->where('additional_data->selling_type', 'pos')
         ->orderBy('created_at', 'desc')
         ->get();
     
-        return view('merchant.dashboard.pos.pos', compact('reservations'));
+            return view('merchant.dashboard.pos.pos', compact('reservations',"merchantid"));
     
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($merchantid = null)
     {
-        return view('merchant.dashboard.pos.create');
+        $finalID = can_enter($merchantid, "pos_create");
+
+        return view('merchant.dashboard.pos.create',compact('merchantid'));
     }
 
     /**
@@ -40,13 +44,16 @@ class PosSystemController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id = null,$merchantid = null)
     {
+        //dd($merchantid, $id);
+        $finalID = can_enter($merchantid, "pos_view");
+
         $reservation = PaidReservation::findOrFail($id);
         //dd($reservation);
   
         
-        return view('merchant.dashboard.pos.preview', compact('reservation'));
+        return view('merchant.dashboard.pos.preview', compact('reservation',"merchantid"));
     }
 
     /**
@@ -68,10 +75,12 @@ class PosSystemController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($merchantid = null,string $id)
     {
+        $finalID = can_enter($merchantid, "pos_delete");
+
         $reservation = PaidReservation::findOrFail($id);
-        if ($reservation->user_id !== Auth::id()) {
+        if ($reservation->user_id !== $merchantid) {
             return redirect()->back()->with('error', 'Unauthorized action.');
         }
         

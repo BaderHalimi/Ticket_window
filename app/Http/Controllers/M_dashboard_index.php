@@ -11,9 +11,14 @@ class M_dashboard_index extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($merchantid = null)
     {
-        $statistics = get_statistics(Auth::id());
+        //dd($merchantid,Auth::id());
+
+
+
+        $finalID = can_enter($merchantid,"overview_page");
+        $statistics = get_statistics($finalID);
         $payments = $statistics["payments"];
         $offers = $statistics["offers"];
         $now = Carbon::now();
@@ -42,7 +47,7 @@ class M_dashboard_index extends Controller
         $topOffer = $topOfferData['offer'] ?? null; 
         $topOfferName = $topOffer->name  ?? null;   
 
-        $notification = notifications::where("user_id", Auth::id())
+        $notification = notifications::where("user_id", $finalID)
         ->orderBy('created_at', 'desc')
         ->paginate(10);
             //dd($notification);
@@ -53,7 +58,8 @@ class M_dashboard_index extends Controller
         })->sum("amount");
 
         //dd($todayPayments);   
-        return view("merchant.dashboard.index",compact('todayPayments',"activeReservationsCount","wallet","topOfferName","notification"));
+        //$merchant = $finalID;
+        return view("merchant.dashboard.index",compact('todayPayments',"activeReservationsCount","wallet","topOfferName","notification","merchantid"));
     }
 
     /**

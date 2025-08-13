@@ -12,16 +12,19 @@ class ResController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($merchantid = null)
     {
-        $reservations = PaysHistory::whereHas('item', function($query) {
-            $query->where('user_id', Auth::id());
+        $finalID = can_enter($merchantid,"reservations_view");
+
+        $reservations = PaysHistory::whereHas('item', function($query) use ($finalID) {
+            $query->where('user_id', $finalID);
         })->get();
 
         
         //dd($reservations);
+        //$merchant = $finalID;
         
-        return view('merchant.dashboard.reservations.reservations', compact('reservations'));
+        return view('merchant.dashboard.reservations.reservations', compact('reservations','merchantid'));
     }
 
     /**
@@ -43,13 +46,18 @@ class ResController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($merchantid = null, string $id = null)
     {
+        //dd($merchantid, Auth::id());
+        //dd(fetch_Permetions(Auth::id(), $merchantid));
+        //dd(has_Permetion(Auth::id(),"reservation_detail", $merchantid));
+        $finalID = can_enter($merchantid,"reservation_detail");
+
         $reservation = PaysHistory::findOrFail($id);
         $offering = $reservation->item;
         $user = $reservation->user;
         $reservation->load('item', 'user');
-        return view('merchant.dashboard.reservations.info', compact('reservation', 'offering', 'user'));
+        return view('merchant.dashboard.reservations.info', compact('reservation', 'offering', 'user','merchantid'));
     }
 
     /**

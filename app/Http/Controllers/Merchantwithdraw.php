@@ -14,13 +14,15 @@ class Merchantwithdraw extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($merchantid = null)
     {
-        $wallet = MerchantWallet::where('merchant_id', Auth::id())->first();
-        $withdraws = withdraws_log::where('user_id', Auth::id())
+        $finalID = can_enter($merchantid,"wallet_view");
+
+        $wallet = MerchantWallet::where('merchant_id', $finalID)->first();
+        $withdraws = withdraws_log::where('user_id', $finalID)
             ->orderBy('created_at', 'desc')
             ->get();
-        return view('merchant.dashboard.wallet_withdrawal', compact('wallet','withdraws'));
+        return view('merchant.dashboard.wallet_withdrawal', compact('wallet','withdraws','merchantid'));
     }
     
 
@@ -35,9 +37,11 @@ class Merchantwithdraw extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    
+    public function store(Request $request,$merchantid = null)
     {
+        $finalID = can_enter($merchantid,"wallet_withdraw");
+
+        //dd($finalID, $merchantid,$request->all());
         $validated = $request->validate([
             'amount' => 'required|numeric|min:1',
             'account_name' => [
@@ -66,7 +70,7 @@ class Merchantwithdraw extends Controller
                 ],
             
         ]);
-        $wallet = MerchantWallet::where('merchant_id', Auth::id())->first();
+        $wallet = MerchantWallet::where('merchant_id', $finalID)->first();
 
         if ((float)$validated['amount'] > $wallet->balance){
             return redirect()->back()->with("fail","لاتحتوي على هذا الرقم في محفضتك");
@@ -79,7 +83,7 @@ class Merchantwithdraw extends Controller
         $wallet->save();
         
         $withdraw = withdraws_log::create([
-            'user_id' => Auth::id(),
+            'user_id' => $finalID,
             'withdraw_id' => uniqid('withdraw_'),
             'amount' => $validated['amount'],
             'status' => 'pending',
@@ -87,14 +91,14 @@ class Merchantwithdraw extends Controller
         ]);
 
         notifcate(
-            Auth::id(),
+            $finalID,
             'تم طلب السحب بنجاح' . $validated['amount'],
             'تستغرق العملية حوالي 24 ساعة او اكثر',
             [
                 'type' => 'payment',
                 'withdrawal' => true,
                 'status' => 'pending',
-                'recipient_id' => Auth::id(),
+                'recipient_id' => $finalID,
                 'transaction_id' => $withdraw->withdraw_id,
                 'amount' => $withdraw->amount,
 
@@ -102,7 +106,13 @@ class Merchantwithdraw extends Controller
         );
         
         //dd($withdraw);
-        return redirect()->route('merchant.dashboard.withdraws.index')->with('success', 'تم إرسال طلب السحب بنجاح ✅');
+        if (!$merchantid){
+            return redirect()->route('merchant.dashboard.withdraws.index')->with('success', 'تم إرسال طلب السحب بنجاح ✅');
+
+        }else{
+            return redirect()->route('merchant.dashboard.m.withdraws.index',$merchantid)->with('success', 'تم إرسال طلب السحب بنجاح ✅');
+
+        }
 
     }
 

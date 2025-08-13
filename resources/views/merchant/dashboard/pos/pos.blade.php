@@ -1,15 +1,34 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app',['merchant' => $merchantid ?? false])
 
 @section('content')
 <div class="container mx-auto p-4">
 
     {{-- زر إضافة POS جديد --}}
-    <div class="flex justify-end mb-6">
-        <a href="{{ route('merchant.dashboard.pos.create') }}"
-           class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-lg font-bold shadow-md transition duration-300">
-            + إضافة POS جديد
-        </a>
-    </div>
+    @php
+        $hasPosCreatePermission = true;
+        $hasPosViewPermission = true;
+        $hasPosDeletePermission = true;
+        if($merchantid){
+            $hasPosCreatePermission = has_Permetion(Auth::id(),'pos_create', $merchantid);
+
+            $hasPosDeletePermission = has_Permetion(Auth::id(),'pos_delete', $merchantid);
+            $hasPosViewPermission = has_Permetion(Auth::id(),'pos_view', $merchantid);
+
+        }
+    @endphp
+    @if ($hasPosCreatePermission)
+        <div class="flex justify-end mb-6">
+            <a href="{{isset($merchantid) ? route('merchant.dashboard.m.pos.create',["merchant"=>$merchantid]) : route('merchant.dashboard.pos.create') }}"
+            class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-lg font-bold shadow-md transition duration-300">
+                + إضافة POS جديد
+            </a>
+        </div> 
+    @else
+        <div class="flex justify-end mb-6">
+            <span class="text-red-500 font-bold">ليس لديك صلاحية إضافة POS جديد</span>
+        </div>
+    @endif
+
 
     {{-- جدول الحجوزات --}}
     <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
@@ -46,18 +65,32 @@
                     <td class="px-4 py-3 text-sm text-slate-500">{{ $data['selected_time'] ?? NULL }} / {{ $data['selected_day'] ?? NULL }}</td>
                     <td class="px-4 py-3 text-sm">
                         <div class="flex items-center space-x-2 space-x-reverse">
-                            <a href="{{ route('merchant.dashboard.pos.show', $reservation->id) }}"
-                               class="text-orange-500 hover:text-orange-600 font-bold transition duration-200">
-                                عرض
-                            </a>
+                            @if ($hasPosViewPermission)
+                            <a href="{{isset($merchantid) ? route('merchant.dashboard.m.pos.show', [$merchantid,$reservation->id]) : route('merchant.dashboard.pos.show', $reservation->id) }}"
+                                class="text-orange-500 hover:text-orange-600 font-bold transition duration-200">
+                                 عرض
+                             </a>  
+                            @else
+                            <span class="text-orange-500 font-bold">ليس لديك صلاحية العرض</span>
+                            @endif
+
+
                             <span class="text-slate-400">/</span>
-                            <form action="{{ route('merchant.dashboard.pos.destroy', $reservation->id) }}" method="POST" class="inline">
+                            @if ($hasPosDeletePermission)
+                            <form action="{{ isset($merchantid) 
+                                ? route('merchant.dashboard.m.pos.destroy', [$merchantid, $reservation->id]) 
+                                : route('merchant.dashboard.pos.destroy', $reservation->id) }}"
+                                 method="POST" class="inline">
                                 @method('DELETE')
                                 @csrf
                                 <button type="submit" class="text-red-500 hover:text-red-600 font-bold focus:outline-none">
                                     حذف
                                 </button>
                             </form>
+                            @else
+                            <span class="text-red-500 font-bold">ليس لديك صلاحية الحذف</span>
+                            @endif
+
                         </div>
                     </td>
                     

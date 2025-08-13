@@ -1,4 +1,4 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app',['merchant' => $merchantid ?? false])
 
 @section('content')
 <div class="flex-1 p-8" x-data="{ open: false }">
@@ -20,7 +20,9 @@
     </button>
   </div>
 
-<form action="{{ route('merchant.dashboard.withdraws.store') }}" method="POST" class="space-y-6">
+<form     action="{{ isset($merchantid) 
+  ? route('merchant.dashboard.m.withdraws.store', $merchantid) 
+  : route('merchant.dashboard.withdraws.store') }}"  method="POST" class="space-y-6">
   @csrf
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -92,13 +94,31 @@
           @if (($wallet?$wallet->balance:0) > 0)
 
           <div >
+
+              @php
+                if($merchantid){
+                    $hasWalletWithdrawPermission = has_Permetion(Auth::id(),'wallet_withdraw', $merchantid);
+
+                }else {
+                    $hasReservationDetailsPermission = true;
+                }
+              @endphp
             {{-- الزر الرئيسي --}}
-            <button
+            @if ($hasWalletWithdrawPermission)
+              <button
                 @click="open = true"
                 type="button"
                 class="w-full inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-orange-400 to-orange-600 text-white text-base font-bold py-3 shadow-lg hover:from-orange-500 hover:to-orange-700 focus:ring-4 focus:ring-orange-300 transition">
                 طلب سحب
             </button>
+            @else
+            <button
+                type="button"
+                class="w-full inline-flex items-center justify-center rounded-lg bg-gray-300 text-gray-600 text-base font-bold py-3 shadow-lg cursor-not-allowed">
+                لا تملك صلاحية طلب السحب
+            </button>
+            @endif
+
 
             {{-- الخلفية + المودال --}}
 

@@ -384,10 +384,11 @@ if (!function_exists('fetch_time')) {
 // }
 
 if (!function_exists('fetch_Permetions')){
-    function fetch_Permetions($user_id)
+    function fetch_Permetions($user_id,$merchant_id)
     {
-        $Roles_user = role_permission::with('role')->where('employee_id', $user_id)->get();
-
+        $Roles_user = role_permission::with('role')->where('employee_id', $user_id)
+        ->where('merchant_id',$merchant_id)->get();
+        //dd($Roles_user);
         $result = [];
 
         foreach ($Roles_user as $roleUser) {
@@ -415,9 +416,14 @@ if (!function_exists('fetch_Permetions')){
     }
 }
 if(!function_exists("has_Permetion")){
-    function has_Permetion($user_id, $perm_key)
+    function has_Permetion($user_id = null, $perm_key,$merchant_id)
     {
-        $roles = fetch_Permetions($user_id);
+        if ($user_id === null) {
+            $user_id = Auth::id();
+        }
+        
+        $roles = fetch_Permetions($user_id,$merchant_id);
+        //dd($roles);
         foreach ($roles as $role) {
             if (in_array($perm_key, $role['permissions'])) {
                 return true;
@@ -427,7 +433,37 @@ if(!function_exists("has_Permetion")){
     }
 }
 
+if (!function_exists("is_m_admin")){
+    function is_m_admin(){
+        return false;    
+    }
+    
+}
 
+if (!function_exists("can_enter")) {
+    function can_enter($mer,$viewPermetion){
+        $merchantId = $mer;
+        $empID = null;
+        $finalID = null;
+        if(!is_m_admin()){
+            if ($merchantId) {
+                if (!work_in($merchantId) || !has_Permetion(Auth::id(),$viewPermetion,$merchantId) ) {
+                    abort(403, 'غير مسموح لك بالدخول');
+                }else{
+                    $empID = $merchantId;
+                }
+            }else{
+                $merchantid = Auth::id();
+            }
+            $finalID = $empID ?? $merchantid;
+
+        }else{
+            $finalID = $merchantId;
+
+        }
+        return $finalID;
+    }
+}
 if(!function_exists("is_work")){
     function is_work($user_id){
         $user = User::find($user_id);
@@ -444,26 +480,23 @@ if(!function_exists("is_work")){
 
     }
 }
+
 if(!function_exists("work_in")){
-    function work_in($user_id){
-        $user = User::find($user_id);
+    function work_in($merchant_id){
+        $user = User::find(Auth::id());
         if (!$user){
-            return;
+            return false;
         }
 
         $data = $user->additional_data['workIn'] ?? [];
         if (empty($data)) {
-            //dd("not");
-            return ;
+            return false;
         }
-        //dd($data, Auth::id(), $user_id);
-        // if (isset($data['workIn']) && is_array($data['workIn'])) {
-        //     return in_array(Auth::id(), $data['workIn']);
-        // }
-        return $data;
 
+        return in_array($merchant_id, $data);
     }
 }
+
 
 if (!function_exists('clear_offers')) {
     function clear_offers($collection)

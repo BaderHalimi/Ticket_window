@@ -1,6 +1,6 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app',['merchant' => $merchantid ?? false])
 @section('content')
 
-@livewire('merchant.dashboard.pos')
+@livewire('merchant.dashboard.pos',['merchantid'=>$merchantid])
 
 @endsection

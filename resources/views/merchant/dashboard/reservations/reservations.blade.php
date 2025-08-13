@@ -1,10 +1,17 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app',['merchant' => $merchantid ?? false])
 
 @section('content')
 <div class="flex-1 p-8">
     <div class="space-y-6">
         <h2 class="text-3xl font-bold text-slate-800">إدارة الحجوزات</h2>
+        @php
+            if($merchantid){
+                $hasReservationDetailsPermission = has_Permetion(Auth::id(),'merchant_reservation_details', $merchantid);
 
+            }else {
+                $hasReservationDetailsPermission = true;
+            }
+        @endphp
         <div class="rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg">
             <div class="px-4 py-2 overflow-x-scroll">
                 <table class="w-full caption-bottom text-sm">
@@ -54,8 +61,19 @@
                                 </td>
                                 <td class="p-4">{{ $reservation->created_at->format('Y-m-d') }}</td>
                                 <td class="p-4 text-center">
-                                    <a href="{{route("merchant.dashboard.reservations.show",$reservation->id)}}" class="text-blue-500 hover:underline">عرض التفاصيل</a>
-                                </td>
+                                @if ($hasReservationDetailsPermission)
+                                    
+                                    <a 
+                                        href="{{ route($merchantid ? 'merchant.dashboard.m.reservations.show' : 'merchant.dashboard.reservations.show', $merchantid ? ['merchant' => $merchantid, 'reservation' => $reservation->id] : [$reservation->id]) }}" 
+                                        class="text-blue-500 hover:underline"
+                                    >
+                                        عرض التفاصيل
+                                    </a>
+                                @else
+                                    <span class="text-gray-500">لا تملك صلاحية العرض</span>
+                                @endif
+
+                            </td>
                             </tr>
                         @endforeach
                     </tbody>

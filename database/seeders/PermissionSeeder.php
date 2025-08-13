@@ -13,39 +13,48 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
+        Permission::truncate();
+
         $merchantId = 1; // غيّره حسب ID التاجر الذي تريده
         $createdBy = 1;  // ID المستخدم الذي أنشأها
 
+
         $permissions = [
+            // Overview
             ['key' => 'overview_page'],
+
             ['key' => 'services_view'],
             ['key' => 'services_create'],
             ['key' => 'services_edit'],
             ['key' => 'services_delete'],
 
-            ['key' => 'check'],
-            ['key' => 'ratings'],
-            ['key' => 'reservations'],
+            ['key' => 'check_view'],
+            ['key' => 'ratings_view'],
 
+            ['key' => 'reservations_view'],
+            ['key' => 'reservations_create'],
+            ['key' => 'reservations_edit'],
+            ['key' => 'reservations_delete'],
+            ['key' => 'reservation_detail'],
 
-            ['key' => 'Pos'],
-            ['key' => 'Pos_create'],
-            ['key' => 'Pos_edit'],
-            ['key' => 'Pos_delete'],
+            
+            ['key' => 'pos_page'],
+            ['key' => 'pos_create'],
+            ['key' => 'pos_view'],
+            ['key' => 'pos_delete'],
 
+            ['key' => 'reports_view'],
+            ['key' => 'notifications_view'],
+            ['key' => 'messages_view'],
+            ['key' => 'wallet_view'],
+            ['key' => 'wallet_withdraw'],
 
-            ['key' => 'reports'],
-            ['key' => 'notificatons'],
-            ['key' => 'messages'],
-            ['key' => 'wallet_and_payments'],
-
-            ['key' => 'branchs_view'],
+            ['key' => 'branches_view'],
             ['key' => 'branches_create'],
             ['key' => 'branches_edit'],
             ['key' => 'branches_delete'],
 
             ['key' => 'team_manager_view'],
-            ['key' => 'team_manager_actions'],
             ['key' => 'team_manager_create'],
             ['key' => 'team_manager_edit'],
             ['key' => 'team_manager_delete'],
@@ -56,11 +65,11 @@ class PermissionSeeder extends Seeder
             ['key' => 'languages_edit'],
             ['key' => 'languages_delete'],
 
-
             ['key' => 'settings_view'],
             ['key' => 'settings_edit'],
             ['key' => 'history_view'],
         ];
+
 
         foreach ($permissions as $permission) {
             Permission::create([

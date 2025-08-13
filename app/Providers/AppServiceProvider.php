@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Offering;
 use App\Observers\OfferingObserver;
-
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -41,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
         // // ضبط التايمزون للـ Laravel كله
         // date_default_timezone_set($timezone);
         // Carbon::setTimeZone($timezone);
+
         \Carbon\Carbon::setLocale(config('app.locale'));
 
         Gate::define('overview_page', function ($user,$merchant) {

@@ -34,10 +34,12 @@ class Pos extends Component
 
     public $allowedDates = [];
     public $allowedTimes = [];
-
-    public function mount()
+    public $finalID ;
+    public function mount($merchantid = null)
     {
-        $this->offerings = Offering::where('user_id', Auth::id())->where('status', 'active')->get();
+        //dd($merchantid);
+        $this->finalID = can_enter($merchantid, "pos_create");
+        $this->offerings = Offering::where('user_id', $this->finalID)->where('status', 'active')->get();
     }
 
     public function updatedSelectedOfferingId($value)
@@ -115,7 +117,7 @@ class Pos extends Component
         PaidReservation::create([
             'item_id' => $this->selectedOfferingId,
             'item_type' => Offering::class,
-            'user_id' => Auth::id(),
+            'user_id' => $this->finalID,
             'quantity' => $this->tickets,
             'price' => $price,
             'discount' => 0,

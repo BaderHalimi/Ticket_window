@@ -1,11 +1,12 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app',['merchant' => $merchantid ?? false])
 
 @section('content')
 <div class="flex-1 p-6 md:p-10 bg-orange-50 min-h-screen">
 
     <!-- Back button -->
     <div class="mb-6">
-        <a href="{{ route('merchant.dashboard.reservations.index') }}"
+        
+        <a href="{{ route($merchantid ? 'merchant.dashboard.m.reservations.index' : 'merchant.dashboard.reservations.index', $merchantid ? ['merchant' => $merchantid] : []) }}"
            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold shadow-md transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -101,6 +102,7 @@
         </div>
 
         <!-- Reservation Section -->
+
         <div class="space-y-4">
             <h4 class="text-2xl font-bold text-orange-700 border-b-2 border-orange-300 inline-block pb-1">معلومات الحجز</h4>
             <div class="text-slate-700 space-y-2">
