@@ -46,11 +46,16 @@ class ResController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id = null,$merchantid = null)
+    public function show($merchantid = null,string $id = null)
     {
         //dd($merchantid, Auth::id());
         //dd(fetch_Permetions(Auth::id(), $merchantid));
         //dd(has_Permetion(Auth::id(),"reservation_detail", $merchantid));
+        if ($id === null) {
+            $id = $merchantid;
+            $merchantid = null;
+        }
+
         $finalID = can_enter($merchantid,"reservation_detail");
 
         $reservation = PaysHistory::findOrFail($id);

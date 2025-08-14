@@ -8,6 +8,8 @@ use App\Models\Role;
 use App\Models\Permission;
 use App\Models\role_permission as RoleUserAssignment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
 class TeamManager extends Component
 {
     public $users;
@@ -185,7 +187,7 @@ class TeamManager extends Component
             //$user->password = bcrypt($this->UserPassword);
         }
         $user->email = $this->UserEmail;
-        $user->password = bcrypt($this->UserPassword);
+        $user->password = Hash::make($this->UserPassword);
         $user->f_name = $this->UserFname;
         $user->role = 'merchant';
         $user->status = 'active';
