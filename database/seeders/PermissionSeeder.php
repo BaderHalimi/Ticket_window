@@ -29,6 +29,8 @@ class PermissionSeeder extends Seeder
             ['key' => 'services_delete'],
 
             ['key' => 'check_view'],
+            ['key' => 'check_tickets'],
+
             ['key' => 'ratings_view'],
 
             ['key' => 'reservations_view'],
@@ -59,7 +61,8 @@ class PermissionSeeder extends Seeder
             ['key' => 'team_manager_edit'],
             ['key' => 'team_manager_delete'],
 
-            ['key' => 'setup_page'],
+            ['key' => 'setup_page_view'],
+            ['key' => 'ProfileSetup_page_view'],
             ['key' => 'languages_view'],
             ['key' => 'languages_create'],
             ['key' => 'languages_edit'],

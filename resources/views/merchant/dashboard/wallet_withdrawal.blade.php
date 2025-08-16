@@ -100,7 +100,7 @@
                     $hasWalletWithdrawPermission = has_Permetion(Auth::id(),'wallet_withdraw', $merchantid);
 
                 }else {
-                    $hasReservationDetailsPermission = true;
+                    $hasWalletWithdrawPermission = true;
                 }
               @endphp
             {{-- الزر الرئيسي --}}

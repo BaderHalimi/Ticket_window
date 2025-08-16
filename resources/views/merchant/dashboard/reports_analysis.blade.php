@@ -1,4 +1,4 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app',['merchant' => $merchantid ?? false])
 
 @section('content')
 

@@ -28,34 +28,48 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
 
 
     Route::get('checking',function(){
-        return view('merchant.dashboard.checking');
+        $finalID = can_enter(null,"check_view");
+
+        return view('merchant.dashboard.checking',compact('finalID'));
+
     })->name('checking');
 
-    Route::get('social_reservation',function(){
-        return view('merchant.dashboard.social_reservation');
-    })->name('social_reservation');
-    Route::get('offers_codes',function(){
-        return view('merchant.dashboard.offers_codes');
-    })->name('offers_codes');
+    // Route::get('social_reservation',function(){
+
+    //     return view('merchant.dashboard.social_reservation');
+    // })->name('social_reservation');
+
+    // Route::get('offers_codes',function(){
+    //     return view('merchant.dashboard.offers_codes');
+    // })->name('offers_codes');
+
     Route::get('customer_reviews',function(){
-        return view('merchant.dashboard.customer_reviews');
+        $finalID = can_enter(null,"");
+
+        return view('merchant.dashboard.customer_reviews',compact('finalID'));
     })->name('customer_reviews');
-    Route::get('intelligence_analytics',function(){
-        return view('merchant.dashboard.intelligence_analytics');
-    })->name('intelligence_analytics');
+
+    // Route::get('intelligence_analytics',function(){
+    //     return view('merchant.dashboard.intelligence_analytics');
+    // })->name('intelligence_analytics');
     // Route::get('reports_analysis',function(){
     //     return view('merchant.dashboard.reports_analysis');
     // })->name('reports_analysis');
 
-    Route::get('notification_management',function(){
-        return view('merchant.dashboard.notification_management');
-    })->name('notification_management');
+    // Route::get('notification_management',function(){
+    //     return view('merchant.dashboard.notification_management');
+    // })->name('notification_management');
+
     Route::get('message_center',function(){
-        return view('merchant.dashboard.message_center');
+        $finalID = can_enter(null,"");
+
+        return view('merchant.dashboard.message_center',compact('finalID'));
     })->name('message_center');
-    Route::get('wallet_withdrawal',function(){
-        return view('merchant.dashboard.wallet_withdrawal');
-    })->name('wallet_withdrawal');
+
+    // Route::get('wallet_withdrawal',function(){
+    //     return view('merchant.dashboard.wallet_withdrawal');
+    // })->name('wallet_withdrawal');
+
     Route::resource('branch', BranchController::class);
     Route::resource('offer', OffersController::class);
 
@@ -63,10 +77,15 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
     //     return view('merchant.dashboard.index');
     // })->name('branch_management');
     Route::get('team_management',function(){
-        return view('merchant.dashboard.team_management');
+        $finalID = can_enter(null,"");
+
+        return view('merchant.dashboard.team_management',compact('finalID'));
     })->name('team_management');
+
     Route::get('page_setup',function(){
-        return view('merchant.dashboard.page_setup');
+        $finalID = can_enter(null,"");
+
+        return view('merchant.dashboard.page_setup',compact('finalID'));
     })->name('page_setup');
     // Route::get('policies_settings',function(){
     //     return view('merchant.dashboard.policies_settings');
@@ -74,16 +93,17 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
 
     Route::resource('policies_settings', policies_settings::class)->names("policies_settings");
 
-    Route::get('languages_translation',function(){
-        return view('merchant.dashboard.languages_translation');
-    })->name('languages_translation');
 
-    Route::get('api',function(){
-        return view('merchant.dashboard.api');
-    })->name('api');
+    // Route::get('languages_translation',function(){
+    //     return view('merchant.dashboard.languages_translation');
+    // })->name('languages_translation');
+
+    // Route::get('api',function(){
+    //     return view('merchant.dashboard.api',compact('finalID'));
+    // })->name('api');
 
     Route::get('profile_setup',function(){
-        return view('merchant.dashboard.Profile_Setup');
+        return view('merchant.dashboard.Profile_Setup',compact('finalID'));
     })->name('profile_setup');
 
     Route::resource('support', SupportControllerM::class)->names('support');
@@ -118,65 +138,77 @@ Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->g
     Route::resource('m/{merchant}/pos', PosSystemController::class)->names('pos');
     Route::resource('m/{merchant}/statistics', Page_statistics::class)->names('statistics');
 
-    Route::get('m/{merchant}/work_in', function() {
-        return view('merchant.dashboard.work_In');
-    })->name('work_in');
+    // Route::get('m/{merchant}/work_in', function() {
+    //     return view('merchant.dashboard.work_In');
+    // })->name('work_in');
 
-    Route::get('m/{merchant}/checking', function() {
-        return view('merchant.dashboard.checking');
+    Route::get('m/{merchant}/checking', function($merchantid= null) {
+        $finalID = can_enter($merchantid,"check_view");
+        //dd($finalID);
+        return view('merchant.dashboard.checking',compact('finalID', 'merchantid'));
     })->name('checking');
 
-    Route::get('m/{merchant}/social_reservation', function() {
-        return view('merchant.dashboard.social_reservation');
-    })->name('social_reservation');
+    // Route::get('m/{merchant}/social_reservation', function() {
+    //     return view('merchant.dashboard.social_reservation',compact('finalID', 'merchantid'));
+    // })->name('social_reservation');
 
-    Route::get('m/{merchant}/offers_codes', function() {
-        return view('merchant.dashboard.offers_codes');
-    })->name('offers_codes');
+    // Route::get('m/{merchant}/offers_codes', function() {
+    //     return view('merchant.dashboard.offers_codes');
+    // })->name('offers_codes');
 
-    Route::get('m/{merchant}/customer_reviews', function() {
-        return view('merchant.dashboard.customer_reviews');
+    Route::get('m/{merchant}/customer_reviews', function($merchantid) {
+        $finalID = can_enter($merchantid,"ratings_view");
+
+        return view('merchant.dashboard.customer_reviews',compact('finalID', 'merchantid'));
     })->name('customer_reviews');
 
-    Route::get('m/{merchant}/intelligence_analytics', function() {
-        return view('merchant.dashboard.intelligence_analytics');
-    })->name('intelligence_analytics');
+    // Route::get('m/{merchant}/intelligence_analytics', function() {
+    //     return view('merchant.dashboard.intelligence_analytics');
+    // })->name('intelligence_analytics');
 
-    Route::get('m/{merchant}/notification_management', function() {
-        return view('merchant.dashboard.notification_management');
-    })->name('notification_management');
+    // Route::get('m/{merchant}/notification_management', function() {
+    //     return view('merchant.dashboard.notification_management');
+    // })->name('notification_management');
 
-    Route::get('m/{merchant}/message_center', function() {
-        return view('merchant.dashboard.message_center');
+    Route::get('m/{merchant}/message_center', function($merchantid= null) {
+        $finalID = can_enter($merchantid,"messages_view");
+
+        return view('merchant.dashboard.message_center',compact('finalID', 'merchantid'));
     })->name('message_center');
 
-    Route::get('m/{merchant}/wallet_withdrawal', function() {
-        return view('merchant.dashboard.wallet_withdrawal');
-    })->name('wallet_withdrawal');
+    // Route::get('m/{merchant}/wallet_withdrawal', function() {
+    //     return view('merchant.dashboard.wallet_withdrawal');
+    // })->name('wallet_withdrawal');
 
     Route::resource('m/{merchant}/branch', BranchController::class);
     Route::resource('m/{merchant}/offer', OffersController::class);
 
-    Route::get('m/{merchant}/team_management', function() {
-        return view('merchant.dashboard.team_management');
+    Route::get('m/{merchant}/team_management', function($merchantid= null) {
+        $finalID = can_enter($merchantid,"team_manager_view");
+
+        return view('merchant.dashboard.team_management',compact('finalID', 'merchantid'));
     })->name('team_management');
 
-    Route::get('m/{merchant}/page_setup', function() {
-        return view('merchant.dashboard.page_setup');
+    Route::get('m/{merchant}/page_setup', function($merchantid= null) {
+        $finalID = can_enter($merchantid,"setup_page_view");
+
+        return view('merchant.dashboard.page_setup',compact('finalID', 'merchantid'));
     })->name('page_setup');
 
     Route::resource('m/{merchant}/policies_settings', policies_settings::class)->names('policies_settings');
 
-    Route::get('m/{merchant}/languages_translation', function() {
-        return view('merchant.dashboard.languages_translation');
-    })->name('languages_translation');
+    // Route::get('m/{merchant}/languages_translation', function() {
+    //     return view('merchant.dashboard.languages_translation');
+    // })->name('languages_translation');
 
-    Route::get('m/{merchant}/api', function() {
-        return view('merchant.dashboard.api');
-    })->name('api');
+    // Route::get('m/{merchant}/api', function() {
+    //     return view('merchant.dashboard.api');
+    // })->name('api');
 
-    Route::get('m/{merchant}/profile_setup', function() {
-        return view('merchant.dashboard.Profile_Setup');
+    Route::get('m/{merchant}/profile_setup', function($merchantid= null) {
+        $finalID = can_enter($merchantid,"ProfileSetup_page_view");
+
+        return view('merchant.dashboard.Profile_Setup',compact('finalID', 'merchantid'));
     })->name('profile_setup');
 
     Route::resource('m/{merchant}/support', SupportControllerM::class)->names('support');

@@ -4,23 +4,36 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Customer_Ratings;
-
+use App\Models\User;
 class CustomerReviews extends Component
 {
     public $reviews;
     public $replyText = [];
     public $editingReply = [];
-
-    public function mount()
+    public $finalID = null;
+    public function mount($finalID)
     {
+        $this->finalID = $finalID;
         $this->loadReviews();
     }
 
     public function loadReviews()
     {
-        $this->reviews = Customer_Ratings::where('is_visible', true)
-            ->orderByDesc('created_at')
-            ->get();
+        $user = User::find($this->finalID);
+
+        // $this->reviews = Customer_Ratings::whereHas('offer', function($q) use ($user) {
+        //     $q->where('user_id', $user->id);
+        // })
+        // ->where('is_visible', true)
+        // ->orderByDesc('created_at')
+        // ->get();
+        // $this->reviews = Customer_Ratings::where('is_visible', true)
+        //     ->orderByDesc('created_at')
+        //     ->get();
+        $this->reviews = $user->reviews()
+        ->where('is_visible', true)
+        ->orderByDesc('created_at')
+        ->get();
     }
 
     public function startEditing($reviewId)

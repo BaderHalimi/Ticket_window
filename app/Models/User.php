@@ -98,5 +98,17 @@ class User extends Authenticatable
     {
         return $this->hasOne(MerchantWallet::class, 'merchant_id', 'id');
     }
+    public function reviews()
+    {
+        return $this->hasManyThrough(
+            Customer_Ratings::class,
+            Offering::class,
+            'user_id',   
+            'service_id',  
+            'id',       
+            'id'  
+        );
+    }
+
 
 }

@@ -42,5 +42,9 @@ class Offering extends Model
     {
         return $this->hasMany(PaidReservation::class, 'item_id');
     }
+    public function Reviwes()
+    {
+        return $this->hasMany(Customer_Ratings::class, 'service_id');
+    }
     use HasFactory;
 }

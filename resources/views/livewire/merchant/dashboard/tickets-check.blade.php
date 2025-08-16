@@ -1,16 +1,33 @@
 <div class="grid lg:grid-cols-2 gap-8">
 
     {{-- Manual Verification --}}
+
+    @php
+        if($merchantid){
+            $hasTicketsCheckPermission = has_Permetion(Auth::id(),'check_tickets', $merchantid);
+
+        }else {
+            $hasTicketsCheckPermission = true;
+        }
+    @endphp
     <div class="rounded-2xl border border-slate-200 bg-white shadow-lg p-6">
         <h3 class="text-xl font-semibold mb-2">التحقق اليدوي</h3>
         <p class="text-sm text-slate-500 mb-4">أدخل رقم التذكرة أو الحجز للتحقق من صلاحيته.</p>
         <input wire:model.defer="code"
             class="w-full rounded-lg border border-slate-300 px-4 py-2 mb-2 focus:ring-2 focus:ring-orange-500"
             placeholder="أدخل رقم التذكرة...">
-        <button wire:click="check"
-            class="w-full bg-orange-500 text-white rounded-lg py-2 font-bold hover:bg-orange-600 transition">
-            تحقق الآن
-        </button>
+        @if ($hasTicketsCheckPermission)
+            <button wire:click="check"
+                class="w-full bg-orange-500 text-white rounded-lg py-2 font-bold hover:bg-orange-600 transition">
+                تحقق الآن
+            </button> 
+        @else
+            <button
+                class="w-full bg-gray-300 text-gray-600 rounded-lg py-2 font-bold cursor-not-allowed">
+                لا تملك صلاحية التحقق
+            </button>
+        @endif
+
         @if($reservation)
         @php
             $arr = json_decode($reservation->additional_data, true) ?? [];
@@ -35,15 +52,23 @@
 
         <div id="qr-reader" class="w-full rounded-lg bg-black aspect-video mb-4"></div>
         <div id="qr-result" class="hidden text-green-600 font-semibold mb-2">تم مسح الكود بنجاح!</div>
+        @if ($hasTicketsCheckPermission)
+            <button id="start-scanner"
+                class="border bg-white hover:bg-slate-100 rounded-lg py-2 px-4 font-bold">
+                فتح الكاميرا للمسح
+            </button>
+            <button id="stop-scanner"
+                class="hidden border bg-red-500 text-white hover:bg-red-600 rounded-lg py-2 px-4 font-bold">
+                إيقاف المسح
+            </button>
+        @else
+            <button
+                class="border bg-gray-300 text-gray-600 rounded-lg py-2 px-4 font-bold cursor-not-allowed">
+                لا تملك صلاحية المسح
+            </button>
+        @endif
 
-        <button id="start-scanner"
-            class="border bg-white hover:bg-slate-100 rounded-lg py-2 px-4 font-bold">
-            فتح الكاميرا للمسح
-        </button>
-        <button id="stop-scanner"
-            class="hidden border bg-red-500 text-white hover:bg-red-600 rounded-lg py-2 px-4 font-bold">
-            إيقاف المسح
-        </button>
+
     </div>
 
     {{-- Display verification results --}}
@@ -111,6 +136,7 @@
             }
         }
     }
+    document.addEventListener('DOMContentLoaded', setupScanner);
 
     document.addEventListener('livewire:init', setupScanner);
     document.addEventListener('livewire:navigated', setupScanner);

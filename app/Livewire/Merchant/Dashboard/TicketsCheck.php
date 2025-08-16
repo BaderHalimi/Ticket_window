@@ -13,9 +13,15 @@ class TicketsCheck extends Component
     public $code = '';
     public $reservation = null;
     public $error = null;
-
+    public $finalID;
+    public $merchantid;
+    public function mount($finalID,$merchantid){
+        $this->finalID = $finalID;
+        $this->merchantid = $merchantid;
+    }
     public function check()
     {
+        $this->finalID = can_enter($this->finalID, "check_tickets");
         $this->reset(['reservation', 'error']);
 
         $this->validate([

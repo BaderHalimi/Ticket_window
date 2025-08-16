@@ -17,9 +17,11 @@ class Page_statistics extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($merchantid = null)
     {
-        $statistics = get_statistics(Auth::id()); //Global function to get statistics
+        $finalID = can_enter($merchantid,"reports_view");
+
+        $statistics = get_statistics($finalID); //Global function to get statistics
         $txns = $statistics['txns'];
         $wallet = $statistics['wallet'];
         $offers = $statistics['offers'];
@@ -34,10 +36,10 @@ class Page_statistics extends Controller
 
         $refundPercent = $all_refunds > 0 ? round(($all_refunds / $all_selles) * 100, 2) : 0;
         $PayPercent = $all_payments > 0 ? round(($all_payments / $all_selles) * 100, 2) : 0;
-        $views = page_views::where('merchant_id', Auth::id())->count();
+        $views = page_views::where('merchant_id', $finalID)->count();
         $couponLoss = 0;
         unset($statistics);
-        $Peak_Time = Peak_Time(Auth::id());
+        $Peak_Time = Peak_Time($finalID);
         $dailyPeaks = [];
         //dd($Peak_Time);
         foreach ($Peak_Time as $day => $hoursArray) {
@@ -69,7 +71,7 @@ class Page_statistics extends Controller
         //dd($Peak_Time);
         //dd($PayPercent,$refundPercent);
         return view('merchant.dashboard.reports_analysis', compact('txns', 'wallet', 'offers', 'offersPercent',
-            'all_selles', 'all_refunds', 'all_payments','PayPercent', 'refundPercent', 'views', 'couponLoss','Peak_Time', 'dailyPeaks', 'maxHour', 'maxDay', 'maxValue','sells_day'));
+            'all_selles', 'all_refunds', 'all_payments','PayPercent', 'refundPercent', 'views', 'couponLoss','Peak_Time', 'dailyPeaks', 'maxHour', 'maxDay', 'maxValue','sells_day','merchantid'));
         
     }
 
