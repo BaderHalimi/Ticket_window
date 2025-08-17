@@ -17,20 +17,23 @@ class OffersController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($merchant=null)
+    public function index($merchantid = null)
     {
-        if ($merchant != null) {
-            $role = Role::findOrFail(Auth::guard('merchant')->user()->additional_data['role'] ?? 0);
-            if (!$role->permissions->contains('key', 'services_view')) {
-                abort(403, 'Unauthorized action.');
-            }
-        }
-        $offers = Offering::where('user_id', $merchant??Auth::id())->get();
+        // if ($merchant != null) {
+        //     $role = Role::findOrFail(Auth::guard('merchant')->user()->additional_data['role'] ?? 0);
+        //     if (!$role->permissions->contains('key', 'services_view')) {
+        //         abort(403, 'Unauthorized action.');
+        //     }
+        // }
+        //dd($merchantid);
+        $finalID = can_enter($merchantid,"offers_view");
+
+        $offers = Offering::where('user_id', $finalID)->get();
         clear_offers($offers);
         //dd($offers);
-        $branches = Branch::all(); 
+        $branches = Branch::where("user_id", $finalID)->get(); 
 
-        return view('merchant.dashboard.offers.index', compact('offers','branches'));
+        return view('merchant.dashboard.offers.index', compact('offers','branches','merchantid','finalID'));
     }
 
     /**

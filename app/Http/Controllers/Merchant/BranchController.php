@@ -6,17 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Models\Merchant\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\User;
 class BranchController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($merchantid = null)
     {
-        $user = Auth::guard('merchant')->user();
+        $finalID = can_enter($merchantid,"branches_view");
+
+        //$user = Auth::guard('merchant')->user();
+        $user = User::find($finalID);
         $branches = $user->branches()->paginate(10);
-        return view('merchant.dashboard.branch.index', compact('branches'));
+        return view('merchant.dashboard.branch.index', compact('branches','merchantid','finalID'));
     }
 
     /**
@@ -30,9 +33,14 @@ class BranchController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request,$merchantid = null)
     {
-        $user = Auth::guard('merchant')->user();
+        //$user = Auth::guard('merchant')->user();
+        //dd($merchantid);
+        $finalID = can_enter($merchantid,"branches_create");
+
+        $user = User::find($finalID);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
@@ -62,9 +70,15 @@ class BranchController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $branch)
-    {
-        $user = Auth::guard('merchant')->user();
+    public function update(Request $request, $merchantid = null,$branch = null)
+    {   //dd($branch,$merchantid);
+        if ($branch === null) {
+            $branch = $merchantid;
+            $merchantid = null;
+        }
+        $finalID = can_enter($merchantid,"branches_edit");
+
+        $user = User::find($finalID);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
@@ -79,9 +93,18 @@ class BranchController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($branch)
+    public function destroy($merchantid = null,$branch = null)
     {
-        $user = Auth::guard('merchant')->user();
+
+
+        if ($branch === null) {
+            $branch = $merchantid;
+            $merchantid = null;
+        }
+        $finalID = can_enter($merchantid,"branches_delete");
+        //dd($branch,$merchantid);
+
+        $user = User::find($finalID);
         $branch = $user->branches()->findOrFail($branch);
         $branch->delete();
         return redirect()->back()->with('success', 'تم حذف الفرع بنجاح');

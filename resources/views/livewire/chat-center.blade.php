@@ -1,5 +1,15 @@
 <div class="flex h-screen overflow-hidden bg-gray-100">
     <!-- Sidebar -->
+    @php
+        if($merchantid){
+            $hasChatingPermession = has_Permetion(Auth::id(),'messages_send', $merchantid);
+            $hasAcceptChatsPermission = has_Permetion(Auth::id(),'accept_chats', $merchantid);
+
+        }else {
+            $hasChatingPermession = true;
+            $hasAcceptChatsPermission = true;
+        }
+    @endphp
     <div class="w-full md:w-1/3 max-w-xs bg-white border-r shadow p-4 flex flex-col">
         <h2 class="text-lg font-bold mb-4 text-blue-600 border-b pb-2">قائمة المحادثات</h2>
         <ul class="space-y-2 flex-1 overflow-y-auto">
@@ -70,7 +80,7 @@
 
                 @forelse ($messages as $msg)
                     @php
-                        $isSender = $msg->user_id === auth()->id();
+                        $isSender = $msg->user_id ===  $finalID;
                         $isImage = $msg->type === 'image';
                         $isFile = $msg->type === 'file';
                         $profilePicture = $msg->user->additional_data['profile_picture'] ?? $msg->user->additional_data['profile_picture'];
@@ -115,23 +125,38 @@
             </div>
 
             <!-- Conditional Input / Action -->
+
             @if (empty($chatData['status']) || $chatData['status'] === 'open')
-                <div class="mt-4 border rounded-lg p-4 bg-yellow-50 text-center">
-                    <p class="mb-2 text-sm text-gray-700">هل ترغب ببدء المحادثة مع هذا المستخدم؟</p>
-                    <button wire:click="acceptChat({{ $chat_id }})"
-                            class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                        قبول الطلب
-                    </button>
-                </div>
-            @else
-                <form wire:submit.prevent="send" class="mt-4 border rounded-lg overflow-hidden shadow relative">
-                    <input type="file" wire:model="attachment" id="attachment" class="hidden">
-                    <div class="flex items-center gap-2 p-2">
-                        <button type="button" onclick="document.getElementById('attachment').click()" class="text-gray-500 hover:text-gray-700">📎</button>
-                        <input type="text" wire:model.defer="newMessage" placeholder="اكتب رسالتك..." class="flex-1 p-2 text-sm focus:outline-none bg-transparent">
-                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600 text-sm rounded">إرسال</button>
+                @if ($hasAcceptChatsPermission)
+                    <div class="mt-4 border rounded-lg p-4 bg-yellow-50 text-center">
+                        <p class="mb-2 text-sm text-gray-700">هل ترغب ببدء المحادثة مع هذا المستخدم؟</p>
+                        <button wire:click="acceptChat({{ $chat_id }})"
+                                class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                            قبول الطلب
+                        </button>
                     </div>
-                </form>
+                @else
+                    <div class="mt-4 border rounded-lg p-4 bg-gray-50 text-center">
+                        <p class="text-sm text-gray-500">ليس لديك صلاحية قبول المحادثات.</p>
+                    </div>
+                @endif
+
+            @else
+                @if ($hasChatingPermession)
+                    <form wire:submit.prevent="send" class="mt-4 border rounded-lg overflow-hidden shadow relative">
+                        <input type="file" wire:model="attachment" id="attachment" class="hidden">
+                        <div class="flex items-center gap-2 p-2">
+                            <button type="button" onclick="document.getElementById('attachment').click()" class="text-gray-500 hover:text-gray-700">📎</button>
+                            <input type="text" wire:model.defer="newMessage" placeholder="اكتب رسالتك..." class="flex-1 p-2 text-sm focus:outline-none bg-transparent">
+                            <button type="submit" class="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600 text-sm rounded">إرسال</button>
+                        </div>
+                    </form> 
+                @else
+                    <div class="mt-4 border rounded-lg p-4 bg-gray-50 text-center">
+                        <p class="text-sm text-gray-500">ليس عندك صلاحية المراسلة</p>
+                    </div>
+                @endif
+
             @endif
 
         @else

@@ -23,15 +23,16 @@ class PermissionSeeder extends Seeder
             // Overview
             ['key' => 'overview_page'],
 
-            ['key' => 'services_view'],
-            ['key' => 'services_create'],
-            ['key' => 'services_edit'],
-            ['key' => 'services_delete'],
+            ['key' => 'offers_view'],
+            ['key' => 'offers_create'],
+            ['key' => 'offers_edit'],
+            ['key' => 'offers_delete'],
 
             ['key' => 'check_view'],
             ['key' => 'check_tickets'],
 
             ['key' => 'ratings_view'],
+            ['key' => 'ratings_reply'],
 
             ['key' => 'reservations_view'],
             ['key' => 'reservations_create'],
@@ -48,6 +49,9 @@ class PermissionSeeder extends Seeder
             ['key' => 'reports_view'],
             ['key' => 'notifications_view'],
             ['key' => 'messages_view'],
+            ['key' => 'messages_send'],
+            ['key' => 'accept_chats'],
+
             ['key' => 'wallet_view'],
             ['key' => 'wallet_withdraw'],
 

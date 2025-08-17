@@ -1,19 +1,41 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app', ["merchant" => $merchantid ?? false])
 @section('content')
 <div class="flex-1 p-8 space-y-12">
 
     {{-- العنوان وزر الإضافة --}}
+    @php
+        if($merchantid){
+            $hasOffersCreatePermession = has_Permetion(Auth::id(),'offers_create', $merchantid);
+            $hasOffersDeletePermession = has_Permetion(Auth::id(),'offers_edit', $merchantid);
+            $hasOffersEditePermession = has_Permetion(Auth::id(),'offers_delete', $merchantid);
+        }else {
+            $hasOffersCreatePermession = true;
+            $hasOffersDeletePermession = true;
+            $hasOffersEditePermession = true;
+        }
+    @endphp
     <div class="flex justify-between items-center flex-wrap gap-4">
         <h2 class="text-3xl font-bold text-slate-800">إدارة الخدمات</h2>
-        <a href="{{ route('merchant.dashboard.offer.create') }}">
-            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 transition">
+        @if ($hasOffersCreatePermession)
+            <a href="{{ route('merchant.dashboard.offer.create') }}">
+                <button class="inline-flex items-center justify-center rounded-md text-sm font-medium bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 transition">
+                    <svg class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M8 12h8M12 8v8"></path>
+                    </svg>
+                    إضافة خدمة جديدة
+                </button>
+            </a>
+        @else
+            <button disabled class="inline-flex items-center justify-center rounded-md text-sm font-medium bg-gray-300 text-gray-500 px-4 py-2 transition cursor-not-allowed">
                 <svg class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <circle cx="12" cy="12" r="10"></circle>
                     <path d="M8 12h8M12 8v8"></path>
                 </svg>
                 إضافة خدمة جديدة
             </button>
-        </a>
+        @endif
+
     </div>
 
     {{-- شريط الفلترة --}}
@@ -107,11 +129,20 @@
                                 <td class="px-4 py-2">{{ $times['data'][0]['end_date'] ?? "غير محدد" }}</td>                            
                             @endif
                             <td class="px-4 py-2 space-x-1 rtl:space-x-reverse">
-                                <a href="{{ route('merchant.dashboard.offer.edit', $service->id) }}" class="text-blue-600 hover:underline text-xs">تعديل</a>
+                                @if ($hasOffersEditePermession)
+                                    <a href="{{ route('merchant.dashboard.offer.edit', $service->id) }}" class="text-blue-600 hover:underline text-xs">تعديل</a>
+                                @else
+                                    <span class="text-gray-400 text-xs">لاتملك صلاحية التعديل</span>
+                                @endif
+                                @if ($hasOffersDeletePermession)
                                 <form method="POST" action="{{ route('merchant.dashboard.offer.destroy', $service->id) }}" class="inline-block" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:underline text-xs">حذف</button>
-                                </form>
+                                </form>  
+                                @else
+                                    <span class="text-gray-400 text-xs">لاتملك صلاحية الحذف</span>
+                                @endif
+
                             </td>
                         </tr>
 

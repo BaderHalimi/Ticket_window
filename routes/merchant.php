@@ -12,6 +12,7 @@ use App\Models\Role;
 use App\Http\Controllers\policies_settings;
 use App\Http\Controllers\M_dashboard_index;
 use App\Http\Controllers\SupportControllerM;
+use App\Http\Controllers\WorkCenter;
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verified_user'])->group(function(){
     Route::get('/',[M_dashboard_index::class,"index"])->name('overview');
     // Route::get('services',function(){
@@ -26,7 +27,7 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
         return view('merchant.dashboard.work_In');
     })->name('work_in');
 
-
+    Route::resource('work_center', WorkCenter::class)->names('work_center');
     Route::get('checking',function(){
         $finalID = can_enter(null,"check_view");
 

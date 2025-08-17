@@ -497,6 +497,21 @@ if(!function_exists("work_in")){
     }
 }
 
+if (!function_exists("GetWorkPlace")){
+    function GetWorkPlace($user_id)
+    {
+        $user = User::find($user_id);
+        if (!$user) {
+            return [];
+        }
+        $data = $user->additional_data['workIn'] ?? [];
+        if (empty($data)) {
+            return [];
+        }
+        return $data;
+    }
+}
+
 
 if (!function_exists('clear_offers')) {
     function clear_offers($collection)

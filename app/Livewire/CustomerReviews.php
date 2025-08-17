@@ -11,8 +11,10 @@ class CustomerReviews extends Component
     public $replyText = [];
     public $editingReply = [];
     public $finalID = null;
-    public function mount($finalID)
+    public $merchantid = null;
+    public function mount($finalID,$merchantid= null)
     {
+        $this->merchantid = $merchantid;
         $this->finalID = $finalID;
         $this->loadReviews();
     }
@@ -38,6 +40,7 @@ class CustomerReviews extends Component
 
     public function startEditing($reviewId)
     {
+
         $this->editingReply[$reviewId] = true;
 
         $review = Customer_Ratings::find($reviewId);
@@ -57,6 +60,9 @@ class CustomerReviews extends Component
 
     public function sendReply($reviewId)
     {
+        if ($this->merchantid && has_Permetion($this->finalID, 'ratings_reply',$this->merchantid)) {
+            return;
+        }
         $reply = trim($this->replyText[$reviewId] ?? '');
 
         if ($reply) {

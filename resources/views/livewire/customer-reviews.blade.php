@@ -54,7 +54,15 @@
                             <h3 class="text-xl font-semibold">قائمة المراجعات ({{ $total }})</h3>
                         </div>
                     </div>
+                    @php
+                    if($merchantid){
+                        $hasReplyPermission = has_Permetion(Auth::id(),'ratings_reply', $merchantid);
 
+                    }else {
+                        $hasReplyPermission = true;
+                    }
+                       // $ = has_Permetion(Auth::id(), 'ratings_reply', $merchantid ?? false);
+                    @endphp
                     <div class="p-6 pt-0 space-y-6">
                         @forelse($reviews as $review)
                             <div class="rounded-xl border p-4">
@@ -89,15 +97,15 @@
                                                 <strong>تعليق العميل:</strong> {{ $review->review }}
                                             </div>
                                         @endif
-
-                                        @if(!empty($data['reply']) && empty($editingReply[$review->id]))
+                                        @if ($hasReplyPermission)
+                                            @if(!empty($data['reply']) && empty($editingReply[$review->id]))
                                             <div class="mt-2 p-2 text-sm text-green-800 bg-green-50 rounded">
                                                 <strong>ردك:</strong> {{ $data['reply'] }}
                                             </div>
                                             <button wire:click="startEditing({{ $review->id }})" class="mt-1 text-blue-600 text-sm hover:underline">تعديل الرد</button>
-                                        @endif
+                                            @endif
 
-                                        @if(empty($data['reply']) || !empty($editingReply[$review->id]))
+                                            @if(empty($data['reply']) || !empty($editingReply[$review->id]))
                                             <div class="flex gap-2 mt-2">
                                                 <textarea wire:model.defer="replyText.{{ $review->id }}" class="flex-1 rounded-md border p-2 text-sm" placeholder="اكتب ردك على {{ $review->customer_name }}..."></textarea>
                                                 <button wire:click="sendReply({{ $review->id }})" class="bg-blue-600 text-white px-3 rounded-md hover:bg-blue-700 text-sm">
@@ -109,11 +117,15 @@
                                                     </button>
                                                 @endif
                                             </div>
+                                            @endif
+
+                                            <button wire:click="hideReview({{ $review->id }})" class="mt-2 text-sm text-red-600 hover:underline">
+                                            حذف التقييم
+                                            </button>
+                                        @else
+                                                <span class="text-sm text-red-600">ليس لديك صلاحية للرد على هذا التقييم.</span>
                                         @endif
 
-                                        <button wire:click="hideReview({{ $review->id }})" class="mt-2 text-sm text-red-600 hover:underline">
-                                            حذف التقييم
-                                        </button>
                                     </div>
                                 </div>
                             </div>

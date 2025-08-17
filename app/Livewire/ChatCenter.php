@@ -15,12 +15,16 @@ class ChatCenter extends Component
     public $chat_id;
     public $newMessage = '';
     public $attachment;
-
+    public $finalID , $merchantid = null;
     protected $rules = [
         'newMessage' => 'nullable|string|max:1000',
         'attachment' => 'nullable|file|max:10240',
     ];
 
+    public function mount($finalID , $merchantid = null){
+        $this->finalID = $finalID;
+        $this->merchantid = $merchantid;
+    }
     public function acceptChat($chatId)
     {
         $chat = MerchantChat::findOrFail($chatId);
@@ -49,7 +53,7 @@ class ChatCenter extends Component
 
         $data = [
             'merchant_chat_id' => $this->chat_id,
-            'user_id' => Auth::id(),
+            'user_id' => $this->finalID,
             'message' => $this->newMessage,
             'type' => 'text',
         ];
@@ -74,7 +78,7 @@ class ChatCenter extends Component
     public function deleteMessage($id)
     {
         $msg = MerchantChatMessage::findOrFail($id);
-        if ($msg->user_id === Auth::id()) {
+        if ($msg->user_id === $this->finalID) {
             $msg->delete();
         }
     }
@@ -82,7 +86,7 @@ class ChatCenter extends Component
     public function render()
     {
         $chats = MerchantChat::with(['messages' => fn($q) => $q->latest()->limit(1), 'user'])
-            ->where('merchant_id', Auth::id())
+            ->where('merchant_id', $this->finalID)
             ->latest()
             ->get();
 
@@ -93,7 +97,6 @@ class ChatCenter extends Component
         if ($this->chat_id) {
             $currentChat = MerchantChat::find($this->chat_id);
 
-            // معالجة additional_data لتكون مصفوفة
             $data = $currentChat?->additional_data;
 
             if (is_string($data)) {
