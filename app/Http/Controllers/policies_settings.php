@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\User;
 class policies_settings extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($merchantid = null)
     {
-        $user = auth()->user();
-        return view("merchant.dashboard.policies_settings",compact("user"));
+        $finalID = can_enter($merchantid, "policies_view");
+        
+        $user = User::find($finalID);
+        return view("merchant.dashboard.policies_settings",compact("user","merchantid", "finalID"));
     }
 
     /**
@@ -27,8 +29,9 @@ class policies_settings extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request , $merchantid = null)
     {
+        $finalID = can_enter($merchantid, "policies_edit");
         $request->validate([
             "policies" => "required|max:10000",
             'payments' => 'array',
@@ -42,8 +45,8 @@ class policies_settings extends Controller
             'allow_refund' => $request->has('allow_refund'),
             'payments' => $request->input('payments', []),
         ];
-
-        $user = auth()->user();
+        $user = User::find($finalID);
+        //$user = auth()->user();
         $user->additional_data = array_merge($user->additional_data ?? [], $data);
         $user->save();
         //dd($user->additional_data);

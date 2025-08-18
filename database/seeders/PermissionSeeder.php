@@ -70,8 +70,8 @@ class PermissionSeeder extends Seeder
             ['key' => 'team_manager_edit'],
             ['key' => 'team_manager_kick'],
 
-            ['key' => 'setup_page_view'],
-            ['key' => 'ProfileSetup_page_view'],
+            //['key' => 'setup_page_view'],
+            //['key' => 'ProfileSetup_page_view'],
             ['key' => 'support_view'],
             ['key' => 'support_open'],
             ['key' => 'support_delete'],
@@ -80,6 +80,12 @@ class PermissionSeeder extends Seeder
 
             ['key' => 'settings_view'],
             ['key' => 'settings_edit'],
+
+            ['key' => 'policies_view'],
+            ['key' => 'policies_edit'],
+
+
+
             ['key' => 'history_view'],
         ];
 

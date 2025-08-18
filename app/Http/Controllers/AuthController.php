@@ -196,9 +196,15 @@ class AuthController extends Controller
         //
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id,$merchantid = null)
     {
-        if (Auth::id() != $id) {
+        if ($merchantid != null) {
+            $tmp = $merchantid;
+            $merchantid = $id;
+            $id = $tmp;
+        }
+        $finalID = can_enter($merchantid, "settings_edit");
+        if ($finalID != $id) {
             abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
         }
         
@@ -249,8 +255,15 @@ class AuthController extends Controller
         return back()->with('success', 'تم تحديث البيانات بنجاح.');
     }
 
-    public function update_settings(Request $request, string $id){
-        if (Auth::id() != $id) {
+    public function update_settings(Request $request, string $id, $merchantid = null){
+        if ($merchantid != null) {
+            $tmp = $merchantid;
+            $merchantid = $id;
+            $id = $tmp;
+        }
+        $finalID = can_enter($merchantid, "settings_edit");
+
+        if ($finalID != $id) {
             
             abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
         }
@@ -361,8 +374,15 @@ class AuthController extends Controller
 
     }
 
-    public function update_work(Request $request,string $id){
-        if (Auth::id() != $id) {
+    public function update_work(Request $request,string $id, $merchantid = null){
+        if ($merchantid != null) {
+            $tmp = $merchantid;
+            $merchantid = $id;
+            $id = $tmp;
+        }
+        $finalID = can_enter($merchantid, "settings_edit");
+
+        if ($finalID != $id) {
             abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
         }
         //dd($request->all());Abc@123111

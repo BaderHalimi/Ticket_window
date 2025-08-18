@@ -104,7 +104,7 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
     // })->name('api');
 
     Route::get('profile_setup',function(){
-        return view('merchant.dashboard.Profile_Setup',compact('finalID'));
+        return view('merchant.dashboard.Profile_Setup');
     })->name('profile_setup');
 
     Route::resource('support', SupportControllerM::class)->names('support');
@@ -191,7 +191,7 @@ Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->g
     })->name('team_management');
 
     Route::get('m/{merchant}/page_setup', function($merchantid= null) {
-        $finalID = can_enter($merchantid,"setup_page_view");
+        $finalID = can_enter($merchantid,"settings_view");
 
         return view('merchant.dashboard.page_setup',compact('finalID', 'merchantid'));
     })->name('page_setup');
@@ -206,11 +206,11 @@ Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->g
     //     return view('merchant.dashboard.api');
     // })->name('api');
 
-    Route::get('m/{merchant}/profile_setup', function($merchantid= null) {
-        $finalID = can_enter($merchantid,"ProfileSetup_page_view");
+    // Route::get('m/{merchant}/profile_setup', function($merchantid= null) {
+    //     $finalID = can_enter($merchantid,"ProfileSetup_page_view");
 
-        return view('merchant.dashboard.Profile_Setup',compact('finalID', 'merchantid'));
-    })->name('profile_setup');
+    //     return view('merchant.dashboard.Profile_Setup',compact('finalID', 'merchantid'));
+    // })->name('profile_setup');
 
     Route::resource('m/{merchant}/support', SupportControllerM::class)->names('support');
 

@@ -1,19 +1,38 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app',["merchant" => $merchantid ?? false])
 @section('content')
 
 <div class="flex-1 p-8">
     <div class="space-y-8">
         <!-- العنوان والزر -->
-        <form action="{{ route('merchant.dashboard.policies_settings.store') }}" method="POST">
+        @php
+        if($merchantid){
+            $hasEditPermission = has_Permetion(Auth::id(),'policies_edit', $merchantid);
+
+        }else {
+            $hasEditPermission = true;
+        }
+        @endphp
+        <form action="{{isset($merchantid) ? route('merchant.dashboard.m.policies_settings.store',["merchant"=>$merchantid]) : route('merchant.dashboard.policies_settings.store') }}" method="POST">
             @csrf
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-3xl font-bold text-slate-800">السياسات والإعدادات</h2>
+                @if ($hasEditPermission)
                 <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold px-5 py-2.5 shadow-md transition">
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                     حفظ الإعدادات
                 </button>
+                @else
+                <button class="inline-flex items-center justify-center rounded-lg bg-gray-300 text-gray-500 font-semibold px-5 py-2.5 shadow-md transition cursor-not-allowed" disabled>
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    لاتملك الصلاحية
+                </button>
+
+                @endif
+
             </div>
 
             <!-- سياسة الإلغاء -->

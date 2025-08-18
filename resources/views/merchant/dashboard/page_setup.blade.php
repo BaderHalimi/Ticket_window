@@ -1,16 +1,27 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app', ["merchant"=> $merchantid ?? false])
 @section('content')
 
 @php
-$data = is_array(Auth::guard('merchant')->user()->additional_data??null) ? Auth::guard('merchant')->user()->additional_data : json_decode(Auth::guard('merchant')->user()->additional_data??'', true);
+$user = App\Models\User::find($finalID);
+$data = is_array($user->additional_data??null) ? $user->additional_data : json_decode($user->additional_data??'', true);
 $socialLinks = $data['social_links'] ?? [];
-$user = Auth::guard('merchant')->user();
+//$user = Auth::guard('merchant')->user();
 //dd($user);
 @endphp
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
 <div class="flex-1 p-8">
-    <form method="POST" action="{{ route('merchant.dashboard.update', ['id'=>Auth::id()]) }}" enctype="multipart/form-data" class="space-y-8">
+  @php
+  if(isset($merchantid)){
+      $hasEditPPermission = has_Permetion(Auth::id(),'settings_edit', $merchantid);
+
+  }else {
+      $hasEditPPermission = true;
+  }
+  @endphp
+
+  <fieldset  @if (!$hasEditPPermission) disabled @endif>
+    <form method="POST" action="{{ isset($merchantid) ?  route('merchant.dashboard.m.update', ['id'=>$finalID , "merchant" => $merchantid]) :  route('merchant.dashboard.update', ['id'=>$finalID]) }}" enctype="multipart/form-data" class="space-y-8">
         @csrf
 
         <!-- الشعار والبنر -->
@@ -126,7 +137,7 @@ $user = Auth::guard('merchant')->user();
 <div class="rounded-2xl border mt-4 border-slate-200 bg-white text-slate-900 shadow-lg p-6 space-y-6">
   <h2 class="text-2xl font-bold">تعديل إعدادات الصفحة</h2>
 
-  <form method="POST" action="{{route("merchant.dashboard.update_settings",['id'=>Auth::id()])}}" class="space-y-4">
+  <form method="POST" action="{{ isset($merchantid) ? route("merchant.dashboard.m.update_settings",['id'=>$finalID,"merchant" => $merchantid]) : route("merchant.dashboard.update_settings",['id'=>$finalID])}}" class="space-y-4">
       @csrf
       
 
@@ -170,7 +181,7 @@ $user = Auth::guard('merchant')->user();
 <div class="rounded-2xl border mt-4 border-slate-200 bg-white text-slate-900 shadow-lg p-6 space-y-6">
   <h2 class="text-2xl font-bold">تعديل إعدادات النشاط</h2>
 
-  <form method="POST" action="{{route("merchant.dashboard.update_work",['id'=>Auth::id()])}}" class="space-y-4">
+  <form method="POST" action="{{ isset($merchantid) ? route("merchant.dashboard.m.update_work",['id'=>$finalID, "merchant" => $merchantid]) : route("merchant.dashboard.update_work",['id'=>$finalID])}}" class="space-y-4">
       @csrf
       
 
@@ -237,7 +248,7 @@ $user = Auth::guard('merchant')->user();
       </div>
   </form>
 </div>
-
+  </fieldset>
 <!-- سكريبت المعاينة والتبديل -->
 <script>
     function previewImage(input, previewId, iconId) {
