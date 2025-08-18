@@ -1,18 +1,37 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app',["merchant" => $merchantid ?? false])
 
 @section('content')
 
 <div class="max-w-6xl mx-auto mt-12 space-y-6">
+    @php
+        if($merchantid){
+            $hasopenPermission = has_Permetion(Auth::id(),'support_open', $merchantid);
+            $hasViewPermission = has_Permetion(Auth::id(),'support_view', $merchantid);
+            $hasDPermission = has_Permetion(Auth::id(),'support_delete', $merchantid);
 
+        }else {
+            $hasopenPermission = true;
+            $hasViewPermission = true;
+            $hasDPermission = true;
+        }
+    @endphp
     <!-- عنوان وزر إضافة -->
     <div class="flex justify-between items-center mb-4">
         <div>
             <h2 class="text-2xl font-bold text-gray-800">طلبات الدعم</h2>
             <p class="text-sm text-gray-500 mt-1">التذاكر المرسلة يتم التعامل معها من قبل فريق الإدارة، وسيتم الرد عليك في أقرب وقت.</p>
         </div>
-        <a href="{{ route('merchant.dashboard.support.create') }}" class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700">
+        @if ($hasopenPermission)
+        <a href="{{isset($merchantid) ? route('merchant.dashboard.m.support.create',["merchant" => $merchantid]) : route('merchant.dashboard.support.create') }}" class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700">
             + إضافة تذكرة جديدة
         </a>
+        @else
+        <button class="bg-gray-300 text-gray-500 text-sm px-4 py-2 rounded cursor-not-allowed" disabled>
+            + إضافة تذكرة جديدة
+        </button>
+
+        @endif
+
     </div>
 
     <!-- جدول التذاكر -->
@@ -46,13 +65,23 @@
                         <td class="px-6 py-4 text-gray-500">{{ $ticket->created_at->format('Y-m-d H:i') }}</td>
                         <td class="px-6 py-4">
                             @if($ticket->status == 'open')
-                                <form action="{{ route('merchant.dashboard.support.destroy', $ticket->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف التذكرة؟')">
+                            @if ($hasDPermission)
+
+                                <form action="{{isset($merchantid) ? route('merchant.dashboard.m.support.destroy', ["merchant"=>$merchantid,"support"=>$ticket->id]) : route('merchant.dashboard.support.destroy', $ticket->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف التذكرة؟')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:underline text-sm">حذف</button>
                                 </form>
                             @else
-                                <a href="{{ route('merchant.dashboard.support.show', $ticket->id) }}" class="text-blue-600 hover:underline text-sm">عرض</a>
+                                <button class="text-gray-400 text-sm cursor-not-allowed" disabled>حذف</button>
+                            @endif
+                            @else
+                            @if ($hasViewPermission)
+
+                                <a href="{{isset($merchantid) ? route('merchant.dashboard.m.support.show', [ "merchant" =>  $merchantid,"support" => $ticket->id]) : route('merchant.dashboard.support.show', $ticket->id) }}" class="text-blue-600 hover:underline text-sm">عرض</a>
+                            @else
+                                <button class="text-gray-400 text-sm cursor-not-allowed" disabled>عرض</button>
+                            @endif
                             @endif
                         </td>
                     </tr>

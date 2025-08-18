@@ -266,8 +266,11 @@
             <select wire:model="selectedUserId" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
                 <option value="">-- اختر العامل --</option>
                 @foreach($users as $user)
-                    <option value="{{ $user->id }}">{{ $user->f_name }}</option>
+                    @if($user->id !== Auth::id())
+                        <option value="{{ $user->id }}">{{ $user->f_name }}</option>
+                    @endif
                 @endforeach
+            
             </select>
         </div>
 
@@ -300,7 +303,7 @@
                 <div class="border rounded p-4">
                     <h4 class="font-bold flex items-center gap-2">
                         <i class="ri-user-line"></i> {{ $user['employee']->f_name }}
-                        @if ($hasRoleTeamEditPermission)
+                        @if ($hasRoleTeamEditPermission && $user["employee"]->id != Auth::id())
 
                         <button wire:click="editUser({{ $user['employee']->id }})" class="text-blue-500 text-sm hover:underline ml-2">
                             <i class="ri-pencil-line"></i> تعديل
@@ -316,7 +319,7 @@
                             @foreach($user['roles'] as $role)
                             <li class="flex items-center justify-between">
                                 <span>{{ $role->name }}</span>
-                                @if ($hasRoleTeamEditPermission)
+                                @if ($hasRoleTeamEditPermission && $user['employee']->id != Auth::id())
 
                                 <button wire:click="removeRoleFromEmployee({{ $user['employee']->id }}, {{ $role->id }})" class="text-red-500 text-sm hover:underline flex items-center gap-1">
                                     <i class="ri-delete-bin-line"></i> حذف

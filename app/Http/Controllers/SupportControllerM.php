@@ -13,27 +13,30 @@ class SupportControllerM extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($merchantid = null)
     {
-        $tickets = Supports::where('user_id', auth()->id())
+        $finalID = can_enter($merchantid, "support_view");
+        $tickets = Supports::where('user_id', $finalID)
             ->orderBy('created_at', 'desc')
             ->get();
-        return view('merchant.dashboard.support.index',compact('tickets'));
+        return view('merchant.dashboard.support.index',compact('tickets',"merchantid", 'finalID'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($merchantid = null)
     {
-        return view('merchant.dashboard.support.create');
+        $finalID = can_enter($merchantid, "support_open");
+        return view('merchant.dashboard.support.create',compact("merchantid","finalID"));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request,$merchantid = null)
     {
+        $finalID = can_enter($merchantid, "support_open");
         $data = $request->validate([
             'subject' => 'required|string|max:255',
             'category' => 'nullable|string|in:payment,booking,technical,other',
@@ -46,12 +49,12 @@ class SupportControllerM extends Controller
             $data['attachment'] = $request->file('attachment')->store('support-attachments', 'public');
         }
     
-        $data['user_id'] = auth()->id();
+        $data['user_id'] = $finalID;
         $data['status'] = 'open';
     
         Supports::create($data);
         notifcate(
-            Auth::id(),
+            $finalID,
             'تم فتح طلب دعم جديد',
             'تم فتح طلب دعم جديد من قبل العميل: ' . auth()->user()->name,
             [
@@ -59,7 +62,9 @@ class SupportControllerM extends Controller
             ],
 
         );
-    
+        if ($merchantid) {
+            return redirect()->route('merchant.dashboard.m.support.index', ['merchant' => $merchantid])->with('success', 'تم إرسال الطلب بنجاح ✅');
+        }
         return redirect()->route('merchant.dashboard.support.index')->with('success', 'تم إرسال الطلب بنجاح ✅');
         
     }
@@ -67,17 +72,26 @@ class SupportControllerM extends Controller
     /**
      * Display the specified resource.
      */
-public function show(string $id)
+public function show(string $id, $merchantid = null)
 {
+    if ($merchantid != null) {
+        $tmp = $merchantid;
+        $merchantid = $id;
+        $id = $tmp;
+    }
+    $finalID = can_enter($merchantid, "support_view");
     $ticket = Supports::findOrFail($id);
 
-    if ($ticket->user_id !== auth()->id()) {
+    if ($ticket->user_id != $finalID) {
         return redirect()->back()->with('error', 'لا يمكنك عرض هذا الطلب');
     }
 
     return view('merchant.dashboard.support.chat', [
         'ticket' => $ticket,
         'support_id' => $ticket->id,
+        'merchantid' => $merchantid,
+        'finalID' => $finalID,
+
     ]);
 }
 
@@ -101,10 +115,17 @@ public function show(string $id)
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id,$merchantid = null)
     {
+        if ($merchantid != null) {
+            $tmp = $merchantid;
+            $merchantid = $id;
+            $id = $tmp;
+        }
+        $finalID = can_enter($merchantid, "support_delete");
+
         $ticket = Supports::findOrFail($id);
-        if ($ticket->user_id !== auth()->id()) {
+        if ($ticket->user_id != $finalID) {
             return redirect()->back()->with('error', 'لا يمكنك حذف هذا الطلب');
         }
         

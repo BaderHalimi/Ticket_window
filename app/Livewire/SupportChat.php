@@ -14,7 +14,14 @@ class SupportChat extends Component
 
     public $support_id;
     public $newMessage = '';
+    public $finalID,$merchantid = null;
 
+    public function mount($support_id, $merchantid = null, $finalID )
+    {
+        $this->support_id = $support_id;
+        $this->merchantid = $merchantid;
+        $this->finalID = $finalID;
+    }
     protected $rules = [
         'newMessage' => 'required|string|max:5000',
     ];
@@ -32,7 +39,7 @@ class SupportChat extends Component
 
         SupportMessage::create([
             'support_id' => $this->support_id,
-            'user_id' => Auth::id(),
+            'user_id' => $this->finalID,
             'message' => $this->newMessage,
             'type' => 'text',
         ]);

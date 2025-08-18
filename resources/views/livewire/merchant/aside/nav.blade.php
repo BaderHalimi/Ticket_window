@@ -368,8 +368,8 @@
 
 <a
     @if($merchant ?? false)
-        href="{{ route('merchant.dashboard.support.index', ['merchant' => $merchant]) }}"
-        wire:click.prevent="intended(`{{ route('merchant.dashboard.support.index', ['merchant' => $merchant]) }}`)"
+        href="{{ route('merchant.dashboard.m.support.index', ['merchant' => $merchant]) }}"
+        wire:click.prevent="intended(`{{ route('merchant.dashboard.m.support.index', ['merchant' => $merchant]) }}`)"
     @else
         href="{{ route('merchant.dashboard.support.index') }}"
         wire:click.prevent="intended(`{{ route('merchant.dashboard.support.index') }}`)"

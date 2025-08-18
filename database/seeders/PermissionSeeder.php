@@ -72,10 +72,11 @@ class PermissionSeeder extends Seeder
 
             ['key' => 'setup_page_view'],
             ['key' => 'ProfileSetup_page_view'],
-            ['key' => 'languages_view'],
-            ['key' => 'languages_create'],
-            ['key' => 'languages_edit'],
-            ['key' => 'languages_delete'],
+            ['key' => 'support_view'],
+            ['key' => 'support_open'],
+            ['key' => 'support_delete'],
+
+
 
             ['key' => 'settings_view'],
             ['key' => 'settings_edit'],

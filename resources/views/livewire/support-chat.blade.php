@@ -28,7 +28,7 @@
     <div x-ref="messagesContainer" class="flex-1 overflow-y-auto px-2 sm:px-4 py-4 space-y-4 bg-gray-50" wire:poll.1000ms    >
         @foreach($messages as $message)
             @php
-                $isMine = $message->user_id === auth()->id();
+                $isMine = $message->user_id === $finalID;
                 $profileImagePath = $message->user->additional_data['profile_picture'] ?? null;
                 $userName = $message->user->f_name ?? 'U';
                 $userImage = $profileImagePath

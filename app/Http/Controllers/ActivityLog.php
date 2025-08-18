@@ -7,11 +7,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\notifications;
 class ActivityLog extends Controller
 {
-    public function index(){
-        $notifications = notifications::where('user_id', Auth::id())
+    public function index($merchantid = null){
+        $finalID = can_enter($merchantid, "history_view");
+        $notifications = notifications::where('user_id', $finalID)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('merchant.dashboard.activity_log', compact('notifications'));
+        return view('merchant.dashboard.activity_log', compact('notifications', 'finalID', 'merchantid'));
     }
 }

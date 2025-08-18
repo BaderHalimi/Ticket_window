@@ -1,7 +1,7 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app',["merchant" => $merchantid ?? false])
 
 @section('content')
-<form action="{{ route('merchant.dashboard.support.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 bg-white p-6 rounded-xl shadow-lg">
+<form action="{{ isset($merchantid) ? route('merchant.dashboard.m.support.store',["merchant" => $merchantid]) : route('merchant.dashboard.support.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 bg-white p-6 rounded-xl shadow-lg">
     @csrf
 
     <div>
