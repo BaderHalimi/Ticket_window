@@ -48,11 +48,11 @@ class ResSettings extends Component
     //public $enable_selected_branches = false;
     public $branches;
     public array $selected_branches = [];
-
-    public function mount(Offering $offering)
+    public $finalID;
+    public function mount(Offering $offering , $finalID)
     {
         $this->offering = $offering;
-
+        $this->finalID = $finalID;
         $features = $offering->features ?? [];
         $this->type = $offering->type;
         // ✅ تأكد أن closed_days عبارة عن array دائمًا حتى لو كانت string
@@ -63,7 +63,7 @@ class ResSettings extends Component
             $features['selected_branches'] = [];
         }
         
-        $this->branches = Branch::where('user_id', Auth::id())->get();
+        $this->branches = Branch::where('user_id', $this->finalID)->get();
         $this->fill(array_merge([
             'enable_duration' => false,
             'booking_duration' => 1,

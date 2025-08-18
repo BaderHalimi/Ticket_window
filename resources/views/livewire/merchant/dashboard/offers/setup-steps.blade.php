@@ -123,19 +123,19 @@
                 {{-- نموذج تعبئة المعلومات --}}
                 <div class="col-span-12 sm:col-span-8">
                     @if ($currentStep === 1)
-                    @livewire('merchant.dashboard.offers.create.information', ['offering' => $offering], key('info-'.$offering->id))
+                    @livewire('merchant.dashboard.offers.create.information', ['offering' => $offering ,  "finalID" => $finalID], key('info-'.$offering->id))
                     @elseif ($currentStep === 3)
-                    @livewire('merchant.dashboard.offers.create.res_settings', ['offering' => $offering], key('settings-'.$offering->id))
+                    @livewire('merchant.dashboard.offers.create.res_settings', ['offering' => $offering ,  "finalID" => $finalID], key('settings-'.$offering->id))
                     @elseif ($currentStep === 4)
-                    @livewire('merchant.dashboard.offers.create.time', ['offering' => $offering], key('time-'.$offering->id))
+                    @livewire('merchant.dashboard.offers.create.time', ['offering' => $offering ,  "finalID" => $finalID], key('time-'.$offering->id))
                     @elseif ($currentStep === 5)
-                    @livewire('merchant.dashboard.offers.create.gallery', ['offering' => $offering], key('gallery-'.$offering->id))
+                    @livewire('merchant.dashboard.offers.create.gallery', ['offering' => $offering ,  "finalID" => $finalID], key('gallery-'.$offering->id))
                     @elseif ($currentStep === 6)
-                    @livewire('merchant.dashboard.offers.create.prices', ['offering' => $offering], key('prices-'.$offering->id))
+                    @livewire('merchant.dashboard.offers.create.prices', ['offering' => $offering , "finalID" => $finalID], key('prices-'.$offering->id))
                     @elseif ($currentStep === 7)
-                    @livewire('merchant.dashboard.offers.create.faqs', ['offering' => $offering], key('faqs-'.$offering->id))
+                    @livewire('merchant.dashboard.offers.create.faqs', ['offering' => $offering ,  "finalID" => $finalID], key('faqs-'.$offering->id))
                     @elseif ($currentStep === 2)
-                    @livewire('merchant.dashboard.offers.create.offer_settings', ['offering' => $offering], key('offer-'.$offering->id))
+                    @livewire('merchant.dashboard.offers.create.offer_settings', ['offering' => $offering ,  "finalID" => $finalID], key('offer-'.$offering->id))
 
                     @endif
                 </div>

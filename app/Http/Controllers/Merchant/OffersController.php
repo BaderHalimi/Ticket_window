@@ -39,29 +39,34 @@ class OffersController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create($merchant = null)
+    public function create($merchantid = null)
     {
-        if ($merchant != null) {
-            $role = Role::findOrFail(Auth::guard('merchant')->user()->additional_data['role'] ?? 0);
-            if (!$role->permissions->contains('key', 'services_actions')) {
-                abort(403, 'Unauthorized action.');
+            // $role = Role::findOrFail(Auth::guard('merchant')->user()->additional_data['role'] ?? 0);
+            // if (!$role->permissions->contains('key', 'services_actions')) {
+            //     abort(403, 'Unauthorized action.');
+            // }
+            $finalID = can_enter($merchantid,"offers_create");
+
+            $offering =  \App\Models\Offering::create([
+                'user_id' => $finalID,
+                'status' => "inactive",
+            ]);
+            //return view('merchant.dashboard.offers.edit',compact('offering'));
+            if ($merchantid){
+                return redirect()->route('merchant.dashboard.m.offer.edit', ['merchant' => $merchantid, 'offer' => $offering->id])->with('success', 'Offer created successfully. Please fill in the details.');
+
+            }else{
+                return redirect()->route('merchant.dashboard.offer.edit', $offering->id)->with('success', 'Offer created successfully. Please fill in the details.');
+
             }
-            $offering =  \App\Models\Offering::create([
-                'user_id' => $merchant,
-                'status' => "inactive",
-            ]);
-            //return view('merchant.dashboard.offers.edit',compact('offering'));
+        // } else {
+        //     $offering =  \App\Models\Offering::create([
+        //         'user_id' => Auth::id(),
+        //         'status' => "inactive",
+        //     ]);
+        //     //return view('merchant.dashboard.offers.edit',compact('offering'));
 
-            return redirect()->route('merchant.dashboard.m.offer.edit', ['merchant' => $merchant, 'offer' => $offering->id])->with('success', 'Offer created successfully. Please fill in the details.');
-        } else {
-            $offering =  \App\Models\Offering::create([
-                'user_id' => Auth::id(),
-                'status' => "inactive",
-            ]);
-            //return view('merchant.dashboard.offers.edit',compact('offering'));
-
-            return redirect()->route('merchant.dashboard.offer.edit', $offering->id)->with('success', 'Offer created successfully. Please fill in the details.');
-        }
+        
 
         // return view('merchant.dashboard.offers.create',compact('offering'));
 
@@ -131,21 +136,30 @@ class OffersController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id,$merchant = null)
+    public function edit($id,$merchantid = null)
     {
-        if($merchant != null){
-            $tmp = $merchant;
-            $merchant = $id;
+        if($merchantid != null){
+            $tmp = $merchantid;
+            $merchantid = $id;
             $id = $tmp;
         }
+        //dd(["id" => $id,"mer"=> $merchant]);
+        $finalID = can_enter($merchantid,"offers_create");
+
         // dd($id,$merchant);
         $offering = Offering::findOrFail($id);
-        if ($offering->user_id != $merchant ?? Auth::id()) {
+        if ($offering->user_id == $finalID) {
             //if ($merchant != null)
                 // return redirect()->route('merchant.dashboard.m.offer.index',['merchant'=>$merchant])->with('error', 'Unauthorized action.');
-            return view('merchant.dashboard.offers.edit', compact('offering'));
+            
+            return view('merchant.dashboard.offers.edit', compact('offering', 'merchantid', 'finalID'));
 
             // return redirect()->route('merchant.dashboard.offer.index')->with('error', 'Unauthorized action.');
+        }elseif ($offering->user_id != $finalID){
+            $finalID = can_enter($merchantid,"offers_edit");
+            return view('merchant.dashboard.offers.edit', compact('offering', 'merchantid', 'finalID'));
+
+
         }
         //return view('merchant.dashboard.offers.edit', compact('offering'));
     }
@@ -201,16 +215,32 @@ class OffersController extends Controller
     }
 
 
-    public function destroy($id)
+    public function destroy($id , $merchantid = null)
     {
+        if($merchantid != null){
+            $tmp = $merchantid;
+            $merchantid = $id;
+            $id = $tmp;
+        }
+        $finalID = can_enter($merchantid,"offers_delete");
+
         $offer = Offering::findOrFail($id);
-        if ($offer->user_id !== Auth::id()) {
+        //dd($id,$merchantid,$finalID,$offer->user_id);
+
+        if ($offer->user_id != $finalID) {
             return redirect()->route('merchant.dashboard.offer.index')->with('error', 'Unauthorized action.');
         }
         if ($offer->image) {
             Storage::disk('public')->delete($offer->image);
         }
         $offer->delete();
-        return redirect()->route('merchant.dashboard.offer.index')->with('success', 'Offer deleted successfully.');
+         if ($merchantid) {
+            return redirect()->route('merchant.dashboard.m.offer.index', ["merchant" => $merchantid])->with('success', 'Offer deleted successfully.');
+
+         }else{
+            return redirect()->route('merchant.dashboard.offer.index')->with('success', 'Offer deleted successfully.');
+
+         }    
+    
     }
 }

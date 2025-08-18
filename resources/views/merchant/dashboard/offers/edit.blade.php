@@ -1,4 +1,4 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app' ,["merchant" => $merchantid ?? false])
 @section('content')
 <!-- <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script> -->
 
@@ -7,7 +7,7 @@
 
         {{-- <div class="grid grid-cols-12 gap-6"> --}}
             {{-- خطوات التسجيل - السلم --}}
-                @livewire('merchant.dashboard.offers.setup-steps', ['offering' => $offering])
+                @livewire('merchant.dashboard.offers.setup-steps', ['offering' => $offering , "merchantid" => $merchantid , "finalID" => $finalID])
 
 
             {{-- نموذج تعبئة المعلومات --}}

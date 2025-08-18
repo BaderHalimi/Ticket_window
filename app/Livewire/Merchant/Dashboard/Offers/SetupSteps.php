@@ -15,9 +15,13 @@ class SetupSteps extends Component
 
     public Offering $offering;
     public int $currentStep = 1;
+    public $merchantid = null , $finalID = null;
 
-    public function mount(Offering $offering)
+    public function mount(Offering $offering, $merchantid = null,$finalID)
     {
+        $this->merchantid = $merchantid;
+        $this->finalID = $finalID;  
+
         $this->offering = $offering;
     }
 
@@ -39,7 +43,7 @@ class SetupSteps extends Component
             $offering->status = 'active';
             $offering->save();
 
-            notifcate(Auth::id(), 'success', 'Offer published successfully!', [
+            notifcate($this->finalID, 'success', 'Offer published successfully!', [
                 'title' => 'Offer Published',
                 'text' => 'Your offer has been published successfully.',
             ]);
