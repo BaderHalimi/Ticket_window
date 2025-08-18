@@ -38,10 +38,13 @@ class TeamManager extends Component
     public $UserFname, $UserLname;
     public $UserId = null;
 
-
-    public function mount()
+    public $Amerchantid,$finalID;
+    public function mount($merchantid = null , $finalID)
     {
-        $this->merchantId = auth()->id();
+        $this->Amerchantid = $merchantid;
+        $this->finalID = $finalID;
+        //dd($this->finalID);
+        $this->merchantId = $finalID;
         $this->loadData();
     }
 
@@ -52,6 +55,7 @@ class TeamManager extends Component
         ->get();
 
     $this->usersWithRoles = $assignments
+        //->reject(fn ($item) => $item->employee_id === Auth::id())
         ->groupBy('employee_id')
         ->map(function ($group) {
             return [
@@ -59,19 +63,21 @@ class TeamManager extends Component
                 'roles'    => $group->pluck('role'),
             ];
         })->values();
+        //dd($this->usersWithRoles);
             //dd($this->usersWithRoles);
 
             $this->users = User::whereNotNull('additional_data')
-            ->whereJsonContains('additional_data->workIn', Auth::id())->get();
+            ->whereJsonContains('additional_data->workIn', $this->finalID)->get();
                     //dd($this->users);
             // $this->users = User::whereNotNull('additional_data')->get()
             // ->filter(function ($user) {
             //     return !empty($user->additional_data['workIn'])
-            //         && in_array(Auth::id(), $user->additional_data['workIn']);
             // });
         
             //dd($this->users);        
-        $this->roles = Role::all();
+        //$this->roles = Role::all();
+        $this->roles = Role::where("created_by", $this->finalID)->get();
+        //dd(Role::all());
         $this->permissions = Permission::all();
     }
 
@@ -97,6 +103,9 @@ class TeamManager extends Component
 
     public function startEditingRole($roleId)
     {
+        if(!can_enter( $this->Amerchantid, 'role_edit')){
+            return;
+        }
         $this->editingRoleId = $roleId;
         $role = Role::findOrFail($roleId);
         $this->editRoleName = $role->name;
@@ -110,6 +119,9 @@ class TeamManager extends Component
 
     public function updateRole()
     {
+        if(!can_enter($this->Amerchantid, 'role_edit' )){
+            return;
+        }
         $role = Role::findOrFail($this->editingRoleId);
         $role->name = $this->editRoleName;
 
@@ -126,6 +138,9 @@ class TeamManager extends Component
         $this->loadData();
     }
     public function editUser($userId){
+        if(!can_enter( $this->Amerchantid,'team_manager_edit' )){
+            return;
+        }
         $user = User::find($userId);
         $this->UserId = $user->id;
 
@@ -147,6 +162,9 @@ class TeamManager extends Component
     }
     public function deleteUser()
     {
+        if(!can_enter($this->Amerchantid ,'team_manager_kick')){
+            return;
+        }
         if ($this->UserId) {
             $user = User::find($this->UserId);
             if ($user) {
@@ -158,7 +176,7 @@ class TeamManager extends Component
                     ->delete();
     
                 $workIn = array_filter($workIn, function ($id) {
-                    return $id != Auth::id();
+                    return $id != $this->finalID;
                 });
     
                 $data['workIn'] = array_values($workIn); 
@@ -179,6 +197,9 @@ class TeamManager extends Component
     
     Public function adduser()
     {
+        if(!can_enter($this->Amerchantid , 'team_manager_create')){
+            return;
+        }
         if ($this->UserId) {
             $user = User::find($this->UserId);
 
@@ -194,7 +215,7 @@ class TeamManager extends Component
         $user->l_name = $this->UserLname;
 
         $user->additional_data = [
-            'workIn' => [Auth::id()],
+            'workIn' => [$this->finalID],
         ];
         $user->save();
         $this->canceledit();
@@ -204,8 +225,12 @@ class TeamManager extends Component
     }
     public function createRole()
     {
+        if(!can_enter($this->Amerchantid , 'role_create')){
+            return;
+        }
         $role = new Role();
         $role->name = $this->newRoleName;
+        $role->created_by = $this->finalID;
         $role->additional_data = json_encode([
             'permissions' => $this->newRolePermissionIds
         ]);
@@ -220,6 +245,10 @@ class TeamManager extends Component
 
     public function deleteRole($roleId)
     {
+        if(!can_enter($this->Amerchantid , 'role_delete')){
+            return;
+        }
+
         $role = Role::findOrFail($roleId);
         $role->delete();
 
@@ -229,6 +258,10 @@ class TeamManager extends Component
     }
     public function removeRoleFromEmployee($employeeId, $roleId)
     {
+        if(!can_enter($this->Amerchantid , 'team_manager_edit')){
+            return;
+        }
+
         RoleUserAssignment::where('merchant_id', $this->merchantId)
             ->where('employee_id', $employeeId)
             ->where('role_id', $roleId)
@@ -240,6 +273,9 @@ class TeamManager extends Component
     
     public function assignWorkerToMerchant()
     {
+        if(!can_enter($this->Amerchantid , 'team_manager_edit')){
+            return;
+        }
         if (!$this->selectedUserId || !$this->selectedRoleId) {
             session()->flash('error', '❗ اختر العامل والرول أولًا!');
             return;

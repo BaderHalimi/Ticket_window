@@ -60,10 +60,15 @@ class PermissionSeeder extends Seeder
             ['key' => 'branches_edit'],
             ['key' => 'branches_delete'],
 
-            ['key' => 'team_manager_view'],
+            ['key' => 'role_create'],
+            ['key' => 'role_view'],
+            ['key' => 'role_edit'],
+            ['key' => 'role_delete'],
+
             ['key' => 'team_manager_create'],
+            ['key' => 'team_manager_view'],
             ['key' => 'team_manager_edit'],
-            ['key' => 'team_manager_delete'],
+            ['key' => 'team_manager_kick'],
 
             ['key' => 'setup_page_view'],
             ['key' => 'ProfileSetup_page_view'],

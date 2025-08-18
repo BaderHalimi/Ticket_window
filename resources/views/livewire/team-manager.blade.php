@@ -2,6 +2,24 @@
     <h1 class="text-3xl font-bold text-center mb-8">Merchant Admin Panel</h1>
 
     {{-- Tabs Navigation --}}
+    @php
+        if($Amerchantid){
+            $hasRoleCreatePermission = has_Permetion(Auth::id(),"role_create",$Amerchantid);
+            $hasRoleDeletePermission = has_Permetion(Auth::id(),"role_delete",$Amerchantid);
+            $hasRoleEditPermission = has_Permetion(Auth::id(),"role_edit",$Amerchantid);
+            $hasRoleTeamCreatePermission = has_Permetion(Auth::id(),"team_manager_create",$Amerchantid);
+            $hasRoleTeamkickPermission = has_Permetion(Auth::id(),"team_manager_kick",$Amerchantid);
+            $hasRoleTeamEditPermission = has_Permetion(Auth::id(),"team_manager_edit",$Amerchantid);
+
+        }else{
+            $hasRoleCreatePermission = true;
+            $hasRoleDeletePermission = true;
+            $hasRoleEditPermission = true;
+            $hasRoleTeamCreatePermission = true;
+            $hasRoleTeamkickPermission = true;
+            $hasRoleTeamEditPermission = true;
+        }
+    @endphp
     <div class="flex border-b mb-6">
         <button
             wire:click="setActiveTab('roles')"
@@ -57,9 +75,16 @@
             <small class="text-gray-500">امسك Ctrl/Cmd لاختيار أكثر من صلاحية</small>
         </div>
 
-        <button wire:click="createRole" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition flex items-center gap-2">
-            <i class="ri-add-line"></i> إضافة الرول
-        </button>
+        @if ($hasRoleCreatePermission)
+            <button wire:click="createRole" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition flex items-center gap-2">
+                <i class="ri-add-line"></i> إضافة الرول
+            </button>
+        @else
+            <button class="bg-gray-300 text-gray-500 px-4 py-2 rounded cursor-not-allowed flex items-center gap-2" disabled>
+                <i class="ri-lock-line"></i> ليس لديك صلاحية لإنشاء رول
+            </button>
+        @endif
+
 
         <hr class="my-6">
 
@@ -78,23 +103,44 @@
                     </div>
 
                     <div class="flex items-center gap-3">
+                        @if ($hasRoleEditPermission)
                         <button
                             type="button"
                             wire:click.stop="startEditingRole({{ $role->id }})"
                             class="hover:text-blue-600"
                             title="تعديل"
                         >
+
+                    
                             <i class="ri-pencil-line"></i>
                         </button>
-
+                        @else
                         <button
                             type="button"
-                            wire:click.stop="deleteRole({{ $role->id }})"
-                            class="hover:text-red-600"
-                            title="حذف"
-                        >
+                            class="text-gray-400 cursor-not-allowed"
+                            title="ليس لديك صلاحية لتعديل الرول">
+                            <i class="ri-pencil-line"></i>
+                        </button>
+                        @endif
+                        @if ($hasRoleDeletePermission)
+                        <button
+                        type="button"
+                        wire:click.stop="deleteRole({{ $role->id }})"
+                        class="hover:text-red-600"
+                        title="حذف"
+                    >
+                        <i class="ri-delete-bin-line"></i>
+                    </button>
+                        @else
+                        <button
+                            type="button"
+                            class="text-gray-400 cursor-not-allowed"
+                            title="ليس لديك صلاحية لحذف الرول"
+                            >
                             <i class="ri-delete-bin-line"></i>
                         </button>
+                        @endif
+
 
                         <span
                             class="transform transition-transform duration-300"
@@ -173,22 +219,44 @@
             <input wire:model="UserPassword" type="password" placeholder="كلمة السر" class="w-full mt-3 border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
 
             @if (!$UserId)
+            @if ($hasRoleTeamCreatePermission)
             <button wire:click="adduser" class="bg-blue-500 text-white px-4 py-2 mt-3 rounded hover:bg-blue-600 transition flex items-center gap-2">
                 <i class="ri-add-line"></i> إضافة العامل
             </button>
+            @else
+            <button class="bg-gray-300 text-gray-500 px-4 py-2 mt-3 rounded cursor-not-allowed flex items-center gap-2" disabled>
+                <i class="ri-lock-line"></i> ليس لديك صلاحية لإضافة عامل
+            </button>
+            @endif
+
             @endif
             @if ($UserId)
                 <div class="flex flex-wrap gap-3 mt-3">
-
+                    @if ($hasRoleTeamEditPermission)
+    
                     <button wire:click="adduser" class="bg-lime-500 text-white px-4 py-2 mt-3 rounded hover:bg-lime-600 transition flex items-center gap-2">
                         <i class="ri-pencil-line"></i> تعديل العامل
                     </button>
                     <button wire:click="canceledit" class="bg-red-200 text-white px-4 py-2 mt-3 rounded hover:bg-red-400 transition flex items-center gap-2">
                         <i class="ri-pencil-line"></i> الغاء التعديل
                     </button>
+                    @else
+                    <button class="bg-gray-300 text-gray-500 px-4 py-2 mt-3 rounded cursor-not-allowed flex items-center gap-2" disabled>
+                        <i class="ri-lock-line"></i> ليس لديك صلاحية لتعديل العامل
+                    </button>
+
+                    @endif
+
+                    @if ($hasRoleTeamkickPermission)
                     <button wire:click="deleteUser" class="bg-red-500 text-white px-4 py-2 mt-3 rounded hover:bg-red-600 transition flex items-center gap-2">
                         <i class="ri-pencil-line"></i> طرد العامل
                     </button>
+                    @else
+                    <button class="bg-gray-300 text-gray-500 px-4 py-2 mt-3 rounded cursor-not-allowed flex items-center gap-2" disabled>
+                        <i class="ri-lock-line"></i> ليس لديك صلاحية لطرد العامل
+                    </button>
+                    @endif
+
                 </div>
             @endif
         </div>
@@ -212,10 +280,16 @@
                 @endforeach
             </select>
         </div>
+        @if ($hasRoleTeamEditPermission)
 
         <button wire:click="assignWorkerToMerchant" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition flex items-center gap-2">
             <i class="ri-add-line"></i> إضافة العامل
         </button>
+        @else
+        <button class="bg-gray-300 text-gray-500 px-4 py-2 rounded cursor-not-allowed flex items-center gap-2" disabled>
+            <i class="ri-lock-line"></i> ليس لديك صلاحية لإضافة عامل
+        </button>
+        @endif
 
         <hr class="my-6">
 
@@ -226,18 +300,32 @@
                 <div class="border rounded p-4">
                     <h4 class="font-bold flex items-center gap-2">
                         <i class="ri-user-line"></i> {{ $user['employee']->f_name }}
+                        @if ($hasRoleTeamEditPermission)
+
                         <button wire:click="editUser({{ $user['employee']->id }})" class="text-blue-500 text-sm hover:underline ml-2">
                             <i class="ri-pencil-line"></i> تعديل
                         </button>
+                        @else
+                        <button class="text-gray-400 cursor-not-allowed text-sm hover:underline ml-2" disabled>
+                            <i class="ri-pencil-line"></i> ليس لديك صلاحية لتعديل
+                        </button>
+                        @endif
                     </h4>
                     @if($user['roles']->count())
                         <ul class="list-disc list-inside text-sm text-gray-700 mt-2">
                             @foreach($user['roles'] as $role)
                             <li class="flex items-center justify-between">
                                 <span>{{ $role->name }}</span>
+                                @if ($hasRoleTeamEditPermission)
+
                                 <button wire:click="removeRoleFromEmployee({{ $user['employee']->id }}, {{ $role->id }})" class="text-red-500 text-sm hover:underline flex items-center gap-1">
                                     <i class="ri-delete-bin-line"></i> حذف
                                 </button>
+                                @else
+                                <button class="text-gray-400 cursor-not-allowed text-sm hover:underline flex items-center gap-1" disabled>
+                                    <i class="ri-delete-bin-line"></i> ليس لديك صلاحية لحذف
+                                </button>
+                                @endif
                             </li>
                             @endforeach
                         </ul>

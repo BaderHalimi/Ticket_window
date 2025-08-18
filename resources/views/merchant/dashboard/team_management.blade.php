@@ -1,8 +1,8 @@
-@extends('merchant.layouts.app')
+@extends('merchant.layouts.app',["merchant" => $merchantid ?? false])
 
 @section('content')
 
-@livewire("team_manager")
+@livewire("team_manager",["merchantid" => $merchantid ?? null, "finalID" => $finalID])
 {{-- @livewire('under-review')
 
 <div class="flex-1 p-8">
