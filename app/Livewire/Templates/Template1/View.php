@@ -10,6 +10,7 @@ class View extends Component
     public $offering;
     public function mount($id){
         $this->offering = Offering::findOrFail($id);
+
         //dd($this->offering);
 
     }
