@@ -1,101 +1,255 @@
-@php
-    $profile = $offering->user->additional_data['profile_picture'] ?? null;
-    $id = $offering->user->id;
-    $gallery = $offering->features['gallery'] ?? [];
-@endphp
+<div x-data="{ modalOpen: false, modalContent: null }" class="relative">
 
-<div class="max-w-7xl mx-auto bg-white shadow-lg rounded-2xl overflow-hidden p-6 space-y-8">
-    {{-- زر الرجوع --}}
-    <a href="{{ route('template', $id) }}" wire:navigate
-        class="inline-flex items-center text-sm text-orange-600 hover:underline">
-        ← الرجوع
-    </a>
+    @php
+        $profile = $offering->user->additional_data['profile_picture'] ?? null;
+        $id = $offering->user->id ?? null;
+        $gallery = $offering->features['gallery'] ?? [];
+    @endphp
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-        {{-- صورة رئيسية --}}
-        @if ($offering->image)
-            <div class="w-full h-full">
-                <img src="{{ Storage::url($offering->image) }}" alt="{{ $offering->name }}"
-                    class="w-full h-72 md:h-full object-cover rounded-xl shadow-md transition-all duration-300">
-            </div>
-        @endif
+    {{-- Particles --}}
+    <div id="particles-js" class="fixed inset-0 z-0"></div>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
+    <script>
+        tsParticles.load("particles-js", {
+            fpsLimit: 60,
+            particles: {
+                number: {
+                    value: 80,
+                    limit: 120 // ← ما يزيد عن 120 particle
+                },
+                color: {
+                    value: ["#FFA500", "#FF8C00", "#FFD700"]
+                },
+                shape: {
+                    type: "circle"
+                },
+                opacity: {
+                    value: 0.5,
+                    random: true
+                },
+                size: {
+                    value: {
+                        min: 2,
+                        max: 6
+                    },
+                    random: true
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: "none",
+                    outModes: "bounce"
+                },
+                links: {
+                    enable: true,
+                    distance: 120,
+                    color: "#FFA500",
+                    opacity: 0.2,
+                    width: 1
+                }
+            },
+            interactivity: {
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: "grab"
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: "push"
+                    }
+                },
+                modes: {
+                    grab: {
+                        distance: 150,
+                        links: {
+                            opacity: 0.4
+                        }
+                    }
+                }
+            },
+            detectRetina: true
+        });
+    </script>
 
-        {{-- معلومات الخدمة --}}
-        <div class="space-y-4">
-            <h1 class="text-3xl font-bold text-gray-800">{{ $offering->name }}</h1>
-            <p class="text-sm text-gray-500">الموقع: {{ $offering->location }}</p>
-            <p class="text-xl text-green-600 font-semibold">السعر: {{ $offering->price }} دج</p>
+    {{-- AOS --}}
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            AOS.init({
+                duration: 900,
+                once: true,
+                easing: "ease-out-back"
+            });
+        });
+    </script>
 
-            {{-- وصف الخدمة --}}
-            <div
-                class="text-sm text-slate-600 leading-relaxed max-h-48 overflow-y-auto border-t pt-4 whitespace-pre-line">
-                {!! nl2br(e($offering->description)) !!}
-            </div>
+    {{-- Glassmorphism & Animations CSS --}}
+    <style>
+        .glass-card {
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
 
-            {{-- التاجر --}}
-            @if ($offering->user)
-                <a href="{{ route('template', $id) }}" wire:navigate
-                    class="bg-white text-gray-700  
-                   transition duration-300 ease-in-out
-                   hover:bg-slate-400 hover:text-white hover:shadow-lg">
+        .float:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+        }
 
-                    <div class="flex items-center gap-4 border-t pt-4">
-                        <img src="{{ $profile ? Storage::url($profile) : 'https://ui-avatars.com/api/?name=' . urlencode($offering->user->f_name . ' ' . $offering->user->l_name) }}"
-                            alt="صورة التاجر" class="w-14 h-14 rounded-full object-cover shadow">
+        @keyframes shake {
 
-                        <div>
-                            <p class="text-sm font-medium text-gray-700">
-                                {{ $offering->user->business_name ?? $offering->user->f_name . ' ' . $offering->user->l_name }}
-                            </p>
-                            <p class="text-xs text-gray-500">صاحب الخدمة</p>
-                        </div>
-                    </div>
-                </a>
-            @endif
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            50% {
+                transform: translateX(5px);
+            }
+
+            75% {
+                transform: translateX(-5px);
+            }
+        }
+
+        .shake:hover {
+            animation: shake 0.5s ease-in-out;
+        }
+    </style>
+
+    {{-- Modal --}}
+    <div x-show="modalOpen" x-transition.opacity
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="relative max-w-4xl w-full px-6">
+            <button @click="modalOpen=false"
+                class="absolute top-4 right-4 text-white text-4xl font-bold hover:text-red-500">&times;</button>
+            <div x-html="modalContent"></div>
         </div>
     </div>
 
-    {{-- الجاليري --}}
-    @if (is_array($gallery) && count($gallery))
-        <div x-data="{ open: false, currentImage: null }" class="border-t pt-6">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4">صور إضافية:</h3>
+    {{-- Main Page --}}
+    <div class="relative z-10 max-w-7xl mx-auto space-y-10 p-6 md:p-10">
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                @foreach ($gallery as $img)
-                    <img src="{{ Storage::url($img) }}" @click="open = true; currentImage = '{{ Storage::url($img) }}'"
-                        class="cursor-pointer object-cover h-32 w-full rounded-xl hover:scale-105 transition-transform duration-200 shadow-sm"
-                        alt="صورة إضافية">
-                @endforeach
-            </div>
+        {{-- Back Button --}}
+        <a href="{{ route('template', $id) }}" wire:navigate
+            class="glass-card inline-flex items-center px-4 py-2 font-semibold text-orange-600 hover:text-orange-800 hover:scale-105 transition-all duration-300">
+            ← الرجوع
+        </a>
 
-            <div x-show="open" x-transition @keydown.escape.window="open = false"
-                class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-                <div class="relative max-w-3xl w-full px-6">
-                    <button class="absolute top-4 right-4 text-white text-3xl font-bold"
-                        @click="open = false">&times;</button>
+        {{-- Main Section --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
 
-                    <img x-show="currentImage" x-transition :src="currentImage" alt="معاينة"
-                        class="rounded-xl max-h-[80vh] w-full object-contain shadow-xl border-4 border-white">
+            {{-- Main Image --}}
+            @if ($offering->image)
+                <div data-aos="fade-up"
+                    class="glass-card overflow-hidden transform hover:scale-105 hover:rotate-1 transition-all duration-500">
+                    <img src="{{ Storage::url($offering->image) }}" alt="{{ $offering->name }}"
+                        class="w-full h-80 md:h-full object-cover">
                 </div>
+            @endif
+
+            {{-- Service Info --}}
+            <div data-aos="fade-up" data-aos-delay="100" class="space-y-6 glass-card p-6 float">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-wide">{{ $offering->name }}</h1>
+                <p class="text-base text-gray-500 font-medium">الموقع: <span
+                        class="text-gray-700">{{ $offering->location }}</span></p>
+                <p class="text-2xl text-green-600 font-bold">السعر: {{ $offering->price }} دج</p>
+
+                <div
+                    class="text-base text-gray-700 leading-relaxed max-h-60 overflow-y-auto border-t pt-4 whitespace-pre-line scrollbar-thin scrollbar-thumb-orange-300 scrollbar-track-gray-100">
+                    {!! nl2br(e($offering->description)) !!}
+                </div>
+
+                {{-- Seller Info --}}
+                @if ($offering->user)
+                    <a href="{{ route('template', $id) }}" wire:navigate
+                        class="glass-card p-4 flex items-center gap-4 hover:scale-105 transition-all duration-300 float">
+                        <img src="{{ $profile ? Storage::url($profile) : 'https://ui-avatars.com/api/?name=' . urlencode($offering->user->f_name . ' ' . $offering->user->l_name) }}"
+                            alt="صورة التاجر"
+                            class="w-16 h-16 rounded-full object-cover border-2 border-orange-300 shadow">
+                        <div>
+                            <p class="text-lg font-semibold text-gray-800">
+                                {{ $offering->user->business_name ?? $offering->user->f_name . ' ' . $offering->user->l_name }}
+                            </p>
+                            <p class="text-sm text-gray-500">صاحب الخدمة</p>
+                        </div>
+                    </a>
+                @endif
             </div>
         </div>
-    @endif
 
-    @livewire("templates.template1.components.activities", ["offering" => $offering])
-    @livewire("templates.template1.components.cartoons", ["offering" => $offering])
-    @livewire("templates.template1.components.destination", ["offering" => $offering])
-    @livewire("templates.template1.components.eventlinks", ["offering" => $offering])
-    @livewire("templates.template1.components.games", ["offering" => $offering])
-    @livewire("templates.template1.components.kidshops", ["offering" => $offering])
-    @livewire("templates.template1.components.offer-features", ["offering" => $offering])
-    @livewire("templates.template1.components.plats", ["offering" => $offering])
-    @livewire("templates.template1.components.portfolio", ["offering" => $offering])
-    @livewire("templates.template1.components.products", ["offering" => $offering])
-    @livewire("templates.template1.components.services", ["offering" => $offering])
-    @livewire("templates.template1.components.session", ["offering" => $offering])
-    @livewire("templates.template1.components.speakers", ["offering" => $offering])
-    @livewire("templates.template1.components.sponsors", ["offering" => $offering])
-    @livewire("templates.template1.components.support-devices", ["offering" => $offering])
-    @livewire("templates.template1.components.tools", ["offering" => $offering])
-    @livewire("templates.template1.components.train-workshops", ["offering" => $offering])
+        {{-- Gallery --}}
+        @if (is_array($gallery) && count($gallery))
+            <div class="border-t pt-8" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">صور إضافية:</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    @foreach ($gallery as $img)
+                        <img src="{{ Storage::url($img) }}"
+                            @click="modalOpen=true; modalContent='<img src={{ Storage::url($img) }} class=rounded-2xl max-h-[85vh] w-full object-contain shadow-xl border-4 border-white>'"
+                            class="glass-card cursor-pointer object-cover h-32 w-full rounded-2xl float shake transition-all duration-300"
+                            alt="صورة إضافية">
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        {{-- Livewire Components --}}
+        <div class="space-y-10">
+            @if ($offering)
+                @livewire('templates.template1.components.session', ['offering' => $offering], key('session-' . $offering->id))
+            @endif
+
+            @if ($category === 'tourism')
+                @livewire('templates.template1.components.destination', ['offering' => $offering], key('destination-' . $offering->id))
+            @endif
+
+            @if ($category === 'exhibition')
+                @livewire('templates.template1.components.products', ['offering' => $offering], key('products-' . $offering->id))
+            @endif
+
+            @if ($category === 'maintenance')
+                @livewire('templates.template1.components.support-devices', ['offering' => $offering], key('support-' . $offering->id))
+            @endif
+
+            @if ($category === 'workshop')
+                @livewire('templates.template1.components.train-workshops', ['offering' => $offering], key('workshop-' . $offering->id))
+            @endif
+
+            @if ($category === 'restaurant')
+                @livewire('templates.template1.components.plats', ['offering' => $offering], key('plats-' . $offering->id))
+            @endif
+
+            @if ($category === 'online')
+                @livewire('templates.template1.components.eventlinks', ['offering' => $offering], key('eventlinks-' . $offering->id))
+            @endif
+
+            @if ($category === 'children_event')
+                @livewire('templates.template1.components.games', ['offering' => $offering], key('games-' . $offering->id))
+                @livewire('templates.template1.components.kidshops', ['offering' => $offering], key('kidshops-' . $offering->id))
+                @livewire('templates.template1.components.cartoons', ['offering' => $offering], key('cartoons-' . $offering->id))
+            @endif
+
+            @if ($type === 'services')
+                @livewire('templates.template1.components.portfolio', ['offering' => $offering], key('portfolio-' . $offering->id))
+            @endif
+
+            @livewire('templates.template1.components.speakers', ['offering' => $offering], key('speakers-' . $offering->id))
+            @livewire('templates.template1.components.offer-features', ['offering' => $offering], key('features-' . $offering->id))
+            @livewire('templates.template1.components.sponsors', ['offering' => $offering], key('sponsors-' . $offering->id))
+            @livewire('templates.template1.components.activities', ['offering' => $offering], key('activities-' . $offering->id))
+            @livewire('templates.template1.components.services', ['offering' => $offering], key('services-' . $offering->id))
+            @livewire('templates.template1.components.tools', ['offering' => $offering], key('tools-' . $offering->id))
+        </div>
+
+    </div>
 </div>

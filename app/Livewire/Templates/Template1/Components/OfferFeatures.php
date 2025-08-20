@@ -24,12 +24,7 @@ class OfferFeatures extends Component
             $this->Offerfeatures = $this->offering->features['Offerfeatures'];
         } else {
             $this->Offerfeatures = [
-                [
-                    'name' => '',
-                    'description' => '',
-                    'image' => null,
-            
-                ]
+
             ];
         }
 

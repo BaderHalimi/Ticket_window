@@ -25,15 +25,7 @@ class Products extends Component
             $this->products = $this->offering->features['products'];
         } else {
             $this->products = [
-                [
-                    'name' => '',
-                    'image' => '',
-                    'price' => '',
-                    'description' => '',
-                    'category' => '',
-                    'link' => '',
-                    'booth' => ''
-                ]
+
             ];
         }
 

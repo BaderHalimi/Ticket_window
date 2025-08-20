@@ -8,9 +8,13 @@ use App\Models\Offering;
 class View extends Component
 {   
     public $offering;
+    public $category;
+    public $type;
+
     public function mount($id){
         $this->offering = Offering::findOrFail($id);
-
+        $this->category = $this->offering->category;
+        $this->type = $this->offering->type;
         //dd($this->offering);
 
     }

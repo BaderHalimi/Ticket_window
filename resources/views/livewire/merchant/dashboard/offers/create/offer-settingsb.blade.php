@@ -58,3 +58,20 @@
 
 
 </div>
+    {{-- @livewire("templates.template1.components.activities", ["offering" => $offering])
+    @livewire("templates.template1.components.cartoons", ["offering" => $offering])
+    @livewire("templates.template1.components.destination", ["offering" => $offering])
+    @livewire("templates.template1.components.eventlinks", ["offering" => $offering])
+    @livewire("templates.template1.components.games", ["offering" => $offering])
+    @livewire("templates.template1.components.kidshops", ["offering" => $offering])
+    @livewire("templates.template1.components.offer-features", ["offering" => $offering])
+    @livewire("templates.template1.components.plats", ["offering" => $offering])
+    @livewire("templates.template1.components.portfolio", ["offering" => $offering])
+    @livewire("templates.template1.components.products", ["offering" => $offering])
+    @livewire("templates.template1.components.services", ["offering" => $offering])
+    @livewire("templates.template1.components.session", ["offering" => $offering])
+    @livewire("templates.template1.components.speakers", ["offering" => $offering])
+    @livewire("templates.template1.components.sponsors", ["offering" => $offering])
+    @livewire("templates.template1.components.support-devices", ["offering" => $offering])
+    @livewire("templates.template1.components.tools", ["offering" => $offering])
+    @livewire("templates.template1.components.train-workshops", ["offering" => $offering]) --}}

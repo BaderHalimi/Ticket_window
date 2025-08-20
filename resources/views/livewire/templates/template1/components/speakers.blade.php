@@ -1,9 +1,9 @@
-<div class="mb-6">
-    <label class="block text-base font-semibold mb-3 text-gray-700">المتحدثين</label>
+<div class="mb-6" dir="rtl" x-data="{ openIndex: null }">
+    <label class="block text-base font-semibold mb-3 text-gray-700 text-xl">المتحدثين </label>
 
-    <div class="flex gap-4 overflow-x-auto py-2 px-1">
+    <div class="flex flex-wrap justify-center gap-6">
         @foreach ($speakers as $index => $speaker)
-            <div class="min-w-[250px] max-w-[250px] bg-white border rounded-lg shadow-sm p-3 relative">
+            <div class="min-w-[250px] max-w-[250px] bg-white border-2 border-gray-200 hover:border-blue-500 rounded-lg shadow-lg p-3 relative transition-all duration-300">
                 
                 {{-- صورة المتحدث --}}
                 <div class="w-full h-32 bg-gray-100 rounded mb-2 flex items-center justify-center overflow-hidden">
@@ -15,43 +15,33 @@
                 </div>
 
                 {{-- بيانات المتحدث --}}
-                @if ($SpeakereditingIndex === $index)
-                    <div class="space-y-2">
-                        <input type="text" wire:model.lazy="speakers.{{ $index }}.name" placeholder="الاسم" class="w-full p-1 border rounded text-sm" />
-                        <input type="text" wire:model.lazy="speakers.{{ $index }}.title" placeholder="الوظيفة/اللقب" class="w-full p-1 border rounded text-sm" />
-                        <input type="text" wire:model.lazy="speakers.{{ $index }}.cv" placeholder="رابط السيرة الذاتية" class="w-full p-1 border rounded text-sm" />
-                        <textarea wire:model.lazy="speakers.{{ $index }}.shortDescreption" placeholder="نبذة قصيرة" class="w-full p-1 border rounded text-sm"></textarea>
-                        <input type="file" wire:model="speakers.{{ $index }}.image" class="w-full text-sm" />
-                    </div>
+                <div class="space-y-1 text-sm text-gray-800">
+                    <p class="font-semibold text-gray-900">{{ $speaker['name'] }}</p>
+                    <p class="text-gray-600">{{ $speaker['title'] }}</p>
+                    <p class="text-xs text-gray-500 line-clamp-2">{{ $speaker['shortDescreption'] }}</p>
+                </div>
 
-                    <div class="flex justify-between mt-2 text-sm">
-                        <button wire:click="saveSpeaker({{ $index }})" class="text-green-600 hover:text-green-800"><i class="ri-save-line text-lg"></i></button>
-                        <button wire:click="removeSpeaker({{ $index }})" class="text-red-600 hover:text-red-800"><i class="ri-delete-bin-line text-lg"></i></button>
-                    </div>
-                @else
-                    <div class="space-y-1 text-sm text-gray-800">
-                        <p><strong>{{ $speaker['name'] }}</strong></p>
-                        <p>{{ $speaker['title'] }}</p>
-                        <p class="text-xs text-gray-600">{{ $speaker['shortDescreption'] }}</p>
-                    </div>
-
-                    <div class="flex justify-between mt-2 text-sm">
-                        <button wire:click="editSpeaker({{ $index }})" class="text-blue-600 hover:text-blue-800"><i class="ri-edit-line text-lg"></i></button>
-                        <button wire:click="removeSpeaker({{ $index }})" class="text-red-600 hover:text-red-800"><i class="ri-delete-bin-line text-lg"></i></button>
-                    </div>
-                @endif
+                {{-- زر More --}}
+                <div class="text-center mt-2">
+                    <button @click="openIndex = {{ $index }}" class="text-blue-600 font-semibold hover:text-blue-800">
+                        <i class="ri-more-2-line"></i> More
+                    </button>
+                </div>
             </div>
+
+            {{-- مودال Alpine.js للمتحدث --}}
+            <div x-show="openIndex === {{ $index }}" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 mx-4 relative">
+                    <button @click="openIndex = null" class="absolute top-2 left-2 text-gray-600 hover:text-gray-800 text-2xl">&times;</button>
+                    <h3 class="text-lg font-semibold mb-2">{{ $speaker['name'] }} <i class="ri-mic-line inline text-blue-600"></i></h3>
+                    <p class="text-gray-700 mb-1">الوظيفة: {{ $speaker['title'] }}</p>
+                    <p class="text-gray-700 mb-2">{{ $speaker['shortDescreption'] }}</p>
+                    @if(!empty($speaker['cv']))
+                        <a href="{{ $speaker['cv'] }}" target="_blank" class="text-blue-600 underline text-sm">عرض السيرة الذاتية</a>
+                    @endif
+                </div>
+            </div>
+
         @endforeach
-    </div>
-
-    {{-- زر الإضافة والحفظ --}}
-    <div class="flex items-center mt-4 gap-3">
-        <button type="button" wire:click="addSpeaker" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition">
-            + أضف متحدث
-        </button>
-
-        <button type="button" wire:click="saveSpeakers" class="px-5 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition">
-            حفظ كل المتحدثين
-        </button>
     </div>
 </div>

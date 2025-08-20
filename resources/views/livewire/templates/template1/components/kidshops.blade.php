@@ -1,72 +1,46 @@
-<div class="mb-6 font-sans">
-    <label class="block text-2xl font-extrabold mb-6 text-teal-600">🛠️ ورش العمل</label>
+<div class="mb-6 font-sans" dir="rtl">
+    <label class="block text-2xl font-extrabold mb-6 text-gray-800">ورش العمل</label>
 
-    <div class="flex space-x-6 overflow-x-auto pb-4">
-        @foreach ($workshops as $index => $workshop)
-            <div class="flex-shrink-0 w-72 bg-gradient-to-br from-teal-100 via-teal-200 to-teal-300 rounded-xl shadow-lg p-5 relative text-gray-800">
-                @if ($workshopEditingIndex === $index)
-                    <input 
-                        type="text" 
-                        wire:model.lazy="workshops.{{ $index }}.title" 
-                        placeholder="عنوان الورشة" 
-                        class="w-full mb-3 px-3 py-2 rounded-lg border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-400 font-semibold text-lg text-teal-700"
-                    />
-                    <textarea 
-                        wire:model.lazy="workshops.{{ $index }}.description" 
-                        placeholder="وصف الورشة" 
-                        rows="3"
-                        class="w-full mb-3 px-3 py-2 rounded-lg border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm resize-none"
-                    ></textarea>
+    <div class="flex flex-wrap gap-4">
+        @foreach($workshops as $index => $workshop)
+            <div x-data="{ open: false }" class="flex-shrink-0 w-72 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer p-4">
+                
+                <!-- الصورة -->
+                <div class="h-40 rounded-lg overflow-hidden mb-4 bg-gray-50 flex items-center justify-center">
+                    @if(!empty($workshop['image']))
+                        <img src="{{ asset('storage/' . $workshop['image']) }}" alt="صورة الورشة" class="object-cover w-full h-full" />
+                    @else
+                        <i class="ri-tools-line text-6xl text-gray-400"></i>
+                    @endif
+                </div>
 
-                    <label class="block mb-2 font-semibold text-teal-600">صورة الورشة</label>
-                    <input 
-                        type="file" 
-                        wire:model="workshops.{{ $index }}.image" 
-                        accept="image/*"
-                        class="mb-3 w-full text-sm text-teal-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-100 file:text-teal-700 hover:file:bg-teal-200 cursor-pointer"
-                    />
+                <!-- العنوان والوصف المختصر -->
+                <h3 class="text-xl font-bold text-gray-800 mb-1 truncate">{{ $workshop['title'] ?? 'NULL' }}</h3>
+                <p class="text-sm text-gray-600 mb-2 h-16 overflow-hidden">{{ $workshop['description'] ?? 'NULL' }}</p>
 
-                    <div class="flex justify-end space-x-3 rtl:space-x-reverse">
-                        <button wire:click="saveWorkshop({{ $index }})" class="text-teal-600 hover:text-teal-800 transition text-xl" title="حفظ">
-                            <i class="ri-save-line"></i>
-                        </button>
-                        <button wire:click="removeWorkshop({{ $index }})" class="text-red-600 hover:text-red-800 transition text-xl" title="حذف">
-                            <i class="ri-delete-bin-line"></i>
-                        </button>
+                <!-- زر فتح المودال -->
+                <button @click="open = true" class="text-gray-700 hover:text-gray-900 text-sm font-semibold transition">عرض التفاصيل</button>
+
+                <!-- مودال التفاصيل -->
+                <div x-show="open" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div class="bg-white rounded-2xl w-full max-w-md p-6 relative shadow-xl overflow-auto max-h-[90vh]">
+                        <button @click="open = false" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+                        
+                        <!-- صورة الورشة -->
+                        <div class="h-48 w-full rounded-lg overflow-hidden mb-4 bg-gray-50 flex items-center justify-center">
+                            @if(!empty($workshop['image']))
+                                <img src="{{ asset('storage/' . $workshop['image']) }}" alt="صورة الورشة" class="object-cover w-full h-full rounded" />
+                            @else
+                                <i class="ri-tools-line text-6xl text-gray-400"></i>
+                            @endif
+                        </div>
+
+                        <h3 class="font-bold text-lg mb-2">{{ $workshop['title'] ?? 'NULL' }}</h3>
+                        <p class="text-gray-700 mt-2"><strong>الوصف:</strong> {{ $workshop['description'] ?? 'NULL' }}</p>
                     </div>
-                @else
-                    <div class="h-40 rounded-lg overflow-hidden mb-4 bg-teal-50 flex items-center justify-center">
-                        @if (!empty($workshop['image']) && !is_object($workshop['image']))
-                            <img src="{{ asset('storage/' . $workshop['image']) }}" alt="صورة الورشة" class="object-cover w-full h-full" />
-                        @elseif(is_object($workshop['image']))
-                            <img src="{{ $workshop['image']->temporaryUrl() }}" alt="صورة مؤقتة" class="object-cover w-full h-full" />
-                        @else
-                            <i class="ri-tools-line text-6xl text-teal-400"></i>
-                        @endif
-                    </div>
-                    <h3 class="text-xl font-bold text-teal-700 mb-1 truncate">{{ $workshop['title'] ?: 'بدون عنوان' }}</h3>
-                    <p class="text-sm text-teal-600 mb-2 h-16 overflow-hidden">{{ $workshop['description'] ?: 'لا يوجد وصف' }}</p>
+                </div>
 
-                    <div class="flex justify-between items-center">
-                        <button wire:click="editWorkshop({{ $index }})" class="text-teal-600 hover:text-teal-800 transition text-xl" title="تعديل">
-                            <i class="ri-edit-line"></i>
-                        </button>
-                        <button wire:click="removeWorkshop({{ $index }})" class="text-red-600 hover:text-red-800 transition text-xl" title="حذف">
-                            <i class="ri-delete-bin-line"></i>
-                        </button>
-                    </div>
-                @endif
             </div>
         @endforeach
-    </div>
-
-    <div class="flex justify-between items-center mt-6">
-        <button type="button" wire:click="addWorkshop" class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-semibold transition">
-            + أضف ورشة جديدة
-        </button>
-
-        <button type="button" wire:click="saveWorkshops" class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition">
-            حفظ كل الورش
-        </button>
     </div>
 </div>

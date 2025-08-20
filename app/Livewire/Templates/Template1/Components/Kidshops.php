@@ -24,11 +24,7 @@ class Kidshops extends Component
             $this->workshops = $this->offering->features['workshops'];
         } else {
             $this->workshops = [
-                [
-                    'title' => '',
-                    'description' => '',
-                    'image' => '',
-                ]
+
             ];
         }
 

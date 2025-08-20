@@ -1,60 +1,42 @@
 <div class="mb-6">
-    <label class="block text-base font-semibold mb-3 text-gray-700">الفعاليات الجانبية</label>
+    <label class="block text-lg font-bold mb-4 text-gray-800">الفعاليات الجانبية</label>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto pr-1">
-        @foreach ($activities as $index => $activity)
-            <div class="border rounded-md p-4 shadow-sm bg-white relative">
-                @if ($activityeditingIndex === $index)
-                    {{-- حالة التعديل --}}
-                    <div class="space-y-2">
-                        <input type="text" wire:model.lazy="activities.{{ $index }}.title" placeholder="عنوان الفعالية" class="w-full p-2 border rounded text-sm">
-                        <input type="time" wire:model.lazy="activities.{{ $index }}.time" class="w-full p-2 border rounded text-sm">
-                        <input type="text" wire:model.lazy="activities.{{ $index }}.location" placeholder="الموقع" class="w-full p-2 border rounded text-sm">
-                        <textarea wire:model.lazy="activities.{{ $index }}.description" placeholder="الوصف" class="w-full p-2 border rounded text-sm"></textarea>
-                        
-                        <input type="file" wire:model="activities.{{ $index }}.image" class="w-full p-1 border rounded text-sm">
-                        
-                        <div class="flex justify-end gap-2 mt-2">
-                            <button wire:click="saveActivityRow({{ $index }})" class="text-green-600 hover:text-green-800">
-                                <i class="ri-save-line text-lg"></i>
-                            </button>
-                            <button wire:click="removeActivity({{ $index }})" class="text-red-600 hover:text-red-800">
-                                <i class="ri-delete-bin-line text-lg"></i>
-                            </button>
+    @if(!empty($activities) && count($activities) > 0)
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            @foreach($activities as $activity)
+                <div x-data="{ open: false }" class="bg-white rounded-2xl shadow-md hover:shadow-xl transition cursor-pointer overflow-hidden">
+                    @if(!empty($activity['image']))
+                        <div class="h-28 w-full overflow-hidden">
+                            <img src="{{ asset('storage/' . ($activity['image'] ?? '')) }}" alt="Activity Image" class="w-full h-full object-cover">
+                        </div>
+                    @else
+                        <div class="h-28 w-full bg-gradient-to-r from-purple-500 to-indigo-500"></div>
+                    @endif
+                    <div class="p-4" @click="open = true">
+                        <h3 class="font-semibold text-lg text-gray-800">{{ $activity['title'] ?? 'NULL' }}</h3>
+                        <p class="text-xs text-gray-500 mt-1 flex items-center gap-2">
+                            <span class="ri-time-line"></span> {{ $activity['time'] ?? 'NULL' }} | 
+                            <span class="ri-map-pin-line"></span> {{ $activity['location'] ?? 'NULL' }}
+                        </p>
+                        <p class="text-gray-600 text-sm line-clamp-2 mt-2">{{ $activity['description'] ?? 'NULL' }}</p>
+                    </div>
+
+                    <!-- مودال صغير أنيق -->
+                    <div x-show="open" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-xl w-full max-w-md p-6 relative shadow-lg">
+                            <button @click="open = false" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+                            <h3 class="font-bold text-xl mb-2">{{ $activity['title'] ?? 'NULL' }}</h3>
+                            <p class="text-gray-500 text-sm mb-4">
+                                <span class="ri-time-line"></span> {{ $activity['time'] ?? 'NULL' }} | 
+                                <span class="ri-map-pin-line"></span> {{ $activity['location'] ?? 'NULL' }}
+                            </p>
+                            <p class="text-gray-700">{{ $activity['description'] ?? 'NULL' }}</p>
                         </div>
                     </div>
-                @else
-                    {{-- حالة العرض --}}
-                    <div class="space-y-1">
-                        <h3 class="font-semibold text-sm text-gray-800">{{ $activity['title'] }}</h3>
-                        <p class="text-xs text-gray-500">{{ $activity['time'] }} | {{ $activity['location'] }}</p>
-                        <p class="text-sm text-gray-600 line-clamp-3">{{ $activity['description'] }}</p>
-
-                        @if (!empty($activity['image']))
-                            <img src="{{ asset('storage/' . $activity['image']) }}" class="mt-2 w-full h-28 object-cover rounded" alt="Activity Image">
-                        @endif
-                    </div>
-
-                    <div class="absolute top-2 left-2 flex gap-2">
-                        <button wire:click="editActivityRow({{ $index }})" class="text-blue-600 hover:text-blue-800">
-                            <i class="ri-edit-line text-lg"></i>
-                        </button>
-                        <button wire:click="removeActivity({{ $index }})" class="text-red-600 hover:text-red-800">
-                            <i class="ri-delete-bin-line text-lg"></i>
-                        </button>
-                    </div>
-                @endif
-            </div>
-        @endforeach
-    </div>
-
-    <div class="flex items-center mt-4 gap-3">
-        <button type="button" wire:click="addActivity" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition">
-            + أضف فعالية
-        </button>
-
-        <button type="button" wire:click="saveActivities" class="px-5 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition">
-            حفظ الفعاليات
-        </button>
-    </div>
+                </div>
+            @endforeach
+        </div>
+    @else
+        <p class="text-gray-500 text-sm">لا توجد فعاليات لعرضها حالياً.</p>
+    @endif
 </div>

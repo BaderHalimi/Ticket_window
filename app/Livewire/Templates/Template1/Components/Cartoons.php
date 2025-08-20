@@ -23,11 +23,7 @@ class Cartoons extends Component
             $this->cartoons = $this->offering->features['cartoons'];
         } else {
             $this->cartoons = [
-                [
-                    'name' => '',
-                    'description' => '',
-                    'image' => '',
-                ]
+
             ];
         }
         

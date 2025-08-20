@@ -25,13 +25,7 @@ class Speakers extends Component
             $this->speakers = $this->offering->features['speakers'];
         } else {
             $this->speakers = [
-                [
-                    'name' => '',
-                    'title' => '',
-                    'cv' => '',
-                    'image' => '',
-                    'shortDescreption' => '',
-                ]
+
             ];
         }
 

@@ -24,12 +24,7 @@ class Destination extends Component
             $this->Destenations = $this->offering->features['Destenations'];
         } else {
             $this->Destenations = [
-                [
-                    'name' => '',
-                    'description' => '',
-                    'image' => null,     
-            
-                ]
+
             ];
         }
 

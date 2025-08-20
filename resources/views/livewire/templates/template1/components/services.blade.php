@@ -1,60 +1,45 @@
 <div class="mb-6">
     <label class="block text-base font-semibold mb-3 text-gray-700">الخدمات المتوفرة</label>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto pr-1">
-        @foreach ($services as $index => $activity)
-            <div class="border rounded-md p-4 shadow-sm bg-white relative">
-                @if ($servicesEditingIndex === $index)
-                    {{-- حالة التعديل --}}
-                    <div class="space-y-2">
-                        <input type="text" wire:model.lazy="services.{{ $index }}.title" placeholder="عنوان الخدمة" class="w-full p-2 border rounded text-sm">
-                        <input type="time" wire:model.lazy="services.{{ $index }}.time" class="w-full p-2 border rounded text-sm">
-                        <input type="text" wire:model.lazy="services.{{ $index }}.location" placeholder="الموقع" class="w-full p-2 border rounded text-sm">
-                        <textarea wire:model.lazy="services.{{ $index }}.description" placeholder="الوصف" class="w-full p-2 border rounded text-sm"></textarea>
-                        
-                        <input type="file" wire:model="services.{{ $index }}.image" class="w-full p-1 border rounded text-sm">
-                        
-                        <div class="flex justify-end gap-2 mt-2">
-                            <button wire:click="saveServiceRow({{ $index }})" class="text-green-600 hover:text-green-800">
-                                <i class="ri-save-line text-lg"></i>
-                            </button>
-                            <button wire:click="removeService({{ $index }})" class="text-red-600 hover:text-red-800">
-                                <i class="ri-delete-bin-line text-lg"></i>
-                            </button>
-                        </div>
-                    </div>
-                @else
-                    {{-- حالة العرض --}}
-                    <div class="space-y-1">
-                        <h3 class="font-semibold text-sm text-gray-800">{{ $activity['title'] }}</h3>
-                        <p class="text-xs text-gray-500">{{ $activity['time'] }} | {{ $activity['location'] }}</p>
-                        <p class="text-sm text-gray-600 line-clamp-3">{{ $activity['description'] }}</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        @foreach ($services as $index => $service)
+            <div class="border rounded-lg shadow-sm bg-white overflow-hidden flex flex-col" x-data="{ open: false }">
+                {{-- الصورة --}}
+                <div class="h-32 bg-gray-100">
+                    <img src="{{ is_string($service['image']) ? asset('storage/'.$service['image']) : 'https://via.placeholder.com/300x200' }}" 
+                         class="w-full h-full object-cover" alt="صورة الخدمة">
+                </div>
 
-                        @if (!empty($activity['image']))
-                            <img src="{{ asset('storage/' . $activity['image']) }}" class="mt-2 w-full h-28 object-cover rounded" alt="Activity Image">
+                {{-- البيانات --}}
+                <div class="p-3 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-semibold text-gray-800 text-sm">{{ $service['title'] }}</h3>
+                        <p class="text-xs text-gray-500">{{ $service['time'] }} | {{ $service['location'] }}</p>
+                        <p class="text-xs text-gray-700 line-clamp-3 mt-1">{{ $service['description'] }}</p>
+                    </div>
+
+                    {{-- فاصل وزر More --}}
+                    <div class="border-t border-dashed border-gray-300 mt-2"></div>
+                    <div class="text-center mt-1">
+                        <button @click="open = true" class="text-blue-600 font-semibold text-sm hover:text-blue-800">More</button>
+                    </div>
+                </div>
+
+                {{-- مودال Alpine --}}
+                <div x-show="open" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-5 relative">
+                        <button @click="open = false" class="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-2xl">&times;</button>
+                        <h3 class="text-lg font-semibold mb-3">{{ $service['title'] }}</h3>
+                        @if (!empty($service['image']))
+                            <img src="{{ is_string($service['image']) ? asset('storage/'.$service['image']) : 'https://via.placeholder.com/300x200' }}" 
+                                 class="w-full h-40 object-cover rounded mb-3" alt="صورة الخدمة">
                         @endif
+                        <p class="text-gray-700 mb-2">{{ $service['description'] }}</p>
+                        <p class="text-xs text-gray-500 mb-1">الوقت: {{ $service['time'] }}</p>
+                        <p class="text-xs text-gray-500 mb-1">الموقع: {{ $service['location'] }}</p>
                     </div>
-
-                    <div class="absolute top-2 left-2 flex gap-2">
-                        <button wire:click="editServiceRow({{ $index }})" class="text-blue-600 hover:text-blue-800">
-                            <i class="ri-edit-line text-lg"></i>
-                        </button>
-                        <button wire:click="removeService({{ $index }})" class="text-red-600 hover:text-red-800">
-                            <i class="ri-delete-bin-line text-lg"></i>
-                        </button>
-                    </div>
-                @endif
+                </div>
             </div>
         @endforeach
-    </div>
-
-    <div class="flex items-center mt-4 gap-3">
-        <button type="button" wire:click="addService" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition">
-            + أضف خدمة
-        </button>
-
-        <button type="button" wire:click="saveServices" class="px-5 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition">
-            حفظ الخدمات
-        </button>
     </div>
 </div>
