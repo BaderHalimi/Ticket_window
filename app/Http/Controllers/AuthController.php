@@ -76,7 +76,7 @@ class AuthController extends Controller
             return back()->withErrors(['phone' => 'رقم الهاتف مستخدم بالفعل.'])->withInput();
         }
         $validated['phone'] = $fullPhone;
-        
+
 
         unset($validated['country_code']);
 
@@ -99,11 +99,13 @@ class AuthController extends Controller
         if ($validated['role'] === 'user') {
             Auth::guard('customer')->login($user);
             session(['email' => $user->email]);
+            //return redirect()->route('otpConfermation.index')->with('success', 'Registration successful!');
+            return redirect()->intended()->with('success', 'Registration successful!');
+
+        } elseif ($validated['role'] === 'merchant') {
+            session(['email' => $user->email]);
             return redirect()->route('otpConfermation.index')->with('success', 'Registration successful!');
-                   } elseif ($validated['role'] === 'merchant') {
-                    session(['email' => $user->email]);
-                    return redirect()->route('otpConfermation.index')->with('success', 'Registration successful!');
-                         }
+        }
 
         return redirect()->intended(route('login', ['redirect' => $request->redirect ?? '']))
             ->with('success', 'تم التسجيل بنجاح!');
@@ -151,9 +153,12 @@ class AuthController extends Controller
                 unset($request['_token']);
                 unset($request['email']);
                 unset($request['password']);
-                $params = http_build_query($request->all());
-                $baseUrl = $request->redirect ?? route('customer.dashboard.overview');
-                $redirectUrl = $baseUrl . (str_contains($baseUrl, '?') ? '&' : '?') . $params;
+                //dd($request->input('back'));
+                $redirectUrl = $request->input('back') ?? route('customer.dashboard.overview');
+
+                // $params = http_build_query($request->all());
+                // $baseUrl = $request->redirect ?? route('customer.dashboard.overview');
+                // $redirectUrl = $baseUrl . (str_contains($baseUrl, '?') ? '&' : '?') . $params;
 
                 return redirect($redirectUrl)->with('success', 'Login successful');
             } else {
@@ -196,7 +201,7 @@ class AuthController extends Controller
         //
     }
 
-    public function update(Request $request, string $id,$merchantid = null)
+    public function update(Request $request, string $id, $merchantid = null)
     {
         if ($merchantid != null) {
             $tmp = $merchantid;
@@ -207,12 +212,12 @@ class AuthController extends Controller
         if ($finalID != $id) {
             abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
         }
-        
+
         $validated = $request->validate([
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'social_links' => 'nullable|array',
-            'social_links.*' => 'nullable|url|max:255', 
+            'social_links.*' => 'nullable|url|max:255',
         ]);
 
         $user = User::findOrFail($id);
@@ -255,7 +260,8 @@ class AuthController extends Controller
         return back()->with('success', 'تم تحديث البيانات بنجاح.');
     }
 
-    public function update_settings(Request $request, string $id, $merchantid = null){
+    public function update_settings(Request $request, string $id, $merchantid = null)
+    {
         if ($merchantid != null) {
             $tmp = $merchantid;
             $merchantid = $id;
@@ -264,10 +270,10 @@ class AuthController extends Controller
         $finalID = can_enter($merchantid, "settings_edit");
 
         if ($finalID != $id) {
-            
+
             abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
         }
-        
+
         //dd($request->all());
         $validated = $request->validate([
             // 'f_name' => [
@@ -289,11 +295,11 @@ class AuthController extends Controller
                 //'unique:users,email,' . $id,
             ],
             //dd(1),
-            'phone' => ['required', 'max:16','regex:/^[^a-zA-Z.]+$/'],
+            'phone' => ['required', 'max:16', 'regex:/^[^a-zA-Z.]+$/'],
 
         ]);
-          
-        
+
+
         $user = User::findOrFail($id);
         //$user->f_name = $validated["f_name"];
         //$user->l_name = $validated["l_name"];
@@ -305,14 +311,14 @@ class AuthController extends Controller
         $user->phone = $validated["phone"];
         $user->save();
         return back()->with('success', 'تم تحديث البيانات بنجاح.');
-
     }
-    public function update_PS(Request $request, string $id){
+    public function update_PS(Request $request, string $id)
+    {
         if (Auth::id() != $id) {
-            
+
             abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
         }
-        
+
         //dd($request->all());
         $validated = $request->validate([
             'f_name' => [
@@ -330,30 +336,30 @@ class AuthController extends Controller
 
 
         ]);
-          
-        
+
+
         $user = User::findOrFail($id);
         $user->f_name = $validated["f_name"];
         $user->l_name = $validated["l_name"];
 
         $user->save();
         return back()->with('success', 'تم تحديث البيانات بنجاح.');
-
     }
-    public function update_password(Request $request,string $id){
+    public function update_password(Request $request, string $id)
+    {
         if (Auth::id() != $id) {
             abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
         }
         //dd($request->all());Abc@123111
 
         $validated = $request->validate([
-             'old_password' =>[
+            'old_password' => [
                 'required',
                 'string',
                 'min:8',
                 'max:20',
                 //'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
-             ],
+            ],
             'password' => [
                 'required',
                 'string',
@@ -362,7 +368,7 @@ class AuthController extends Controller
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
                 'confirmed',
             ],
-        ]);//Abc@123111
+        ]); //Abc@123111
         $user = User::findOrFail($id);
 
         if (!Hash::check($validated["old_password"], $user->password)) {
@@ -371,10 +377,10 @@ class AuthController extends Controller
         $user->password = Hash::make($validated["password"]);
         $user->save();
         return back()->with('success', 'تم تحديث البيانات بنجاح.');
-
     }
 
-    public function update_work(Request $request,string $id, $merchantid = null){
+    public function update_work(Request $request, string $id, $merchantid = null)
+    {
         if ($merchantid != null) {
             $tmp = $merchantid;
             $merchantid = $id;
@@ -388,12 +394,12 @@ class AuthController extends Controller
         //dd($request->all());Abc@123111
 
         $validated = $request->validate([
-             'business_name' =>[
+            'business_name' => [
                 'required',
                 'string',
                 'max:32'
                 //'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
-             ],
+            ],
             'business_type' => [
                 'required',
                 'string',
@@ -408,24 +414,23 @@ class AuthController extends Controller
                 'string',
                 'max:20',
             ],
-            
-        ]);//Abc@123111
+
+        ]); //Abc@123111
         $user = User::findOrFail($id);
 
 
         $user->business_name = $validated["business_name"];
         $user->business_type = $validated["business_type"];
 
-        if ($validated["other_business_type"]){
+        if ($validated["other_business_type"]) {
             $data = $user->additional_data;
             $data['other_business_type'] = $validated["other_business_type"];
-    
+
             $user->additional_data = $data;
         }
-//dd(1);
+        //dd(1);
         $user->save();
         return back()->with('success', 'تم تحديث البيانات بنجاح.');
-
     }
     /**
      * Remove the specified resource from storage.

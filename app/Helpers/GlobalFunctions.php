@@ -698,8 +698,12 @@ if (!function_exists('can_booking_now')){
     function can_booking_now($offer_id,$branch = null)
     {
         $offer = Offering::find($offer_id);
-        if (!$offer->features["max_user_unit"] || !$offer->features["eventMaxQuantity"]){
+        if (!$offer->features["max_user_unit"] && $offer->type == "services" ){
             return false;
+        }
+        if (!$offer->features["eventMaxQuantity"] && $offer->type == "events" ){
+            return false;
+
         }
         $unit = 0;
         $max_limit =  0;
@@ -732,7 +736,7 @@ if (!function_exists("get_quantity")) {
     function get_quantity($offer_id,$branch = null)
     {
         $offer = Offering::find($offer_id);
-        if (!$offer->features["max_user_unit"]){
+        if (!$offer->features["max_user_unit"] && !$offer->features["eventMaxQuantity"]){
             return false;
         }
         // $unit = $offer->features["max_user_unit"];
@@ -745,6 +749,7 @@ if (!function_exists("get_quantity")) {
 
         if ($offer->type == "events"){
             $max_limit = $offer->features["eventMaxQuantity"] ?? 0;
+            //dd((object )$offer->features);
             $res = pending_reservations_at($offer_id, $unit, $branch);
         }elseif ($offer->type == "services"){
             $max_limit = $offer->features["max_user_time"] ?? 0;
@@ -755,7 +760,7 @@ if (!function_exists("get_quantity")) {
         }
         //dd($res);
         if ($res->isEmpty()) {
-            return true;
+            return $max_limit;
         }
         //$res->count("quantity");
         $total_quantity = $res->sum("quantity");

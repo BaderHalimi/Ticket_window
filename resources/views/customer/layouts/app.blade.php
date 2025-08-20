@@ -60,7 +60,7 @@
                 @livewire('customer.aside.nav')
 
                 <div class="mt-auto p-4 border-t">
-                    <form action="{{ route('logout') }}" method="post">
+                    <form action="{{ route('customer.logout') }}" method="post">
                         @csrf
                         <button type="submit" class="inline-flex items-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 h-10 px-4 py-2 w-full justify-start text-base text-red-500 hover:text-red-600 hover:bg-red-50">
                             <svg class="w-5 h-5 ml-3" fill="none" stroke="currentColor" stroke-width="2">

@@ -355,48 +355,61 @@
         <div x-show="showTform" x-transition
             class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
             @click.self="showTform = false">
+            @if (Auth::guard('customer')->user())
+                <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg relative">
 
-            <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg relative">
+                    <button wire:click="reset_ticket" @click="showTform = false"
+                        class="absolute top-3 right-3 text-slate-400 hover:text-orange-500 text-xl">
+                        <i class="ri-close-line"></i>
+                    </button>
 
-                <button wire:click="reset_ticket" @click="showTform = false"
-                    class="absolute top-3 right-3 text-slate-400 hover:text-orange-500 text-xl">
-                    <i class="ri-close-line"></i>
-                </button>
+                    @if (!$savedTicket)
+                        <h2 class="text-xl font-bold mb-4 text-slate-800">طلب تذكرة دعم</h2>
 
-                @if (!$savedTicket)
-                    <h2 class="text-xl font-bold mb-4 text-slate-800">طلب تذكرة دعم</h2>
+                        <div class="space-y-4">
+                            <input type="text" wire:model.lazy="ticketTitle" placeholder="عنوان التذكرة"
+                                class="w-full p-2 border rounded" />
+                            <input type="file" wire:model="ticketImage" class="w-full p-2 border rounded" />
 
-                    <div class="space-y-4">
-                        <input type="text" wire:model.lazy="ticketTitle" placeholder="عنوان التذكرة"
-                            class="w-full p-2 border rounded" />
-                        <input type="file" wire:model="ticketImage" class="w-full p-2 border rounded" />
+                            <textarea wire:model.lazy="ticketDescription" placeholder="وصف التذكرة" class="w-full p-2 border rounded"
+                                rows="4"></textarea>
+                            <button wire:click="save_ticket"
+                                class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded">
+                                إرسال
+                            </button>
+                        </div>
+                    @else
+                        <h2 class="text-xl font-bold mb-4 text-slate-800">نجاح</h2>
+                        <div class="flex items-center justify-center mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-500" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <p class="text-center text-slate-700">تمت العملية بنجاح!</p>
+                        <div class="mt-4 text-center">
+                            <button @click="showTform = false"
+                                class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+                                إغلاق
+                            </button>
+                        </div>
+                    @endif
 
-                        <textarea wire:model.lazy="ticketDescription" placeholder="وصف التذكرة" class="w-full p-2 border rounded"
-                            rows="4"></textarea>
-                        <button wire:click="save_ticket"
-                            class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded">
-                            إرسال
-                        </button>
-                    </div>
-                @else
-                    <h2 class="text-xl font-bold mb-4 text-slate-800">نجاح</h2>
-                    <div class="flex items-center justify-center mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-500" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 13l4 4L19 7" />
-                        </svg>
-                    </div>
-                    <p class="text-center text-slate-700">تمت العملية بنجاح!</p>
-                    <div class="mt-4 text-center">
-                        <button @click="showTform = false"
-                            class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
-                            إغلاق
-                        </button>
-                    </div>
-                @endif
+                </div>
+            @else
+                <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg text-center">
+                    <h2 class="text-xl font-bold mb-4 text-slate-800">يرجى تسجيل الدخول</h2>
+                    <p class="mb-4 text-slate-600">يجب أن تكون مسجلاً للدخول لطلب تذكرة الدعم.</p>
+                    <a 
+                    x-data 
+                    x-bind:href="'{{ route('customer.login') }}?back=' + encodeURIComponent(window.location.href)" 
+                                        class="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded transition-all duration-300">
+                        تسجيل الدخول
+                    </a>
+                </div>
+            @endif
 
-            </div>
         </div>
 
 
@@ -810,7 +823,8 @@
                                 <div>
                                     <h3 class="font-semibold text-gray-700">السعر:</h3>
                                     <p>{{ $price }} ريال x {{ $quantity }} =
-                                        <strong>{{ $price * $quantity }} ريال</strong></p>
+                                        <strong>{{ $price * $quantity }} ريال</strong>
+                                    </p>
                                 </div>
 
                                 {{-- الكوبون --}}
@@ -905,8 +919,10 @@
                 <div class="w-full mt-4 space-y-3">
                     <!-- تسجيل الدخول -->
 
-                    <a href="{{ route('customer.login') }}" wire:navigate>
-                        <button
+                    <a 
+                    x-data 
+                    x-bind:href="'{{ route('customer.login') }}?back=' + encodeURIComponent(window.location.href)" 
+                >                        <button
                             class="w-full flex items-center px-4 py-3 rounded-lg border transition bg-white text-slate-700 hover:bg-orange-100 border-slate-200 gap-3">
                             <i class="fas fa-sign-in-alt text-orange-500 text-lg"></i>
                             <span class="font-semibold">تسجيل الدخول</span>

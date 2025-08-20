@@ -181,6 +181,7 @@ class TemplateRouter extends Component
                     'answer' => '',
                 ];
             })->toArray();
+            $this->enableNext = true;
         }
     }
     public function selectOffer($value)
@@ -205,15 +206,18 @@ class TemplateRouter extends Component
     #[On('stepNext')]
     public function stepNext()
     {
-        if ($this->step == 0 && !($this->selectedOffer->type == "services" )) {
+        if ($this->step == 0 && !($this->selectedOffer->type == "services" && $this->selectedOffer->features["center"] == "place")) {
             $this->step = 2;
         } else if ($this->step == 4 && empty($this->Qa)) {
-            $this->step = 6;
+            $this->step = 5;
         } else {
             $this->step++;
         }
-        if ($this->step != 4) {
-            $this->enableNext = false; // Reset enableNext on step change
+        if ($this->step != 4 && empty($this->Qa) ) {
+            $this->enableNext = false; 
+        }
+        if ($this->step != 5 && !empty($this->Qa) ) {
+            $this->enableNext = true; 
         }
         if ($this->step ==3 && $this->selectedOffer->type == "events"){
             $this->step +=1;
@@ -403,6 +407,7 @@ class TemplateRouter extends Component
             }
             $this->price = $this->selectedOffer->price;
             $this->stock = get_quantity($this->selectedOffer->id, $this->selectedBranch);
+            //dd(get_quantity($this->selectedOffer->id, $this->selectedBranch));
             $this->finalPrice = $this->price * $this->quantity;
         }
     }
@@ -432,6 +437,11 @@ class TemplateRouter extends Component
     }
     public function ready()
     {
+        // dd($this->selectedOffer ,
+        // $this->selectedTime ,
+        // $this->selectedDate,
+        // $this->quantity ,
+        // $this->finalPrice);
         if (
             $this->selectedOffer &&
             $this->selectedTime &&
@@ -440,7 +450,7 @@ class TemplateRouter extends Component
             $this->finalPrice
         ) {
             if ($this->selectedOffer->type == 'services') {
-                if (get_branches($this->selectedOffer->id)->isNotEmpty()) {
+                if ($this->selectedOffer->features["center"] == "place" && get_branches($this->selectedOffer->id)->isNotEmpty()) {
                     if (!$this->selectedBranch) {
                         $this->dispatch('alert', [
                             'type' => 'error',
@@ -486,6 +496,8 @@ class TemplateRouter extends Component
     public function is_ready()
     {
         if ($this->step == 6) {
+            //dd(can_booking_now($this->selectedOffer->id, $this->selectedBranch));
+
             return $this->ready();
         } else {
             return false;
@@ -548,6 +560,10 @@ class TemplateRouter extends Component
         //dd($this->merchant->additional_data);
     }
     public function add_ticket(){
+
+        // if(!Auth::guard("customer")->user()){
+        //     return;
+        // }
         $this->newTicket = new MerchantChat;
     }
     public function deleteTicket($id){
@@ -561,6 +577,9 @@ class TemplateRouter extends Component
 
     }
     public function save_ticket(){
+        if(!Auth::guard("customer")->user()){
+            return;
+        }
             $this->validate([
                 'ticketTitle' => 'required|string|max:255',
                 'ticketDescription' => 'required|string',

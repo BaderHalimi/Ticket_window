@@ -242,7 +242,7 @@
         </label>
         <div>
             <label class="block text-sm font-medium mb-1">العدد المسموح</label>
-            <input type="number" wire:model.lazy="max_user_time" class="w-full border rounded-md p-2">
+            <input type="number" wire:model.lazy="eventMaxQuantity" class="w-full border rounded-md p-2">
         </div>
         </div>
     </div>
