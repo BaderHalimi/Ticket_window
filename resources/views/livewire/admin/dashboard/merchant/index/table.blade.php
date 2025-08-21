@@ -12,7 +12,7 @@
         @foreach($merchants as $merchant)
         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
             <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
-                <a href="{{ route('template', $merchant->id) }}">
+                <a href="{{ route('template', $merchant->id) }}" class="merchant-card">
                     {{ $merchant->f_name.' '.$merchant->l_name }}
                 </a>
             </td>

@@ -1,10 +1,9 @@
 @extends('admin.layouts.app')
 @section('content')
 
-@livewire('under-review') 
-<br>
+@livewire("EmployeesManger")
 
-<main class="flex-1 overflow-y-auto p-6 lg:p-8">
+<!-- <main class="flex-1 overflow-y-auto p-6 lg:p-8">
     <div style="opacity: 1; transform: none;">
       <div class="space-y-6">
         <div class="flex justify-between items-center">
@@ -126,7 +125,7 @@
         </div>
       </div>
     </div>
-  </main>
+  </main> -->
   
 
 @endsection

@@ -4,7 +4,7 @@
 
 
 
-@livewire('support-chat', ['support_id' => $ticket->id])
+@livewire('support-chat', ['support_id' => $ticket->id,"finalID" => Auth::guard('admin')->user()->id,"merchantid" => null])
 
 
 

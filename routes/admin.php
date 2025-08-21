@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Withdraw_checking;
+use App\Http\Controllers\AccesMerchantProfile;
 
 Route::get('/', function () {
     return redirect()->route('dashboard.overview');
@@ -29,6 +30,9 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:admin'])->group(
     });
     Route::resource('withdraws', Withdraw_checking::class)
         ->names('withdraws');
+
+    Route::get("merchant",[AccesMerchantProfile::class,"index"])->name('merchant.access');
+    Route::get('/handled', [Withdraw_checking::class, 'index2'])->name('withdraw.handled');
     Route::resource('support', \App\Http\Controllers\Admin_Support::class)
         ->names('support');
     Route::get('public_res', function () {

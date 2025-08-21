@@ -3,8 +3,6 @@
 
 @section('content')
 
-@livewire('under-review') 
-<br>
 
 
 

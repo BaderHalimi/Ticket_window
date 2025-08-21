@@ -49,7 +49,7 @@
                 <div class="p-6 space-y-5">
                     <div>
                         <label for="cancellation-policy" class="block text-sm font-medium mb-2">نص السياسة</label>
-                        <textarea id="cancellation-policy" name="policies" class="w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 px-4 py-2 text-sm min-h-[120px]" placeholder="مثال: لا يمكن استرجاع المبلغ قبل 24 ساعة من موعد الفعالية...">{{ old('policies', $user->additional_data['policies'] ?? '') }}</textarea>
+                        <textarea id="cancellation-policy" wire:model="cancellationPolicy" name="policies" class="w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 px-4 py-2 text-sm min-h-[120px]" placeholder="مثال: لا يمكن استرجاع المبلغ قبل 24 ساعة من موعد الفعالية...">{{ old('policies', $user->additional_data['policies'] ?? '') }}</textarea>
                     </div>
                     <div class="flex items-center justify-between bg-slate-50 p-3 rounded-lg">
                         <span class="text-sm font-medium text-gray-700">السماح بالاسترجاع التلقائي</span>
@@ -103,14 +103,24 @@
 
 @endsection
 @push('scripts')
+
 <script>
-    tinymce.init({
-        selector: '#cancellation-policy',
-        height: 300,
-        menubar: false,
-        plugins: 'lists link image preview code',
-        toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image | preview code'
+    document.addEventListener("livewire:navigated", () => {
+        initTiny();
     });
+
+    document.addEventListener("livewire:load", () => {
+        initTiny();
+    });
+
+    function initTiny() {
+        // if (!tinymce.get("cancellation-policy")) {
+        //     tinymce.get("cancellation-policy").remove();
+        // }
+
+        tinymce.init({ selector: '#cancellation-policy', height: 300, menubar: false, plugins: 'lists link image preview code', toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image | preview code' });
+    
+    }
 </script>
 
 @endpush

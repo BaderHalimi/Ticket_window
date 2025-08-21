@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('item_id')->constrained('offerings')->onDelete('cascade');
             $table->string('transaction_id')->unique();
             $table->string('payment_method')->nullable(); 
-            $table->decimal('amount');
+            $table->decimal('amount', 15, 2);
             $table->json('additional_data')->nullable();
             $table->timestamps();
         });

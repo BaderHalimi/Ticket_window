@@ -5,7 +5,8 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\setup;
-
+//use DragonCode\Contracts\Cashier\Auth\Auth;
+use Illuminate\Support\Facades\Auth;
 class GeneralSetup extends Component
 {
     use WithFileUploads;
@@ -25,7 +26,7 @@ class GeneralSetup extends Component
     {
         $this->setup = Setup::firstOrCreate(
             ['id' => 1],
-            ['name' => 'My Site']
+            ['name' => '']
         );
         
         $this->name = $this->setup->name;
@@ -33,10 +34,21 @@ class GeneralSetup extends Component
         $this->phone = $this->setup->phone;
         $this->social_links = $this->setup->social_links ?? [];
         $this->additional_data = $this->setup->additional_data ?? [];
+
     }
 
     public function save()
     {
+        if(isset($this->setup->additional_data["owner"])){
+            if ($this->setup->additional_data["owner"] != Auth::guard("admin")->user()->id) {
+                session()->flash('error', '❌ لا يمكنك تعديل الإعدادات');
+                return;
+            }
+        }else{
+            $this->additional_data["owner"] = Auth::guard("admin")->user()->id;
+
+        }
+
         if ($this->logo) {
             $path = $this->logo->store('logos', 'public');
             $this->setup->logo = $path;

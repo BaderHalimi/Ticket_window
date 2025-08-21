@@ -87,7 +87,7 @@
       <div class="rounded-2xl border-2 border-orange-400 bg-white text-slate-900 shadow-2xl hover:shadow-3xl transition transform hover:scale-105">
         <div class="flex flex-col space-y-2 p-6">
           <h3 class="text-xl font-bold tracking-tight text-orange-700">الرصيد القابل للسحب</h3>
-          <div class="text-5xl font-extrabold text-slate-900 mt-2">{{ number_format($wallet?$wallet->balance:0, 2) }} ريال</div>
+          <div class="text-5xl font-extrabold text-slate-900 mt-2 break-words">{{ number_format($wallet?$wallet->balance:0, 2) }} ريال</div>
           <p class="text-sm text-slate-500 mt-1">رصيدك المتاح حاليا للسحب.</p>
 
           {{-- زر طلب السحب --}}

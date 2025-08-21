@@ -297,7 +297,7 @@
                         <img src="{{ asset('storage/' . $offer['image']) }}"
                             class="w-full h-40 object-cover rounded-lg shadow" />
 
-                        <a href="{{ route('offer_view', ['template' => 1, 'id' => $offer['id']]) }}" wire:navigate
+                        <a href="{{ route('offer_view', ['template' => 1, 'id' => $offer['id']]) }}" wire:navigate.replace 
                             class="absolute top-2 right-2 bg-black bg-opacity-60 text-white p-2 rounded-full hover:bg-opacity-80 transition"
                             title="عرض التفاصيل">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"

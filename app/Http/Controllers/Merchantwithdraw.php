@@ -87,7 +87,12 @@ class Merchantwithdraw extends Controller
             'withdraw_id' => uniqid('withdraw_'),
             'amount' => $validated['amount'],
             'status' => 'pending',
-            'additional_data' => [],
+            'additional_data' => [
+                'account_name' => $validated['account_name'],
+                'bank_name'    => $validated['bank_name'],
+                'iban'         => $validated['iban'],
+                'swift'        => $validated['swift'],
+            ],
         ]);
 
         notifcate(

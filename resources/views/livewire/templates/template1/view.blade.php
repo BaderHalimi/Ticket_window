@@ -1,4 +1,4 @@
-<div x-data="{ modalOpen: false, modalContent: null }" class="relative">
+<div x-data="{ modalOpen: false, modalContent: null }" class="relative" x-cloak>
 
     @php
         $profile = $offering->user->additional_data['profile_picture'] ?? null;

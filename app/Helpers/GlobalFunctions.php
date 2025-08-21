@@ -21,8 +21,9 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use App\Models\setup;
 
-if (!function_exists('getCard')){
+if (!function_exists('getCard')) {
     function getCard()
     {
         $auth = Auth::user();
@@ -35,9 +36,7 @@ if (!function_exists('getCard')){
             if (is_numeric($index) && isset($additional['cards'][$index])) {
                 $paymentMethod = $additional['cards'][$index]['type'] ?? null;
                 return $paymentMethod;
-
             }
-
         }
 
 
@@ -48,44 +47,44 @@ if (!function_exists('getCard')){
 if (!function_exists('logPayment')) {
     function logPayment(array $data)
     {
-        $wallet = Offering::where('id', $data['item_id'])->first()->user->wallet;
-        //dd($wallet);
-        $balance = (float) $wallet->balance;
-        $amount = (float) $data['amount'];
-        if ($data['additional_data']['type'] === 'pay') {
-            $wallet->balance = $balance + $amount;
-        } elseif ($data['additional_data']['type'] === 'refund') {
-            $wallet->balance = $balance - $amount;
-        }
-        $wallet->save();
-        $txn =  PaysHistory::create([
-            'user_id'         => $data['user_id'] ?? Auth::user()->id,
-            'item_id'         => $data['item_id'] ?? null,
-            'wallet_id'      => $wallet->id,
-            'transaction_id'  => $data['transaction_id'],
-            'payment_method'  => getCard(),
-            'amount'          => $data['amount'],
-            'additional_data' => $data['additional_data'] ?? [],
+        DB::transaction(function () use ($data) {
+            $wallet = Offering::where('id', $data['item_id'])->first()->user->wallet;
+            //dd($wallet);
+            $balance = (float) $wallet->balance;
+            $amount = (float) $data['amount'];
+            if ($data['additional_data']['type'] === 'pay') {
+                $wallet->balance = $balance + $amount;
+            } elseif ($data['additional_data']['type'] === 'refund') {
+                $wallet->balance = $balance - $amount;
+            }
+            $wallet->save();
+            $txn =  PaysHistory::create([
+                'user_id'         => $data['user_id'] ?? Auth::user()->id,
+                'item_id'         => $data['item_id'] ?? null,
+                'wallet_id'      => $wallet->id,
+                'transaction_id'  => $data['transaction_id'],
+                'payment_method'  => getCard(),
+                'amount'          => $data['amount'],
+                'additional_data' => $data['additional_data'] ?? [],
 
-        ]);
-
-
+            ]);
+        });
     }
 }
 if (!function_exists('calculateNet')) {
 
-function calculateNet($collection)
-{
-    $totalPay = $collection->filter(function ($r) {
-        return ($r->additional_data['type'] ?? null) === 'pay';
-    })->sum('amount');
+    function calculateNet($collection)
+    {
+        $totalPay = $collection->filter(function ($r) {
+            return ($r->additional_data['type'] ?? null) === 'pay';
+        })->sum('amount');
 
-    $totalRefund = $collection->filter(function ($r) {
-        return ($r->additional_data['type'] ?? null) === 'refund';
-    })->sum('amount');
+        $totalRefund = $collection->filter(function ($r) {
+            return ($r->additional_data['type'] ?? null) === 'refund';
+        })->sum('amount');
 
-    return $totalPay - $totalRefund;
-}
+        return $totalPay - $totalRefund;
+    }
 }
 if (!function_exists('set_viewed')) {
     function set_viewed($merchant_id)
@@ -120,13 +119,13 @@ if (!function_exists('set_viewed')) {
             'ip_address'     => $ip,
             'page_url'       => $page_url,
             'merchant_id'    => $merchant_id,
-            'additional_data'=> json_encode(['timestamp' => now()]),
+            'additional_data' => json_encode(['timestamp' => now()]),
         ]);
     }
 }
 
 if (!function_exists('notifcate')) {
-    function notifcate( $user_id,$title, $body, $data)
+    function notifcate($user_id, $title, $body, $data)
     {
 
 
@@ -138,14 +137,13 @@ if (!function_exists('notifcate')) {
             'data'  => json_encode($data),
             'type' => 'alert',
             'is_read' => false,
-            'additional_data' => json_encode($data),//link * image
+            'additional_data' => json_encode($data), //link * image
         ]);
 
         // Optionally, you can trigger an event or perform additional actions here
         // event(new NotificationCreated($notification));
 
         return $notification;
-
     }
 }
 
@@ -256,17 +254,17 @@ if (!function_exists('hasEssentialFields')) {
         $eventMaxQuantity = true;
         $center = $offer->features['center'] ?? null;
         $boolcenter = true;
-        if($offer->type == "services"){
+        if ($offer->type == "services") {
             $boolcenter = isFilled($features['center'] ?? null);
         }
-        if($offer->type == "services" && $center == "place"){
-            $branch_for_ser=isFilled($features['selected_branches'] ?? null);
+        if ($offer->type == "services" && $center == "place") {
+            $branch_for_ser = isFilled($features['selected_branches'] ?? null);
         }
-        if ($offer->type == "events"){
+        if ($offer->type == "events") {
             $eventMaxQuantity =  isFilled($features['eventMaxQuantity'] ?? null);
-        }elseif ($offer->type == "services"){
+        } elseif ($offer->type == "services") {
             $eventMaxQuantity = isFilled($features['max_user_time'] ?? null) &&
-                                isFilled($features['max_user_unit'] ?? null);
+                isFilled($features['max_user_unit'] ?? null);
         }
         $checks = [
             'name'                => isFilled($offer->name),
@@ -286,8 +284,8 @@ if (!function_exists('hasEssentialFields')) {
             'center' => $boolcenter,
             // 'pricing_packages'    => !empty($features['pricing_packages']) &&
             //                           isFilled($features['pricing_packages'][0]['label'] ?? null),
-            
-            
+
+
             // 'gallery'             => !empty($features['gallery']) &&
             //                           isFilled($features['gallery'][0] ?? null),
 
@@ -324,7 +322,6 @@ if (!function_exists('fetch_time')) {
                     'from' => $info['from'] ?? null,
                     'to' => $info['to'] ?? null,
                 ];
-
             }
 
 
@@ -383,11 +380,11 @@ if (!function_exists('fetch_time')) {
 //     }
 // }
 
-if (!function_exists('fetch_Permetions')){
-    function fetch_Permetions($user_id,$merchant_id)
+if (!function_exists('fetch_Permetions')) {
+    function fetch_Permetions($user_id, $merchant_id)
     {
         $Roles_user = role_permission::with('role')->where('employee_id', $user_id)
-        ->where('merchant_id',$merchant_id)->get();
+            ->where('merchant_id', $merchant_id)->get();
         //dd($Roles_user);
         $result = [];
 
@@ -408,21 +405,37 @@ if (!function_exists('fetch_Permetions')){
                 'role_name' => $roleName,
                 'permissions' => $permissions
             ];
-
         }
         //dd($result);
 
         return $result;
     }
 }
-if(!function_exists("has_Permetion")){
-    function has_Permetion($user_id = null, $perm_key,$merchant_id)
+if (!function_exists("first_setup")){
+    function first_setup(){
+        $setup = setup::first();
+        if (!$setup) {
+            return false;
+        }
+        $owner = $setup->additional_data["owner"] ?? null;
+        if(isset($setup->name) && isset($setup->email) && isset($setup->phone) && isset($setup->logo) && isset($owner)){
+           return true; 
+        }
+        return false;
+
+    }
+}
+if (!function_exists("has_Permetion")) {
+    function has_Permetion($user_id = null, $perm_key, $merchant_id)
     {
+        if (Auth::guard('admin')->check()) {
+            return true;
+        }
         if ($user_id === null) {
             $user_id = Auth::id();
         }
-        
-        $roles = fetch_Permetions($user_id,$merchant_id);
+
+        $roles = fetch_Permetions($user_id, $merchant_id);
         //dd($roles);
         foreach ($roles as $role) {
             if (in_array($perm_key, $role['permissions'])) {
@@ -433,41 +446,44 @@ if(!function_exists("has_Permetion")){
     }
 }
 
-if (!function_exists("is_m_admin")){
-    function is_m_admin(){
-        return false;    
+if (!function_exists("is_m_admin")) {
+    function is_m_admin()
+    {
+        if (Auth::guard('admin')->check()) {
+            return true;
+        }
+        return false;
     }
-    
 }
 
 if (!function_exists("can_enter")) {
-    function can_enter($mer,$viewPermetion){
+    function can_enter($mer, $viewPermetion)
+    {
         $merchantId = $mer;
         $empID = null;
         $finalID = null;
-        if(!is_m_admin()){
+        if (!is_m_admin()) {
             if ($merchantId) {
-                if (!work_in($merchantId) || !has_Permetion(Auth::id(),$viewPermetion,$merchantId) ) {
+                if (!work_in($merchantId) || !has_Permetion(Auth::id(), $viewPermetion, $merchantId)) {
                     abort(403, 'غير مسموح لك بالدخول');
-                }else{
+                } else {
                     $empID = $merchantId;
                 }
-            }else{
+            } else {
                 $merchantid = Auth::id();
             }
             $finalID = $empID ?? $merchantid;
-
-        }else{
+        } else {
             $finalID = $merchantId;
-
         }
         return $finalID;
     }
 }
-if(!function_exists("is_work")){
-    function is_work($user_id){
+if (!function_exists("is_work")) {
+    function is_work($user_id)
+    {
         $user = User::find($user_id);
-        if (!$user){
+        if (!$user) {
             return;
         }
 
@@ -477,14 +493,14 @@ if(!function_exists("is_work")){
         }
 
         return true;
-
     }
 }
 
-if(!function_exists("work_in")){
-    function work_in($merchant_id){
+if (!function_exists("work_in")) {
+    function work_in($merchant_id)
+    {
         $user = User::find(Auth::id());
-        if (!$user){
+        if (!$user) {
             return false;
         }
 
@@ -497,7 +513,7 @@ if(!function_exists("work_in")){
     }
 }
 
-if (!function_exists("GetWorkPlace")){
+if (!function_exists("GetWorkPlace")) {
     function GetWorkPlace($user_id)
     {
         $user = User::find($user_id);
@@ -517,16 +533,16 @@ if (!function_exists('clear_offers')) {
     function clear_offers($collection)
     {
         foreach ($collection as $offer) {
-            if (!in_array("true",hasEssentialFields($offer->id)['fields'])) {
+            if (!in_array("true", hasEssentialFields($offer->id)['fields'])) {
                 $offer->delete();
             }
-
         }
     }
 }
 
-if(!function_exists('set_presence')){
-    function set_presence($id){
+if (!function_exists('set_presence')) {
+    function set_presence($id)
+    {
         $Res = PaidReservation::Find($id);
         if (!$Res) {
             return "this res is'nt exist";
@@ -557,8 +573,9 @@ if(!function_exists('set_presence')){
 }
 
 
-if (!function_exists('Create_Wallet')){
-    function Create_Wallet($user_id){
+if (!function_exists('Create_Wallet')) {
+    function Create_Wallet($user_id)
+    {
         MerchantWallet::create([
             'merchant_id' => $user_id,
             'balance' => 0,
@@ -569,7 +586,7 @@ if (!function_exists('Create_Wallet')){
     }
 }
 
-if(!function_exists('get_statistics')){
+if (!function_exists('get_statistics')) {
     function get_statistics($user_id)
     {
         $wallet = MerchantWallet::where('merchant_id', $user_id)->first();
@@ -583,7 +600,9 @@ if(!function_exists('get_statistics')){
             ]);
         }
         $txns = $wallet->transactions()->get();
-        $offers = $txns->map(function ($txn) {return $txn->item;})->unique('id');
+        $offers = $txns->map(function ($txn) {
+            return $txn->item;
+        })->unique('id');
         $offersPercent = $offers->map(function ($offer) use ($txns) {
             $offerTxns = $txns->where('item_id', $offer->id);
             $totalAmount = $offerTxns->sum('amount');
@@ -593,8 +612,12 @@ if(!function_exists('get_statistics')){
                 'percentage' => round($totalAmount / $txns->sum('amount') * 100, 2),
             ];
         });
-        $refunds = $txns->filter(function ($txn) {return $txn->additional_data['type'] === 'refund';});
-        $payments = $txns->filter(function ($txn) {return $txn->additional_data['type'] === 'pay';});
+        $refunds = $txns->filter(function ($txn) {
+            return $txn->additional_data['type'] === 'refund';
+        });
+        $payments = $txns->filter(function ($txn) {
+            return $txn->additional_data['type'] === 'pay';
+        });
         return [
             'wallet' => $wallet,
             'txns' => $txns,
@@ -638,7 +661,6 @@ if (!function_exists('Peak_Time')) {
 
         return $result;
     }
-
 }
 if (!function_exists('pending_reservations')) {
     function pending_reservations($item)
@@ -649,7 +671,6 @@ if (!function_exists('pending_reservations')) {
         }
         $reservations = $item->Reservations;
         return $reservations;
-
     }
 }
 if (!function_exists('pending_reservations_at')) {
@@ -659,17 +680,17 @@ if (!function_exists('pending_reservations_at')) {
         if (!$item) {
             return [];
         }
-        if ($item->type = "services"){
+        if ($item->type = "services") {
             $now = Carbon::now();
 
             $reservations = $item->Reservations->filter(function ($reservation) use ($now, $unit, $branch) {
                 $createdAt = Carbon::parse($reservation->created_at);
                 $data = json_decode($reservation->additional_data, true);
-    
+
                 if ($branch !== null && (!isset($data['branch']) || $data['branch'] != $branch)) {
                     return false;
                 }
-    
+
                 switch ($unit) {
                     case 'minute':
                         return $createdAt->diffInMinutes($now) === 0;
@@ -682,42 +703,39 @@ if (!function_exists('pending_reservations_at')) {
                         return $createdAt->isSameDay($now);
                 }
             })->values();
-    
+
             return $reservations;
-        }elseif($item->type = "events"){
+        } elseif ($item->type = "events") {
             return $item->Reservations;
         }
-
     }
 }
 
 
 
 
-if (!function_exists('can_booking_now')){
-    function can_booking_now($offer_id,$branch = null)
+if (!function_exists('can_booking_now')) {
+    function can_booking_now($offer_id, $branch = null)
     {
         $offer = Offering::find($offer_id);
-        if (!$offer->features["max_user_unit"] && $offer->type == "services" ){
+        if (!$offer->features["max_user_unit"] && $offer->type == "services") {
             return false;
         }
-        if (!$offer->features["eventMaxQuantity"] && $offer->type == "events" ){
+        if (!$offer->features["eventMaxQuantity"] && $offer->type == "events") {
             return false;
-
         }
         $unit = 0;
         $max_limit =  0;
         $res = 0;
 
-        if ($offer->type == "events"){
+        if ($offer->type == "events") {
             $max_limit = $offer->features["eventMaxQuantity"] ?? 0;
             $res = pending_reservations_at($offer_id, $unit, $branch);
-        }elseif ($offer->type == "services"){
+        } elseif ($offer->type == "services") {
             $max_limit = $offer->features["max_user_time"] ?? 0;
             $unit = $offer->features["max_user_unit"];
 
             $res = pending_reservations_at($offer_id, $unit, $branch);
-
         }
         //dd($res);
         if ($res->isEmpty()) {
@@ -729,14 +747,13 @@ if (!function_exists('can_booking_now')){
             return false;
         }
         return true;
-
     }
 }
 if (!function_exists("get_quantity")) {
-    function get_quantity($offer_id,$branch = null)
+    function get_quantity($offer_id, $branch = null)
     {
         $offer = Offering::find($offer_id);
-        if (!$offer->features["max_user_unit"] && !$offer->features["eventMaxQuantity"]){
+        if (!$offer->features["max_user_unit"] && !$offer->features["eventMaxQuantity"]) {
             return false;
         }
         // $unit = $offer->features["max_user_unit"];
@@ -747,16 +764,15 @@ if (!function_exists("get_quantity")) {
         $max_limit =  0;
         $res = 0;
 
-        if ($offer->type == "events"){
+        if ($offer->type == "events") {
             $max_limit = $offer->features["eventMaxQuantity"] ?? 0;
             //dd((object )$offer->features);
             $res = pending_reservations_at($offer_id, $unit, $branch);
-        }elseif ($offer->type == "services"){
+        } elseif ($offer->type == "services") {
             $max_limit = $offer->features["max_user_time"] ?? 0;
             $unit = $offer->features["max_user_unit"];
 
             $res = pending_reservations_at($offer_id, $unit, $branch);
-
         }
         //dd($res);
         if ($res->isEmpty()) {
@@ -768,13 +784,11 @@ if (!function_exists("get_quantity")) {
             return 0;
         }
         return $max_limit - $total_quantity;
-
-
     }
 }
 
 if (!function_exists('get_branches')) {
-    function get_branches($offer_id=null)
+    function get_branches($offer_id = null)
     {
         if (!$offer_id) {
             return [];
@@ -794,8 +808,9 @@ if (!function_exists('get_branches')) {
     }
 }
 
-if (!function_exists("get_coupons")){
-    function get_coupons($id) {
+if (!function_exists("get_coupons")) {
+    function get_coupons($id)
+    {
         $offer = Offering::find($id);
         if (!$offer) {
             return [];
@@ -833,18 +848,19 @@ if (!function_exists("get_coupons")){
 //             ]);
 //             dd($response->status(), $response->body(), $response->json());
 
-        
+
 //             if ($response->successful()) {
 //                 dd($response->status(), $response->body());
 //                 //return $response->json()['translatedText'];
 //             }
-        
+
 //             return 'خطأ في الترجمة';
 //         }
 // }
 
 
-function translate($text, $source = 'auto', $target = 'fr') {
+function translate($text, $source = 'auto', $target = 'fr')
+{
     try {
         $response = Http::timeout(10)->get("https://lingva.ml/api/v1/{$source}/{$target}/" . urlencode($text));
 
@@ -859,22 +875,23 @@ function translate($text, $source = 'auto', $target = 'fr') {
     }
 }
 
-if(!function_exists("pendingRes")){
-    function pendingRes($collection){
+if (!function_exists("pendingRes")) {
+    function pendingRes($collection)
+    {
         $today = Carbon::today();
 
         $res = $collection->filter(function ($item) use ($today) {
             $data = json_decode($item->additional_data ?? '{}', true);
             $selectedDate = isset($data['selected_date']) ? Carbon::parse($data['selected_date']) : null;
-        
+
             return $item->quantity == 0 && $selectedDate && $selectedDate->lt($today);
         });
         return $res;
-    
     }
 }
 if (!function_exists("sendOTP")) {
-    function sendOTP($email) {
+    function sendOTP($email)
+    {
         $otp = rand(100000, 999999);
         Session::put('otp_code', $otp);
         Session::put('otp_email', $email);
@@ -882,16 +899,17 @@ if (!function_exists("sendOTP")) {
 
         Mail::raw("Your OTP code is: $otp", function ($message) use ($email) {
             $message->to($email)
-                    ->subject("OTP Verification Code");
+                ->subject("OTP Verification Code");
         });
         return $otp;
     }
 }
 
 
-if (!function_exists("can_cancel")){
+if (!function_exists("can_cancel")) {
 
-    function can_cancel( $res) {
+    function can_cancel($res)
+    {
         $offer = $res->offering;
         if (!$offer->features["enable_cancellation"]) {
             return false;
@@ -900,10 +918,10 @@ if (!function_exists("can_cancel")){
         $additional_data = is_string($res->additional_data ?? '') ? json_decode($res->additional_data) : (object) ($res->additional_data ?? []);
 
         $reservation_time = Carbon::parse($additional_data->selected_date  . ' ' . $additional_data->selected_time);
-    
-        $now = Carbon::now(); 
-        $diff = $reservation_time->diffInMinutes($now, false); 
-    
+
+        $now = Carbon::now();
+        $diff = $reservation_time->diffInMinutes($now, false);
+
         return $diff <= (-1 * $offer->features['cancellation_deadline_minutes']);
     }
 }

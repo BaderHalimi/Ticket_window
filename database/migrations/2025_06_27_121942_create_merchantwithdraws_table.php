@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('merchantwithdraws', function (Blueprint $table) {
             $table->id();
             $table->foreignId('merchant_id')->constrained('users')->onDelete('cascade');
-            $table->decimal('amount', 10, 2)->default(0.00);
+            $table->decimal('amount',  15, 2)->default(0.00);
             $table->string('status')->default('pending'); 
             $table->string('transaction_id')->nullable();
             $table->json('additional_data')->nullable(); 

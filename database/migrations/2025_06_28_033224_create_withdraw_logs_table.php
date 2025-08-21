@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('withdraw_id')->unique();
-            $table->decimal('amount', 10, 2);
+            $table->decimal('amount', 15, 2);
             $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
             $table->json('additional_data')->nullable();
             $table->timestamps();

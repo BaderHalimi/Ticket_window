@@ -16,12 +16,17 @@ class SupportChat extends Component
     public $newMessage = '';
     public $finalID,$merchantid = null;
 
-    public function mount($support_id, $merchantid = null, $finalID )
+    public function mount($support_id, $finalID=null, $merchantid = null)
     {
         $this->support_id = $support_id;
         $this->merchantid = $merchantid;
         $this->finalID = $finalID;
+
+        if ($this->finalID === null) {
+            $this->finalID = Auth::id();
+        }
     }
+    
     protected $rules = [
         'newMessage' => 'required|string|max:5000',
     ];
@@ -30,16 +35,20 @@ class SupportChat extends Component
     {
         $message = SupportMessage::findOrFail($id);
 
-        $message->delete();
-    
+        if ($message->user_id === $this->finalID) {
+            $message->delete();
+        }
+            
     }
     public function send()
     {
+        //dd(Auth::guard('admin')->user(), $this->support_id, $this->newMessage, Auth::id());
         $this->validate();
 
         SupportMessage::create([
             'support_id' => $this->support_id,
-            'user_id' => $this->finalID,
+            'user_id' => $this->finalID ?? Auth::id(),
+
             'message' => $this->newMessage,
             'type' => 'text',
         ]);

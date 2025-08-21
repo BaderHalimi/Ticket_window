@@ -6,6 +6,20 @@ use Livewire\Component;
 use App\Models\PaysHistory;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use App\Models\MerchantWallet;
+use App\Models\User;
+use App\Models\Support_chat;
+use App\Models\Supports;
+use App\Models\Role;
+use App\Models\MerchantChat;
+use App\Models\MerchantMessage;
+use App\Models\withdraws_log;
+use App\Models\Offering;
+use App\Models\page_views;
+use App\Models\Presence;
+use App\Models\Merchant\Branch;
+use App\Models\PaidReservation;
 
 class Reports extends Component
 {
@@ -36,70 +50,86 @@ class Reports extends Component
 
     public function render()
     {
-        // تحليل additional_data
-        $parsed = $this->pays->map(function ($pay) {
-            $add = $pay->additional_data;
-            $pay->typeInAdditional = $add['type'] ?? 'pay';
-            $pay->couponCode = $add['coupon_code'] ?? null;
-            $pay->note = $add['notes'] ?? null;
-            return $pay;
-        });
+        // Wallet
+        $topOffers = Offering::withCount([
+            'Reservations as totalSales' => function ($query) {
+                $query->select(DB::raw("SUM(price)")); 
+            },
+            'Reservations as totalBuyers' => function ($query) {
+                $query->select(DB::raw("COUNT(DISTINCT user_id)"));
+            }
+        ])
+        ->orderByDesc('totalSales') 
+        ->take(4)
+        ->get();
 
-        // إجمالي الدفع
-        $totalPay = $parsed->where('typeInAdditional', 'pay')->sum('amount');
-        $totalRefund = $parsed->where('typeInAdditional', 'refund')->sum('amount');
-        $netSales = $totalPay - $totalRefund;
+        $paidReservations = PaidReservation::selectRaw('DATE(created_at) as day,  COUNT(*) as total')
+        ->groupBy('day')
+        ->orderBy('day', 'asc')
+        ->get();
 
-        // الخصومات من الكوبونات
-        $couponLoss = $parsed->where('couponCode', '!=', '')->sum('amount');
-
-        // توزيع حسب المنتج
-        $salesByProduct = $parsed
-            ->where('typeInAdditional', 'pay')
-            ->groupBy('item.name')
-            ->map(fn($group) => $group->sum('amount'));
-
-        // طرق الدفع
-        $countByPaymentMethod = $parsed
-            ->where('typeInAdditional', 'pay')
-            ->groupBy('payment_method')
-            ->map(fn($group) => $group->count());
-
-        // الحالات
-        $countByStatus = $parsed
-            ->groupBy('status')
-            ->map(fn($group) => $group->count());
-
-        // أفضل العملاء
-        $topUsers = $parsed
-            ->where('typeInAdditional', 'pay')
-            ->groupBy('user.f_name')
-            ->map(fn($group) => $group->sum('amount'))
-            ->sortDesc()
-            ->take(5);
-
-        // المبيعات اليومية مع الملاحظات
-        $dailySales = $parsed
-            ->where('typeInAdditional', 'pay')
-            ->groupBy(fn($item) => $item->created_at->format('Y-m-d'))
-            ->map(function ($group) {
-                return [
-                    'total' => $group->sum('amount'),
-                    'notes' => $group->pluck('note')->filter()->values()->all(),
-                ];
-            })
-            ->sortKeys();
-
+        $dates = $paidReservations->pluck('day');
+        $totals = $paidReservations->pluck('total');
+        //dd($topOffers);
+        $totalBalance   = MerchantWallet::sum('balance');
+        $totalLocked    = MerchantWallet::sum('locked_balance');
+        $totalWithdrawn = MerchantWallet::sum('withdrawn_total');
+        $walletTotal    = $totalBalance + $totalLocked + $totalWithdrawn;
+        $averageWallet  = MerchantWallet::avg('balance');
+    
+        // Users & Roles
+        $totalMerchants = MerchantWallet::count();
+        $totalUsers     = User::where("role", "user")->count();
+        $totalAdmins    = User::where("role", "admin")->count();
+        $totalRoles     = Role::count();
+    
+        // Offerings & Branches
+        $totalOffers    = Offering::count();
+        $totalBranches  = Branch::count();
+    
+        // Transactions & Payments
+        $totalTransactions = PaysHistory::count();
+        $totalPay          = PaysHistory::sum('amount');
+    
+        // Support
+        $totalSupportMessages = Support_chat::count();
+        $totalSupportTickets  = Supports::count();
+    
+        // Merchant chats & messages
+        $totalMerchantChats    = MerchantChat::count();
+        $totalMerchantMessages = MerchantMessage::count();
+    
+        // Withdraws & presence
+        $totalWithdraws   = withdraws_log::count();
+        $totalPageViews   = page_views::count();
+        $totalPresence    = Presence::count();
+    
         return view('livewire.reports', [
-            'netSales' => $netSales,
+            'totalBalance' => $totalBalance,
+            'totalLocked' => $totalLocked,
+            'totalWithdrawn' => $totalWithdrawn,
+            'walletTotal' => $walletTotal,
+            'averageWallet' => $averageWallet,
+            'totalMerchants' => $totalMerchants,
+            'totalUsers' => $totalUsers,
+            'totalAdmins' => $totalAdmins,
+            'totalRoles' => $totalRoles,
+            'totalOffers' => $totalOffers,
+            'totalBranches' => $totalBranches,
+            'totalTransactions' => $totalTransactions,
             'totalPay' => $totalPay,
-            'totalRefund' => $totalRefund,
-            'couponLoss' => $couponLoss,
-            'salesByProduct' => $salesByProduct,
-            'countByPaymentMethod' => $countByPaymentMethod,
-            'countByStatus' => $countByStatus,
-            'topUsers' => $topUsers,
-            'dailySales' => $dailySales,
+            'totalSupportMessages' => $totalSupportMessages,
+            'totalSupportTickets' => $totalSupportTickets,
+            'totalMerchantChats' => $totalMerchantChats,
+            'totalMerchantMessages' => $totalMerchantMessages,
+            'totalWithdraws' => $totalWithdraws,
+            'totalPageViews' => $totalPageViews,
+            'totalPresence' => $totalPresence,
+            "topOffers" => $topOffers,
+            "paidReservations" => $paidReservations,
+            "dates" => $dates,
+            "totals" => $totals,
         ]);
     }
+    
 }

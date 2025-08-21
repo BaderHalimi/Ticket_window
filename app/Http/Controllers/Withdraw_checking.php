@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\PaysHistory;
 use App\Http\Controllers\Controller;
 use App\Models\withdraws_log;
+use Illuminate\Support\Facades\DB;
 
 class Withdraw_checking extends Controller
 {
@@ -18,6 +19,14 @@ class Withdraw_checking extends Controller
         $logs = withdraws_log::where('status', 'pending')
             ->get();
         return view('admin.dashboard.withdraws.withdraws_check', compact('logs'));
+    }
+
+    public function index2()
+    {
+        //dd(1);
+        $logs = withdraws_log::where('status', 'completed')->orWhere('status', 'cancelled')
+            ->paginate(10);
+        return view('admin.dashboard.withdraws.withdrawsCheked', compact('logs'));
     }
 
     /**
@@ -43,8 +52,9 @@ class Withdraw_checking extends Controller
     {
         $log = withdraws_log::findOrFail($id);
         $log->load('user');
-
-        $decoded_transactions = json_decode($log->additional_data, true);
+        ///dd($log);
+        $decoded_transactions = $log->additional_data;
+        //dd($decoded_transactions);
         //$transaction_id =  collect($decoded_transactions)->pluck('transaction_id')->all();
         $transactions = PaysHistory::whereIn('transaction_id', $decoded_transactions)->get();
         //dd($transactions, $log, $decoded_transactions);
@@ -68,21 +78,38 @@ class Withdraw_checking extends Controller
     public function update(Request $request, string $id)
     {
         $log = withdraws_log::findOrFail($id);
-        $log->status = 'completed';
-        $log->save();
 
-        $decoded_transactions = json_decode($log->additional_data, true);
-        $transactions = PaysHistory::whereIn('transaction_id', $decoded_transactions)->get();
+
+         $wallet = $log->user->wallet;
+        // $wallet->balance -= $log->amount;
+        // $wallet->withdrawn_total += $log->amount;
+        // $wallet->save();
+        DB::transaction(function () use ($wallet, $log) {
+
+            // if ($wallet->balance < $log->amount) {
+            //     throw new \Exception("الرصيد غير كافي");
+            // }
+    
+            //$wallet->balance -= $log->amount;
+            $wallet->withdrawn_total += $log->amount;
+            $wallet->save();
+    
+            $log->status = 'completed';
+            //$log->save();
+            $log->save();
+        });
+        // $decoded_transactions = json_decode($log->additional_data, true);
+        // $transactions = PaysHistory::whereIn('transaction_id', $decoded_transactions)->get();
         
-        foreach ($transactions as $transaction) {
-            $data = $transaction->additional_data ?? [];
-            if (!is_array($data)) {
-                $data = json_decode($data, true) ?? [];
-            }
-            $data['status'] = 'paid';  
-            $transaction->additional_data = json_encode($data);
-            $transaction->save();
-        }
+        // foreach ($transactions as $transaction) {
+        //     $data = $transaction->additional_data ?? [];
+        //     if (!is_array($data)) {
+        //         $data = json_decode($data, true) ?? [];
+        //     }
+        //     $data['status'] = 'paid';  
+        //     $transaction->additional_data = json_encode($data);
+        //     $transaction->save();
+        // }
         notifcate(
             $log->user_id,
             'تم  السحب',
@@ -105,22 +132,34 @@ class Withdraw_checking extends Controller
      */
     public function destroy(string $id)
     {
-        $log = withdraws_log::findOrFail($id);
-        $log->status = 'cancelled';
-        $log->save();
+         $log = withdraws_log::findOrFail($id);
+        // $log->status = 'cancelled';
+        //$log->save();
+        $wallet = $log->user->wallet;
+        DB::transaction(function () use ($wallet, $log) {
 
-        $decoded_transactions = json_decode($log->additional_data, true);
-        $transactions = PaysHistory::whereIn('transaction_id', $decoded_transactions)->get();
+
+    
+            //$wallet->balance -= $log->amount;
+            $wallet->locked_balance += $log->amount;
+            $wallet->save();
+    
+            $log->status = 'cancelled';
+            //$log->save();
+            $log->save();
+        });
+        // $decoded_transactions = json_decode($log->additional_data, true);
+        // $transactions = PaysHistory::whereIn('transaction_id', $decoded_transactions)->get();
         
-        foreach ($transactions as $transaction) {
-            $data = $transaction->additional_data ?? [];
-            if (!is_array($data)) {
-                $data = json_decode($data, true) ?? [];
-            }
-            $data['status'] = 'cancelled';  
-            $transaction->additional_data = json_encode($data);
-            $transaction->save();
-        }
+        // foreach ($transactions as $transaction) {
+        //     $data = $transaction->additional_data ?? [];
+        //     if (!is_array($data)) {
+        //         $data = json_decode($data, true) ?? [];
+        //     }
+        //     $data['status'] = 'cancelled';  
+        //     $transaction->additional_data = json_encode($data);
+        //     $transaction->save();
+        // }
 
         return redirect()->route('admin.dashboard.withdraws.index')->with('success', 'Withdraw log deleted successfully.');
     }

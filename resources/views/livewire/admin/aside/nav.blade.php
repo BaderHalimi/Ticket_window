@@ -32,6 +32,34 @@
         <span>إدارة طلبات السحب</span>
     </button>
     </a>
+    <a href="{{ route('admin.dashboard.withdraw.handled') }}"> 
+
+<button class="w-full flex items-center p-3 rounded-lg transition-colors text-right hover:bg-slate-700">
+    <svg xmlns="http://www.w3.org/2000/svg" 
+    width="24" height="24" viewBox="0 0 24 24" 
+    fill="none" stroke="currentColor" stroke-width="2" 
+    stroke-linecap="round" stroke-linejoin="round" 
+    class="w-5 h-5 ml-4">
+ <path d="M9 12l2 2 4-4"></path>
+ <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path>
+ <path d="M14 2v6h6"></path>
+</svg>
+
+    <span>طلبات السحب المنفذة</span>
+</button>
+</a>
+
+<a href="{{ route('admin.dashboard.merchant.access') }}"> 
+
+    <button class="w-full flex items-center p-3 rounded-lg transition-colors text-right hover:bg-slate-700">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 ml-4">
+            <path d="M2 16V4a2 2 0 0 1 2-2h11"></path>
+            <path d="M5 14H4a2 2 0 1 0 0 4h1"></path>
+            <path d="M22 18H11a2 2 0 1 0 0 4h11V6H11a2 2 0 0 0-2 2v12"></path>
+        </svg>
+        <span>الوصول لحسبات التجار</span>
+    </button>
+</a>
     {{-- <a href="{{ route('admin.dashboard.public_reservations') }}"> 
 
     
@@ -91,7 +119,7 @@
         <span>إعدادات النظام</span>
     </button>
 </a>
-    <button class="w-full flex items-center p-3 rounded-lg transition-colors text-right hover:bg-slate-700">
+    <!-- <button class="w-full flex items-center p-3 rounded-lg transition-colors text-right hover:bg-slate-700">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 ml-4">
             <path d="M12 4.5a2.5 2.5 0 0 0-4.96-.46 2.5 2.5 0 0 0-1.98 3 2.5 2.5 0 0 0-1.32 4.24 3 3 0 0 0 .34 5.58 2.5 2.5 0 0 0 2.96 3.08 2.5 2.5 0 0 0 4.91.05L12 20V4.5Z"></path>
             <path d="M16 8V5c0-1.1.9-2 2-2"></path>
@@ -104,5 +132,5 @@
             <path d="M18.5 3a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z"></path>
         </svg>
         <span>الرقابة الذكية</span>
-    </button>
+    </button> -->
 </nav>

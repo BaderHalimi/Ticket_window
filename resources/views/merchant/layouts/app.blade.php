@@ -110,6 +110,15 @@
             </aside>
         </div>
 
+        
+        @php
+        $user = auth()->user();
+
+        if ($merchant) {
+            $user = \App\Models\User::find($merchant);
+        }
+            
+        @endphp
         <main class="relative flex-1 overflow-y-auto">
 
             <header class="bg-white shadow p-4 sticky top-0 z-30 flex justify-between items-center">
@@ -120,7 +129,7 @@
                 </button>
                 <!-- نضع العناصر في يسار الشاشة دائمًا مهما كان حجم الجهاز -->
                 <div class="flex items-center gap-4 ltr:ml-auto rtl:mr-auto">
-                    <a href="{{ route('template', Auth::id()) }}" target="_blank" class="text-slate-600 hover:text-orange-500" aria-label="عرض المتجر">
+                    <a href="{{ route('template', $user->id) }}" target="_blank" class="text-slate-600 hover:text-orange-500" aria-label="عرض المتجر">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M1.5 12s4-7.5 10.5-7.5S22.5 12 22.5 12s-4 7.5-10.5 7.5S1.5 12 1.5 12z" />
                             <circle cx="12" cy="12" r="3" />
@@ -128,13 +137,13 @@
                     </a>
 
                     @livewire('notif-bell')
-
+                    
                     <div class="flex items-center gap-2">
-                        <span class="text-slate-800 font-bold text-sm hidden md:inline">
-                            {{ auth('merchant')->user()->name }}
-                        </span>
+                        {{-- <span class="text-slate-800 font-bold text-sm hidden md:inline">
+                            {{ $user->f_name . " " . $user->l_name ?? 'تاجر غير معروف' }}
+                        </span> --}}
                         <img class="h-10 w-10 rounded-full border border-slate-300 object-cover"
-                            src="{{ asset('storage/' . (auth('merchant')->user()->additional_data['profile_picture'] ?? 'default-user.png')) }}"
+                            src="{{ asset('storage/' . ($user->additional_data['profile_picture'] ?? 'default-user.png')) }}"
                             alt="User">
                     </div>
                 </div>

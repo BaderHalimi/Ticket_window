@@ -21,9 +21,8 @@
                         <div class="relative w-64" bis_skin_checked="1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400">
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <path d="m21 21-4.3-4.3"></path>
-                            </svg><input class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus:ring-2 focus:ring-primary focus:border-transparent transition-all pl-10" placeholder="بحث عن تاجر..."></div><button type="button" role="combobox" aria-controls="radix-:r1r:" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" data-placeholder="" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-[180px]"><span style="pointer-events: none;">فلترة حسب الحالة</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 opacity-50" aria-hidden="true">
-                                <path d="m6 9 6 6 6-6"></path>
-                            </svg></button>
+                            </svg><input  id="searchInput" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus:ring-2 focus:ring-primary focus:border-transparent transition-all pl-10" placeholder="بحث عن تاجر..."></div>
+
                     </div>
                 </div>
             </div>
@@ -57,5 +56,20 @@
 
         menu.classList.toggle('hidden');
     }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const cards = document.querySelectorAll(".merchant-card");
+
+        searchInput.addEventListener("keyup", function () {
+            const query = this.value.toLowerCase();
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(query) ? "" : "none";
+            });
+        });
+    });
 </script>
 @endpush
