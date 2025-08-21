@@ -19,7 +19,7 @@ class EmployeesManger extends Component
         'staff_approval' => false,
         'withdraw_check' => false,
         'tickets' => false,
-        'system_edit' => false,
+        //'system_edit' => false,
 
     ];
 
@@ -32,6 +32,7 @@ class EmployeesManger extends Component
 
     public function mount()
     {
+        //dd(adminPermission("employees_edit"));
         if (Auth::guard("admin")->user() === null) {
             abort(403, 'Unauthorized action.');
         }
@@ -40,11 +41,17 @@ class EmployeesManger extends Component
 
     public function loadAdmins()
     {
-        $this->admins = User::where('role', 'admin')->get();
+        //dd(LoadConfig());
+        $owner = LoadConfig()->system->owner ?? null;
+        $this->admins = User::where('role', 'admin')->where('id', '!=', $owner)->get();
     }
 
     public function addAdmin()
     {
+        if (!adminPermission("employees_edit")) {
+            session()->flash('error', 'ليس لديك صلاحية لإضافة أدمن جديد ❌');
+            return;
+        }
         $this->validate();
 
         $user = User::create([
@@ -65,7 +72,7 @@ class EmployeesManger extends Component
             'staff_approval' => false,
             'withdraw_check' => false,
             'tickets' => false,
-            'system_edit' => false,
+            //'system_edit' => false,
     
         ];
 
@@ -75,6 +82,10 @@ class EmployeesManger extends Component
 
     public function deleteAdmin($id)
     {
+        if (!adminPermission("employees_edit")) {
+            session()->flash('error', 'ليس لديك صلاحية لحذف الأدمن ❌');
+            return;
+        }
         $admin = User::findOrFail($id);
         $admin->delete();
         $this->loadAdmins();
@@ -83,6 +94,10 @@ class EmployeesManger extends Component
 
     public function togglePermission($id, $perm)
     {
+        if (!adminPermission("employees_edit")) {
+            session()->flash('error', 'ليس لديك صلاحية لتعديل الصلاحيات ❌');
+            return;
+        }
         $admin = User::findOrFail($id);
         $data = $admin->additional_data ?? [];
 

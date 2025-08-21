@@ -1,6 +1,9 @@
 @extends('admin.layouts.app')
 @section('content')
 
+
+
+
 <div class="mb-6">
     <input type="text" id="searchInput"
            placeholder="ابحث عن تاجر..."

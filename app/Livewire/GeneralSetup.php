@@ -25,7 +25,7 @@ class GeneralSetup extends Component
     public function mount()
     {
         $this->setup = Setup::firstOrCreate(
-            ['id' => 1],
+            //['id' => 1],
             ['name' => '']
         );
         

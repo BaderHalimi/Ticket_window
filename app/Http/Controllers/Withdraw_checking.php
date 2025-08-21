@@ -16,6 +16,9 @@ class Withdraw_checking extends Controller
      */
     public function index()
     {
+        if (!adminPermission("withdraw_check")) {
+            return redirect()->route('dashboard.overview')->with('error', 'ليس لديك صلاحية للوصول إلى هذه الصفحة ❌');
+        }
         $logs = withdraws_log::where('status', 'pending')
             ->get();
         return view('admin.dashboard.withdraws.withdraws_check', compact('logs'));
@@ -50,6 +53,7 @@ class Withdraw_checking extends Controller
      */
     public function show(string $id)
     {
+        
         $log = withdraws_log::findOrFail($id);
         $log->load('user');
         ///dd($log);
@@ -77,6 +81,9 @@ class Withdraw_checking extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!adminPermission("withdraw_check")) {
+            return redirect()->route('dashboard.overview')->with('error', 'ليس لديك صلاحية للوصول إلى هذه الصفحة ❌');
+        }
         $log = withdraws_log::findOrFail($id);
 
 

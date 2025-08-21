@@ -102,16 +102,16 @@
       <!-- PAYMENT -->
       @if ($tab == 'payment')
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
+        <!-- <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">💰 العملة الافتراضية</label>
           <input wire:model.defer="additional_data.currency" type="text"
             class="w-full border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 transition text-sm px-4 py-2">
-        </div>
-        <div>
+        </div> -->
+        <!-- <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">💱 العملات المسموحة (بفواصل)</label>
           <input wire:model.defer="additional_data.allowed_currencies" type="text"
             class="w-full border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 transition text-sm px-4 py-2">
-        </div>
+        </div> -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">🪙 عمولة المنصة (%)</label>
           <input wire:model.defer="additional_data.percent" type="text"

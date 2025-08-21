@@ -417,18 +417,54 @@ if (!function_exists("first_setup")){
         if (!$setup) {
             return false;
         }
-        $owner = $setup->additional_data["owner"] ?? null;
-        if(isset($setup->name) && isset($setup->email) && isset($setup->phone) && isset($setup->logo) && isset($owner)){
+        $owner = $setup->additional_data["owner"] ?? null;//&& isset($setup->email) && isset($setup->phone) &&
+        if(isset($setup->name) && isset($setup->logo) && isset($owner)){
            return true; 
         }
         return false;
 
     }
 }
+
+if (!function_exists("adminPermission")){
+    function adminPermission($perm_key){
+        if (LoadConfig()->system->owner == Auth::guard("admin")->user()->id) {
+            return true;
+        }
+        $user = Auth::guard("admin")->user();
+        $add = $user->additional_data ?? [];
+        $permissions = $add['permissions'] ?? [];
+        if(in_array($perm_key, $permissions)){
+            return true;
+
+        }
+        //dd($add);
+        return false;
+
+    }
+}
+
+if (!function_exists("LoadConfig")){
+    function LoadConfig()
+    {
+        $setup = setup::first();
+        if (!$setup) {
+            return [];
+        }
+        $system = $setup->additional_data ?? [];
+        $config["setup"] = (object)$setup; 
+        $config["system"] = (object)$system; 
+
+        return (object)$config;
+    }
+}
+
+
+
 if (!function_exists("has_Permetion")) {
     function has_Permetion($user_id = null, $perm_key, $merchant_id)
     {
-        if (Auth::guard('admin')->check()) {
+        if (Auth::guard('admin')->check() && adminPermission("merchants_access") ) {
             return true;
         }
         if ($user_id === null) {
@@ -449,7 +485,8 @@ if (!function_exists("has_Permetion")) {
 if (!function_exists("is_m_admin")) {
     function is_m_admin()
     {
-        if (Auth::guard('admin')->check()) {
+        //dd(adminPermission("merchants_access"));
+        if (Auth::guard('admin')->check() && adminPermission("merchants_access")) {
             return true;
         }
         return false;

@@ -1,4 +1,13 @@
-<div class="p-6 space-y-6">
+<div>
+
+@php
+$access = false;
+if (adminPermission("employees_edit")) {
+    $access = true;
+}
+@endphp
+<fieldset @if (!$access) disabled @endif >
+<div class="p-6 space-y-6" >
     {{-- رسائل --}}
     @if (session()->has('success'))
         <div class="bg-green-100 text-green-700 p-2 rounded mb-4">
@@ -45,10 +54,10 @@
                     <input type="checkbox" wire:model="permissions.withdraw_check">
                     <span>معالجة السحوبات</span>
                 </label>
-                <label class="flex items-center gap-2">
+                {{-- <label class="flex items-center gap-2">
                     <input type="checkbox" wire:model="permissions.system_edit">
                     <span>إعدادات النظام</span>
-                </label>
+                </label> --}}
             </div>
         </div>
 
@@ -129,12 +138,12 @@
                         <i class="ri-bank-card-line"></i> معالجة السحوبات
                     </button>
                 </li>
-                <li>
+                {{-- <li>
                     <button wire:click="togglePermission({{ $admin->id }}, 'system_edit')"
                         class="px-3 py-1 rounded-xl flex items-center gap-2 {{ ($perms['system_edit'] ?? false) ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
                         <i class="ri-settings-3-line"></i> إعدادات النظام
                     </button>
-                </li>
+                </li> --}}
             </ol>
         </div>
     </div>
@@ -143,3 +152,4 @@
         @endforeach
     </div>
 </div>
+</fieldset></div>

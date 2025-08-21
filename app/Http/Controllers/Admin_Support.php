@@ -40,6 +40,9 @@ class Admin_Support extends Controller
      */
     public function show(string $id)
     {
+        if (!adminPermission("tickets")) {
+            return redirect()->route('dashboard.overview')->with('error', 'ليس لديك صلاحية للوصول إلى هذه الصفحة ❌');
+        }
         $ticket = Supports::findOrFail($id);
         return view('admin.dashboard.support.show', compact('ticket')); 
     }
@@ -49,6 +52,9 @@ class Admin_Support extends Controller
      */
     public function edit(string $id)
     {
+        if (!adminPermission("tickets")) {
+            return redirect()->route('dashboard.overview')->with('error', 'ليس لديك صلاحية للوصول إلى هذه الصفحة ❌');
+        }
         $ticket = Supports::findOrFail($id);
         if (isEmpty($ticket->staff_id)) {
             $ticket->staff_id = Auth::id();
@@ -73,6 +79,9 @@ class Admin_Support extends Controller
      */
     public function destroy(string $id)
     {
+        if (!adminPermission("tickets")) {
+            return redirect()->route('dashboard.overview')->with('error', 'ليس لديك صلاحية للوصول إلى هذه الصفحة ❌');
+        }
         $ticket = Supports::findOrFail($id);
         $ticket->status = 'closed';
         return redirect()->back()->with('success', 'تم حذف الطلب بنجاح');

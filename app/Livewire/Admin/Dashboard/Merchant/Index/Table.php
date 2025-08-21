@@ -14,6 +14,10 @@ class Table extends Component
 
     public function acceptMerchant($merchantId)
     {
+        if (!adminPermission("staff_approval")) {
+            $this->dispatch('notify', ['type' => 'error', 'message' => 'You do not have permission to accept merchants.']);
+            return;
+        }
         $merchant = User::find($merchantId);
         if ($merchant) {
             $merchant->update(['status' => 'active']);
@@ -24,6 +28,10 @@ class Table extends Component
     }
     public function rejectMerchant($merchantId)
     {
+        if (!adminPermission("staff_approval")) {
+            $this->dispatch('notify', ['type' => 'error', 'message' => 'You do not have permission to reject merchants.']);
+            return;
+        }
         $merchant = User::find($merchantId);
         if ($merchant) {
             $merchant->update(['status' => 'rejected']);
