@@ -2,10 +2,10 @@
 @section('content')
 <!-- Hero Section -->
 <section class="min-h-screen flex flex-col justify-center items-center text-center bg-[#F5EFF1] pt-24 px-4">
-    <img src="{{ asset('assets/logo/Ticket-Window-01.png') }}" alt="logo"
+    <img src="{{ Storage::url(LoadConfig()->setup->logo ?? null) }}" alt="logo"
         class="w-40 h-40 mb-6 floating-animation" />
     <h1 class="text-5xl md:text-7xl font-extrabold mb-6 text-orange-500 text-orange-500">
-        {{ config('app.name') }}
+        {{ LoadConfig()->setup->name }}
     </h1>
     <p class="text-lg md:text-xl text-gray-700 max-w-xl mb-6">
         بوابتك الذكية لإدارة وبيع تذاكر الفعاليات والحجوزات

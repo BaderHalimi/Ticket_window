@@ -26,7 +26,7 @@ class GeneralSetup extends Component
     {
         $this->setup = Setup::firstOrCreate(
             //['id' => 1],
-            ['name' => '']
+            //['name' => '']
         );
         
         $this->name = $this->setup->name;

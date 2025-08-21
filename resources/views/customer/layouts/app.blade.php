@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ config('app.name') }}</title>
-    <link rel="shortcut icon" href="{{ asset('assets/logo/Ticket-Window-01.png') }}" type="image/x-icon">
+    <title>{{ LoadConfig()->setup->name }}</title>
+    <link rel="shortcut icon" href="{{ Storage::url(LoadConfig()->setup->logo ?? null) }}" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
@@ -54,7 +54,7 @@
                             <path d="M13 11v2" />
                         </svg>
                     </div>
-                    <h1 class="text-xl font-bold text-slate-800">{{ config('app.name') }}</h1>
+                    <h1 class="text-xl font-bold text-slate-800">{{ LoadConfig()->setup->name }}</h1>
                 </div>
 
                 @livewire('customer.aside.nav')

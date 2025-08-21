@@ -149,7 +149,7 @@
         <!-- Navigation -->
         <nav class="fixed top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center">
             <div class="flex items-center">
-                <h1 class="text-3xl font-['Pacifico'] text-primary">{{ config('app.name') }}</h1>
+                <h1 class="text-3xl font-['Pacifico'] text-primary">{{ LoadConfig()->setup->name }}</h1>
             </div>
 
             <div class="flex items-center space-x-6">
@@ -459,7 +459,7 @@
         <footer class="container mx-auto px-8 py-12 relative z-10">
             <div class="flex flex-wrap justify-between">
                 <div class="w-1/4 mb-8">
-                    <h1 class="text-3xl font-['Pacifico'] text-primary mb-4">{{ config('app.name') }}</h1>
+                    <h1 class="text-3xl font-['Pacifico'] text-primary mb-4">{{ LoadConfig()->setup->name }}</h1>
                     <p class="text-indigo-700 mb-6">Experience the future of event booking in our immersive virtual exhibition hall.</p>
                     <div class="flex space-x-4">
                         <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full glassmorphism">
