@@ -435,7 +435,10 @@ if (!function_exists("adminPermission")){
         $add = $user->additional_data ?? [];
         $permissions = $add['permissions'] ?? [];
         if(in_array($perm_key, $permissions)){
-            return true;
+            if ($permissions[$perm_key] == true){
+                return true;
+            }
+            //return true;
 
         }
         //dd($add);
@@ -627,15 +630,15 @@ if (!function_exists('get_statistics')) {
     function get_statistics($user_id)
     {
         $wallet = MerchantWallet::where('merchant_id', $user_id)->first();
-        if (!$wallet) {
-            $wallet = MerchantWallet::create([
-                'merchant_id' => $user_id,
-                'balance' => 0,
-                'locked_balance' => 0,
-                'withdrawn_total' => 0,
-                'additional_data' => [],
-            ]);
-        }
+        // if (!$wallet) {
+        //     $wallet = MerchantWallet::create([
+        //         'merchant_id' => $user_id,
+        //         'balance' => 0,
+        //         'locked_balance' => 0,
+        //         'withdrawn_total' => 0,
+        //         'additional_data' => [],
+        //     ]);
+        // }
         $txns = $wallet->transactions()->get();
         $offers = $txns->map(function ($txn) {
             return $txn->item;

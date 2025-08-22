@@ -106,6 +106,7 @@ class TeamManager extends Component
         if(!can_enter( $this->Amerchantid, 'role_edit')){
             return;
         }
+        $this->toggleRoleAccordion($roleId);
         $this->editingRoleId = $roleId;
         $role = Role::findOrFail($roleId);
         $this->editRoleName = $role->name;

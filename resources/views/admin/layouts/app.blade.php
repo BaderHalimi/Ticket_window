@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ LoadConfig()->setup->name }}</title>
+    <title>{{ LoadConfig()->setup->name ?? null   ?? "شباك التذاكر"}}</title>
     <link rel="shortcut icon" href="{{ Storage::url(LoadConfig()->setup->logo ?? null) }}" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,15 +66,9 @@
         }
     </style>
 </head>
-@php
-    $isSetupd= true;
-    if(!first_setup()){
-        $isSetupd = false;
-    }
-@endphp
+
 <body class="font-sans">
     <div class="flex h-screen bg-slate-100" dir="rtl" bis_skin_checked="1">
-        @if ($isSetupd)
             
         <div class="scrolled-div fixed top-0 right-0 h-full overflow-y-auto bg-slate-800 text-white w-64 z-40 flex flex-col" bis_skin_checked="1" style="transform: none;">
             <div class="p-6 mb-4 flex items-center justify-center border-b border-slate-700" bis_skin_checked="1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-orange-500">
@@ -111,15 +105,10 @@
                             <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
                         </svg><span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span></button><span class="relative flex shrink-0 overflow-hidden rounded-full cursor-pointer h-9 w-9" type="button" id="radix-:r1k:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><img class="aspect-square h-full w-full" alt="Admin" src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&amp;w=200"></span></div>
             </header>
-            @endif
 
             <main class="flex-1 overflow-y-auto p-6 lg:p-8">
-                @if(!$isSetupd)
-                @livewire('general_setup')
 
-                @else
                 @yield('content')
-                @endif
 
             </main>
         </div>

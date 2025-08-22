@@ -240,7 +240,7 @@
                                                 #{{ $ticket['id'] }} - {{ $ticket['subject'] ?? 'بدون عنوان' }}
                                             </h3>
 
-                                            @if ($ticket->additional_data['status'] == 'pending')
+                                            @if ($ticket->additional_data['status'] ?? null == 'pending')
                                                 <a href="{{ route('customer.dashboard.chatC') }}">
                                                     <button class="text-blue-500 hover:text-blue-700 text-lg">
                                                         <i class="ri-chat-3-line"></i>
@@ -288,6 +288,17 @@
                         $features = json_decode($features, true);
                     }
                     $calendar = $features['calendar'][0] ?? null;
+
+                            $now = \Carbon\Carbon::now();
+        $start = \Carbon\Carbon::parse($features['discount_start'] ?? null);
+        $end = \Carbon\Carbon::parse($features['discount_end'] ?? null);
+        $discountActive = ($features['enable_discounts'] ?? false) 
+                          && $start && $end 
+                          && $now->between($start, $end);
+
+        $price = (float) $offer['price'];
+        $discountPercent = (float) ($features['discount_percent'] ?? 0);
+        $discountedPrice = $price - ($price * $discountPercent / 100);
                 @endphp
 
 
@@ -319,8 +330,12 @@
                                 <i class="ri-map-pin-line text-orange-500"></i> {{ $offer['location'] }}
                             </p>
                             <p class="flex items-center gap-1">
-                                <i class="ri-cash-line text-orange-500"></i> {{ $offer['price'] }} ريال
-                            </p>
+                                <i class="ri-cash-line text-orange-500"></i>                                 @if($discountActive)
+                                <span class="line-through text-gray-400">{{ $price }} ريال</span>
+                                <span class="text-green-600 font-bold">{{ $discountedPrice }} ريال</span>
+                            @else
+                                <span>{{ $price }} ريال</span>
+                            @endif
                         </div>
 
                         @if ($calendar)
@@ -448,7 +463,7 @@
                                 <span
                                     class="text-sm bg-orange-100 text-orange-600 font-semibold px-3 py-1 rounded-full shadow-sm">
                                     <i class="ri-money-dollar-circle-line"></i>
-                                    {{ number_format($selectedOffer->price, 2) }} ريال
+                                    {{ number_format($PiceforView, 2) }} ريال
                                 </span>
                             </div>
 
@@ -748,7 +763,7 @@
 
                             <div class="flex justify-between items-center">
                                 <div class="text-lg font-semibold">
-                                    السعر: {{ $price }} ريال
+                                    السعر: {{ $PiceforView }} ريال
                                 </div>
                                 <div class="text-sm text-gray-600">
                                     الكمية المتوفرة: {{ $stock }}
@@ -822,8 +837,8 @@
                                 {{-- السعر والكمية --}}
                                 <div>
                                     <h3 class="font-semibold text-gray-700">السعر:</h3>
-                                    <p>{{ $price }} ريال x {{ $quantity }} =
-                                        <strong>{{ $price * $quantity }} ريال</strong>
+                                    <p>{{ $PiceforView }} ريال x {{ $quantity }} =
+                                        <strong>{{ $PiceforView * $quantity }} ريال</strong>
                                     </p>
                                 </div>
 

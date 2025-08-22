@@ -5,7 +5,7 @@
     <img src="{{ Storage::url(LoadConfig()->setup->logo ?? null) }}" alt="logo"
         class="w-40 h-40 mb-6 floating-animation" />
     <h1 class="text-5xl md:text-7xl font-extrabold mb-6 text-orange-500 text-orange-500">
-        {{ LoadConfig()->setup->name }}
+        {{ LoadConfig()->setup->name ?? null  }}
     </h1>
     <p class="text-lg md:text-xl text-gray-700 max-w-xl mb-6">
         بوابتك الذكية لإدارة وبيع تذاكر الفعاليات والحجوزات

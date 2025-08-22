@@ -32,6 +32,8 @@
         </button>
     </form>
 
+    
+
     <div class="mt-6 text-center">
         <button id="resend-btn"
                 class="bg-gray-300 text-gray-700 px-4 py-2 rounded cursor-not-allowed opacity-50"

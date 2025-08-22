@@ -39,7 +39,7 @@
         @foreach ($coupons as $index => $coupon)
             <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
                 <input type="text" wire:model.lazy="coupons.{{ $index }}.code" placeholder="كود الكوبون" class="border p-2 rounded-md">
-                <input type="number" wire:model.lazy="coupons.{{ $index }}.discount" placeholder="الخصم (بالدولار)" class="border p-2 rounded-md">
+                <input type="number" wire:model.lazy="coupons.{{ $index }}.discount" max="100" placeholder="الخصم (%)" class="border p-2 rounded-md">
                 <input type="date" wire:model.lazy="coupons.{{ $index }}.expires_at" class="border p-2 rounded-md">
                 <button type="button" wire:click="removeCoupon({{ $index }})" class="text-red-500 hover:underline text-sm">حذف</button>
             </div>

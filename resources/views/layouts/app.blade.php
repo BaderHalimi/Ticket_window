@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ LoadConfig()->setup->name }}</title>
+    <title>{{ LoadConfig()->setup->name ?? null  ?? "شباك التذاكر" }}</title>
     <link rel="shortcut icon" href="{{ Storage::url(LoadConfig()->setup->logo ?? null) }}" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,12 +42,25 @@
         }
     </style>
 </head>
+@php
+    $isSetupd= true;
+    if(!first_setup()){
+        $isSetupd = false;
+    }
+@endphp
 
 <body class="font-sans">
 
-    @livewire('front.nav')
-    @yield('content')
-    <footer class="bg-slate-900 text-white py-12">
+
+    @if(!$isSetupd)
+                @livewire('general_setup')
+
+                @else
+                @livewire('front.nav')
+
+                @yield('content')
+
+                <footer class="bg-slate-900 text-white py-12">
         <div class="mx-[5%]">
             <div class="container mx-auto px-4" bis_skin_checked="1">
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8" bis_skin_checked="1">
@@ -55,7 +68,7 @@
                         <div class="flex items-center mb-4 cursor-pointer" bis_skin_checked="1"><img
                                 alt="logo" class="w-10 h-10 ml-3"
                                 src="{{Storage::url(LoadConfig()->setup->logo ?? null)}}"><span
-                                class="text-xl font-bold text-white">{{ LoadConfig()->setup->name }}</span></div>
+                                class="text-xl font-bold text-white">{{ LoadConfig()->setup->name ?? null  ?? "شباك التذاكر" }}</span></div>
                         <p class="text-gray-400 text-sm leading-relaxed">البوابة الذكية لحجوزات الفعاليات والمطاعم
                             والمعارض، بوابتك نحو تجربة فريدة.</p>
                     </div>
@@ -94,6 +107,8 @@
             </div>
         </div>
     </footer>
+     @endif
+
     @livewireScripts
     @stack('scripts')
     <script>

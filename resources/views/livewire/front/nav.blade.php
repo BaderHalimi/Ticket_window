@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between h-16" bis_skin_checked="1">
             <div class="flex items-center cursor-pointer" bis_skin_checked="1"><img alt="logo" class="w-10 h-10 ml-3"
                     src="{{ Storage::url(LoadConfig()->setup->logo ?? null) }}"><span
-                    class="text-xl font-bold gradient-text">{{ LoadConfig()->setup->name }}</span></div>
+                    class="text-xl font-bold gradient-text">{{ LoadConfig()->setup->name ?? null  ?? "شباك التذاكر" }}</span></div>
             <div class="hidden md:flex items-center space-x-2 space-x-reverse" bis_skin_checked="1">
                 <a href="{{ route('home') }}" wire:click.prevent="checkAccess('{{ route('home') }}')"
                     class="px-4 py-2 relative font-medium @if (Route::is('home')) text-orange-500 border-b-2 border-orange-500 transition-all duration-500 @else text-gray-600 hover:text-orange-500 @endif">الرئيسية

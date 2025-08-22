@@ -4,7 +4,7 @@ namespace App\Livewire\Admin\Dashboard\Merchant\Index;
 
 use App\Models\User;
 use Livewire\Component;
-
+use App\Models\MerchantWallet;
 class Table extends Component
 {
     // public $merchants;
@@ -21,6 +21,14 @@ class Table extends Component
         $merchant = User::find($merchantId);
         if ($merchant) {
             $merchant->update(['status' => 'active']);
+
+            $wallet = MerchantWallet::create([
+                'merchant_id' => $merchant->id,
+                'balance' => 0,
+                'locked_balance' => 0,
+                'withdrawn_total' => 0,
+                'additional_data' => [],
+            ]);
             $this->dispatch('notify', ['type' => 'success', 'message' => 'Merchant accepted successfully.']);
         } else {
             $this->dispatch('notify', ['type' => 'error', 'message' => 'Merchant not found.']);

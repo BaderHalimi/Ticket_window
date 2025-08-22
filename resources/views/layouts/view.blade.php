@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ LoadConfig()->setup->name }}</title>
+    <title>{{ LoadConfig()->setup->name ?? null  }}</title>
     <link rel="shortcut icon" href="{{ Storage::url(LoadConfig()->setup->logo ?? null) }}" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,7 +55,7 @@
                         <div class="flex items-center mb-4 cursor-pointer" bis_skin_checked="1"><img
                                 alt="logo" class="w-10 h-10 ml-3"
                                 src="{{Storage::url(LoadConfig()->setup->logo ?? null)}}"><span
-                                class="text-xl font-bold text-white">{{ LoadConfig()->setup->name }}</span></div>
+                                class="text-xl font-bold text-white">{{ LoadConfig()->setup->name ?? null  }}</span></div>
                         <p class="text-gray-400 text-sm leading-relaxed">البوابة الذكية لحجوزات الفعاليات والمطاعم
                             والمعارض، بوابتك نحو تجربة فريدة.</p>
                     </div>

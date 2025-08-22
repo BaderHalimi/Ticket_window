@@ -21,7 +21,7 @@
 <body class="min-h-screen flex items-center justify-center px-4">
     <nav class="fixed top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center">
         <div class="flex items-center">
-            <h1 class="text-3xl font-['Pacifico'] text-primary">{{ LoadConfig()->setup->name }}</h1>
+            <h1 class="text-3xl font-['Pacifico'] text-primary">{{ LoadConfig()->setup->name ?? null  }}</h1>
         </div>
     </nav>
     <div class="max-w-xl w-full mx-auto">

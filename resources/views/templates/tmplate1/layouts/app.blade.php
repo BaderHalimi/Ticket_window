@@ -89,7 +89,7 @@
             </div>
         </div>
         <div class="text-center text-xs text-gray-400 mt-6">
-            جميع الحقوق محفوظة لدى <a class="text-orange-500" href="{{ config('app.url') }}">{{ LoadConfig()->setup->name }} © 2025 </a>
+            جميع الحقوق محفوظة لدى <a class="text-orange-500" href="{{ config('app.url') }}">{{ LoadConfig()->setup->name ?? null  }} © 2025 </a>
         </div>
     </footer>
 

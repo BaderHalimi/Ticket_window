@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ LoadConfig()->setup->name }}</title>
+    <title>{{ LoadConfig()->setup->name ?? null  }}</title>
     <link rel="shortcut icon" href="{{ Storage::url(LoadConfig()->setup->logo ?? null) }}" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
@@ -54,7 +54,7 @@
                             <path d="M13 11v2" />
                         </svg>
                     </div>
-                    <h1 class="text-xl font-bold text-slate-800">{{ LoadConfig()->setup->name }}</h1>
+                    <h1 class="text-xl font-bold text-slate-800">{{ LoadConfig()->setup->name ?? null  }}</h1>
                 </div>
 
                 @livewire('customer.aside.nav')

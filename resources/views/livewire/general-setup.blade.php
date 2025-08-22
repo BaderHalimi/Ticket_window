@@ -12,15 +12,12 @@
     @endif
   
     <!-- Tabs -->
+
     <div class="flex flex-wrap justify-center mb-12 gap-3">
-      @foreach([
-        'general'=>'⚙️ عام',
-        'contact'=>'📞 تواصل',
-        'social'=>'🌐 روابط اجتماعية',
-        'payment'=>'💰 الدفع',
-        'policy'=>'📜 سياسة الخصوصية',
-        'terms'=>'📑 الشروط والأحكام'
-      ] as $key => $label)
+      @php
+        
+      @endphp
+      @foreach($tabs as $key => $label)
         <button
           wire:click="$set('tab', '{{ $key }}')"
           class="px-5 py-2 rounded-full text-sm font-semibold shadow-sm transition duration-300
@@ -31,7 +28,57 @@
     </div>
   
     <form wire:submit.prevent="save" class="space-y-10">
-  
+    @if ($tab == 'account')
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+    {{-- First Name --}}
+    <div>
+        <label for="first_name" class="block text-sm font-medium mb-1">First Name</label>
+        <input type="text" wire:model="first_name" id="first_name"
+            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:border-blue-500">
+        @error('first_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+    </div>
+
+    {{-- Last Name --}}
+    <div>
+        <label for="last_name" class="block text-sm font-medium mb-1">Last Name</label>
+        <input type="text" wire:model="last_name" id="last_name"
+            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:border-blue-500">
+        @error('last_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+    </div>
+
+    {{-- Email --}}
+    <div>
+        <label for="email" class="block text-sm font-medium mb-1">Email</label>
+        <input type="email" wire:model="admin_email" id="admin_email"
+            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:border-blue-500">
+        @error('admin_email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+    </div>
+
+    {{-- Password --}}
+    <div>
+        <label for="password" class="block text-sm font-medium mb-1">Password</label>
+        <input type="password" wire:model="password" id="password"
+            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:border-blue-500">
+        @error('password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+    </div>
+
+    {{-- Confirm Password --}}
+    <div>
+        <label for="password_confirmation" class="block text-sm font-medium mb-1">Confirm Password</label>
+        <input type="password" wire:model="password_confirmation" id="password_confirmation"
+            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:border-blue-500">
+        @error('password_confirmation') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+    </div>
+
+</div>
+@endif
+
+
+
+
+
+
       <!-- GENERAL -->
       @if ($tab == 'general')
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">

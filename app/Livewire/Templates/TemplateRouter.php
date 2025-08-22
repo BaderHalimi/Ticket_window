@@ -36,7 +36,7 @@ class TemplateRouter extends Component
     public $calendarDate;
     public $selectedDate;
 
-    public $price = 1000;
+    public $price = 0;
     public $quantity = 0;
     public $couponCode = '';
     public $coupon;
@@ -59,6 +59,9 @@ class TemplateRouter extends Component
 
     public $LoginStep = 0;
     public $EnableLogin,$errors;
+
+    public $Offerdiscount;
+    public $PiceforView;
     //public $selectedTime;
     public $selectedHour;
     public $selectedMinute;
@@ -200,6 +203,23 @@ class TemplateRouter extends Component
                 $this->resetForm();
                 $this->step = 0;
                 $this->selectedOffer = Offering::find($value);
+
+
+                $now = \Carbon\Carbon::now();
+                $start = \Carbon\Carbon::parse($this->selectedOffer->features['discount_start'] ?? null);
+                $end = \Carbon\Carbon::parse($this->selectedOffer->features['discount_end'] ?? null);
+                $discountActive = ($this->selectedOffer->features['enable_discounts'] ?? false) 
+                                  && $start && $end 
+                                  && $now->between($start, $end);
+                if ($discountActive) {
+                    $this->Offerdiscount = $this->selectedOffer->features["discount_percent"] ?? 0;
+                }
+                else {
+                    $this->Offerdiscount = 0;
+                }
+                $this->PiceforView = $this->selectedOffer->price - ($this->selectedOffer->price * ($this->Offerdiscount / 100)) ;
+                //dd($this->PiceforView, $this->Offerdiscount);
+
             }
         //}
     }
@@ -255,6 +275,7 @@ class TemplateRouter extends Component
         $this->branchDetails = null;
         $this->selectedHour = null;
         $this->selectedMinute = null;
+        $this->PiceforView = null;
 
         $this->times = null;
         $this->calendarDate = now()->toDateString();
@@ -405,7 +426,7 @@ class TemplateRouter extends Component
             else {
                 $this->enableNext = true;
             }
-            $this->price = $this->selectedOffer->price;
+            $this->price = $this->PiceforView;//$this->selectedOffer->price;
             $this->stock = get_quantity($this->selectedOffer->id, $this->selectedBranch);
             //dd(get_quantity($this->selectedOffer->id, $this->selectedBranch));
             $this->finalPrice = $this->price * $this->quantity;
@@ -595,6 +616,10 @@ class TemplateRouter extends Component
             $this->newTicket->subject = $this->ticketTitle;
             //$this->newTicket->image = $this->ticketImage;
             $this->newTicket->description = $this->ticketDescription;
+            // $this->newTicket->additional_data = [
+            //     'status' => 'open',
+            //     'priority' => 'normal',
+            // ];
             $this->newTicket->save();
             $userName = Auth::guard('customer')->user()->name;
             //dd(function_exists('notifcate'));
