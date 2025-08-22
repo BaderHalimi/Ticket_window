@@ -11,8 +11,11 @@ class M_dashboard_index extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($merchantid = Auth::id())
+    public function index($merchantid = null)
     {
+        if($merchantid == null){
+            $merchantid = Auth::id();
+        }
         //dd($merchantid,Auth::id());
 
 
