@@ -11,7 +11,7 @@ class M_dashboard_index extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($merchantid = null)
+    public function index($merchantid = Auth::id())
     {
         //dd($merchantid,Auth::id());
 
@@ -30,22 +30,22 @@ class M_dashboard_index extends Controller
         })
         ->filter(function ($reservation) use ($now) {
             $data = json_decode($reservation->additional_data, true);
-    
+
             if (!isset($data['selected_date']) || !isset($data['selected_time'])) {
                 return false;
             }
-    
+
             $datetimeStr = $data['selected_date'] . ' ' . $data['selected_time'];
             $startTime = Carbon::parse($datetimeStr);
-    
-            return $startTime->gt($now); 
+
+            return $startTime->gt($now);
         })
         ->count();
 
         $offersPercent = $statistics['offersPercent']  ?? null;
         $topOfferData = $offersPercent->sortByDesc('percentage')->first();
-        $topOffer = $topOfferData['offer'] ?? null; 
-        $topOfferName = $topOffer->name  ?? null;   
+        $topOffer = $topOfferData['offer'] ?? null;
+        $topOfferName = $topOffer->name  ?? null;
 
         $notification = notifications::where("user_id", $finalID)
         ->orderBy('created_at', 'desc')
@@ -57,7 +57,7 @@ class M_dashboard_index extends Controller
             return Carbon::parse($payment->created_at)->isSameDay($today);
         })->sum("amount");
 
-        //dd($todayPayments);   
+        //dd($todayPayments);
         //$merchant = $finalID;
         return view("merchant.dashboard.index",compact('todayPayments',"activeReservationsCount","wallet","topOfferName","notification","merchantid"));
     }
