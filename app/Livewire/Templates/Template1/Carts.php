@@ -24,6 +24,10 @@ class Carts extends Component
         //dd($this->user);
 
     }
+    public function loadRes(){
+        $this->Reservations = PaidReservation::where('user_id', Auth::id())->get();
+
+    }
     public function checkout_all()
     {
         foreach ($this->carts as $cart) {
@@ -35,7 +39,7 @@ class Carts extends Component
     {
         $cart = Cart::find($id);
         //dd($cart);
-        if (can_booking_now($cart->item_id, $cart->additional_data['branch'])) {
+        if (can_booking_now($cart->item_id, $cart->additional_data['branch']) && get_quantity($cart->offering->id, $cart->additional_data['branch']) >= $cart->quantity) {
             DB::transaction(function () use ($cart) {
                 $res = PaidReservation::create([
                     'item_id' => $cart->item_id,
@@ -69,7 +73,7 @@ class Carts extends Component
                 ]);
                 $cart->delete();
             });
-
+            $this->loadRes();
             notifcate(
                 $cart->offering->user_id,
                 $this->user->f_name . ' قام بالدفع بنجاح',

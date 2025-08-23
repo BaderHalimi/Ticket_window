@@ -30,6 +30,7 @@
                                     @forelse ($carts as $cart)
                                     @php
                                     $branch = null;
+                                    $branchId = null;
                                     if (isset($cart->additional_data['branch'])) {
                                     $branchId = $cart->additional_data['branch'];
                                     $branch = \App\Models\Merchant\Branch::find($branchId);
@@ -45,6 +46,8 @@
                                         <td class="px-4 py-2">{{ $cart->additional_data['selected_time'] ?? '-' }}</td>
                                         <td class="px-4 py-2 text-center flex justify-center gap-3">
                                             <!-- Delete Icon -->
+                                            @if (can_booking_now($cart->offering->id, $branchId) && get_quantity($cart->offering->id, $branchId) >= $cart->quantity) 
+                                                
                                             <button wire:click="delete({{ $cart->id }})"
                                                 class="text-red-600 hover:text-red-800 text-xl">
                                                 <i class="ri-delete-bin-line"></i>
@@ -54,6 +57,18 @@
                                                 class="text-green-600 hover:text-green-800 text-xl">
                                                 <i class="ri-shopping-cart-2-line"></i>
                                             </button>
+                                            @else
+
+                                            <button wire:click="delete({{ $cart->id }})"
+                                                class="text-red-600 hover:text-red-800 text-xl">
+                                                <i class="ri-delete-bin-line"></i>
+                                            </button>
+                                            <button disabled class="text-gray-400 cursor-not-allowed text-xl">
+                                                <i class="ri-shopping-cart-2-line"></i>
+                                            </button>
+
+                                            @endif
+
                                         </td>
                                     </tr>
                                     @empty
