@@ -22,13 +22,7 @@ class Sponsors extends Component
             $this->sponsors = $this->offering->features['sponsors'];
         } else {
             $this->sponsors = [
-                [
-                    'name' => '',
-                    'level' => '',
-                    'logo' => '',
-                    'link' => '',
-                    'description' => '',
-                ]
+
             ];
         }
     }

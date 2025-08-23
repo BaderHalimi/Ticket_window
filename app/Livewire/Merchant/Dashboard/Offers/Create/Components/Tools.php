@@ -22,16 +22,7 @@ class Tools extends Component
                 $this->availableTools = $this->offering->features['availableTools'];
             } else {
                 $this->availableTools = [
-                    [
-                        'name' => '',          
-                        'category' => '',      
-                        'description' => '',   
-                        'model' => '',         
-                        'image' => '',         
-                        'availability' => '',  
-                        'features' => '',     
-                
-                    ]
+  
                 ];
             }
 

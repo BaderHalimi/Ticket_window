@@ -24,12 +24,12 @@ class SupportDevices extends Component
             $this->supportedDevices = $this->offering->features['supportedDevices'];
         } else {
             $this->supportedDevices = [
-                [
-                    'device_name' => '',
-                    'model' => '',
-                    'description' => '',
-                    'image' => null,
-                ]
+                // [
+                //     'device_name' => '',
+                //     'model' => '',
+                //     'description' => '',
+                //     'image' => null,
+                // ]
             ];
         }
 

@@ -23,15 +23,7 @@ class TrainWorkshops extends Component
             $this->trainingWorkshops = $this->offering->features['trainingWorkshops'];
         } else {
             $this->trainingWorkshops = [
-                [
-                    'title' => '',          
-                    'description' => '',            
-                    'duration' => '',
-                    'location' => '',       
-                    'instructor' => '',      
-                    'image' => '',         
-                    'certificate' => false, 
-                ]
+
             ];
         }
 

@@ -754,41 +754,56 @@ if (!function_exists('pending_reservations_at')) {
 
 
 
+
 if (!function_exists('can_booking_now')) {
-    function can_booking_now($offer_id, $branch = null)
-    {
+    function can_booking_now($offer_id, $branch = null) {
         $offer = Offering::find($offer_id);
-        if (!$offer->features["max_user_unit"] && $offer->type == "services") {
-            return false;
-        }
-        if (!$offer->features["eventMaxQuantity"] && $offer->type == "events") {
-            return false;
-        }
-        $unit = 0;
-        $max_limit =  0;
-        $res = 0;
+        if (!$offer) return false;
 
-        if ($offer->type == "events") {
-            $max_limit = $offer->features["eventMaxQuantity"] ?? 0;
-            $res = pending_reservations_at($offer_id, $unit, $branch);
-        } elseif ($offer->type == "services") {
-            $max_limit = $offer->features["max_user_time"] ?? 0;
-            $unit = $offer->features["max_user_unit"];
+        $times = fetch_time($offer->id);
+        $unit = $offer->features["max_user_unit"] ?? 0;
+        $max_limit = $offer->type === "services" 
+            ? ($offer->features["max_user_time"] ?? 0) 
+            : ($offer->features["eventMaxQuantity"] ?? 0);
 
-            $res = pending_reservations_at($offer_id, $unit, $branch);
-        }
-        //dd($res);
-        if ($res->isEmpty()) {
-            return true;
-        }
-        //$res->count("quantity");
-        $total_quantity = $res->sum("quantity");
-        if ($total_quantity >= $max_limit) {
+        if ($max_limit <= 0) return false;
+
+        $res = pending_reservations_at($offer_id, $unit, $branch);
+        if (!$res->isEmpty() && $res->sum("quantity") >= $max_limit) {
             return false;
         }
-        return true;
+
+        $now = Carbon::now();
+
+        if ($offer->type === "services") {
+            // $day = strtolower($now->format('l'));
+            // $service = $times['data'][$day] ?? null;
+            // if (!$service || !$service['enabled']) return false;
+
+            // $from = Carbon::createFromFormat('H:i', $service['from']);
+            // $to = Carbon::createFromFormat('H:i', $service['to']);
+            // if ($from->gt($to)) $to->addDay();
+
+            $max_date = isset($times['max_reservation_date']) 
+                ? Carbon::parse($times['max_reservation_date']) 
+                : Carbon::parse('3000-12-30');
+
+            return  $now->lte($max_date);
+        }
+
+        if ($offer->type === "events") {
+            foreach ($times['data'] as $event) {
+                $start = Carbon::parse($event['start_date'] . ' ' . $event['start_time']);
+                $end = Carbon::parse($event['end_date'] . ' ' . $event['end_time']);
+                if ($now->between($start, $end)) return true;
+            }
+            return false;
+        }
+
+        return false;
     }
 }
+
 if (!function_exists("get_quantity")) {
     function get_quantity($offer_id, $branch = null)
     {

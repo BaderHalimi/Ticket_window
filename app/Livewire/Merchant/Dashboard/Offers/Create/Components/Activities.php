@@ -23,13 +23,7 @@ class Activities extends Component
             $this->activities = $this->offering->features['activities'];
         } else {
             $this->activities = [
-                [
-                    'title' => '',
-                    'description' => '',
-                    'time' => '',
-                    'location' => '',
-                    'image' => '',
-                ]
+
             ];
         }
 

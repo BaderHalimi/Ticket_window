@@ -13,9 +13,9 @@ class M_dashboard_index extends Controller
      */
     public function index($merchantid = null)
     {
-        if($merchantid == null){
-            $merchantid = Auth::id();
-        }
+        // if($merchantid == null){
+        //     //$merchantid = Auth::id();
+        // }
         //dd($merchantid,Auth::id());
 
 

@@ -23,14 +23,7 @@ class Portfolio extends Component
             $this->Portfolio = $this->offering->features['Portfolio'];
         } else {
             $this->Portfolio = [
-                [
-                    'title' => '',          
-                    'description' => '',    
-                    'link' => '',           
-                    'image' => '',           
-                    'date' => '',            
-                    'tools' => '',       
-                ]
+
             ];
         }
 

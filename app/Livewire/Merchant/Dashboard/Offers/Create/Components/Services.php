@@ -23,13 +23,7 @@ class Services extends Component
             $this->services = $this->offering->features['services'];
         } else {
             $this->services = [
-                [
-                    'title' => '',
-                    'description' => '',
-                    'time' => '',
-                    'location' => '',
-                    'image' => '',
-                ]
+
             ];
         }
 

@@ -22,16 +22,7 @@ class Plats extends Component
             $this->plats = $this->offering->features['plats'];
         } else {
             $this->plats = [
-                [
-                    'name' => '',
-                    'description' => '',
-                    'image' => null,
-                    'price' => '',  
-                    'allergens' => '',
-                    'calories' => '',
 
-            
-                ]
             ];
         }
 

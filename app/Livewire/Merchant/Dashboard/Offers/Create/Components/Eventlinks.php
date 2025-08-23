@@ -22,11 +22,7 @@ class Eventlinks extends Component
             $this->links = $this->offering->features['links'];
         } else {
             $this->links = [
-                [
-                    'platform' => '',
-                    'url' => '',
-                    'description' => '',
-                ]
+
             ];
         }
 

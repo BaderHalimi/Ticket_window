@@ -37,7 +37,7 @@ class TemplateRouter extends Component
     public $selectedDate;
 
     public $price = 0;
-    public $quantity = 0;
+    public $quantity = 1;
     public $couponCode = '';
     public $coupon;
     public $finalPrice;
@@ -204,7 +204,7 @@ class TemplateRouter extends Component
                 $this->step = 0;
                 $this->selectedOffer = Offering::find($value);
 
-
+                //dd(can_booking_now($this->selectedOffer->id));
                 $now = \Carbon\Carbon::now();
                 $start = \Carbon\Carbon::parse($this->selectedOffer->features['discount_start'] ?? null);
                 $end = \Carbon\Carbon::parse($this->selectedOffer->features['discount_end'] ?? null);

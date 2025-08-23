@@ -23,15 +23,7 @@ class Games extends Component
             $this->games = $this->offering->features['games'];
         } else {
             $this->games = [
-                [
-                    'name' => '',
-                    'description' => '',
-                    'age_range' => '',
-                    'image' => '',
-                    'location' => '',
-                    'supervisor' => '',
-                    'rules' => '',
-                ]
+
             ];
         }
 

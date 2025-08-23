@@ -18,14 +18,7 @@ class Session extends Component
             $this->sessions = $this->offering->features['sessions'];
         } else {
             $this->sessions = [
-                [
-                    'speaker' => '',
-                    'date' => '',
-                    'time' => '',
-                    'location' => '',
-                    'description' => '',
-                    'image' => ''
-                ]
+
             ];
         }
     }

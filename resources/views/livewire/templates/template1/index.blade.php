@@ -352,12 +352,21 @@
                         @endif
 
                         <div class="pt-4">
-                            <!-- الزر داخل البطاقة -->
-                            <button @click="showForm = true" wire:click="selectOffer('{{ $offer['id'] }}')"
-                                class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-xl shadow transition-all duration-300">
-                                <i class="ri-calendar-check-line text-lg"></i>
-                                حجز الآن
-                            </button>
+                            <button 
+                            @click="showForm = true" 
+                            wire:click="selectOffer('{{ $offer['id'] }}')"
+                            class="inline-flex items-center gap-2 text-white text-sm font-semibold px-4 py-2 rounded-xl shadow transition-all duration-300"
+                            :class="{
+                                'bg-orange-500 hover:bg-orange-600': {{ can_booking_now($offer['id']) ? 'true' : 'false' }},
+                                'bg-gray-400 cursor-not-allowed': {{ !can_booking_now($offer['id']) ? 'true' : 'false' }}
+                            }"
+                            {{ can_booking_now($offer['id']) ? '' : 'disabled' }}
+                        >
+                            <i class="ri-calendar-check-line text-lg"></i>
+                            حجز الآن
+                        </button>
+                        
+
 
                         </div>
                     </div>
