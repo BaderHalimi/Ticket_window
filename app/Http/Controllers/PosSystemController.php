@@ -12,6 +12,11 @@ class PosSystemController extends Controller
      */
     public function index($merchantid = null)
     {
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
         //dd(can_enter($merchantid, "pos_page"));
         $finalID = can_enter($merchantid, "pos_page");
         $reservations = PaidReservation::where('user_id', $finalID)

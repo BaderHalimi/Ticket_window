@@ -19,6 +19,11 @@ class OffersController extends Controller
      */
     public function index($merchantid = null)
     {
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
         // if ($merchant != null) {
         //     $role = Role::findOrFail(Auth::guard('merchant')->user()->additional_data['role'] ?? 0);
         //     if (!$role->permissions->contains('key', 'services_view')) {

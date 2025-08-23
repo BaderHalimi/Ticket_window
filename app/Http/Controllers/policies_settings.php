@@ -12,6 +12,11 @@ class policies_settings extends Controller
      */
     public function index($merchantid = null)
     {
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
         $finalID = can_enter($merchantid, "policies_view");
         
         $user = User::find($finalID);

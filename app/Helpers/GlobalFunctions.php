@@ -472,7 +472,7 @@ if (!function_exists("has_Permetion")) {
             return true;
         }
         if ($user_id === null) {
-            $user_id = Auth::id();
+            $user_id = Auth::guard('merchant')->user()->id;
         }
 
         $roles = fetch_Permetions($user_id, $merchant_id);
@@ -490,7 +490,7 @@ if (!function_exists("is_m_admin")) {
     function is_m_admin()
     {
         //dd(adminPermission("merchants_access"));
-        if (Auth::guard('admin')->check() && adminPermission("merchants_access")) {
+        if ( Auth::guard('admin')->check() && adminPermission("merchants_access")) {
             return true;
         }
         return false;
@@ -500,23 +500,33 @@ if (!function_exists("is_m_admin")) {
 if (!function_exists("can_enter")) {
     function can_enter($mer, $viewPermetion)
     {
+        $guardUser = Auth::guard("merchant")->user()->id;
         $merchantId = $mer;
         $empID = null;
         $finalID = null;
-        if (!is_m_admin()) {
-            if ($merchantId) {
-                if (!work_in($merchantId) || !has_Permetion(Auth::id(), $viewPermetion, $merchantId)) {
-                    abort(403, 'غير مسموح لك بالدخول');
-                } else {
-                    $empID = $merchantId;
+        $merchantid=null;
+        if ($merchantId) {
+            if (!is_m_admin()) {
+
+                if (!work_in($merchantId) || !has_Permetion($guardUser, $viewPermetion, $merchantId)) {
+                        abort(403, 'غير مسموح لك بالدخول');
+                    } else {
+                        $empID = $merchantId;
                 }
             } else {
-                $merchantid = Auth::id();
-            }
-            $finalID = $empID ?? $merchantid;
+                    $finalID = $merchantId;
+
+                }
+            //dd(Auth::guard("merchant")->user()->id);
+            //dd($finalID, $guardUser, $merchantId, $empID);
         } else {
-            $finalID = $merchantId;
+            $merchantId = $guardUser;
+
         }
+        $finalID = $empID ?? $merchantId;
+
+        //dd($guardUser);
+
         return $finalID;
     }
 }
@@ -540,7 +550,7 @@ if (!function_exists("is_work")) {
 if (!function_exists("work_in")) {
     function work_in($merchant_id)
     {
-        $user = User::find(Auth::id());
+        $user = User::find(Auth::guard('merchant')->user()->id);
         if (!$user) {
             return false;
         }
@@ -640,6 +650,7 @@ if (!function_exists('get_statistics')) {
         //         'additional_data' => [],
         //     ]);
         // }
+        //dd($wallet);
         $txns = $wallet->transactions()->get();
         $offers = $txns->map(function ($txn) {
             return $txn->item;

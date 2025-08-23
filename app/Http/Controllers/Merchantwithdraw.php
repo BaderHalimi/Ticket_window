@@ -16,6 +16,11 @@ class Merchantwithdraw extends Controller
      */
     public function index($merchantid = null)
     {
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
         $finalID = can_enter($merchantid,"wallet_view");
 
         $wallet = MerchantWallet::where('merchant_id', $finalID)->first();

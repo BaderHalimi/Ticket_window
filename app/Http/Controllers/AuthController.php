@@ -134,6 +134,11 @@ class AuthController extends Controller
                     session()->regenerate();
                     return redirect()->intended(route('merchant.dashboard.overview'))->with('success', 'Login successful');
                 } else {
+                    if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+                        session()->regenerate();
+                        return redirect()->route("merchant.dashboard.work_center.index");
+                        
+                    }
                     $status = Auth::guard('merchant')->user()->status;
                     Auth::guard('merchant')->logout();
                     return redirect()->route('status')->with([
@@ -314,7 +319,7 @@ class AuthController extends Controller
     }
     public function update_PS(Request $request, string $id)
     {
-        if (Auth::id() != $id) {
+        if (Auth::guard("merchant")->user()->id != $id) {
 
             abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
         }
@@ -347,7 +352,7 @@ class AuthController extends Controller
     }
     public function update_password(Request $request, string $id)
     {
-        if (Auth::id() != $id) {
+        if (Auth::guard('merchant')->user()->id != $id) {
             abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء.');
         }
         //dd($request->all());Abc@123111

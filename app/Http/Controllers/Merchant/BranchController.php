@@ -15,7 +15,11 @@ class BranchController extends Controller
     public function index($merchantid = null)
     {
         $finalID = can_enter($merchantid,"branches_view");
-
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
         //$user = Auth::guard('merchant')->user();
         $user = User::find($finalID);
         $branches = $user->branches()->paginate(10);

@@ -218,7 +218,7 @@ class TeamManager extends Component
         $user->password = Hash::make($this->UserPassword);
         $user->f_name = $this->UserFname;
         $user->role = 'merchant';
-        $user->status = 'active';
+        //$user->status = 'active';
         $user->l_name = $this->UserLname;
 
         $user->additional_data = [

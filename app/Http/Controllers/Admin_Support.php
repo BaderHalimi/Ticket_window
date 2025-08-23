@@ -57,7 +57,7 @@ class Admin_Support extends Controller
         }
         $ticket = Supports::findOrFail($id);
         if (isEmpty($ticket->staff_id)) {
-            $ticket->staff_id = Auth::id();
+            $ticket->staff_id = Auth::guard('admin')->user()->id;
             $ticket->status = 'pending';
             $ticket->save();
 

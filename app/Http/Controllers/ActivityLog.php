@@ -8,6 +8,11 @@ use App\Models\notifications;
 class ActivityLog extends Controller
 {
     public function index($merchantid = null){
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
         $finalID = can_enter($merchantid, "history_view");
         $notifications = notifications::where('user_id', $finalID)
             ->orderBy('created_at', 'desc')

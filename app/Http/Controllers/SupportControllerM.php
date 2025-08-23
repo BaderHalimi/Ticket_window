@@ -16,6 +16,11 @@ class SupportControllerM extends Controller
     public function index($merchantid = null)
     {
         $finalID = can_enter($merchantid, "support_view");
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
         $tickets = Supports::where('user_id', $finalID)
             ->orderBy('created_at', 'desc')
             ->get();

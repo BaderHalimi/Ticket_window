@@ -19,6 +19,11 @@ class Page_statistics extends Controller
      */
     public function index($merchantid = null)
     {
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
         $finalID = can_enter($merchantid,"reports_view");
 
         $statistics = get_statistics($finalID); //Global function to get statistics

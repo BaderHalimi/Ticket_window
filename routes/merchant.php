@@ -13,6 +13,7 @@ use App\Http\Controllers\policies_settings;
 use App\Http\Controllers\M_dashboard_index;
 use App\Http\Controllers\SupportControllerM;
 use App\Http\Controllers\WorkCenter;
+use Illuminate\Support\Facades\Auth;
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verified_user'])->group(function(){
     Route::get('/',[M_dashboard_index::class,"index"])->name('overview');
     // Route::get('services',function(){
@@ -24,13 +25,22 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
     Route::resource('statistics',Page_statistics::class)->names('statistics');
 
     Route::get('work_in',function(){
+        // if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+        //     //session()->regenerate();
+        //     return redirect()->route("merchant.dashboard.work_center.index");
+            
+        // }
         return view('merchant.dashboard.work_In');
     })->name('work_in');
 
     Route::resource('work_center', WorkCenter::class)->names('work_center');
     Route::get('checking',function(){
         $finalID = can_enter(null,"check_view");
-
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
         return view('merchant.dashboard.checking',compact('finalID'));
 
     })->name('checking');
@@ -46,7 +56,11 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
 
     Route::get('customer_reviews',function(){
         $finalID = can_enter(null,"");
-
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
         return view('merchant.dashboard.customer_reviews',compact('finalID'));
     })->name('customer_reviews');
 
@@ -63,6 +77,11 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
 
     Route::get('message_center',function(){
         $finalID = can_enter(null,"");
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
 
         return view('merchant.dashboard.message_center',compact('finalID'));
     })->name('message_center');
@@ -79,12 +98,21 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
     // })->name('branch_management');
     Route::get('team_management',function(){
         $finalID = can_enter(null,"");
-
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
         return view('merchant.dashboard.team_management',compact('finalID'));
     })->name('team_management');
 
     Route::get('page_setup',function(){
         $finalID = can_enter(null,"");
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
 
         return view('merchant.dashboard.page_setup',compact('finalID'));
     })->name('page_setup');
@@ -104,6 +132,11 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
     // })->name('api');
 
     Route::get('profile_setup',function(){
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
         return view('merchant.dashboard.Profile_Setup');
     })->name('profile_setup');
 

@@ -12,6 +12,11 @@ class WorkCenter extends Controller
      */
     public function index()
     {
+        // if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+        //     //session()->regenerate();
+        //     return redirect()->route("merchant.dashboard.work_center.index");
+            
+        // }
         $workPLaces = GetWorkPlace(Auth::id());
         $workPLace = User::find($workPLaces);
         if (!$workPLace) {

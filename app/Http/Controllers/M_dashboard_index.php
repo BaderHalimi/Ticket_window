@@ -18,9 +18,14 @@ class M_dashboard_index extends Controller
         // }
         //dd($merchantid,Auth::id());
 
-
+        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending'){
+            //session()->regenerate();
+            return redirect()->route("merchant.dashboard.work_center.index");
+            
+        }
 
         $finalID = can_enter($merchantid,"overview_page");
+        //dd($finalID);
         $statistics = get_statistics($finalID);
         $payments = $statistics["payments"];
         $offers = $statistics["offers"];
