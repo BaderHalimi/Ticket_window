@@ -282,6 +282,7 @@ if (!function_exists('hasEssentialFields')) {
             'user_limit' => $eventMaxQuantity,
             'branch' => $branch_for_ser,
             'center' => $boolcenter,
+            //'eventMaxQuantity' => $eventMaxQuantity,
             // 'pricing_packages'    => !empty($features['pricing_packages']) &&
             //                           isFilled($features['pricing_packages'][0]['label'] ?? null),
 

@@ -37,7 +37,12 @@ class TeamManager extends Component
     public $UserPassword;
     public $UserFname, $UserLname;
     public $UserId = null;
-
+    protected $rules = [
+        'UserFname' => 'required|string|min:2',
+        'UserLname' => 'required|string|min:2',
+        'UserEmail'  => 'required|email|unique:users,email',
+        'UserPassword' => 'required|min:6',
+    ];
     public $Amerchantid,$finalID;
     public function mount($merchantid = null , $finalID)
     {
@@ -208,6 +213,7 @@ class TeamManager extends Component
             $user = new User();
             //$user->password = bcrypt($this->UserPassword);
         }
+        $this->validate();
         $user->email = $this->UserEmail;
         $user->password = Hash::make($this->UserPassword);
         $user->f_name = $this->UserFname;

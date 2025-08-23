@@ -24,7 +24,12 @@ if (adminPermission("employees_edit")) {
         <div class="grid grid-cols-2 gap-4 mb-4">
             <input type="text" wire:model="f_name" placeholder="الاسم الأول" class="border p-2 rounded w-full">
             <input type="text" wire:model="l_name" placeholder="اسم العائلة" class="border p-2 rounded w-full">
-            <input type="email" wire:model="email" placeholder="الإيميل" class="border p-2 rounded w-full">
+            <input type="email" 
+       wire:model="email" 
+       placeholder="الإيميل" 
+       class="border p-2 rounded w-full"
+       pattern="^[^@]+@[^@]+\.[a-zA-Z]{2,}$"
+       title="يجب إدخال إيميل صحيح يحتوي على @ وامتداد مثل .com">
             <input type="password" wire:model="password" placeholder="الباسورد" class="border p-2 rounded w-full">
         </div>
 

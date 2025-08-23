@@ -12,7 +12,7 @@ class Information extends Component
     public Offering $offering;
 
     public $name, $location, $description, $image;
-    public $category, $type, $services_type, $center;
+    public $category, $type, $services_type, $center ;
     public $tags = [];
     public array $questions = [];
     public array $successFields = [];
@@ -51,7 +51,10 @@ class Information extends Component
     {
         unset($this->successFields[$field]);
         unset($this->errorFields[$field]);
-
+        if ($this->type === 'services' && empty($this->center)) {
+            $this->center = 'place'; // القيمة الافتراضية
+        }
+        
         $rules = [
             'name' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',

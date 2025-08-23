@@ -299,7 +299,7 @@
             </div>
         </div> --}}
         
-@if ($offering->type == "services" && $offering->features["center"] == "place")
+@if ($offering->type == "services" && ($offering->features["center"] ?? null) == "place")
 <div>
     {{-- <div class="flex items-center justify-between">
         <label class="text-sm font-medium">هل تريد تحديد الفروع لهذه الخدمة؟</label>
