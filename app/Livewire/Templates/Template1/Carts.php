@@ -13,6 +13,7 @@ class Carts extends Component
 {
     public $user;
     public $carts;
+    public $Reservations;
     public function mount()
     {
         $this->user = Auth::guard('customer')->user();

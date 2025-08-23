@@ -36,7 +36,7 @@
                     <button @click="openIndex = null" class="absolute top-2 left-2 text-gray-600 hover:text-gray-800 text-2xl">&times;</button>
                     <h3 class="text-lg font-semibold mb-2">{{ $sponsor['name'] }} <i class="ri-hand-heart-line inline text-blue-600"></i></h3>
                     <p class="text-gray-700 mb-1">المستوى: {{ $sponsor['level'] }}</p>
-                    <p class="text-gray-700 mb-2">{{ $sponsor['description'] }}</p>
+                    <p class="text-gray-700 mb-2 overflow-auto break-words" >{{ $sponsor['description'] }}</p>
                     @if(!empty($sponsor['link']))
                         <a href="{{ $sponsor['link'] }}" target="_blank" class="text-blue-600 underline text-sm">زيارة الموقع</a>
                     @endif

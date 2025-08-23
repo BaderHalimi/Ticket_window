@@ -23,7 +23,7 @@
                     <div class="bg-white rounded-2xl w-full max-w-md p-6 relative shadow-xl overflow-auto max-h-[90vh]">
                         <button @click="open = false" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
                         <h3 class="font-bold text-lg mb-4">{{ $feature['name'] ?? 'NULL' }}</h3>
-                        <p class="text-gray-700 mb-4">{{ $feature['description'] ?? 'NULL' }}</p>
+                        <p class="text-gray-700 mb-4 overflow-auto break-words">{{ $feature['description'] ?? 'NULL' }}</p>
                         @if(!empty($feature['image']))
                             <img src="{{ asset('storage/' . $feature['image']) }}" class="mx-auto w-48 h-32 object-cover rounded" alt="صورة الميزة" />
                         @endif

@@ -16,7 +16,7 @@
         <div>
             <h3 class="font-semibold text-gray-800 truncate">{{ $item['title'] ?: 'بدون عنوان' }}</h3>
             <p class="text-xs text-gray-500">{{ $item['date'] ?: 'بدون تاريخ' }}</p>
-            <p class="text-gray-600 text-sm line-clamp-3">{{ $item['description'] ?: 'لا يوجد وصف' }}</p>
+            <p class="text-gray-600 text-sm line-clamp-3 ">{{ $item['description'] ?: 'لا يوجد وصف' }}</p>
             <p class="text-xs text-gray-500">الأدوات: {{ $item['tools'] ?: 'غير محددة' }}</p>
         </div>
         <div class="border-t border-dashed border-gray-300 mt-2"></div>
@@ -35,7 +35,7 @@
                         <button @click="open = false" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
                         <h3 class="font-bold text-lg mb-2">{{ $item['title'] ?: 'بدون عنوان' }}</h3>
                         <p class="text-xs text-gray-500 mb-1">{{ $item['date'] ?: 'بدون تاريخ' }}</p>
-                        <p class="text-gray-700 mb-2">{{ $item['description'] ?: 'لا يوجد وصف' }}</p>
+                        <p class="text-gray-700 mb-2 overflow-auto break-words">{{ $item['description'] ?: 'لا يوجد وصف' }}</p>
                         <p class="text-xs text-gray-500 mb-2">الأدوات: {{ $item['tools'] ?: 'غير محددة' }}</p>
                         <a href="{{ $item['link'] }}" target="_blank" class="text-blue-500 underline break-all mb-4 block">رابط المشروع</a>
                         @if(!empty($item['image']))

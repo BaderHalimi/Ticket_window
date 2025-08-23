@@ -45,7 +45,7 @@
                 <p class="text-sm text-gray-700 mb-1">التاريخ: {{ $session['date'] }}</p>
                 <p class="text-sm text-gray-700 mb-1">الوقت: {{ $session['time'] }}</p>
                 <p class="text-sm text-gray-700 mb-1">المكان: {{ $session['location'] }}</p>
-                <p class="text-gray-700 mt-2">{{ $session['description'] }}</p>
+                <p class="text-gray-700 mt-2 overflow-auto break-words">{{ $session['description'] }}</p>
             </div>
         </div>
     @endforeach

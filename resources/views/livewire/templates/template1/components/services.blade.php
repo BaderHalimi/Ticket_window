@@ -34,7 +34,7 @@
                             <img src="{{ is_string($service['image']) ? asset('storage/'.$service['image']) : 'https://via.placeholder.com/300x200' }}" 
                                  class="w-full h-40 object-cover rounded mb-3" alt="صورة الخدمة">
                         @endif
-                        <p class="text-gray-700 mb-2">{{ $service['description'] }}</p>
+                        <p class="text-gray-700 mb-2 overflow-auto break-words">{{ $service['description'] }}</p>
                         <p class="text-xs text-gray-500 mb-1">الوقت: {{ $service['time'] }}</p>
                         <p class="text-xs text-gray-500 mb-1">الموقع: {{ $service['location'] }}</p>
                     </div>

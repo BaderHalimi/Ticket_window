@@ -40,7 +40,7 @@
                             <button @click="openIndex = null" class="absolute top-2 left-2 text-gray-600 hover:text-gray-800 text-2xl">&times;</button>
                             <h3 class="text-lg font-semibold mb-2 text-right">{{ $device['device_name'] }}</h3>
                             <p class="text-gray-700 mb-1">موديل: {{ $device['model'] }}</p>
-                            <p class="text-gray-700 mb-2">{{ $device['description'] }}</p>
+                            <p class="text-gray-700 mb-2 overflow-auto break-words">{{ $device['description'] }}</p>
                             @if(!empty($device['image']))
                                 <img src="{{ asset('storage/' . $device['image']) }}" class="mx-auto mt-2 h-32 object-contain rounded" />
                             @endif

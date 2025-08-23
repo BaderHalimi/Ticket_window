@@ -18,6 +18,7 @@ class Tickets extends Controller
     public function index()
     {
         $Reservations = PaidReservation::where('user_id', Auth::id())->get();
+        
         return view('customer.dashboard.tickets', compact('Reservations'));
     }
 

@@ -36,7 +36,7 @@
                         @endif
 
                         <h3 class="font-bold text-xl mb-2">{{ $destination['name'] ?? 'بدون اسم' }}</h3>
-                        <p class="text-gray-700">{{ $destination['description'] ?? 'لا يوجد وصف' }}</p>
+                        <p class="text-gray-700 overflow-auto break-words">{{ $destination['description'] ?? 'لا يوجد وصف' }}</p>
                     </div>
                 </div>
 

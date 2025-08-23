@@ -1,9 +1,9 @@
 <div x-data="{ modalOpen: false, modalContent: null }" class="relative" x-cloak>
 
     @php
-        $profile = $offering->user->additional_data['profile_picture'] ?? null;
-        $id = $offering->user->id ?? null;
-        $gallery = $offering->features['gallery'] ?? [];
+    $profile = $offering->user->additional_data['profile_picture'] ?? null;
+    $id = $offering->user->id ?? null;
+    $gallery = $offering->features['gallery'] ?? [];
     @endphp
 
     {{-- Particles --}}
@@ -129,13 +129,20 @@
 
     {{-- Modal --}}
     <div x-show="modalOpen" x-transition.opacity
-        class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="relative max-w-4xl w-full px-6">
-            <button @click="modalOpen=false"
-                class="absolute top-4 right-4 text-white text-4xl font-bold hover:text-red-500">&times;</button>
-            <div x-html="modalContent"></div>
-        </div>
+    class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center">
+    <button @click="modalOpen=false"
+            class="absolute top-4 right-4 z-50 bg-black/60 text-white rounded-full w-10 h-10 flex items-center justify-center text-2xl font-bold hover:bg-red-600">
+            &times;
+        </button>
+    <div class="relative max-w-4xl w-full px-6">
+        
+        <!-- زر الإغلاق -->
+
+
+        <div x-html="modalContent" class="relative z-40"></div>
     </div>
+</div>
+
 
     {{-- Main Page --}}
     <div class="relative z-10 max-w-7xl mx-auto space-y-10 p-6 md:p-10">
@@ -151,11 +158,11 @@
 
             {{-- Main Image --}}
             @if ($offering->image)
-                <div data-aos="fade-up"
-                    class="glass-card overflow-hidden transform hover:scale-105 hover:rotate-1 transition-all duration-500">
-                    <img src="{{ Storage::url($offering->image) }}" alt="{{ $offering->name }}"
-                        class="w-full h-80 md:h-full object-cover">
-                </div>
+            <div data-aos="fade-up"
+                class="glass-card overflow-hidden transform hover:scale-105 hover:rotate-1 transition-all duration-500">
+                <img src="{{ Storage::url($offering->image) }}" alt="{{ $offering->name }}"
+                    class="w-full h-80 md:h-full object-cover">
+            </div>
             @endif
 
             {{-- Service Info --}}
@@ -172,84 +179,121 @@
 
                 {{-- Seller Info --}}
                 @if ($offering->user)
-                    <a href="{{ route('template', $id) }}" wire:navigate
-                        class="glass-card p-4 flex items-center gap-4 hover:scale-105 transition-all duration-300 float">
-                        <img src="{{ $profile ? Storage::url($profile) : 'https://ui-avatars.com/api/?name=' . urlencode($offering->user->f_name . ' ' . $offering->user->l_name) }}"
-                            alt="صورة التاجر"
-                            class="w-16 h-16 rounded-full object-cover border-2 border-orange-300 shadow">
-                        <div>
-                            <p class="text-lg font-semibold text-gray-800">
-                                {{ $offering->user->business_name ?? $offering->user->f_name . ' ' . $offering->user->l_name }}
-                            </p>
-                            <p class="text-sm text-gray-500">صاحب الخدمة</p>
-                        </div>
-                    </a>
+                <a href="{{ route('template', $id) }}" wire:navigate
+                    class="glass-card p-4 flex items-center gap-4 hover:scale-105 transition-all duration-300 float">
+                    <img src="{{ $profile ? Storage::url($profile) : 'https://ui-avatars.com/api/?name=' . urlencode($offering->user->f_name . ' ' . $offering->user->l_name) }}"
+                        alt="صورة التاجر"
+                        class="w-16 h-16 rounded-full object-cover border-2 border-orange-300 shadow">
+                    <div>
+                        <p class="text-lg font-semibold text-gray-800">
+                            {{ $offering->user->business_name ?? $offering->user->f_name . ' ' . $offering->user->l_name }}
+                        </p>
+                        <p class="text-sm text-gray-500">صاحب الخدمة</p>
+                    </div>
+                </a>
                 @endif
             </div>
         </div>
 
         {{-- Gallery --}}
         @if (is_array($gallery) && count($gallery))
-            <div class="border-t pt-8" data-aos="fade-up" data-aos-delay="200">
-                <h3 class="text-xl font-bold text-gray-800 mb-6">صور إضافية:</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    @foreach ($gallery as $img)
-                        <img src="{{ Storage::url($img) }}"
-                            @click="modalOpen=true; modalContent='<img src={{ Storage::url($img) }} class=rounded-2xl max-h-[85vh] w-full object-contain shadow-xl border-4 border-white>'"
-                            class="glass-card cursor-pointer object-cover h-32 w-full rounded-2xl float shake transition-all duration-300"
-                            alt="صورة إضافية">
-                    @endforeach
-                </div>
+        <div class="border-t pt-8" data-aos="fade-up" data-aos-delay="200">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">صور إضافية:</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                @foreach ($gallery as $img)
+                <img src="{{ Storage::url($img) }}"
+                    @click="modalOpen=true; modalContent='<img src={{ Storage::url($img) }} class=rounded-2xl max-h-[85vh] w-full object-contain shadow-xl border-4 border-white>'"
+                    class="glass-card cursor-pointer object-cover h-32 w-full rounded-2xl float shake transition-all duration-300"
+                    alt="صورة إضافية">
+                @endforeach
             </div>
+        </div>
         @endif
 
         {{-- Livewire Components --}}
         <div class="space-y-10">
-            @if ($offering)
-                @livewire('templates.template1.components.session', ['offering' => $offering], key('session-' . $offering->id))
-            @endif
+    {{-- سيشنز --}}
+    @if (!empty($offering->features['sessions']))
+        @livewire('templates.template1.components.session', ['offering' => $offering], key('session-' . $offering->id))
+    @endif
 
-            @if ($category === 'tourism')
-                @livewire('templates.template1.components.destination', ['offering' => $offering], key('destination-' . $offering->id))
-            @endif
+    {{-- السياحة: destinations --}}
+    @if ($category === 'tourism' && !empty($offering->features['destinations']))
+        @livewire('templates.template1.components.destination', ['offering' => $offering], key('destination-' . $offering->id))
+    @endif
 
-            @if ($category === 'exhibition')
-                @livewire('templates.template1.components.products', ['offering' => $offering], key('products-' . $offering->id))
-            @endif
+    {{-- المعارض: products --}}
+    @if ($category === 'exhibition' && !empty($offering->features['products']))
+        @livewire('templates.template1.components.products', ['offering' => $offering], key('products-' . $offering->id))
+    @endif
 
-            @if ($category === 'maintenance')
-                @livewire('templates.template1.components.support-devices', ['offering' => $offering], key('support-' . $offering->id))
-            @endif
+    {{-- الصيانة: supportedDevices --}}
+    @if ($category === 'maintenance' && !empty($offering->features['supportedDevices']))
+        @livewire('templates.template1.components.support-devices', ['offering' => $offering], key('support-' . $offering->id))
+    @endif
 
-            @if ($category === 'workshop')
-                @livewire('templates.template1.components.train-workshops', ['offering' => $offering], key('workshop-' . $offering->id))
-            @endif
+    {{-- ورش: trainingWorkshops --}}
+    @if ($category === 'workshop' && !empty($offering->features['trainingWorkshops']))
+        @livewire('templates.template1.components.train-workshops', ['offering' => $offering], key('workshop-' . $offering->id))
+    @endif
 
-            @if ($category === 'restaurant')
-                @livewire('templates.template1.components.plats', ['offering' => $offering], key('plats-' . $offering->id))
-            @endif
+    {{-- مطاعم: plats --}}
+    @if ($category === 'restaurant' && !empty($offering->features['plats']))
+        @livewire('templates.template1.components.plats', ['offering' => $offering], key('plats-' . $offering->id))
+    @endif
 
-            @if ($category === 'online')
-                @livewire('templates.template1.components.eventlinks', ['offering' => $offering], key('eventlinks-' . $offering->id))
-            @endif
+    {{-- أونلاين: eventLinks --}}
+    @if ($category === 'online' && !empty($offering->features['eventLinks']))
+        @livewire('templates.template1.components.eventlinks', ['offering' => $offering], key('eventlinks-' . $offering->id))
+    @endif
 
-            @if ($category === 'children_event')
-                @livewire('templates.template1.components.games', ['offering' => $offering], key('games-' . $offering->id))
-                @livewire('templates.template1.components.kidshops', ['offering' => $offering], key('kidshops-' . $offering->id))
-                @livewire('templates.template1.components.cartoons', ['offering' => $offering], key('cartoons-' . $offering->id))
-            @endif
+    {{-- فعاليات أطفال --}}
+    @if ($category === 'children_event')
+        @if (!empty($offering->features['games']))
+            @livewire('templates.template1.components.games', ['offering' => $offering], key('games-' . $offering->id))
+        @endif
 
-            @if ($type === 'services')
-                @livewire('templates.template1.components.portfolio', ['offering' => $offering], key('portfolio-' . $offering->id))
-            @endif
+        @if (!empty($offering->features['kidshops']))
+            @livewire('templates.template1.components.kidshops', ['offering' => $offering], key('kidshops-' . $offering->id))
+        @endif
 
-            @livewire('templates.template1.components.speakers', ['offering' => $offering], key('speakers-' . $offering->id))
-            @livewire('templates.template1.components.offer-features', ['offering' => $offering], key('features-' . $offering->id))
-            @livewire('templates.template1.components.sponsors', ['offering' => $offering], key('sponsors-' . $offering->id))
-            @livewire('templates.template1.components.activities', ['offering' => $offering], key('activities-' . $offering->id))
-            @livewire('templates.template1.components.services', ['offering' => $offering], key('services-' . $offering->id))
-            @livewire('templates.template1.components.tools', ['offering' => $offering], key('tools-' . $offering->id))
-        </div>
+        @if (!empty($offering->features['cartoons']))
+            @livewire('templates.template1.components.cartoons', ['offering' => $offering], key('cartoons-' . $offering->id))
+        @endif
+    @endif
+
+    {{-- سيرفيس: portfolio --}}
+    @if ($type === 'services' && !empty($offering->features['Portfolio']))
+        @livewire('templates.template1.components.portfolio', ['offering' => $offering], key('portfolio-' . $offering->id))
+    @endif
+
+    {{-- باقي الخصائص --}}
+    @if (!empty($offering->features['speakers']))
+        @livewire('templates.template1.components.speakers', ['offering' => $offering], key('speakers-' . $offering->id))
+    @endif
+
+    @if (!empty($offering->features['Offerfeatures']))
+        @livewire('templates.template1.components.offer-features', ['offering' => $offering], key('features-' . $offering->id))
+    @endif
+
+    @if (!empty($offering->features['sponsors']))
+        @livewire('templates.template1.components.sponsors', ['offering' => $offering], key('sponsors-' . $offering->id))
+    @endif
+
+    @if (!empty($offering->features['activities']))
+        @livewire('templates.template1.components.activities', ['offering' => $offering], key('activities-' . $offering->id))
+    @endif
+
+    @if (!empty($offering->features['services']))
+        @livewire('templates.template1.components.services', ['offering' => $offering], key('services-' . $offering->id))
+    @endif
+
+    @if (!empty($offering->features['availableTools']))
+        @livewire('templates.template1.components.tools', ['offering' => $offering], key('tools-' . $offering->id))
+    @endif
+</div>
+
+
 
     </div>
 </div>

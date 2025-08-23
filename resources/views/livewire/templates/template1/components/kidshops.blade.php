@@ -36,7 +36,7 @@
                         </div>
 
                         <h3 class="font-bold text-lg mb-2">{{ $workshop['title'] ?? 'NULL' }}</h3>
-                        <p class="text-gray-700 mt-2"><strong>الوصف:</strong> {{ $workshop['description'] ?? 'NULL' }}</p>
+                        <p class="text-gray-700 mt-2 overflow-auto break-words"><strong>الوصف:</strong> {{ $workshop['description'] ?? 'NULL' }}</p>
                     </div>
                 </div>
 

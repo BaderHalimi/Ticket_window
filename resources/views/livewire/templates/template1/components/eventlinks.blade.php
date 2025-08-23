@@ -17,7 +17,7 @@
                         <button @click="open = false" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
                         <h3 class="font-bold text-lg mb-2">{{ $link['platform'] ?? 'NULL' }}</h3>
                         <a href="{{ $link['url'] ?? '#' }}" target="_blank" class="text-blue-500 underline break-all mb-4 block">{{ $link['url'] ?? 'NULL' }}</a>
-                        <p class="text-gray-700">{{ $link['description'] ?? 'NULL' }}</p>
+                        <p class="text-gray-700 overflow-auto break-words">{{ $link['description'] ?? 'NULL' }}</p>
                     </div>
                 </div>
             </div>

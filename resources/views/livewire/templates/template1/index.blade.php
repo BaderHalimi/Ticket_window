@@ -8,7 +8,7 @@
 
         <div class="absolute top-2 left-4 flex gap-4 z-20">
 
-            <a href="{{ route('cart', 1) }}" wire:navigate>
+            <a href="{{ route('customer.dashboard.tickets.index') }}" wire:navigate>
                 <button class="bg-white p-3 rounded-md shadow-lg hover:bg-gray-300 transition text-2xl text-gray-800">
                     <i class="ri-shopping-cart-2-line"></i>
                 </button>
@@ -900,7 +900,7 @@
                                     class="inline-block bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">
                                     عروض أخرى
                                 </a>
-                                <a href="{{ route('cart', 1) }}" wire:navigate
+                                <a href="{{ route('customer.dashboard.tickets.index') }}" wire:navigate
                                     class="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
                                     الذهاب إلى السلة
                                 </a>

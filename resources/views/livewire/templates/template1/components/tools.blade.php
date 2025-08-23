@@ -37,8 +37,8 @@
                     <p class="text-gray-700 mb-1 text-right">التصنيف: {{ $tool['category'] }}</p>
                     <p class="text-gray-700 mb-1 text-right">موديل: {{ $tool['model'] }}</p>
                     <p class="text-gray-700 mb-1 text-right">التوفر: {{ $tool['availability'] }}</p>
-                    <p class="text-gray-700 mb-2 text-right">المميزات: {{ $tool['features'] }}</p>
-                    <p class="text-gray-700 mb-2 text-right">الوصف: {{ $tool['description'] }}</p>
+                    <p class="text-gray-700 mb-2 text-right overflow-auto break-words">المميزات: {{ $tool['features'] }}</p>
+                    <p class="text-gray-700 mb-2 text-right overflow-auto break-words">الوصف: {{ $tool['description'] }}</p>
                     @if(!empty($tool['image']))
                         <img src="{{ asset('storage/' . $tool['image']) }}" class="mx-auto mt-2 h-32 object-contain rounded" />
                     @endif

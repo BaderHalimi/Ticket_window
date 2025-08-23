@@ -70,10 +70,10 @@ Route::get('/{id}/{offering}', function ($id, Offering $offering) {
     return view('templates.tmplate1.item', compact('merchant', 'offering'));
 })->where(['id' => '[0-9]+', 'offering' => '[0-9]+'])->name('template1.item');
 
-Route::get('/cart-{template}', [Cart_controller::class, 'index'])
-    ->middleware(['auth:customer', 'verified_user'])
-    ->where('template', '[0-9]+')
-    ->name('cart');
+// Route::get('/cart-{template}', [Cart_controller::class, 'index'])
+//     ->middleware(['auth:customer', 'verified_user'])
+//     ->where('template', '[0-9]+')
+//     ->name('cart');
 
 
 Route::get('/view-{template}/{id}', [offerView::class, 'index'])

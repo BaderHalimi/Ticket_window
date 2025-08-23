@@ -30,7 +30,7 @@
                                 <span class="ri-time-line"></span> {{ $activity['time'] ?? 'NULL' }} | 
                                 <span class="ri-map-pin-line"></span> {{ $activity['location'] ?? 'NULL' }}
                             </p>
-                            <p class="text-gray-700">{{ $activity['description'] ?? 'NULL' }}</p>
+                            <p class="text-gray-700 overflow-auto break-words">{{ $activity['description'] ?? 'NULL' }}</p>
                         </div>
                     </div>
                 </div>

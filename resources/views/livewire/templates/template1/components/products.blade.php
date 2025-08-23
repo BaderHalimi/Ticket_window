@@ -33,7 +33,7 @@
                         <h3 class="text-lg font-semibold mb-4">{{ $product['name'] }}</h3>
                         <img src="{{ is_string($product['image']) ? asset('storage/'.$product['image']) : 'https://via.placeholder.com/400x300' }}" 
                              class="w-full h-48 object-cover rounded mb-4" alt="صورة المنتج">
-                        <p class="text-gray-700 mb-2">{{ $product['description'] }}</p>
+                        <p class="text-gray-700 mb-2 overflow-auto break-words">{{ $product['description'] }}</p>
                         <p class="text-xs text-gray-500 mb-1">التصنيف: {{ $product['category'] }}</p>
                         <p class="text-xs text-gray-500 mb-1">جناح: {{ $product['booth'] }}</p>
                         <p class="text-green-600 font-semibold">السعر: {{ $product['price'] }} ر.س</p>

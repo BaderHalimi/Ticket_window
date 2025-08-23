@@ -37,10 +37,10 @@
 
                         <h3 class="font-bold text-lg mb-2">{{ $game['name'] ?? 'NULL' }}</h3>
                         <p class="text-gray-700 mb-1"><strong>الفئة العمرية:</strong> {{ $game['age_range'] ?? 'NULL' }}</p>
-                        <p class="text-gray-700 mb-1"><strong>المكان:</strong> {{ $game['location'] ?? 'NULL' }}</p>
-                        <p class="text-gray-700 mb-1"><strong>المشرف:</strong> {{ $game['supervisor'] ?? 'NULL' }}</p>
-                        <p class="text-gray-700 mt-2"><strong>الوصف:</strong> {{ $game['description'] ?? 'NULL' }}</p>
-                        <p class="text-gray-700 mt-2"><strong>قوانين اللعبة:</strong> {{ $game['rules'] ?? 'NULL' }}</p>
+                        <p class="text-gray-700 mb-1 overflow-auto break-words"><strong>المكان:</strong> {{ $game['location'] ?? 'NULL' }}</p>
+                        <p class="text-gray-700 mb-1 overflow-auto break-words"><strong>المشرف:</strong> {{ $game['supervisor'] ?? 'NULL' }}</p>
+                        <p class="text-gray-700 mt-2 overflow-auto break-words"><strong>الوصف:</strong> {{ $game['description'] ?? 'NULL' }}</p>
+                        <p class="text-gray-700 mt-2 overflow-auto break-words"><strong>قوانين اللعبة:</strong> {{ $game['rules'] ?? 'NULL' }}</p>
                     </div>
                 </div>
 

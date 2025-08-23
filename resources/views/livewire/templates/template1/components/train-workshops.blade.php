@@ -38,7 +38,7 @@
                     <p class="text-gray-700 mb-1 text-right">المكان: {{ $workshop['location'] }}</p>
                     <p class="text-gray-700 mb-1 text-right">المدرب: {{ $workshop['instructor'] }}</p>
                     <p class="text-gray-700 mb-1 text-right">الشهادة: {{ $workshop['certificate'] ? 'نعم' : 'لا' }}</p>
-                    <p class="text-gray-700 mb-2 text-right">الوصف: {{ $workshop['description'] }}</p>
+                    <p class="text-gray-700 mb-2 text-right overflow-auto break-words">الوصف: {{ $workshop['description'] }}</p>
                     @if(!empty($workshop['image']))
                         <img src="{{ asset('storage/' . $workshop['image']) }}" class="mx-auto mt-2 h-40 object-contain rounded" />
                     @endif

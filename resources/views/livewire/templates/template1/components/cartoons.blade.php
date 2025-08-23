@@ -36,7 +36,7 @@
                         @endif
 
                         <h3 class="font-bold text-xl mb-2">{{ $cartoon['name'] ?? 'بدون اسم' }}</h3>
-                        <p class="text-gray-700">{{ $cartoon['description'] ?? 'لا يوجد وصف' }}</p>
+                        <p class="text-gray-700 overflow-auto break-words">{{ $cartoon['description'] ?? 'لا يوجد وصف' }}</p>
                     </div>
                 </div>
 
