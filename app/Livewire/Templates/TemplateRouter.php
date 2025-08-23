@@ -66,6 +66,7 @@ class TemplateRouter extends Component
     public $selectedHour;
     public $selectedMinute;
 
+    public $reviews;
 
     public function updatedSelectedBranch($branchId)
     {
@@ -130,6 +131,7 @@ class TemplateRouter extends Component
         $this->enableNext = true; // Enable next step when a date is selected
     }
 
+
     public function selectDateE($D, $T)
     {
     
@@ -158,7 +160,24 @@ class TemplateRouter extends Component
     }
 
 
+    public function loadReviews()
+    {
+       // $user = User::find($this->merchant->id);
 
+        // $this->reviews = Customer_Ratings::whereHas('offer', function($q) use ($user) {
+        //     $q->where('user_id', $user->id);
+        // })
+        // ->where('is_visible', true)
+        // ->orderByDesc('created_at')
+        // ->get();
+        // $this->reviews = Customer_Ratings::where('is_visible', true)
+        //     ->orderByDesc('created_at')
+        //     ->get();
+        $this->reviews = $this->merchant->reviews()
+        ->where('is_visible', true)
+        ->orderByDesc('created_at')
+        ->get();
+    }
 
     public function mount($merchant, $offers_collection = null)
     {
@@ -168,7 +187,8 @@ class TemplateRouter extends Component
         //dd(can_booking_now(33,1));
         //dd(get_coupons(33));
         $this->calendarDate = now()->toDateString();
-
+        $this->loadReviews();
+        dd($this->reviews);
         $this->offers_collection = Offering::where('user_id', $this->merchant->id)->where('status', 'active')->get();
         //dd(translate("هل تود الحصول على عرض اضافي","auto" ,$target = "en"));
         //dd($this->offers_collection, $this->merchant);

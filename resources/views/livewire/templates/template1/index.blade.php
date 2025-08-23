@@ -122,17 +122,29 @@
                 class="pb-1 text-lg font-semibold transition">
                 الفعاليات
             </button>
-
+            <button @click="tab = 'ratings'" wire:click="load_chats"
+                :class="tab === 'ratings' ? 'text-orange-600 border-b-2 border-orange-600' : 'text-slate-600'"
+                class="pb-1 text-lg font-semibold transition">
+                التقيمات
+            </button>
             <button @click="tab = 'policies'"
                 :class="tab === 'policies' ? 'text-orange-600 border-b-2 border-orange-600' : 'text-slate-600'"
                 class="pb-1 text-lg font-semibold transition">
-                السياسات والأحكام
+                السياسات 
             </button>
             <button @click="tab = 'support'" wire:click="load_chats"
                 :class="tab === 'support' ? 'text-orange-600 border-b-2 border-orange-600' : 'text-slate-600'"
                 class="pb-1 text-lg font-semibold transition">
                 الدعم
             </button>
+            
+        </div>
+
+
+
+        <div x-show="tab === 'ratings'" x-transition class="flex items-center justify-center min-h-screen">
+        
+    
         </div>
 
         <div x-show="tab === 'policies'" x-transition class="flex items-center justify-center min-h-screen">
