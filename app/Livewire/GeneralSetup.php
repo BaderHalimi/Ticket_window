@@ -12,11 +12,11 @@ class GeneralSetup extends Component
 {
     use WithFileUploads;
 
-    public $tab = 'account';
+    public $tab = 'general'; 
     public $accountTab = true;
     public $logo;
     public $setup;
-
+    public $can_save = false;
     // Editable fields
     public $name;
     public $email;
@@ -131,11 +131,16 @@ class GeneralSetup extends Component
         
         //$this->setup->save();
 
-        session()->flash('success', '✅ تم حفظ الإعدادات بنجاح');
+        session()->flash('success', '✅ تم حفظ الإعدادات بنجاح يرجى عمل ريفريش للموقع');
     }
 
     public function render()
     {
+        if(!empty($this->name) && !empty($this->email) && !empty($this->phone) && !empty($this->first_name) && !empty($this->last_name) && !empty($this->admin_email)){
+            $this->can_save = true;
+        }else{
+            $this->can_save = false;
+        }
         return view('livewire.general-setup');
     }
 }

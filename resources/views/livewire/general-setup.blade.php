@@ -195,10 +195,19 @@
       @endif
   
       <div class="text-center pt-6">
+        @if ($can_save)
+          
         <button type="submit"
           class="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 focus:ring-2 focus:ring-green-400 shadow-lg transition">
           <i class="ri-save-line text-xl"></i> حفظ الإعدادات
         </button>
+        @else
+        <button type="button"
+          class="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-gray-300 text-gray-700 cursor-not-allowed shadow-lg transition">
+          <i class="ri-lock-line text-xl"></i> لا يمكن الحفظ الآن
+        </button>
+        @endif
+
       </div>
     </form>
   </div>
