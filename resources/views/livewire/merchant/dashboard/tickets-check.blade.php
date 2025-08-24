@@ -31,6 +31,7 @@
         @if($reservation)
         @php
             $arr = json_decode($reservation->additional_data, true) ?? [];
+            //dd($arr);
         @endphp
         <div class="lg:col-span-2 mt-8 bg-white border rounded-lg shadow p-6">
             <h4 class="text-lg font-bold text-orange-600 mb-4">بيانات التذكرة</h4>
@@ -39,6 +40,32 @@
             <p><span class="font-semibold">السعر:</span> {{ $reservation->price }} ريال</p>
             <p><span class="font-semibold">الكمية:</span> {{ $reservation->quantity }}</p>
             <p><span class="font-semibold">الحالة:</span> {{ $arr['paymentMethod'] ?? 'غير محدد' }}</p>
+        
+            <hr class="my-4">
+
+
+            {{-- عرض بيانات إضافية --}}
+    <h5 class="font-bold text-gray-700 mb-2">بيانات إضافية:</h5>
+    <p><span class="font-semibold">التاريخ:</span> {{ $arr['selected_date'] ?? '-' }}</p>
+    <p><span class="font-semibold">الوقت:</span> {{ $arr['selected_time'] ?? '-' }}</p>
+    <p><span class="font-semibold">كود الخصم:</span> {{ $arr['coupon_code'] ?: 'لا يوجد' }}</p>
+    <p><span class="font-semibold">الفرع:</span> {{ $arr['branch'] ?? 'غير محدد' }}</p>
+
+    {{-- عرض مصفوفة Qa بشكل مرتب --}}
+@if(!empty($arr['Qa']) && is_array($arr['Qa']))
+    <div class="mt-2">
+        <span class="font-semibold">أسئلة إضافية:</span>
+        <ul class="list-disc list-inside ml-4">
+            @foreach($arr['Qa'] as $qaItem)
+                <li>
+                    <span class="font-semibold">{{ $qaItem['question'] ?? '-' }}:</span>
+                    {{ $qaItem['answer'] ?? '-' }}
+                </li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
         </div>
         @endif
         @if ($error)

@@ -176,6 +176,7 @@ class TemplateRouter extends Component
         $this->reviews = $this->merchant->reviews()
         ->where('is_visible', true)
         ->orderByDesc('created_at')
+        ->take(5)
         ->get();
     }
 
@@ -188,7 +189,7 @@ class TemplateRouter extends Component
         //dd(get_coupons(33));
         $this->calendarDate = now()->toDateString();
         $this->loadReviews();
-        dd($this->reviews);
+        //dd($this->reviews);
         $this->offers_collection = Offering::where('user_id', $this->merchant->id)->where('status', 'active')->get();
         //dd(translate("هل تود الحصول على عرض اضافي","auto" ,$target = "en"));
         //dd($this->offers_collection, $this->merchant);

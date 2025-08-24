@@ -51,30 +51,33 @@
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-    async function printTicket(code, serviceName, imageUrl) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
+async function printTicket(code, serviceName) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-        doc.setFontSize(16);
-        doc.text("Service: " + serviceName, 20, 30);
-        doc.text("Code: " + code, 20, 40);
+    doc.setFontSize(16);
+    doc.text("Service: " + serviceName, 20, 30);
+    doc.text("Code: " + code, 20, 40);
 
-        if (imageUrl) {
-            const img = new Image();
-            img.crossOrigin = 'Anonymous';
-            img.onload = function () {
-                doc.addImage(img, 'JPEG', 20, 50, 170, 80);
-                doc.autoPrint();
-                window.open(doc.output('bloburl'), '_blank');
-            };
-            img.src = imageUrl;
-        } else {
-            doc.autoPrint();
-            window.open(doc.output('bloburl'), '_blank');
-        }
-    }
+    const qrDiv = document.createElement('div');
+    new QRCode(qrDiv, {
+        text: code,
+        width: 120,
+        height: 120,
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    const canvas = qrDiv.querySelector('canvas');
+    const imgData = canvas.toDataURL('image/png');
+
+    doc.addImage(imgData, 'PNG', 20, 50, 60, 60); // يمكن تغيير الحجم حسب الحاجة
+
+    doc.autoPrint();
+    window.open(doc.output('bloburl'), '_blank');
+}
 </script>
 @endsection
