@@ -41,25 +41,74 @@
 
 
 
-            <!-- Missing Fields Alert -->
+            <!-- Required Fields Status -->
             @php
-            $missingFields = collect($fileds_exists)->filter(fn($v) => !$v);
+            $fieldLabels = [
+                'name' => 'اسم الخدمة',
+                'description' => 'وصف الخدمة',
+                'location' => 'الموقع',
+                'image' => 'صورة الخدمة',
+                'price' => 'السعر',
+                'booking_duration' => 'مدة الحجز',
+                'booking_unit' => 'وحدة الحجز',
+                'user_limit' => 'حد المستخدمين',
+                'branch' => 'الفرع',
+                'center' => 'المركز',
+                'time' => 'أوقات الحجز'
+            ];
             @endphp
 
-            @if ($missingFields->isNotEmpty())
-            <div class="font-semibold text-red-700 flex items-center gap-2">
-                <i class="ri-error-warning-line text-xl"></i>
-                هناك حقول ناقصة يجب إكمالها:
-            </div>
-            <div class="border border-red-300 bg-red-50 rounded-lg p-4 space-y-2">
-                <ul class="list-disc list-inside text-red-600 space-y-1">
-                    @foreach ($missingFields as $field => $exists)
-                    <li class="flex items-center gap-2">
-                        <i class="ri-close-circle-line text-red-500"></i>
-                        <span>حقل "{{ $field }}" ناقص</span>
-                    </li>
-                    @endforeach
-                </ul>
+            @if (!empty($fileds_exists))
+            <div class="bg-white border border-gray-200 rounded-lg p-4" x-data="{ isOpen: false }">
+                <div class="font-semibold text-gray-800 flex items-center justify-between cursor-pointer"
+                     @click="isOpen = !isOpen">
+                    <div class="flex items-center gap-2">
+                        <i class="ri-task-line text-xl"></i>
+                        الحقول المطلوبة
+                        @php
+                        $completedCount = collect($fileds_exists)->filter(fn($v) => $v)->count();
+                        $totalCount = count($fileds_exists);
+                        @endphp
+                        <span class="text-sm text-gray-500">
+                            ({{ $completedCount }}/{{ $totalCount }})
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="text-sm text-gray-500">
+                            {{ $completedCount == $totalCount ? 'مكتمل' : 'غير مكتمل' }}
+                        </div>
+                        <i class="ri-arrow-down-s-line text-xl transition-transform duration-200"
+                           :class="{ 'rotate-180': isOpen }"></i>
+                    </div>
+                </div>
+
+                <div x-show="isOpen"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 transform scale-95"
+                     x-transition:enter-end="opacity-100 transform scale-100"
+                     x-transition:leave="transition ease-in duration-150"
+                     x-transition:leave-start="opacity-100 transform scale-100"
+                     x-transition:leave-end="opacity-0 transform scale-95"
+                     class="mt-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        @foreach ($fileds_exists as $field => $isCompleted)
+                        <div class="flex items-center gap-3 p-3 rounded-lg border transition-colors
+                            {{ $isCompleted ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-gray-50' }}">
+                            <div class="flex-shrink-0">
+                                @if ($isCompleted)
+                                    <i class="ri-check-circle-fill text-green-500 text-xl"></i>
+                                @else
+                                    <i class="ri-close-circle-line text-gray-400 text-xl"></i>
+                                @endif
+                            </div>
+                            <span class="text-sm font-medium
+                                {{ $isCompleted ? 'text-green-700' : 'text-gray-600' }}">
+                                {{ $fieldLabels[$field] ?? $field }}
+                            </span>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
             @endif
             <!-- Progress Bar -->
@@ -103,7 +152,7 @@
                                               d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                                     </svg>
                                 </template>
-                                <i x-show="loadingStep !== {{ $step }}" class="{{ $data['icon'] }} text-xl 
+                                <i x-show="loadingStep !== {{ $step }}" class="{{ $data['icon'] }} text-xl
                                     {{ $currentStep === $step ? 'text-red-500' : 'text-slate-500' }}"></i>
                             </div>
 
