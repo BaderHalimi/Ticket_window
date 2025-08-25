@@ -420,7 +420,7 @@ if (!function_exists("first_setup")){
         }
         $owner = $setup->additional_data["owner"] ?? null;//&& isset($setup->email) && isset($setup->phone) &&
         if(isset($setup->name) && isset($setup->logo) && isset($owner)){
-           return true; 
+           return true;
         }
         return false;
 
@@ -456,8 +456,8 @@ if (!function_exists("LoadConfig")){
             return [];
         }
         $system = $setup->additional_data ?? [];
-        $config["setup"] = (object)$setup; 
-        $config["system"] = (object)$system; 
+        $config["setup"] = (object)$setup;
+        $config["system"] = (object)$system;
 
         return (object)$config;
     }
@@ -641,15 +641,15 @@ if (!function_exists('get_statistics')) {
     function get_statistics($user_id)
     {
         $wallet = MerchantWallet::where('merchant_id', $user_id)->first();
-        // if (!$wallet) {
-        //     $wallet = MerchantWallet::create([
-        //         'merchant_id' => $user_id,
-        //         'balance' => 0,
-        //         'locked_balance' => 0,
-        //         'withdrawn_total' => 0,
-        //         'additional_data' => [],
-        //     ]);
-        // }
+        if (!$wallet) {
+            $wallet = MerchantWallet::create([
+                'merchant_id' => $user_id??Auth::guard('merchant')->id(),
+                'balance' => 0,
+                'locked_balance' => 0,
+                'withdrawn_total' => 0,
+                'additional_data' => [],
+            ]);
+        }
         //dd($wallet);
         $txns = $wallet->transactions()->get();
         $offers = $txns->map(function ($txn) {
@@ -774,8 +774,8 @@ if (!function_exists('can_booking_now')) {
 
         $times = fetch_time($offer->id);
         $unit = $offer->features["max_user_unit"] ?? 0;
-        $max_limit = $offer->type === "services" 
-            ? ($offer->features["max_user_time"] ?? 0) 
+        $max_limit = $offer->type === "services"
+            ? ($offer->features["max_user_time"] ?? 0)
             : ($offer->features["eventMaxQuantity"] ?? 0);
 
         if ($max_limit <= 0) return false;
@@ -796,8 +796,8 @@ if (!function_exists('can_booking_now')) {
             // $to = Carbon::createFromFormat('H:i', $service['to']);
             // if ($from->gt($to)) $to->addDay();
 
-            $max_date = isset($times['max_reservation_date']) 
-                ? Carbon::parse($times['max_reservation_date']) 
+            $max_date = isset($times['max_reservation_date'])
+                ? Carbon::parse($times['max_reservation_date'])
                 : Carbon::parse('3000-12-30');
 
             return  $now->lte($max_date);
