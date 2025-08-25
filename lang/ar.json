@@ -296,5 +296,16 @@
     "The given data contains potentially dangerous content.": "البيانات المرسلة تحتوي على محتوى خطير محتمل.",
     "The request contains potentially dangerous content and has been rejected.": "الطلب يحتوي على محتوى خطير محتمل وتم رفضه.",
     "name": "الاسم",
-    "email": "البريد الإلكتروني"
+    "email": "البريد الإلكتروني",
+    "Enter a clear and attractive service name": "أدخل اسم خدمة واضح وجذاب",
+    "Choose a name that clearly describes your service. Minimum 3 characters, maximum 255 characters.": "اختر اسماً يصف خدمتك بوضوح. الحد الأدنى 3 أحرف، والحد الأقصى 255 حرف.",
+    "Enter the service location or address": "أدخل موقع الخدمة أو العنوان",
+    "Specify the exact location where the service will be provided. This helps customers find you easily.": "حدد الموقع الدقيق حيث ستقدم الخدمة. هذا يساعد العملاء في العثور عليك بسهولة.",
+    "Choose whether you are offering an event (one-time occurrence) or a service (ongoing offering).": "اختر ما إذا كنت تقدم فعالية (حدث لمرة واحدة) أو خدمة (عرض مستمر).",
+    "Central: Service provided at a fixed location. Mobile: Service provided at customer location.": "مركزي: الخدمة تقدم في موقع ثابت. متنقل: الخدمة تقدم في موقع العميل.",
+    "Select the main category that best describes your service. This helps customers find your service more easily.": "اختر الفئة الرئيسية التي تصف خدمتك بأفضل شكل. هذا يساعد العملاء في العثور على خدمتك بسهولة أكبر.",
+    "Choose the specific service you provide within the selected category. This helps customers understand exactly what you offer.": "اختر الخدمة المحددة التي تقدمها ضمن الفئة المختارة. هذا يساعد العملاء على فهم ما تقدمه بالضبط.",
+    "Write a detailed description of your service. Include what you offer, benefits, and any special features. Minimum 10 characters, maximum 2000 characters.": "اكتب وصفاً مفصلاً لخدمتك. اشمل ما تقدمه والفوائد وأي ميزات خاصة. الحد الأدنى 10 أحرف، والحد الأقصى 2000 حرف.",
+    "Select the main category of your event. This helps attendees find events that match their interests.": "اختر الفئة الرئيسية لفعاليتك. هذا يساعد الحضور في العثور على الفعاليات التي تتطابق مع اهتماماتهم.",
+    "Choose the specific type of event you are organizing within the selected category. Be as specific as possible.": "اختر النوع المحدد للفعالية التي تنظمها ضمن الفئة المختارة. كن محدداً قدر الإمكان."
 }

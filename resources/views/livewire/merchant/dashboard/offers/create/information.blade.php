@@ -26,7 +26,8 @@
                     {{ __('service name') }} <span class="text-red-500" style="font-weight: bold;">*</span>
                 </label>
                 <input type="text" wire:model.lazy="name"
-                       class="w-full border rounded-md p-2 @error('name') border-red-500 @enderror">
+                       class="w-full border rounded-md p-2 @error('name') border-red-500 @enderror"
+                       placeholder="{{ __('Enter a clear and attractive service name') }}">
                 @error('name')
                     <p class="text-red-500 text-xs mt-1">{{ __($message) }}</p>
                 @enderror
@@ -36,6 +37,9 @@
                 @if(isset($errorFields['name']))
                     <p class="text-red-500 text-xs mt-1">{{ __($errorFields['name']) }}</p>
                 @endif
+                <div class="text-xs text-gray-500 mt-1">
+                    {{ __('Choose a name that clearly describes your service. Minimum 3 characters, maximum 255 characters.') }}
+                </div>
             </div>
 
             @if ($type != 'restaurant')
@@ -45,7 +49,8 @@
                     {{ __('location') }} <span class="text-red-500" style="font-weight: bold;">*</span>
                 </label>
                 <input type="text" wire:model.lazy="location"
-                       class="w-full border rounded-md p-2 @error('location') border-red-500 @enderror">
+                       class="w-full border rounded-md p-2 @error('location') border-red-500 @enderror"
+                       placeholder="{{ __('Enter the service location or address') }}">
                 @error('location')
                     <p class="text-red-500 text-xs mt-1">{{ __($message) }}</p>
                 @enderror
@@ -55,6 +60,9 @@
                 @if(isset($errorFields['location']))
                     <p class="text-red-500 text-xs mt-1">{{ __($errorFields['location']) }}</p>
                 @endif
+                <div class="text-xs text-gray-500 mt-1">
+                    {{ __('Specify the exact location where the service will be provided. This helps customers find you easily.') }}
+                </div>
             </div>
             @endif
 
@@ -76,6 +84,9 @@
                     {{-- <option value="conference">مؤتمر</option> --}}
                     {{-- <option value="experiences">تجربة</option> --}}
                 </select>
+                <div class="text-xs text-gray-500 mt-1">
+                    {{ __('Choose whether you are offering an event (one-time occurrence) or a service (ongoing offering).') }}
+                </div>
             </div>
 @endif
 
@@ -114,6 +125,9 @@
             <option value="social_party">{{ __('social event / party') }}</option>
             <option value="sports_fitness">{{ __('sport / fitness') }}</option>
         </select>
+    </div>
+    <div class="text-xs text-gray-500 mt-1">
+        {{ __('Select the main category of your event. This helps attendees find events that match their interests.') }}
     </div>
 
     <!-- اختيار الفعالية الفعلية -->
@@ -201,6 +215,9 @@
             @endif
         </select>
     </div>
+    <div class="text-xs text-gray-500 mt-1">
+        {{ __('Choose the specific type of event you are organizing within the selected category. Be as specific as possible.') }}
+    </div>
 
 </div>
 
@@ -209,14 +226,15 @@
 @if ($type == 'services')
 
     <div >
-        <label class="block text-sm font-medium mb-1">{{ __('centrality') }}</label>
+        <label class="block text-sm font-medium mb-1">{{ __('centrality') }} <span class="text-red-500" style="font-weight: bold;">*</span></label>
         <select wire:model.lazy="center" class="w-full border rounded-md p-2">
             <option value="">{{ __('is the service central') }}</option>
             <option value="place">{{ __('central') }}</option>
             <option value="mobile">{{ __('mobile') }}</option>
-
         </select>
-
+        <div class="text-xs text-gray-500 mt-1">
+            {{ __('Central: Service provided at a fixed location. Mobile: Service provided at customer location.') }}
+        </div>
     </div>
 
 <div class="space-y-4">
@@ -245,6 +263,9 @@
             <option value="maintenance">{{ __('maintenance and repair services') }}</option>
             <option value="other">{{ __('other') }}</option>
         </select>
+    </div>
+    <div class="text-xs text-gray-500 mt-1">
+        {{ __('Select the main category that best describes your service. This helps customers find your service more easily.') }}
     </div>
 
     <!-- اختيار الخدمة -->
@@ -366,6 +387,9 @@
             @endif
         </select>
     </div>
+    <div class="text-xs text-gray-500 mt-1">
+        {{ __('Choose the specific service you provide within the selected category. This helps customers understand exactly what you offer.') }}
+    </div>
 </div>
 
 @endif
@@ -388,7 +412,7 @@
                     <p class="text-red-500 text-xs mt-1">{{ __($errorFields['description']) }}</p>
                 @endif
                 <div class="text-xs text-gray-500 mt-1">
-                    {{ __('Minimum 10 characters, maximum 2000 characters') }}
+                    {{ __('Write a detailed description of your service. Include what you offer, benefits, and any special features. Minimum 10 characters, maximum 2000 characters.') }}
                 </div>
             </div>
 
