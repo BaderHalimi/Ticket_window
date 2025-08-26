@@ -68,7 +68,7 @@
 
 
             {{-- <div>
-                <label class="block text-sm font-medium mb-1">السعر</label>
+                <label class="block text-sm font-medium mb-1">{{ __('Price') }}</label>
                 <input type="number" wire:model.lazy="price" step="0.01" class="w-full border rounded-md p-2">
             </div> --}}
 @if ($type != 'restaurant')
@@ -78,14 +78,14 @@
             <div>
                 <label class="block text-sm font-medium mb-1">{{ __('type') }} <span class="text-red-500" style="font-weight: bold;">*</span></label>
                 <select wire:model.lazy="type" class="w-full border rounded-md p-2">
-                    {{-- <option value="restaurant">مطعم</option> --}}
+                    {{-- <option value="restaurant">{{ __('Restaurant') }}</option> --}}
                     <option value="events">{{ __('event') }}</option>
                     <option value="services">{{ __('service') }}</option>
-                    {{-- <option value="conference">مؤتمر</option> --}}
-                    {{-- <option value="experiences">تجربة</option> --}}
+                    {{-- <option value="conference">{{ __('Conference') }}</option> --}}
+                    {{-- <option value="experiences">{{ __('Experience') }}</option> --}}
                 </select>
                 <div class="text-xs text-gray-500 mt-1">
-                    {{ __('Choose whether you are offering an event (one-time occurrence) or a service (ongoing offering).') }}
+                    {{ __('Event: One-time activities like conferences or workshops. Service: Ongoing offerings like consulting or maintenance.') }}
                 </div>
             </div>
 @endif
@@ -97,17 +97,17 @@
             <div>
                 <label class="block text-sm font-medium mb-1">{{ __('type') }}</label>
                 <select wire:model.lazy="services_type" class="w-full border rounded-md p-2">
-                    {{-- <option value="restaurant">مطعم</option> --}}
+                    {{-- <option value="restaurant">{{ __('Restaurant') }}</option> --}}
                     <option value="services">{{ __('service') }}</option>
-                    {{-- <option value="conference">مؤتمر</option> --}}
-                    {{-- <option value="experiences">تجربة</option> --}}
+                    {{-- <option value="conference">{{ __('Conference') }}</option> --}}
+                    {{-- <option value="experiences">{{ __('Experience') }}</option> --}}
                 </select>
             </div>
 @endif
 @if ($type == 'events')
 
 <div class="space-y-4">
-    <!-- اختيار نوع الفعالية -->
+    <!-- {{ __('Event Type Selection') }} -->
     <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
         <i class="ri-calendar-event-line text-indigo-500 text-lg"></i>
         {{ __('event type') }}
@@ -130,7 +130,7 @@
         {{ __('Select the main category of your event. This helps attendees find events that match their interests.') }}
     </div>
 
-    <!-- اختيار الفعالية الفعلية -->
+    <!-- {{ __('Actual Event Selection') }} -->
     <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
         <i class="ri-settings-3-line text-indigo-500 text-lg"></i>
         {{ __('actual event') }}
@@ -141,7 +141,7 @@
             class="w-full border border-gray-300 rounded-xl p-3 pr-10 bg-white shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
             <option value="">{{ __('select actual event') }}</option>
 
-            {{-- المؤتمرات --}}
+            {{-- {{ __('Conferences') }} --}}
             @if($category == 'conference')
                 <option value="tech_conference">{{ __('technical conference') }}</option>
                 <option value="business_conference">{{ __('business conference') }}</option>
@@ -152,7 +152,7 @@
                 <option value="press_conference">{{ __('press conference') }}</option>
             @endif
 
-            {{-- المعارض --}}
+            {{-- {{ __('Exhibitions') }} --}}
             @if($category == 'exhibition')
                 <option value="art_exhibition">{{ __('artical exhibition') }}</option>
                 <option value="tech_exhibition">{{ __('technical exhibition') }}</option>
@@ -163,7 +163,7 @@
                 <option value="food_exhibition">{{ __('food exhibition') }}</option>
             @endif
 
-            {{-- فعاليات الأطفال --}}
+            {{-- {{ __('Children Events') }} --}}
             @if($category == 'children_event')
                 <option value="kids_show">{{ __('kids show') }}</option>
                 <option value="kids_workshop">{{ __('kids workshop') }}</option>

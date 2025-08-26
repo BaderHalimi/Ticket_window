@@ -9,6 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -19,6 +20,93 @@
 
         #sidebar {
             transition: transform 0.3s ease-in-out;
+        }
+
+        /* تنسيق مخصص لأزرار SweetAlert2 */
+        .swal2-confirm-custom {
+            background-color: #dc2626 !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 0.375rem !important;
+            padding: 0.75rem 1.5rem !important;
+            font-weight: 600 !important;
+            font-size: 0.875rem !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease-in-out !important;
+            margin: 0 0.25rem !important;
+            min-width: 80px !important;
+        }
+
+        .swal2-confirm-custom:hover {
+            background-color: #b91c1c !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3) !important;
+        }
+
+        .swal2-confirm-custom:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3) !important;
+        }
+
+        .swal2-cancel-custom {
+            background-color: #6b7280 !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 0.375rem !important;
+            padding: 0.75rem 1.5rem !important;
+            font-weight: 600 !important;
+            font-size: 0.875rem !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease-in-out !important;
+            margin: 0 0.25rem !important;
+            min-width: 80px !important;
+        }
+
+        .swal2-cancel-custom:hover {
+            background-color: #4b5563 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 8px rgba(107, 114, 128, 0.3) !important;
+        }
+
+        .swal2-cancel-custom:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.3) !important;
+        }
+
+        /* تنسيق عام للمودال */
+        .swal2-rtl {
+            direction: rtl !important;
+            text-align: right !important;
+        }
+
+        .swal2-popup {
+            border-radius: 0.75rem !important;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+        }
+
+        .swal2-icon.swal2-warning {
+            border-color: #f59e0b !important;
+            color: #f59e0b !important;
+        }
+
+        .swal2-icon.swal2-success {
+            border-color: #10b981 !important;
+            color: #10b981 !important;
+        }
+
+        /* إصلاح مشكلة عدم ظهور الأزرار */
+        .swal2-actions {
+            margin: 1.25rem 0 0 0 !important;
+            gap: 0.5rem !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+        .swal2-styled {
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
     </style>
 
@@ -37,7 +125,7 @@
         };
     @endphp
 
-    <div 
+    <div
         x-data="{ show: true }"
         x-init="setTimeout(() => show = false, 2500)"
         x-show="show"
@@ -110,14 +198,14 @@
             </aside>
         </div>
 
-        
+
         @php
         $user = auth()->user();
 
         if ($merchant) {
             $user = \App\Models\User::find($merchant);
         }
-            
+
         @endphp
         <main class="relative flex-1 overflow-y-auto">
 
@@ -137,7 +225,7 @@
                     </a>
 
                     @livewire('notif-bell')
-                    
+
                     <div class="flex items-center gap-2">
                         {{-- <span class="text-slate-800 font-bold text-sm hidden md:inline">
                             {{ $user->f_name . " " . $user->l_name ?? 'تاجر غير معروف' }}
@@ -155,6 +243,116 @@
     </div>
     <script src="https://cdn.tiny.cloud/1/evqw8zgybaz9h1ukpi5qcps683qv0ef37icy3d3o5xjbo9it/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
     @livewireScripts
+
+    {{-- دوال SweetAlert2 العامة --}}
+    <script>
+        // إعدادات SweetAlert2 المشتركة
+        const swalConfig = {
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            customClass: {
+                popup: 'swal2-rtl',
+                title: 'text-lg font-bold text-gray-800',
+                htmlContainer: 'text-gray-600',
+                confirmButton: 'swal2-confirm-custom',
+                cancelButton: 'swal2-cancel-custom'
+            },
+            buttonsStyling: false,
+            reverseButtons: true
+        };
+
+        const swalSuccessConfig = {
+            customClass: {
+                popup: 'swal2-rtl',
+                title: 'text-lg font-bold text-green-800',
+                htmlContainer: 'text-green-600'
+            },
+            timer: 2000,
+            showConfirmButton: false
+        };
+        // دالة حذف الجلسة
+        function confirmDeleteSession(index, componentId) {
+            Swal.fire({
+                ...swalConfig,
+                title: '{{ __("Are you sure?") }}',
+                text: '{!! __("You won\'t be able to revert this!") !!}',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '{{ __("Yes, delete it!") }}',
+                cancelButtonText: '{{ __("Cancel") }}'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // استخدام Livewire للحذف
+                    Livewire.find(componentId).call('removeSession', index);
+
+                    Swal.fire({
+                        ...swalSuccessConfig,
+                        title: '{{ __("Deleted!") }}',
+                        text: '{{ __("Session has been deleted.") }}',
+                        icon: 'success'
+                    });
+                }
+            });
+        }
+
+        // دالة حذف الرابط
+        function confirmDeleteLink(index, componentId) {
+            Swal.fire({
+                ...swalConfig,
+                title: '{{ __("Are you sure?") }}',
+                text: '{!! __("You won\'t be able to revert this!") !!}',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '{{ __("Yes, delete it!") }}',
+                cancelButtonText: '{{ __("Cancel") }}'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // استخدام Livewire للحذف
+                    Livewire.find(componentId).call('removeLink', index);
+
+                    Swal.fire({
+                        ...swalSuccessConfig,
+                        title: '{{ __("Deleted!") }}',
+                        text: '{{ __("Link has been deleted.") }}',
+                        icon: 'success'
+                    });
+                }
+            });
+        }
+
+        // دالة عامة لعرض رسائل النجاح
+        function showSuccessMessage(title, text) {
+            Swal.fire({
+                ...swalSuccessConfig,
+                title: title,
+                text: text,
+                icon: 'success'
+            });
+        }
+
+        // دالة عامة لعرض رسائل الخطأ
+        function showErrorMessage(title, text) {
+            Swal.fire({
+                customClass: {
+                    popup: 'swal2-rtl',
+                    title: 'text-lg font-bold text-red-800',
+                    htmlContainer: 'text-red-600'
+                },
+                title: title,
+                text: text,
+                icon: 'error',
+                confirmButtonText: '{{ __("OK") }}',
+                confirmButtonColor: '#dc2626',
+                buttonsStyling: false,
+                customClass: {
+                    ...swalConfig.customClass,
+                    title: 'text-lg font-bold text-red-800',
+                    htmlContainer: 'text-red-600'
+                }
+            });
+        }
+    </script>
+
     @stack('scripts')
 </body>
 

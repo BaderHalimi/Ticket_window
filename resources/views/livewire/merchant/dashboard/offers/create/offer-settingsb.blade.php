@@ -1,11 +1,11 @@
 <div>
-<p class="text-red-600">لايتم اضهار الصور حتى يتم الحفض</p>
+<p class="text-yellow-600 bg-yellow-600/10 border border-yellow-600 px-4 py-3 rounded-md mb-4">{{ __('Images will not be displayed until saved') }}</p>
 
 {{--tourism--}}
 @livewire("merchant.dashboard.offers.create.components.session",['offering'=>$offering])
 
 @if ($category == "tourism")
-    @livewire("merchant.dashboard.offers.create.components.destination",[ 'offering'=>$offering])
+    @livewire("merchant.dashboard.offers.create.components.destination",[ 'offering'=>$offering])<!--  -->
 
 @endif
 {{--gallery--}}
