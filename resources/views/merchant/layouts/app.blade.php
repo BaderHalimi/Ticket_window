@@ -320,6 +320,31 @@
             });
         }
 
+        // دالة حذف الأيام المغلقة
+        function confirmDeleteClosedDay(index, componentId) {
+            Swal.fire({
+                ...swalConfig,
+                title: '{{ __("Are you sure?") }}',
+                text: '{{ __("You won\'t be able to revert this!") }}',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '{{ __("Yes, delete it!") }}',
+                cancelButtonText: '{{ __("Cancel") }}'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // استخدام Livewire للحذف
+                    Livewire.find(componentId).call('removeClosedDay', index);
+
+                    Swal.fire({
+                        ...swalSuccessConfig,
+                        title: '{{ __("Deleted!") }}',
+                        text: '{{ __("Closed day has been deleted.") }}',
+                        icon: 'success'
+                    });
+                }
+            });
+        }
+
         // دالة عامة لعرض رسائل النجاح
         function showSuccessMessage(title, text) {
             Swal.fire({

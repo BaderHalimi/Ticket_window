@@ -43,7 +43,7 @@
                                     title="{{ __('Edit') }}">
                                 <i class="ri-edit-line text-lg"></i>
                             </button>
-                            <button onclick="confirmDeleteLink({{ $index }}, '{{ $this->getId() }}')"
+                            <button onclick="confirmDeleteLink(`{{ $index }}`, '{{ $this->getId() }}')"
                                     class="text-red-600 hover:text-red-800"
                                     title="{{ __('Delete') }}"
                                     data-component-id="{{ $this->getId() }}">
