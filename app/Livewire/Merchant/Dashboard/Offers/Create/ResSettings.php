@@ -481,40 +481,12 @@ class ResSettings extends Component
             $features['weekly_recurrence_days'] = '';
         }
 
-        $features['enable_duration'] = $this->enable_duration;
-        $features['booking_duration'] = (int) $this->booking_duration;
-        $features['booking_unit'] = $this->booking_unit;
-
-        // $features['enable_work_schedule'] = $this->enable_work_schedule;
-        // $features['work_schedule'] = $this->work_schedule;
-
-        $features['enable_closed_days'] = $this->enable_closed_days;
-        $features['closed_days'] = $this->closed_days;
-
-        $features['enable_user_limit'] = $this->enable_user_limit;
-        $features['user_limit'] = (int) $this->user_limit;
-
-        $features['enable_max_users'] = $this->enable_max_users;
-        $features['max_user_time'] = (int) $this->max_user_time;
-        $features['max_user_unit'] = $this->max_user_unit;
-
-        $features['enable_booking_deadline'] = $this->enable_booking_deadline;
-        $features['booking_deadline_minutes'] = (int) $this->booking_deadline_minutes;
-
-        $features['enable_weekly_recurrence'] = $this->enable_weekly_recurrence;
-        $features['weekly_recurrence_days'] = $this->weekly_recurrence_days;
-        $features['eventMaxQuantity'] = (int) $this->eventMaxQuantity;
-        //$features['enable_selected_branches'] = $this->enable_selected_branches;
-        $features['selected_branches'] = collect($this->branches)
-        ->whereIn('id', $this->selected_branches)
-        ->pluck('id')
-        ->values()
-        ->toArray();
-    
+        // Update the offering with sanitized and validated features
         $this->offering->update([
             'features' => $features,
             'status' => 'inactive'
         ]);
+
         $this->dispatch('ServiceUpdated');
     }
 
