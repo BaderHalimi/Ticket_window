@@ -1,4 +1,4 @@
-<nav class="flex flex-col gap-2">
+<nav class="flex flex-col gap-2sm:hidden">
 
     @php
         $workerNotActive = false;

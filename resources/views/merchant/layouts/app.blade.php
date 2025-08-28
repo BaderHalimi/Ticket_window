@@ -108,6 +108,192 @@
             visibility: visible !important;
             opacity: 1 !important;
         }
+
+        /* تحسين أزرار SweetAlert */
+        .swal2-confirm {
+            background-color: #3b82f6 !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 12px 24px !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            color: white !important;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3) !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .swal2-confirm:hover {
+            background-color: #2563eb !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 12px -1px rgba(59, 130, 246, 0.4) !important;
+        }
+
+        .swal2-cancel {
+            background-color: #6b7280 !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 12px 24px !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            color: white !important;
+            box-shadow: 0 4px 6px -1px rgba(107, 114, 128, 0.3) !important;
+            transition: all 0.2s ease !important;
+            margin-right: 12px !important;
+        }
+
+        .swal2-cancel:hover {
+            background-color: #4b5563 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 12px -1px rgba(107, 114, 128, 0.4) !important;
+        }
+
+        /* أزرار الحذف الحمراء */
+        .swal2-confirm.swal2-styled.swal2-delete {
+            background-color: #ef4444 !important;
+            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3) !important;
+        }
+
+        .swal2-confirm.swal2-styled.swal2-delete:hover {
+            background-color: #dc2626 !important;
+            box-shadow: 0 6px 12px -1px rgba(239, 68, 68, 0.4) !important;
+        }
+
+        /* تحسين النافذة نفسها */
+        .swal2-popup {
+            border-radius: 16px !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .swal2-title {
+            font-weight: 700 !important;
+            color: #1f2937 !important;
+            font-size: 20px !important;
+        }
+
+        .swal2-content {
+            color: #6b7280 !important;
+            font-size: 14px !important;
+        }
+
+        .swal2-icon {
+            border: none !important;
+        }
+
+        .swal2-icon.swal2-warning {
+            border-color: #f59e0b !important;
+            color: #f59e0b !important;
+        }
+
+        .swal2-icon.swal2-error {
+            border-color: #ef4444 !important;
+            color: #ef4444 !important;
+        }
+
+        .swal2-icon.swal2-success {
+            border-color: #10b981 !important;
+            color: #10b981 !important;
+        }
+
+        .swal2-icon.swal2-info {
+            border-color: #3b82f6 !important;
+            color: #3b82f6 !important;
+        }
+
+        /* تحسين زر الإغلاق */
+        .swal2-close-custom {
+            background: rgba(107, 114, 128, 0.1) !important;
+            color: #6b7280 !important;
+            border: none !important;
+            border-radius: 50% !important;
+            width: 40px !important;
+            height: 40px !important;
+            font-size: 20px !important;
+            font-weight: bold !important;
+            transition: all 0.2s ease !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .swal2-close-custom:hover {
+            background: rgba(107, 114, 128, 0.2) !important;
+            color: #374151 !important;
+            transform: scale(1.1) !important;
+        }
+
+        /* تحسين الخلفية والظلال */
+        .swal2-popup-custom {
+            border-radius: 16px !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        /* تحسين الصورة في المعاينة */
+        .swal2-image {
+            border-radius: 12px !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2) !important;
+            border: 2px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* تأثيرات الحركة */
+        @keyframes swalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes swalFadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+        }
+
+        .swal2-show {
+            animation: swalFadeIn 0.3s ease-out !important;
+        }
+
+        .swal2-hide {
+            animation: swalFadeOut 0.3s ease-in !important;
+        }
+
+        /* Animation للعناصر المتحركة */
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* تحسين مظهر الـ checkboxes */
+        .form-checkbox:checked {
+            background-color: #2563eb !important;
+            border-color: #2563eb !important;
+        }
+
+        .form-checkbox:focus {
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+        }
     </style>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -115,39 +301,38 @@
     @stack('styles')
 </head>
 @if(session('error') || session('success') || session('message'))
-    @php
-        $message = session('error') ?? session('success') ?? session('message');
-        $type = session('error') ? 'error' : (session('success') ? 'success' : 'info');
-        $bgColor = match($type) {
-            'success' => 'bg-green-500',
-            'error' => 'bg-red-500',
-            'info' => 'bg-gray-700',
-        };
-    @endphp
+@php
+$message = session('error') ?? session('success') ?? session('message');
+$type = session('error') ? 'error' : (session('success') ? 'success' : 'info');
+$bgColor = match($type) {
+'success' => 'bg-green-500',
+'error' => 'bg-red-500',
+'info' => 'bg-gray-700',
+};
+@endphp
 
-    <div
-        x-data="{ show: true }"
-        x-init="setTimeout(() => show = false, 2500)"
-        x-show="show"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 translate-x-10"
-        x-transition:enter-end="opacity-100 translate-x-0"
-        x-transition:leave="transition ease-in duration-300"
-        x-transition:leave-start="opacity-100 translate-x-0"
-        x-transition:leave-end="opacity-0 translate-x-10"
-        class="fixed bottom-5 right-5 z-50 max-w-xs w-full {{ $bgColor }} text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-3"
-    >
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            @if($type === 'success')
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            @elseif($type === 'error')
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            @else
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m0-4h.01M12 18h.01" />
-            @endif
-        </svg>
-        <span class="text-sm font-medium">{{ $message }}</span>
-    </div>
+<div
+    x-data="{ show: true }"
+    x-init="setTimeout(() => show = false, 2500)"
+    x-show="show"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 translate-x-10"
+    x-transition:enter-end="opacity-100 translate-x-0"
+    x-transition:leave="transition ease-in duration-300"
+    x-transition:leave-start="opacity-100 translate-x-0"
+    x-transition:leave-end="opacity-0 translate-x-10"
+    class="fixed bottom-5 right-5 z-50 max-w-xs w-full {{ $bgColor }} text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-3">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        @if($type === 'success')
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        @elseif($type === 'error')
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        @else
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m0-4h.01M12 18h.01" />
+        @endif
+    </svg>
+    <span class="text-sm font-medium">{{ $message }}</span>
+</div>
 @endif
 
 <body class="bg-slate-100 font-sans">
@@ -177,7 +362,13 @@
                             <path d="M13 11v2" />
                         </svg>
                     </div>
-                    <h1 class="text-xl font-bold text-slate-800">{{ LoadConfig()->setup->name ?? null  }}</h1>
+                    <h1 class="text-xl font-bold text-slate-800">{{ LoadConfig()->setup->name ?? null  }}
+                        <button @click="openSidebar = !openSidebar"
+                            class="absolute top-4 right-4 bg-white z-50 py-2 px-4 rounded-md transition">
+                            <i class="ri-menu-3-line text-2xl text-slate-800 hover:text-orange-600"></i>
+                        </button>
+                    </h1>
+
                 </div>
 
                 @livewire('merchant.aside.nav',['merchant'=>$merchant??false])
@@ -203,7 +394,7 @@
         $user = auth()->user();
 
         if ($merchant) {
-            $user = \App\Models\User::find($merchant);
+        $user = \App\Models\User::find($merchant);
         }
 
         @endphp
@@ -345,6 +536,60 @@
             });
         }
 
+        // دالة حذف الأحداث
+        function confirmDeleteEvent(index, componentId) {
+            Swal.fire({
+                ...swalConfig,
+                title: '{{ __("Are you sure?") }}',
+                text: '{{ __("You won\'t be able to revert this!") }}',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '{{ __("Yes, delete it!") }}',
+                cancelButtonText: '{{ __("Cancel") }}'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // استخدام Livewire للحذف
+                    Livewire.find(componentId).call('removeEvent', index);
+
+                    Swal.fire({
+                        ...swalSuccessConfig,
+                        title: '{{ __("Deleted!") }}',
+                        text: '{{ __("Event has been deleted.") }}',
+                        icon: 'success'
+                    });
+                }
+            });
+        }
+
+        // معالج عام لأخطاء Livewire Snapshot
+        document.addEventListener('livewire:init', () => {
+            // معالج أخطاء Livewire العامة
+            Livewire.hook('request', ({
+                fail
+            }) => {
+                fail(({
+                    status,
+                    content,
+                    preventDefault
+                }) => {
+                    if (content && content.includes('Snapshot missing')) {
+                        preventDefault();
+
+                        Swal.fire({
+                            ...swalConfig,
+                            title: '{{ __("Connection Lost") }}',
+                            text: '{{ __("The page will be refreshed to restore connection") }}',
+                            icon: 'warning',
+                            timer: 3000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    }
+                });
+            });
+        });
+
         // دالة عامة لعرض رسائل النجاح
         function showSuccessMessage(title, text) {
             Swal.fire({
@@ -373,6 +618,56 @@
                     ...swalConfig.customClass,
                     title: 'text-lg font-bold text-red-800',
                     htmlContainer: 'text-red-600'
+                }
+            });
+        }
+
+        // دالة معاينة الصور المحسنة
+        function previewImage(imageUrl, title = '{{ __("Image Preview") }}') {
+            // التحقق من وجود الصورة
+            if (!imageUrl) {
+                console.error('Image URL is required');
+                return;
+            }
+
+            Swal.fire({
+                title: title,
+                imageUrl: imageUrl,
+                imageAlt: title,
+                showConfirmButton: true,
+                confirmButtonText: '<i class="ri-close-line mr-1"></i>{{ __("Close") }}',
+                showCloseButton: true,
+                imageWidth: 600,
+                imageHeight: 400,
+                width: 700,
+                padding: '2rem',
+                background: '#ffffff',
+                backdrop: 'rgba(0,0,0,0.8)',
+                customClass: {
+                    popup: 'swal2-popup-custom',
+                    image: 'rounded-lg shadow-2xl border-2 border-gray-100',
+                    confirmButton: 'swal2-confirm swal2-styled',
+                    closeButton: 'swal2-close-custom',
+                    title: 'text-lg font-bold text-gray-800 mb-4'
+                },
+                buttonsStyling: false,
+                allowOutsideClick: true,
+                allowEscapeKey: true,
+                focusConfirm: true,
+                showClass: {
+                    popup: 'swal2-show'
+                },
+                hideClass: {
+                    popup: 'swal2-hide'
+                },
+                didOpen: () => {
+                    // إضافة تأثير تحميل
+                    const image = Swal.getImage();
+                    if (image) {
+                        image.onerror = () => {
+                            Swal.showValidationMessage('{{ __("Failed to load image") }}');
+                        };
+                    }
                 }
             });
         }
