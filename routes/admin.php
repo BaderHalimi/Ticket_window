@@ -28,6 +28,7 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:admin'])->group(
     Route::prefix('merchants')->as('merchants.')->group(function () {
         // Route::get('/', [MerchantController::class, 'index'])->name('index');
         Route::get('/', 'App\Http\Controllers\Admin\MerchantController@index')->name('index');
+        Route::get('/{merchant}', [MerchantController::class, 'loginAsMerchant'])->name('loginAsMerchant');
     });
     Route::resource('withdraws', Withdraw_checking::class)
         ->names('withdraws');
