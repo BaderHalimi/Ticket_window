@@ -10,7 +10,7 @@ use App\Http\Controllers\Withdraw_checking;
 use App\Http\Controllers\AccesMerchantProfile;
 
 Route::get('/', function () {
-    return redirect()->route('dashboard.overview');
+    return redirect()->route('admin.dashboard.overview');
 })->middleware('auth:admin');
 Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:admin'])->group(function () {
 

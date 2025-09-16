@@ -1,4 +1,4 @@
-<div class="space-y-8 p-6 bg-gradient-to-br from-gray-50 to-white rounded-xl shadow-sm">
+﻿<div class="space-y-8 p-6 bg-gradient-to-br from-gray-50 to-white rounded-xl shadow-sm">
 
     {{-- عرض الأخطاء العامة --}}
     @if ($errors->any())
@@ -405,38 +405,204 @@
             </div>
         </div>
 
-    {{-- توجل: تفعيل الخصومات --}}
-    <div class="space-y-3">
-        {{-- Toggle --}}
-        <div class="flex items-center justify-between">
-            <label class="text-sm font-medium">السماح باستخدام خصومات؟</label>
-            <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" wire:model.lazy="enable_discounts" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
-                <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transform peer-checked:translate-x-full transition-all"></div>
-            </label>
-        </div>
-
-        {{-- إذا كان الخصم مفعل --}}
-        @if ($enable_discounts)
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <label class="block text-sm font-medium mb-1">بداية الخصم</label>
-                    <input type="datetime-local" wire:model.lazy="discount_start" class="w-full border rounded-md p-2">
+        {{-- الخصومات المجدولة --}}
+        <div class="bg-white rounded-xl p-6 shadow-md border border-gray-100">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center">
+                    <i class="ri-calendar-event-line text-2xl text-emerald-600 mr-3"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">{{ __('Scheduled Discounts') }}</h3>
+                        <p class="text-sm text-gray-600">{{ __('Automatically apply a discount during a specific period') }}</p>
+                    </div>
                 </div>
-
-                <div>
-                    <label class="block text-sm font-medium mb-1">نهاية الخصم</label>
-                    <input type="datetime-local" wire:model.lazy="discount_end" class="w-full border rounded-md p-2">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium mb-1">نسبة الخصم (%)</label>
-                    <input type="number" wire:model.lazy="discount_percent" class="w-full border rounded-md p-2" min="1" max="100">
-                </div>
+                <label class="relative inline-flex items-center cursor-pointer toggle-switch">
+                    <input type="checkbox" wire:model.lazy="enable_discounts" class="sr-only peer">
+                    <div class="w-12 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:bg-gradient-to-r peer-checked:from-emerald-600 peer-checked:to-green-600 transition-all duration-300"></div>
+                    <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow-lg transform peer-checked:translate-x-5 transition-all duration-300 flex items-center justify-center">
+                        <i class="ri-check-line text-xs text-emerald-600 opacity-0 peer-checked:opacity-100 transition-opacity duration-200"></i>
+                    </div>
+                </label>
             </div>
-        @endif
-    </div>
+
+            @if ($enable_discounts)
+                <div class="space-y-6">
+                    {{-- معلومات الخصم --}}
+                    <div class="bg-gradient-to-r from-emerald-50 to-green-50 rounded-lg p-4 border border-emerald-200">
+                        <div class="flex items-center mb-2">
+                            <i class="ri-information-line text-emerald-600 mr-2"></i>
+                            <h4 class="font-bold text-emerald-800">{{ __('Discount Information') }}</h4>
+                        </div>
+                        <p class="text-sm text-emerald-700">
+                            {{ __('Set up automatic discounts that will be applied during specific time periods. This is perfect for flash sales, seasonal promotions, or special events.') }}
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {{-- تاريخ البداية --}}
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                <i class="ri-calendar-event-line mr-1 text-emerald-600"></i>
+                                {{ __('Start Date and Time') }} <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="ri-time-line text-gray-400"></i>
+                                </div>
+                                <input type="datetime-local"
+                                       wire:model.lazy="discount_start"
+                                       min="{{ now()->format('Y-m-d\TH:i') }}"
+                                       max="{{ now()->addYears(2)->format('Y-m-d\TH:i') }}"
+                                       class="w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 @error('discount_start') border-red-500 ring-2 ring-red-200 @else border-gray-300 @enderror">
+                            </div>
+                            @error('discount_start')
+                                <p class="text-red-500 text-xs mt-1 flex items-center">
+                                    <i class="ri-error-warning-line mr-1"></i>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1 flex items-center">
+                                <i class="ri-information-line mr-1"></i>
+                                {{ __('When the discount should start') }}
+                            </p>
+                        </div>
+
+                        {{-- تاريخ النهاية --}}
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                <i class="ri-calendar-check-line mr-1 text-emerald-600"></i>
+                                {{ __('End Date and Time') }} <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="ri-time-line text-gray-400"></i>
+                                </div>
+                                <input type="datetime-local"
+                                       wire:model.lazy="discount_end"
+                                       @if($discount_start) min="{{ \Carbon\Carbon::parse($discount_start)->addHour()->format('Y-m-d\TH:i') }}" @else min="{{ now()->addHour()->format('Y-m-d\TH:i') }}" @endif
+                                       max="{{ now()->addYears(2)->format('Y-m-d\TH:i') }}"
+                                       class="w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 @error('discount_end') border-red-500 ring-2 ring-red-200 @else border-gray-300 @enderror">
+                            </div>
+                            @error('discount_end')
+                                <p class="text-red-500 text-xs mt-1 flex items-center">
+                                    <i class="ri-error-warning-line mr-1"></i>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1 flex items-center">
+                                <i class="ri-information-line mr-1"></i>
+                                {{ __('When the discount should end') }}
+                            </p>
+                        </div>
+
+                        {{-- نسبة الخصم --}}
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                <i class="ri-percent-line mr-1 text-emerald-600"></i>
+                                {{ __('Discount Percentage') }} <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="ri-percent-line text-gray-400"></i>
+                                </div>
+                                <input type="number"
+                                       min="1"
+                                       max="100"
+                                       step="0.01"
+                                       wire:model.lazy="discount_percent"
+                                       placeholder="{{ __('Enter discount percentage') }}"
+                                       class="w-full pl-10 pr-16 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 @error('discount_percent') border-red-500 ring-2 ring-red-200 @else border-gray-300 @enderror">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 text-sm">%</span>
+                                </div>
+                            </div>
+                            @error('discount_percent')
+                                <p class="text-red-500 text-xs mt-1 flex items-center">
+                                    <i class="ri-error-warning-line mr-1"></i>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1 flex items-center">
+                                <i class="ri-information-line mr-1"></i>
+                                {{ __('Percentage to discount from base price') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- معاينة الخصم --}}
+                    @if($discount_start && $discount_end && $discount_percent && $base_price)
+                        @php
+                            try {
+                                $startDate = \Carbon\Carbon::parse($discount_start);
+                                $endDate = \Carbon\Carbon::parse($discount_end);
+                                $showPreview = true;
+                            } catch (\Exception $e) {
+                                $showPreview = false;
+                            }
+                        @endphp
+
+                        @if($showPreview)
+                            <div class="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-6 border-2 border-emerald-200 shadow-sm">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-bold text-emerald-800 mb-2 flex items-center">
+                                            <i class="ri-flashlight-line mr-2"></i>
+                                            {{ __('Discount Preview') }}
+                                        </h4>
+                                        <div class="space-y-2">
+                                            <div class="flex items-center text-sm text-emerald-700">
+                                                <i class="ri-calendar-line mr-2"></i>
+                                                <span>{{ __('Active from') }} {{ $startDate->format('M d, Y H:i') }}</span>
+                                            </div>
+                                            <div class="flex items-center text-sm text-emerald-700">
+                                                <i class="ri-calendar-check-line mr-2"></i>
+                                                <span>{{ __('Until') }} {{ $endDate->format('M d, Y H:i') }}</span>
+                                            </div>
+                                            <div class="flex items-center text-sm text-emerald-700">
+                                                <i class="ri-time-line mr-2"></i>
+                                                <span>{{ __('Duration:') }} {{ $startDate->diffForHumans($endDate, true) }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="bg-white rounded-lg p-4 shadow-sm border border-emerald-200">
+                                            <p class="text-xs text-gray-600 mb-1">{{ __('Original Price') }}</p>
+                                            <p class="text-sm text-gray-500 line-through">{{ number_format($base_price, 2) }} {{ __('SAR') }}</p>
+                                            <p class="text-xs text-emerald-600 font-medium">{{ $discount_percent }}% {{ __('OFF') }}</p>
+                                            <p class="text-lg font-bold text-emerald-600">
+                                                {{ number_format($base_price - ($base_price * $discount_percent / 100), 2) }} {{ __('SAR') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endif
+
+                    {{-- نصائح الخصومات المجدولة --}}
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <i class="ri-lightbulb-line text-emerald-600 mr-2 mt-0.5"></i>
+                            <div class="text-sm text-emerald-700">
+                                <p class="font-medium mb-2">{{ __('Scheduled Discount Tips:') }}</p>
+                                <ul class="space-y-1 text-xs">
+                                    <li>• {{ __('Plan discounts around holidays and special events') }}</li>
+                                    <li>• {{ __('Use flash sales (short duration) to create urgency') }}</li>
+                                    <li>• {{ __('Monitor performance and adjust future discounts accordingly') }}</li>
+                                    <li>• {{ __('Combine with marketing campaigns for maximum impact') }}</li>
+                                    <li>• {{ __('Consider your profit margins when setting discount percentages') }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="text-center py-8 text-gray-500">
+                    <i class="ri-calendar-event-line text-4xl mb-3 text-gray-300"></i>
+                    <p class="text-lg font-medium">{{ __('Scheduled Discounts Disabled') }}</p>
+                    <p class="text-sm">{{ __('Enable scheduled discounts to create time-limited promotional offers') }}</p>
+                </div>
+            @endif
+        </div>
 
 
     {{-- توجل: السماح بالإلغاء --}}

@@ -268,6 +268,11 @@ class Prices extends Component
     public function updated($propertyName)
     {
         try {
+            // Skip validation for certain properties to prevent loops
+            if (in_array($propertyName, ['offering', 'errors'])) {
+                return;
+            }
+
             // Sanitize input to prevent XSS
             $this->sanitizeProperty($propertyName);
 
@@ -280,8 +285,17 @@ class Prices extends Component
             // Save changes
             $this->savePricingSettings();
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors gracefully
+            foreach ($e->errors() as $field => $messages) {
+                $this->addError($field, $messages[0]);
+            }
         } catch (\Exception $e) {
-            Log::error('Prices component update error: ' . $e->getMessage());
+            Log::error('Prices component update error: ' . $e->getMessage(), [
+                'property' => $propertyName,
+                'offering_id' => $this->offering->id ?? null,
+                'trace' => $e->getTraceAsString()
+            ]);
             $this->addError($propertyName, __('An error occurred while updating. Please try again.'));
         }
     }
@@ -332,9 +346,19 @@ class Prices extends Component
             }
         }
 
+        // Validate scheduled discounts
+        if ($propertyName === 'enable_discounts' || in_array($propertyName, ['discount_start', 'discount_end', 'discount_percent'])) {
+            $this->validateScheduledDiscounts();
+        }
+
         // Validate coupon codes for uniqueness
         if (str_contains($propertyName, 'coupons.') && str_contains($propertyName, '.code')) {
             $this->validateCouponUniqueness();
+        }
+
+        // Validate coupon discount based on type
+        if (str_contains($propertyName, 'coupons.') && (str_contains($propertyName, '.discount') || str_contains($propertyName, '.type'))) {
+            $this->validateCouponDiscount($propertyName);
         }
     }
 
