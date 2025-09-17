@@ -16,17 +16,17 @@
             $extra = $merchant->additional_data;
         @endphp
 
-        <a href="{{ route('merchant.dashboard.m.overview', ['merchant' => $merchant->id]) }}"
+        <a href="{{ route('admin.dashboard.merchants.loginAsMerchant', ['merchant' => $merchant->id]) }}"
             target="_blank" rel="noopener noreferrer"
-            class="merchant-card block rounded-xl shadow-lg overflow-hidden bg-white 
-           hover:shadow-xl hover:-translate-y-1 hover:scale-105 hover:bg-slate-50 
+            class="merchant-card block rounded-xl shadow-lg overflow-hidden bg-white
+           hover:shadow-xl hover:-translate-y-1 hover:scale-105 hover:bg-slate-50
            transition transform duration-300
            ">
 
             {{-- صورة الغلاف --}}
             <div class="h-32 bg-gray-200">
                 @if(!empty($extra['banner']))
-                    <img src="{{ asset('storage/' . $extra['banner']) }}" 
+                    <img src="{{ asset('storage/' . $extra['banner']) }}"
                          alt="Banner" class="w-full h-full object-cover">
                 @else
                     <div class="w-full h-full flex items-center justify-center text-gray-400 text-sm">
@@ -39,7 +39,7 @@
                 {{-- صورة البروفايل --}}
                 <div class="flex items-center gap-3 mb-3">
                     @if(!empty($extra['profile_picture']))
-                        <img src="{{ asset('storage/' . $extra['profile_picture']) }}" 
+                        <img src="{{ asset('storage/' . $extra['profile_picture']) }}"
                              alt="Profile" class="w-12 h-12 rounded-full object-cover">
                     @else
                         <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-xs text-gray-600">

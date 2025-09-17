@@ -393,7 +393,7 @@ $bgColor = match($type) {
         @php
         $user = auth()->user();
 
-        if ($merchant) {
+        if (isset($merchant)) {
         $user = \App\Models\User::find($merchant);
         }
 
