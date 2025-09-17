@@ -14,10 +14,10 @@
                     @foreach ($steps as $step => $data)
                     <div             @click.prevent="
                     loadingStep = {{ $step }};
-                    setTimeout(() => {
+                    {{-- setTimeout(() => {
                         $wire.setStep({{ $step }});
                         loadingStep = null;
-                    }, 500);
+                    }, 500); --}}
                 "
                         wire:click="setStep({{ $step }})"
                         class="flex items-start p-3 rounded-lg transition cursor-pointer
