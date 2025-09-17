@@ -44,7 +44,6 @@ class Time extends Component
                     'required',
                     'date_format:H:i',
                     'regex:/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/',
-                    'after:default_day.from'
                 ];
             }
 
@@ -60,7 +59,7 @@ class Time extends Component
                         'required',
                         'date_format:H:i',
                         'regex:/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/',
-                        "after:from_time.{$dayName}"
+                        // "after:from_time.{$dayName}"
                     ];
                 }
             }
@@ -102,7 +101,7 @@ class Time extends Component
                             'required',
                             'date',
                             'after_or_equal:today',
-                            'after_or_equal:calendar.' . $index . '.start_date',
+                            // 'after_or_equal:calendar.' . $index . '.start_date',
                             'before:' . now()->addYears(5)->format('Y-m-d')
                         ];
                         $rules["calendar.{$index}.start_time"] = [
@@ -401,7 +400,7 @@ class Time extends Component
     {
         // Validate time fields when they are updated
         if (str_contains($propertyName, 'calendar.') && (str_contains($propertyName, '.end_time') || str_contains($propertyName, '.start_time'))) {
-            $this->validateTimeLogic($propertyName);
+            // $this->validateTimeLogic($propertyName);
         }
 
         if (str_contains($propertyName, 'calendar.') && str_contains($propertyName, '.end_date')) {
@@ -503,33 +502,33 @@ class Time extends Component
         $this->resetErrorBag("calendar.{$index}.{$timeField}");
 
         // If both times are filled, validate end time is after start time
-        if ($startTime && $endTime) {
-            if (strtotime($endTime) <= strtotime($startTime)) {
-                $this->addError("calendar.{$index}.end_time", __('End time must be after start time'));
-                return;
-            } else {
-                // Clear end_time error if validation passes
-                $this->resetErrorBag("calendar.{$index}.end_time");
-            }
-        }
+        // if ($startTime && $endTime) {
+        //     if (strtotime($endTime) <= strtotime($startTime)) {
+        //         $this->addError("calendar.{$index}.end_time", __('End time must be after start time'));
+        //         return;
+        //     } else {
+        //         // Clear end_time error if validation passes
+        //         $this->resetErrorBag("calendar.{$index}.end_time");
+        //     }
+        // }
 
         // Validate start time is not in the past (if start date is today)
-        if ($timeField === 'start_time' && $startDate && $startTime && $startDate === now()->toDateString()) {
-            $currentTime = now()->format('H:i');
-            if (strtotime($startTime) < strtotime($currentTime)) {
-                $this->addError("calendar.{$index}.start_time", __('Start time cannot be in the past'));
-                return;
-            }
-        }
+        // if ($timeField === 'start_time' && $startDate && $startTime && $startDate === now()->toDateString()) {
+        //     $currentTime = now()->format('H:i');
+        //     if (strtotime($startTime) < strtotime($currentTime)) {
+        //         $this->addError("calendar.{$index}.start_time", __('Start time cannot be in the past'));
+        //         return;
+        //     }
+        // }
 
         // Validate end time is not in the past (if end date is today)
-        if ($timeField === 'end_time' && $endDate && $endTime && $endDate === now()->toDateString()) {
-            $currentTime = now()->format('H:i');
-            if (strtotime($endTime) < strtotime($currentTime)) {
-                $this->addError("calendar.{$index}.end_time", __('End time cannot be in the past'));
-                return;
-            }
-        }
+        // if ($timeField === 'end_time' && $endDate && $endTime && $endDate === now()->toDateString()) {
+        //     $currentTime = now()->format('H:i');
+        //     if (strtotime($endTime) < strtotime($currentTime)) {
+        //         $this->addError("calendar.{$index}.end_time", __('End time cannot be in the past'));
+        //         return;
+        //     }
+        // }
     }
 
     /**
@@ -550,12 +549,12 @@ class Time extends Component
         $this->resetErrorBag("{$timeField}.{$dayName}");
 
         // If both times are filled, validate end time is after start time
-        if ($fromTime && $toTime) {
-            if (strtotime($toTime) <= strtotime($fromTime)) {
-                $this->addError("to_time.{$dayName}", __('End time must be after start time'));
-                return;
-            }
-        }
+        // if ($fromTime && $toTime) {
+        //     if (strtotime($toTime) <= strtotime($fromTime)) {
+        //         $this->addError("to_time.{$dayName}", __('End time must be after start time'));
+        //         return;
+        //     }
+        // }
 
         // If this is today and the day is enabled, validate times are not in the past
         $today = strtolower(now()->format('l')); // Get current day name (e.g., 'saturday')
@@ -586,13 +585,13 @@ class Time extends Component
         $toTime = $this->default_day['to'] ?? '';
 
         // If both times are filled, validate end time is after start time
-        if ($fromTime && $toTime) {
-            if (strtotime($toTime) <= strtotime($fromTime)) {
-                $this->addError('default_day.to', __('End time must be after start time'));
-            } else {
-                $this->resetErrorBag('default_day.to');
-            }
-        }
+        // if ($fromTime && $toTime) {
+        //     if (strtotime($toTime) <= strtotime($fromTime)) {
+        //         $this->addError('default_day.to', __('End time must be after start time'));
+        //     } else {
+        //         $this->resetErrorBag('default_day.to');
+        //     }
+        // }
     }
 
     public function applyDefaultToAll()
@@ -609,7 +608,6 @@ class Time extends Component
                     'required',
                     'date_format:H:i',
                     'regex:/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/',
-                    'after:default_day.from'
                 ]
             ]);
 

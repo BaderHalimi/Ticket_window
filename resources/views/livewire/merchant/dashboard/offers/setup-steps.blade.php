@@ -114,7 +114,7 @@
             <!-- Progress Bar -->
 
         </div>
-        <div class="mt-4 max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6 space-y-6" x-data="{ loadingStep: null }">
+        <div class="mt-4 max-w-7xl mx-auto bg-white rounded-xl shadow-lg p-6 space-y-6" x-data="{ loadingStep: null }">
             <h2 class="text-2xl font-bold text-slate-800">تعديل الخدمة</h2>
 
             <div class="grid grid-cols-12 gap-6">
