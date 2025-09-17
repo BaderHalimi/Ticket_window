@@ -8,6 +8,8 @@ use Livewire\Component;
 
 class OfferPricing extends Component
 {
+
+
     public Offering $offering;
 
     // Toggles
@@ -371,6 +373,44 @@ class OfferPricing extends Component
             $this->addError('coupons', __('Coupon codes must be unique'));
         }
     }
+
+    /**
+     * تحقق من خصومات الكوبونات حسب النوع
+     */
+    public function validateCouponDiscount($propertyName)
+    {
+        // تحقق من نوع الخصم
+        foreach ($this->coupons as $index => $coupon) {
+            if (isset($coupon['type']) && $coupon['type'] === 'percentage') {
+                if (isset($coupon['discount']) && ($coupon['discount'] < 1 || $coupon['discount'] > 100)) {
+                    $this->addError('coupons.' . $index . '.discount', __('Coupon percentage must be between 1% and 100%'));
+                }
+            } elseif (isset($coupon['type']) && $coupon['type'] === 'fixed') {
+                if (isset($coupon['discount']) && $coupon['discount'] < 0.01) {
+                    $this->addError('coupons.' . $index . '.discount', __('Coupon fixed discount must be at least 0.01 SAR'));
+                }
+            }
+        }
+    }
+
+    /**
+     * تحقق من جدولة الخصومات
+     */
+    public function validateScheduledDiscounts()
+    {
+        // تحقق من أن تاريخ البداية أصغر من النهاية وأن النسبة بين 1 و 100
+        if ($this->enable_discounts) {
+            if ($this->discount_start && $this->discount_end) {
+                if (strtotime($this->discount_start) >= strtotime($this->discount_end)) {
+                    $this->addError('discount_end', __('Discount end date must be after start date'));
+                }
+            }
+            if ($this->discount_percent && ($this->discount_percent < 1 || $this->discount_percent > 100)) {
+                $this->addError('discount_percent', __('Discount percent must be between 1% and 100%'));
+            }
+        }
+    }
+
     public function render()
     {
         return view('livewire.merchant.dashboard.offers.create.offer-pricing');
