@@ -22,7 +22,7 @@ class OffersController extends Controller
         if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)){
             //session()->regenerate();
             return redirect()->route("merchant.dashboard.work_center.index");
-            
+
         }
         // if ($merchant != null) {
         //     $role = Role::findOrFail(Auth::guard('merchant')->user()->additional_data['role'] ?? 0);
@@ -36,7 +36,7 @@ class OffersController extends Controller
         $offers = Offering::where('user_id', $finalID)->get();
         clear_offers($offers);
         //dd($offers);
-        $branches = Branch::where("user_id", $finalID)->get(); 
+        $branches = Branch::where("user_id", $finalID)->get();
 
         return view('merchant.dashboard.offers.index', compact('offers','branches','merchantid','finalID'));
     }
@@ -71,7 +71,7 @@ class OffersController extends Controller
         //     ]);
         //     //return view('merchant.dashboard.offers.edit',compact('offering'));
 
-        
+
 
         // return view('merchant.dashboard.offers.create',compact('offering'));
 
@@ -143,6 +143,8 @@ class OffersController extends Controller
      */
     public function edit($id,$merchantid = null)
     {
+        $currentStep = request('currentStep');
+        // dd($currentStep);
         if($merchantid != null){
             $tmp = $merchantid;
             $merchantid = $id;
@@ -156,13 +158,13 @@ class OffersController extends Controller
         if ($offering->user_id == $finalID) {
             //if ($merchant != null)
                 // return redirect()->route('merchant.dashboard.m.offer.index',['merchant'=>$merchant])->with('error', 'Unauthorized action.');
-            
-            return view('merchant.dashboard.offers.edit', compact('offering', 'merchantid', 'finalID'));
+
+            return view('merchant.dashboard.offers.edit', compact('offering', 'merchantid', 'finalID','currentStep'));
 
             // return redirect()->route('merchant.dashboard.offer.index')->with('error', 'Unauthorized action.');
         }elseif ($offering->user_id != $finalID){
             $finalID = can_enter($merchantid,"offers_edit");
-            return view('merchant.dashboard.offers.edit', compact('offering', 'merchantid', 'finalID'));
+            return view('merchant.dashboard.offers.edit', compact('offering', 'merchantid', 'finalID','currentStep'));
 
 
         }
@@ -245,7 +247,7 @@ class OffersController extends Controller
          }else{
             return redirect()->route('merchant.dashboard.offer.index')->with('success', 'Offer deleted successfully.');
 
-         }    
-    
+         }
+
     }
 }

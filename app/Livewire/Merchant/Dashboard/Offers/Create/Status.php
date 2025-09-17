@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Livewire\Merchant\Dashboard\Offers\Create;
+
+use Livewire\Component;
+
+class Status extends Component
+{
+    public $offering;
+    public $finalID;
+    public function mount($offering,$finalID)
+    {
+        $this->offering = $offering;
+        $this->finalID = $finalID;
+    }
+    public function publish()
+    {
+        //dd('Publishing the offer...');
+        $isReady = hasEssentialFields($this->offering->id);
+        //dd($isReady);
+        if ($isReady) {
+            $offering = $this->offering;
+            $data = $offering->additional_data;
+            // $data['is_published'] = true;
+            $offering->additional_data = $data;
+            $offering->status = 'active';
+            $offering->save();
+
+            notifcate($this->finalID, 'success', 'Offer published successfully!', [
+                'title' => 'Offer Published',
+                'text' => 'Your offer has been published successfully.',
+            ]);
+        }
+        $this->render();
+    }
+
+    #[On('ServiceUpdated')]
+    public function render()
+    {
+                $off = $this->offering;
+        $isPublished = $off->status;
+        $isReady = true;//($this->offering->id)['status'];
+        $percent_progress = 100.0;
+        $fileds_exists = [];
+        if ($isPublished === "inactive") {
+            $isReady = hasEssentialFields($this->offering->id)['status'];
+            $all_fileds = count(hasEssentialFields($this->offering->id)['fields']);
+            $fileds_exists = hasEssentialFields($this->offering->id)['fields'];
+
+            $true_fileds = count(array_filter(hasEssentialFields($this->offering->id)['fields']));
+            $percent_progress = ($true_fileds / $all_fileds) * 100;
+        }
+        return view('livewire.merchant.dashboard.offers.create.status', compact('isReady', 'isPublished','percent_progress','fileds_exists'));
+    }
+}
