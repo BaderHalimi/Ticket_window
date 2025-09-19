@@ -25,8 +25,8 @@
     @if (is_work(Auth::id()) && !$merchant)
         <a href="{{ route('merchant.dashboard.work_center.index') }}"
             wire:click.prevent="intended('{{ route('merchant.dashboard.work_center.index') }}')"
-            class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all 
-                @if (Route::is('merchant.dashboard.work_center.index')) bg-orange-500 text-white shadow-md 
+            class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all
+                @if (Route::is('merchant.dashboard.work_center.index')) bg-orange-500 text-white shadow-md
                 @else text-slate-600 hover:bg-slate-100 @endif">
             <svg fill="#000000" height="24px" width="24px" version="1.1" id="Layer_1"
                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512"
@@ -62,9 +62,9 @@
         @else
         href="{{ route('merchant.dashboard.offer.index') }}"
         wire:click.prevent="intended(`{{ route('merchant.dashboard.offer.index') }}`)" @endif
-            class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all 
-                @if (Route::is('merchant.dashboard.offer.index') || Route::is('merchant.dashboard.m.offer.index')) bg-orange-500 text-white shadow-md 
-                @else 
+            class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all
+                @if (Route::is('merchant.dashboard.offer.index') || Route::is('merchant.dashboard.m.offer.index')) bg-orange-500 text-white shadow-md
+                @else
                     text-slate-600 hover:bg-slate-100 @endif">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
@@ -349,10 +349,11 @@
 
     @if (($merchant && has_Permetion(Auth::id(), 'policies_view', $merchant)) || !$merchant)
         <a @if ($merchant ?? false) href="{{ route('merchant.dashboard.m.policies_settings.index', ['merchant' => $merchant]) }}"
-        wire:click.prevent="intended(`{{ route('merchant.dashboard.m.policies_settings.index', ['merchant' => $merchant]) }}`)"
+        {{-- wire:click.prevent="intended(`{{ route('merchant.dashboard.m.policies_settings.index', ['merchant' => $merchant]) }}`)" --}}
         @else
         href="{{ route('merchant.dashboard.policies_settings.index') }}"
-        wire:click.prevent="intended(`{{ route('merchant.dashboard.policies_settings.index') }}`)" @endif
+        {{-- wire:click.prevent="intended(`{{ route('merchant.dashboard.policies_settings.index') }}`)" --}}
+        @endif
             class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all
                 @if (Route::is('merchant.dashboard.m.policies_settings.index') ||
                         Route::is('merchant.dashboard.policies_settings.index')) bg-orange-500 text-white shadow-md

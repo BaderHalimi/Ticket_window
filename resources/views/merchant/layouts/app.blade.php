@@ -336,7 +336,7 @@ $bgColor = match($type) {
 @endif
 
 <body class="bg-slate-100 font-sans">
-    <div class="relative h-screen flex overflow-hidden" dir="rtl" x-data="{ openSidebar: true }">
+    <div class="relative h-screen flex overflow-hidden" dir="rtl" x-data="{ openSidebar: window.innerWidth >= 768 }" x-init="openSidebar = window.innerWidth >= 768; window.addEventListener('resize', () => { openSidebar = window.innerWidth >= 768; });">
 
 
 

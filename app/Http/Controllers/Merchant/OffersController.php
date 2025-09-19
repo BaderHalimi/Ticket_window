@@ -133,9 +133,28 @@ class OffersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($merchant = null, $offer = null)
     {
-        // return view('merchant.offers.show', compact('id'));
+        // إذا الراوت مرر فقط offer
+        if ($offer === null) {
+            $offer = $merchant;
+            $merchant = null;
+        }
+
+        $offer = \App\Models\Offering::findOrFail($offer);
+        $merchantObj = $merchant ? \App\Models\User::findOrFail($merchant) : null;
+        $times = fetch_time($offer->id);
+        $data = $offer->features ?? [];
+        $branches = '';
+        if (!empty($data['selected_branches']) && is_array($data['selected_branches'])) {
+            $branches = implode(',', $data['selected_branches']);
+        }
+        return view('merchant.dashboard.offers.show', [
+            'offer' => $offer,
+            'merchant' => $merchantObj,
+            'times' => $times,
+            'branches' => $branches
+        ]);
     }
 
     /**
@@ -143,7 +162,7 @@ class OffersController extends Controller
      */
     public function edit($id,$merchantid = null)
     {
-        $currentStep = request('currentStep');
+        $currentStep = request('currentStep')??1;
         // dd($currentStep);
         if($merchantid != null){
             $tmp = $merchantid;

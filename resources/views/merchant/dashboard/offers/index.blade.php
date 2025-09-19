@@ -45,14 +45,14 @@
           <i class="ri-filter-line"></i>
           <span class="ml-2 text-sm">فلترة</span>
         </button>
-      
+
         <div id="filterMenu" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-50">
             <div class="py-1">
-      
+
             <button onclick="filterTable('all')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">👁️ الكل</button>
             <button onclick="filterTable('services')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">🛠️ الخدمات</button>
             <button onclick="filterTable('events')" class="w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">🎫 الفعاليات</button>
-      
+
             <div class="border-t border-orange-100 my-2"></div>
             <div class="px-4 py-2">
               <p class="text-sm font-semibold text-orange-600 mb-2">تصفية حسب الفرع</p>
@@ -63,11 +63,11 @@
                 </label>
               @endforeach
             </div>
-      
+
           </div>
         </div>
       </div>
-      
+
 
     <div class="my-4">
         <label for="searchInput" class="block mb-1 text-sm font-medium text-slate-700">بحث عن الخدمة:</label>
@@ -79,7 +79,7 @@
           onkeyup="searchTable()"
         >
       </div>
-      
+
     {{-- جدول الخدمات --}}
     <div class="bg-white shadow-lg rounded-xl overflow-hidden">
         <div class="overflow-x-auto">
@@ -93,7 +93,7 @@
                         <th class="px-4 py-3 text-start">الحالة</th>
                         <th class="px-4 py-3 text-start">البداية</th>
                         <th class="px-4 py-3 text-start">النهاية</th>
-                        <th class="px-4 py-3 text-start">التحكم</th>
+                        <th class="px-4 py-3 text-center">التحكم</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white">
@@ -111,38 +111,44 @@
                         @endphp
                         {{-- <tr data-type="{{ $service->type }}" data-branch="{{ $branches }}"> --}}
 
-                        <tr data-type="{{ $service->type }}" data-branch="{{ $branches }}">
-                            <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                            <td class="px-4 py-2 font-medium">{{ $service->name }}</td>
-                            <td class="px-4 py-2">{{ ucfirst($service->type) }}</td>
-                            <td class="px-4 py-2">{{ $service->price ?? '—' }}</td>
-                            <td class="px-4 py-2">
+                        <tr data-type="{{ $service->type }}" data-branch="{{ $branches }}" class="hover:bg-orange-50 transition">
+                            <td class="px-4 py-3 font-bold text-orange-600">{{ $loop->iteration }}</td>
+                            <td class="px-4 py-3 font-medium">{{ $service->name }}</td>
+                            <td class="px-4 py-3">{{ ucfirst($service->type) }}</td>
+                            <td class="px-4 py-3">{{ $service->price ?? '—' }}</td>
+                            <td class="px-4 py-3">
                                 <span class="inline-block px-2 py-1 text-xs rounded {{ $service->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                     {{ $service->status === 'active' ? 'فعال' : 'غير فعال' }}
                                 </span>
                             </td>
                             @if ($service->type === "services")
-                                <td class="px-4 py-2">{{ $times['data'][0]['start_date'] ?? "مستمر" }}</td>
-                                <td class="px-4 py-2">{{ $times['data'][0]['end_date'] ?? "_" }}</td>         
+                                <td class="px-4 py-3">{{ $times['data'][0]['start_date'] ?? "مستمر" }}</td>
+                                <td class="px-4 py-3">{{ $times['data'][0]['end_date'] ?? "_" }}</td>
                             @elseif ($service->type === "events")
-                                <td class="px-4 py-2">{{ $times['data'][0]['start_date'] ?? "غير محدد" }}</td>
-                                <td class="px-4 py-2">{{ $times['data'][0]['end_date'] ?? "غير محدد" }}</td>                            
+                                <td class="px-4 py-3">{{ $times['data'][0]['start_date'] ?? "غير محدد" }}</td>
+                                <td class="px-4 py-3">{{ $times['data'][0]['end_date'] ?? "غير محدد" }}</td>
                             @endif
-                            <td class="px-4 py-2 space-x-1 rtl:space-x-reverse">
+                            <td class="px-4 py-3 flex gap-2 justify-center items-center">
+                                <a href="{{ isset($merchantid) ? route('merchant.dashboard.m.offer.show', ["offer" => $service->id, "merchant" => $merchantid]):route('merchant.dashboard.offer.show',['offer' => $service->id]) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-orange-100 text-orange-700 hover:bg-orange-200 text-xs font-semibold transition" title="عرض الخدمة">
+                                    <i class="ri-eye-line"></i> عرض
+                                </a>
                                 @if ($hasOffersEditePermession)
-                                    <a href="{{ isset($merchantid) ? route('merchant.dashboard.m.offer.edit', ["merchant"=>  $merchantid,"offer"=>$service->id]) :   route('merchant.dashboard.offer.edit', $service->id) }}" class="text-blue-600 hover:underline text-xs">تعديل</a>
+                                    <a href="{{ isset($merchantid) ? route('merchant.dashboard.m.offer.edit', ["merchant"=>  $merchantid,"offer"=>$service->id]) :   route('merchant.dashboard.offer.edit', $service->id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 text-xs font-semibold transition" title="تعديل الخدمة">
+                                        <i class="ri-edit-line"></i> تعديل
+                                    </a>
                                 @else
-                                    <span class="text-gray-400 text-xs">لاتملك صلاحية التعديل</span>
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded bg-gray-100 text-gray-400 text-xs font-semibold cursor-not-allowed">لاتملك صلاحية التعديل</span>
                                 @endif
                                 @if ($hasOffersDeletePermession)
                                 <form method="POST" action="{{isset($merchantid) ? route('merchant.dashboard.m.offer.destroy',["merchant" => $merchantid , "offer" => $service->id]) : route('merchant.dashboard.offer.destroy', $service->id) }}" class="inline-block" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:underline text-xs">حذف</button>
-                                </form>  
+                                    <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-100 text-red-700 hover:bg-red-200 text-xs font-semibold transition" title="حذف الخدمة">
+                                        <i class="ri-delete-bin-line"></i> حذف
+                                    </button>
+                                </form>
                                 @else
-                                    <span class="text-gray-400 text-xs">لاتملك صلاحية الحذف</span>
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded bg-gray-100 text-gray-400 text-xs font-semibold cursor-not-allowed">لاتملك صلاحية الحذف</span>
                                 @endif
-
                             </td>
                         </tr>
 
@@ -242,7 +248,7 @@
 @endsection
 
 
-  
+
     {{-- التبويبات --}}
     <!-- <div class="w-full">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-2 p-2 bg-orange-500/10 rounded-xl mb-6">

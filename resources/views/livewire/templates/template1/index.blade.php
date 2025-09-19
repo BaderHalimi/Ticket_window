@@ -222,8 +222,8 @@
         </div>
 
 
-        <div x-show="tab === 'policies'" x-transition class="flex items-center justify-center min-h-screen">
-            <div class="bg-white shadow-lg rounded-2xl p-6 space-y-6 w-full max-w-2xl ">
+        <div x-show="tab === 'policies'" x-transition class="flex items-center justify-center">
+            <div class="bg-white shadow-lg rounded-2xl p-6 w-full max-w-2xl ">
 
                 <!-- العنوان -->
                 <h3 class="text-xl font-bold text-slate-800 flex gap-2">

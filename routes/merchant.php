@@ -14,34 +14,34 @@ use App\Http\Controllers\M_dashboard_index;
 use App\Http\Controllers\SupportControllerM;
 use App\Http\Controllers\WorkCenter;
 use Illuminate\Support\Facades\Auth;
-Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verified_user'])->group(function(){
-        Route::get('/',[M_dashboard_index::class,"index"])->name('overview');
+Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant', 'verified_user'])->group(function () {
+    Route::get('/', [M_dashboard_index::class, "index"])->name('overview');
     // Route::get('services',function(){
     //     return view('merchant.dashboard.services');
     // })->name('services');
-    Route::resource('reservations',ResController::class)->names('reservations');
-    Route::resource('withdraw',Merchantwithdraw::class)->names('withdraws');
-    Route::resource('pos',PosSystemController::class)->names('pos');
-    Route::resource('statistics',Page_statistics::class)->names('statistics');
+    Route::resource('reservations', ResController::class)->names('reservations');
+    Route::resource('withdraw', Merchantwithdraw::class)->names('withdraws');
+    Route::resource('pos', PosSystemController::class)->names('pos');
+    Route::resource('statistics', Page_statistics::class)->names('statistics');
 
-    Route::get('work_in',function(){
+    Route::get('work_in', function () {
         // if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)){
         //     //session()->regenerate();
         //     return redirect()->route("merchant.dashboard.work_center.index");
-            
+
         // }
         return view('merchant.dashboard.work_In');
     })->name('work_in');
 
     Route::resource('work_center', WorkCenter::class)->names('work_center');
-    Route::get('checking',function(){
-        $finalID = can_enter(null,"check_view");
-        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)){
+    Route::get('checking', function () {
+        $finalID = can_enter(null, "check_view");
+        if (is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)) {
             //session()->regenerate();
             return redirect()->route("merchant.dashboard.work_center.index");
-            
+
         }
-        return view('merchant.dashboard.checking',compact('finalID'));
+        return view('merchant.dashboard.checking', compact('finalID'));
 
     })->name('checking');
 
@@ -54,14 +54,14 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
     //     return view('merchant.dashboard.offers_codes');
     // })->name('offers_codes');
 
-    Route::get('customer_reviews',function(){
-        $finalID = can_enter(null,"");
-        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)){
+    Route::get('customer_reviews', function () {
+        $finalID = can_enter(null, "");
+        if (is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)) {
             //session()->regenerate();
             return redirect()->route("merchant.dashboard.work_center.index");
-            
+
         }
-        return view('merchant.dashboard.customer_reviews',compact('finalID'));
+        return view('merchant.dashboard.customer_reviews', compact('finalID'));
     })->name('customer_reviews');
 
     // Route::get('intelligence_analytics',function(){
@@ -75,15 +75,15 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
     //     return view('merchant.dashboard.notification_management');
     // })->name('notification_management');
 
-    Route::get('message_center',function(){
-        $finalID = can_enter(null,"");
-        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)){
+    Route::get('message_center', function () {
+        $finalID = can_enter(null, "");
+        if (is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)) {
             //session()->regenerate();
             return redirect()->route("merchant.dashboard.work_center.index");
-            
+
         }
 
-        return view('merchant.dashboard.message_center',compact('finalID'));
+        return view('merchant.dashboard.message_center', compact('finalID'));
     })->name('message_center');
 
     // Route::get('wallet_withdrawal',function(){
@@ -96,25 +96,25 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
     // Route::get('branch_management',function(){
     //     return view('merchant.dashboard.index');
     // })->name('branch_management');
-    Route::get('team_management',function(){
-        $finalID = can_enter(null,"");
-        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)){
+    Route::get('team_management', function () {
+        $finalID = can_enter(null, "");
+        if (is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)) {
             //session()->regenerate();
             return redirect()->route("merchant.dashboard.work_center.index");
-            
+
         }
-        return view('merchant.dashboard.team_management',compact('finalID'));
+        return view('merchant.dashboard.team_management', compact('finalID'));
     })->name('team_management');
 
-    Route::get('page_setup',function(){
-        $finalID = can_enter(null,"");
-        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)){
+    Route::get('page_setup', function () {
+        $finalID = can_enter(null, "");
+        if (is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)) {
             //session()->regenerate();
             return redirect()->route("merchant.dashboard.work_center.index");
-            
+
         }
 
-        return view('merchant.dashboard.page_setup',compact('finalID'));
+        return view('merchant.dashboard.page_setup', compact('finalID'));
     })->name('page_setup');
     // Route::get('policies_settings',function(){
     //     return view('merchant.dashboard.policies_settings');
@@ -131,11 +131,11 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
     //     return view('merchant.dashboard.api',compact('finalID'));
     // })->name('api');
 
-    Route::get('profile_setup',function(){
-        if(is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)){
+    Route::get('profile_setup', function () {
+        if (is_work(Auth::guard('merchant')->user()->id) && Auth::guard('merchant')->user()->status == 'pending' && !isset($merchantid)) {
             //session()->regenerate();
             return redirect()->route("merchant.dashboard.work_center.index");
-            
+
         }
         return view('merchant.dashboard.Profile_Setup');
     })->name('profile_setup');
@@ -148,24 +148,24 @@ Route::prefix('dashboard')->as('dashboard.')->middleware(['auth:merchant','verif
     // })->name('activity_log');
     Route::resource('activity_log', \App\Http\Controllers\ActivityLog::class)->only(['index'])->names('activity_log');
 
-    Route::post('update/{id}', [AuthController::class,'update'])->name('update');
-    Route::post('updateS/{id}', [AuthController::class,'update_settings'])->name('update_settings');
-    Route::post('updateP/{id}', [AuthController::class,'update_password'])->name('update_password');
-    Route::post('updateW/{id}', [AuthController::class,'update_Work'])->name('update_work');
-    Route::post('update_PS/{id}', [AuthController::class,'update_PS'])->name('update_ProfileS');
+    Route::post('update/{id}', [AuthController::class, 'update'])->name('update');
+    Route::post('updateS/{id}', [AuthController::class, 'update_settings'])->name('update_settings');
+    Route::post('updateP/{id}', [AuthController::class, 'update_password'])->name('update_password');
+    Route::post('updateW/{id}', [AuthController::class, 'update_Work'])->name('update_work');
+    Route::post('update_PS/{id}', [AuthController::class, 'update_PS'])->name('update_ProfileS');
 
 
 
-    
+
 
 
 });
-Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->group(function(){
+Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->group(function () {
 
     // Route::get('m/{merchant}/', function($merchant) {
     //     return view('merchant.dashboard.index', compact('merchant'));
     // })->name('overview');
-    Route::get('m/{merchant}',[M_dashboard_index::class,"index"])->name('overview');
+    Route::get('m/{merchant}', [M_dashboard_index::class, "index"])->name('overview');
 
     Route::resource('m/{merchant}/reservations', ResController::class)->names('reservations');
     Route::resource('m/{merchant}/withdraw', Merchantwithdraw::class)->names('withdraws');
@@ -176,10 +176,10 @@ Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->g
     //     return view('merchant.dashboard.work_In');
     // })->name('work_in');
 
-    Route::get('m/{merchant}/checking', function($merchantid= null) {
-        $finalID = can_enter($merchantid,"check_view");
+    Route::get('m/{merchant}/checking', function ($merchantid = null) {
+        $finalID = can_enter($merchantid, "check_view");
         //dd($finalID);
-        return view('merchant.dashboard.checking',compact('finalID', 'merchantid'));
+        return view('merchant.dashboard.checking', compact('finalID', 'merchantid'));
     })->name('checking');
 
     // Route::get('m/{merchant}/social_reservation', function() {
@@ -190,10 +190,10 @@ Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->g
     //     return view('merchant.dashboard.offers_codes');
     // })->name('offers_codes');
 
-    Route::get('m/{merchant}/customer_reviews', function($merchantid) {
-        $finalID = can_enter($merchantid,"ratings_view");
+    Route::get('m/{merchant}/customer_reviews', function ($merchantid) {
+        $finalID = can_enter($merchantid, "ratings_view");
 
-        return view('merchant.dashboard.customer_reviews',compact('finalID', 'merchantid'));
+        return view('merchant.dashboard.customer_reviews', compact('finalID', 'merchantid'));
     })->name('customer_reviews');
 
     // Route::get('m/{merchant}/intelligence_analytics', function() {
@@ -204,10 +204,10 @@ Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->g
     //     return view('merchant.dashboard.notification_management');
     // })->name('notification_management');
 
-    Route::get('m/{merchant}/message_center', function($merchantid= null) {
-        $finalID = can_enter($merchantid,"messages_view");
+    Route::get('m/{merchant}/message_center', function ($merchantid = null) {
+        $finalID = can_enter($merchantid, "messages_view");
 
-        return view('merchant.dashboard.message_center',compact('finalID', 'merchantid'));
+        return view('merchant.dashboard.message_center', compact('finalID', 'merchantid'));
     })->name('message_center');
 
     // Route::get('m/{merchant}/wallet_withdrawal', function() {
@@ -217,16 +217,16 @@ Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->g
     Route::resource('m/{merchant}/branch', BranchController::class);
     Route::resource('m/{merchant}/offer', OffersController::class);
 
-    Route::get('m/{merchant}/team_management', function($merchantid= null) {
-        $finalID = can_enter($merchantid,"team_manager_view");
+    Route::get('m/{merchant}/team_management', function ($merchantid = null) {
+        $finalID = can_enter($merchantid, "team_manager_view");
 
-        return view('merchant.dashboard.team_management',compact('finalID', 'merchantid'));
+        return view('merchant.dashboard.team_management', compact('finalID', 'merchantid'));
     })->name('team_management');
 
-    Route::get('m/{merchant}/page_setup', function($merchantid= null) {
-        $finalID = can_enter($merchantid,"settings_view");
+    Route::get('m/{merchant}/page_setup', function ($merchantid = null) {
+        $finalID = can_enter($merchantid, "settings_view");
 
-        return view('merchant.dashboard.page_setup',compact('finalID', 'merchantid'));
+        return view('merchant.dashboard.page_setup', compact('finalID', 'merchantid'));
     })->name('page_setup');
 
     Route::resource('m/{merchant}/policies_settings', policies_settings::class)->names('policies_settings');
@@ -251,11 +251,10 @@ Route::prefix('dashboard')->as('dashboard.m.')->middleware(['auth:merchant'])->g
         ->only(['index'])
         ->names('activity_log');
 
-    Route::post('m/{merchant}/update/{id}', [AuthController::class,'update'])->name('update');
-    Route::post('m/{merchant}/updateS/{id}', [AuthController::class,'update_settings'])->name('update_settings');
-    Route::post('m/{merchant}/updateP/{id}', [AuthController::class,'update_password'])->name('update_password');
-    Route::post('m/{merchant}/updateW/{id}', [AuthController::class,'update_Work'])->name('update_work');
-    Route::post('m/{merchant}/update_PS/{id}', [AuthController::class,'update_PS'])->name('update_ProfileS');
-
+    Route::post('m/{merchant}/update/{id}', [AuthController::class, 'update'])->name('update');
+    Route::post('m/{merchant}/updateS/{id}', [AuthController::class, 'update_settings'])->name('update_settings');
+    Route::post('m/{merchant}/updateP/{id}', [AuthController::class, 'update_password'])->name('update_password');
+    Route::post('m/{merchant}/updateW/{id}', [AuthController::class, 'update_Work'])->name('update_work');
+    Route::post('m/{merchant}/update_PS/{id}', [AuthController::class, 'update_PS'])->name('update_ProfileS');
 });
 
