@@ -142,7 +142,7 @@
                                 @if ($hasOffersDeletePermession)
                                 <form method="POST" action="{{isset($merchantid) ? route('merchant.dashboard.m.offer.destroy',["merchant" => $merchantid , "offer" => $service->id]) : route('merchant.dashboard.offer.destroy', $service->id) }}" class="inline-block" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-100 text-red-700 hover:bg-red-200 text-xs font-semibold transition" title="حذف الخدمة">
+                                    <button type="button" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-100 text-red-700 hover:bg-red-200 text-xs font-semibold transition swal-delete-btn" title="حذف الخدمة" data-service-id="{{ $service->id }}" data-action="{{isset($merchantid) ? route('merchant.dashboard.m.offer.destroy',["merchant" => $merchantid , "offer" => $service->id]) : route('merchant.dashboard.offer.destroy', $service->id) }}">
                                         <i class="ri-delete-bin-line"></i> حذف
                                     </button>
                                 </form>
@@ -162,6 +162,31 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.querySelectorAll('.swal-delete-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const form = btn.closest('form');
+        Swal.fire({
+            title: 'تأكيد الحذف',
+            text: 'هل أنت متأكد من حذف هذه الخدمة؟',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'نعم، احذف',
+            cancelButtonText: 'إلغاء'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+});
+</script>
+@endpush
 
 <script>
     const filterButton = document.getElementById('filterButton');

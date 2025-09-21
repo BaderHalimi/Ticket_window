@@ -13,6 +13,7 @@ class ChatCenter extends Component
     use WithFileUploads;
 
     public $chat_id;
+    public $chat;
     public $newMessage = '';
     public $attachment;
     public $finalID, $merchantid = null;
@@ -44,6 +45,7 @@ class ChatCenter extends Component
         $data['status'] = 'pending';
         $chat->update(['additional_data' => $data]);
         $this->chat_id = $chatId;
+        $this->chat = $chat;
         $this->dispatchBrowserEvent('scrollDown');
     }
 
@@ -100,6 +102,8 @@ class ChatCenter extends Component
 
         if ($this->chat_id) {
             $currentChat = MerchantChat::find($this->chat_id);
+                    $this->chat = $currentChat;
+
             $data = $currentChat?->additional_data;
             if (is_string($data)) $data = json_decode($data, true) ?? [];
             $currentChatStatus = $data['status'] ?? null;

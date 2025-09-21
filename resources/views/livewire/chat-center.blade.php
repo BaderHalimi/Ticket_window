@@ -14,17 +14,17 @@ if($merchantid){
         <h2 class="text-lg font-bold mb-4 text-blue-600 border-b pb-2">قائمة المحادثات</h2>
         <ul class="space-y-2 flex-1 overflow-y-auto">
 
-            @forelse ($chats as $chat)
+            @forelse ($chats as $cht)
                 @php
-                    $user = $chat->user;
+                    $user = $cht->user;
                     $name = $user->f_name . ' ' . ($user->l_name ?? '');
                     $profilePicture = $user->additional_data['profile_picture'] ?? 'default.png';
                     $profilePictureUrl = asset('storage/' . $profilePicture);
-                    $lastMessage = $chat->messages->sortByDesc('created_at')->first()->message ?? 'لا توجد رسائل بعد';
+                    $lastMessage = $cht->messages->sortByDesc('created_at')->first()->message ?? 'لا توجد رسائل بعد';
                 @endphp
                 <li>
-                    <button wire:click="$set('chat_id', {{ $chat->id }})"
-                        class="flex items-center gap-3 w-full text-right p-3 rounded-lg transition {{ $chat_id === $chat->id ? 'bg-blue-50 border border-blue-300' : 'hover:bg-gray-100' }}">
+                    <button wire:click="$set('chat_id', {{ $cht->id }})"
+                        class="flex items-center gap-3 w-full text-right p-3 rounded-lg transition {{ $chat_id === $cht->id ? 'bg-blue-50 border border-blue-300' : 'hover:bg-gray-100' }}">
                         <img src="{{ $profilePictureUrl }}" class="w-10 h-10 rounded-full object-cover border">
                         <div class="flex flex-col text-right flex-1">
                             <span class="font-bold text-slate-800 truncate">{{ $name }}</span>
@@ -43,8 +43,22 @@ if($merchantid){
         @if ($chat_id)
             <h2 class="text-lg font-bold text-blue-600 border-b pb-2 mb-4">المحادثة رقم #{{ $chat_id }}</h2>
 
+            {{-- ثابت أعلى الشات: وصف وملف التذكرة عند الفتح --}}
+
             <!-- Messages -->
             <div id="chatBox" wire:poll.2s class="flex-1 overflow-y-auto space-y-4 p-2 bg-gray-50 rounded shadow-inner">
+                @if(isset($chat) && ($chat['description'] || $chat['attachment']))
+                <div class="mb-4 p-4 bg-blue-50 border border-blue-200 rounded flex items-center gap-4">
+                    @if($chat['attachment'])
+                        <a href="{{ asset('storage/' . $chat['attachment']) }}" download class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 transition text-sm flex items-center gap-2">
+                            <i class="ri-download-2-line"></i> تنزيل الملف
+                        </a>
+                    @endif
+                    @if($chat['description'])
+                        <div class="text-gray-700 text-sm">{{ $chat['description'] }}</div>
+                    @endif
+                </div>
+                @endif
                 @forelse ($messages as $msg)
                     @php
                         $isSender = $msg->user_id === $finalID;
