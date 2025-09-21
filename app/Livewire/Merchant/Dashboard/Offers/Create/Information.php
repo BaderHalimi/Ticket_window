@@ -200,7 +200,7 @@ class Information extends Component
 
         // Set default values
         if ($this->type === 'services' && empty($this->center)) {
-            $this->center = 'place';
+            $this->center = '';
         }
 
         $this->dispatch('ServiceUpdated');
@@ -379,7 +379,7 @@ class Information extends Component
                 if ($this->type !== $this->offering->type) {
                     $this->category = null;
                     $this->services_type = null;
-                    $this->center = $this->type === 'services' ? 'place' : null;
+                    $this->center = $this->type === 'services' ? '' : null;
                 }
                 break;
 
@@ -439,7 +439,7 @@ class Information extends Component
         $this->services_type = null;
 
         if ($this->type === 'services') {
-            $this->center = $this->center ?: 'place';
+            $this->center = $this->center ?: '';
         } else {
             $this->center = null;
         }

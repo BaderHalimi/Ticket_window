@@ -294,7 +294,6 @@ if (!function_exists('hasEssentialFields')) {
         ];
 
         $allOk = !in_array(false, $checks, true);
-
         return [
             'status' => $allOk,
             'fields' => $checks
