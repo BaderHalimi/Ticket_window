@@ -1,0 +1,14 @@
+{
+  "team.role_name_required": "اسم الرول مطلوب.",
+  "team.role_permission_required": "يجب اختيار صلاحية واحدة على الأقل للرول.",
+  "team.role_created_successfully": "تم إنشاء الرول بنجاح.",
+  "team.role_updated_successfully": "تم تحديث الرول بنجاح.",
+  "team.role_deleted_successfully": "تم حذف الرول بنجاح.",
+  "team.role_removed_from_employee": "تم حذف الرول من الموظف بنجاح.",
+  "team.role_assigned_to_employee": "تم ربط العامل بالرول بنجاح.",
+  "team.select_user_and_role_first": "يرجى اختيار العامل والرول أولاً!",
+  "team.user_added_successfully": "تم إضافة المستخدم بنجاح.",
+  "team.user_removed_successfully": "تم إزالة العامل من فريقك بنجاح.",
+  "team.user_not_found": "المستخدم غير موجود!",
+  "team.no_user_to_edit": "لا يوجد مستخدم لتعديله!"
+}

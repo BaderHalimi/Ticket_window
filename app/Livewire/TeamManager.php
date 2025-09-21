@@ -78,8 +78,8 @@ class TeamManager extends Component
             // ->filter(function ($user) {
             //     return !empty($user->additional_data['workIn'])
             // });
-        
-            //dd($this->users);        
+
+            //dd($this->users);
         //$this->roles = Role::all();
         $this->roles = Role::where("created_by", $this->finalID)->get();
         //dd(Role::all());
@@ -139,7 +139,7 @@ class TeamManager extends Component
         $role->additional_data = json_encode($additional);
         $role->save();
 
-        session()->flash('success', '✅ تم تحديث الرول بنجاح!');
+    session()->flash('success', __('team.role_updated_successfully'));
         $this->resetAccordion();
         $this->loadData();
     }
@@ -175,32 +175,32 @@ class TeamManager extends Component
             $user = User::find($this->UserId);
             if ($user) {
                 $data = $user->additional_data ?? [];
-    
+
                 $workIn = $data['workIn'] ?? [];
                 $role = RoleUserAssignment::where('merchant_id', $this->merchantId)
                     ->where('employee_id', $user->id)
                     ->delete();
-    
+
                 $workIn = array_filter($workIn, function ($id) {
                     return $id != $this->finalID;
                 });
-    
-                $data['workIn'] = array_values($workIn); 
+
+                $data['workIn'] = array_values($workIn);
                 $user->additional_data = $data;
                 $user->save();
                 //dd($user->additional_data);
-    
-                session()->flash('success', '🗑️ تم إزالة العامل من فريقك بنجاح!');
+
+                session()->flash('success', __('team.user_removed_successfully'));
                 $this->loadData();
             } else {
-                session()->flash('error', '❗ المستخدم غير موجود!');
+                session()->flash('error', __('team.user_not_found'));
             }
         } else {
-            session()->flash('error', '❗ لا يوجد مستخدم لتعديله!');
+            session()->flash('error', __('team.no_user_to_edit'));
         }
         $this->canceledit();
     }
-    
+
     Public function adduser()
     {
         if(!can_enter($this->Amerchantid , 'team_manager_create')){
@@ -227,12 +227,22 @@ class TeamManager extends Component
         $user->save();
         $this->canceledit();
 
-        session()->flash('success', '✅ تم إضافة المستخدم بنجاح!');
+    session()->flash('success', __('team.user_added_successfully'));
         $this->loadData();
     }
     public function createRole()
     {
         if(!can_enter($this->Amerchantid , 'role_create')){
+            return;
+        }
+        // تحقق من اسم الرول
+        if(empty($this->newRoleName) || !is_string($this->newRoleName)) {
+            session()->flash('error', __('team.role_name_required'));
+            return;
+        }
+        // Validate at least one permission
+        if(empty($this->newRolePermissionIds) || count($this->newRolePermissionIds) < 1) {
+            session()->flash('error', __('team.role_permission_required'));
             return;
         }
         $role = new Role();
@@ -243,7 +253,7 @@ class TeamManager extends Component
         ]);
         $role->save();
 
-        session()->flash('success', '✅ تم إنشاء الرول بنجاح!');
+    session()->flash('success', __('team.role_created_successfully'));
         $this->newRoleName = '';
         $this->newRolePermissionIds = [];
 
@@ -259,7 +269,7 @@ class TeamManager extends Component
         $role = Role::findOrFail($roleId);
         $role->delete();
 
-        session()->flash('success', '🗑️ تم حذف الرول بنجاح!');
+    session()->flash('success', __('team.role_deleted_successfully'));
         $this->resetAccordion();
         $this->loadData();
     }
@@ -273,27 +283,27 @@ class TeamManager extends Component
             ->where('employee_id', $employeeId)
             ->where('role_id', $roleId)
             ->delete();
-    
-        session()->flash('success', '✅ تم حذف الرول من الموظف بنجاح!');
+
+    session()->flash('success', __('team.role_removed_from_employee'));
         $this->loadData();
     }
-    
+
     public function assignWorkerToMerchant()
     {
         if(!can_enter($this->Amerchantid , 'team_manager_edit')){
             return;
         }
         if (!$this->selectedUserId || !$this->selectedRoleId) {
-            session()->flash('error', '❗ اختر العامل والرول أولًا!');
+            session()->flash('error', __('team.select_user_and_role_first'));
             return;
         }
-    
+
         // Check if already exists
         $exists = RoleUserAssignment::where('merchant_id', $this->merchantId)
             ->where('employee_id', $this->selectedUserId)
             ->where('role_id', $this->selectedRoleId)
             ->exists();
-    
+
         if (!$exists) {
             RoleUserAssignment::create([
                 'merchant_id' => $this->merchantId,
@@ -301,14 +311,14 @@ class TeamManager extends Component
                 'role_id'     => $this->selectedRoleId,
             ]);
         }
-    
-        session()->flash('success', '✅ تم ربط العامل بالرول بنجاح!');
+
+    session()->flash('success', __('team.role_assigned_to_employee'));
         $this->selectedUserId = '';
         $this->selectedRoleId = '';
-    
+
         $this->loadData();
     }
-    
+
 
     public function render()
     {

@@ -1,0 +1,14 @@
+{
+  "team.role_name_required": "Role name is required.",
+  "team.role_permission_required": "At least one permission must be selected for the role.",
+  "team.role_created_successfully": "Role created successfully.",
+  "team.role_updated_successfully": "Role updated successfully.",
+  "team.role_deleted_successfully": "Role deleted successfully.",
+  "team.role_removed_from_employee": "Role removed from employee successfully.",
+  "team.role_assigned_to_employee": "Role assigned to employee successfully.",
+  "team.select_user_and_role_first": "Please select both user and role first!",
+  "team.user_added_successfully": "User added successfully.",
+  "team.user_removed_successfully": "User removed from your team successfully.",
+  "team.user_not_found": "User not found!",
+  "team.no_user_to_edit": "No user to edit!"
+}
